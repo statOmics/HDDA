@@ -1,0 +1,14 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+course_admin/
+
+# Rmd output
+*.html
+*_files/
+*_cache/
+_site/
+
+# Don't ignore these specific files
+!footer.html

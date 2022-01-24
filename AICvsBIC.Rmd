@@ -1,0 +1,139 @@
+---
+title: "AIC vs BIC"
+author: "Lieven Clement"
+date: "statOmics, Ghent University (https://statomics.github.io)"
+output:
+    html_document:
+      code_download: true
+      theme: cosmo
+      toc: true
+      toc_float: true
+      highlight: tango
+      number_sections: true
+    pdf_document:
+      toc: true
+      number_sections: true
+      latex_engine: xelatex
+---
+
+
+# When large datasets are used, the BIC will favour smaller models than the AIC.
+
+Both the BIC and the AIC criterion are a trade-off between fit (-2 log L) and model complexity (2p for the AIC and p log(n) for BIC).
+
+- When we use the BIC for model selection we will select the model with the lowest BIC.
+- When we use the AIC for model selection we will select the model with the lowest AIC. 
+
+However, the trade-off between fit and model complexity is different for the AIC and the BIC. 
+
+- They use the same measure for the fit -2 log L. 
+- Increasing the model complexity will result in a better fit and thus a  decrease of -2 log L. 
+- However, both criteria also penalise for model complexity: 2p vs p log(n). 
+
+In order to favour a more complex model, 
+
+- the decrease of -2 log L has to be larger than the increase in 2p for the AIC criterion, 
+- while the decrease of -2 log L has to be larger than the increase in p log(n) for the BIC criterion.
+
+Because log(n) > 2 as soon as n >= 8,  the BIC criterion will penalise more for the increase in model complexity and it will therefore favour smaller models than the AIC criterion, which punishes less for the increase in model complexity.  
+
+
+# Illustration 
+
+```{r}
+set.seed(2)
+x <- as.data.frame(matrix(rnorm(1000),ncol=10))
+pred <- paste0("V",1:3)
+```
+
+model 
+
+$$
+Y = V1 + 2* V2 + 4*V3 +\epsilon
+$$
+
+
+```{r}
+set.seed(19325)
+y <- 10 + x[,1] + 2* x[,2] + 4*x[,3] + rnorm(100)
+```
+
+## Backward modelselection with AIC
+
+```{r}
+lm0 <- lm(y~.,data=x)
+lmAIC <- step(lm0)
+lmAIC
+realPredAIC <- sum(names(lmAIC$coefficients) %in% pred)
+falsePredAIC <- length(lmAIC$coefficients) - realPredAIC - 1
+```
+
+The AIC criterion selects the model with the lowest AIC. 
+
+This model correctly selects `r realPredAIC` out of `r length(pred)` real predictors. 
+However, it also selects `r falsePredAIC` predictors that are not associated with the response!
+
+
+##  Backward modelselection with BIC.
+
+We can do this in the step function by specifying k. By default k=2. If we define `k=log(n)` than we use the BIC.
+```{r}
+lmBIC <- step(lm0, k=log(nrow(x)))
+lmBIC
+realPredBIC <- sum(names(lmBIC$coefficients) %in% pred)
+falsePredBIC <- length(lmBIC$coefficients) - realPredBIC - 1
+```
+
+The BIC criterion selects the model with the lowest BIC. 
+
+This model correctly selects `r realPredBIC` out of `r length(pred)` real predictors. 
+However, it selects `r falsePredBIC` predictors that are not associated with the response!
+
+
+# What happens when the variance increase? 
+
+If the noise increases it will be harder to select the correct model and we still can expect the AIC to result in more complex models than the BIC.   
+
+We will use the same seed so that the difference in the response is not induced by the random generator but only by the difference in variance. 
+
+
+```{r}
+set.seed(19325)
+y <- 10 + x[,1] + 2* x[,2] + 4*x[,3] + rnorm(100,sd=10)
+lm0 <- lm(y~., data=x)
+```
+
+## Backward modelselection with AIC
+
+```{r}
+lm0 <- lm(y~.,data=x)
+lmAIC10 <- step(lm0)
+lmAIC10
+realPredAIC10 <- sum(names(lmAIC10$coefficients) %in% pred)
+falsePredAIC10 <- length(lmAIC10$coefficients) - realPredAIC10 - 1
+```
+
+The AIC criterion selects the model with the lowest AIC. 
+
+This model correctly selects `r realPredAIC10` out of `r length(pred)` real predictors. 
+However, it also selects `r falsePredAIC10` predictors that are not associated with the response!
+
+
+##  Backward modelselection with BIC.
+
+We can do this in the step function by specifying k. By default k=2. If we define `k=log(n)` than we use the BIC.
+
+```{r}
+lmBIC10 <- step(lm0, k=log(nrow(x)))
+lmBIC10
+realPredBIC10 <- sum(names(lmBIC10$coefficients) %in% pred)
+falsePredBIC10 <- length(lmBIC10$coefficients) - realPredBIC10 - 1
+```
+
+The BIC criterion selects the model with the lowest BIC. 
+
+This model correctly selects `r realPredBIC10` out of `r length(pred)` real predictors. 
+However, it selects `r falsePredBIC10` predictor that is not associated with the response!
+
+
+Note, that AIC and BIC are a good estimate of the insample error, however, when building prediction models we are interested in using the model for predictor patterns that are not observed in the training set. So it is better to build a model based on an estimate of the outsample error. 

@@ -1,0 +1,630 @@
+---
+title: "Lab 2: Principal Component Analysis"
+subtitle: "High Dimensional Data Analysis practicals"
+author: "Adapted by Milan Malfait"
+date: "28 Oct 2021 <br/> (Last updated: 2021-11-26)"
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center",
+  out.width = "100%"
+)
+```
+
+### [Change log](https://github.com/statOmics/HDDA21/commits/master/Lab2-PCA.Rmd) {-}
+
+***
+
+```{r libraries, warning=FALSE, message=FALSE}
+## Install necessary packages with:
+# install.packages("tidyverse")
+# if (!requireNamespace("remotes", quietly = TRUE)) {
+#     install.packages("remotes")
+# }
+# remotes::install_github("statOmics/HDDAData")
+# remotes::install_github("vqv/ggbiplot")
+
+library(tidyverse)
+theme_set(theme_light())
+
+library(ggbiplot)
+library(HDDAData)
+```
+
+# Introduction
+
+The first part of this lab demonstrates the influence of standardizing the data (i.e. working on the
+correlation matrix vs. working on the covariance matrix). Pay attention to what the output looks
+like and how it links to the biplot.)
+
+# PCA demonstration
+
+## Data prep
+
+We will load the `trees` dataset (from base `R`, see `?trees` for more info) that contains the
+height of a tree (in *feet*), the girth (or diameter in *inches*) and the volume (in *cubic feet*)
+of the tree. For the purpose of this exercise, we will convert the continuous *volume* variable to a
+categorical variable (a `factor` in R lingo). A tree will be considered large if its volume is
+bigger than 25 cubic feet, and small otherwise.
+
+```{r}
+# Load data
+data(trees)
+
+# Convert volume to factor
+trees$vol_fac <- as.factor(ifelse(trees$Volume > 25, "large", "small"))
+
+# Preview data
+head(trees)
+summary(trees)
+```
+
+Now suppose that the height was actually measured in **miles** instead of feet.
+
+```{r}
+## Create new column in trees with height in miles
+trees$height_miles <- trees$Height / 5280
+
+# Create matrix using height_miles and Girth variables
+tree_mx <- cbind("height_miles" = trees$height_miles, "girth" = trees$Girth)
+head(tree_mx)
+```
+
+Always good to visualize the data. Here we plot the height (in miles) vs. the girth for each tree
+and size the dots according to their volume. We also use a color aesthetic to distinguish "large"
+and "small" trees.
+
+```{r trees-plot}
+trees_plot <- ggplot(trees) +
+  geom_point(aes(Girth, height_miles, size = Volume, col = vol_fac),
+             alpha = 0.6) +
+  labs(x = "Girth (inches)", y = "Height (miles)",
+       color = "Volume class")
+
+trees_plot +
+  ggtitle("Visualizing the original trees data")
+
+```
+
+Pay attention to the units on the axis and the (very) different orders of the units.
+
+> Q: looking at this plot, can you make a guess in which direction the largest variation lies, i.e.
+> in which direction the first principal component would lie?
+
+To help with visualization of the PCs later on, we also make the plot using the **centered and
+scaled** data. The `scale` function can be used for this, so that all variables have mean 0 and unit
+variance.
+
+```{r}
+## Center and scale data
+trees_scaled <- scale(tree_mx, center = TRUE, scale = TRUE)
+
+trees_scaled_plot <- trees_scaled %>%
+  ## Convert to data.frame and re-add Volume columns for plotting
+  data.frame(Volume = trees$Volume, vol_fac = trees$vol_fac) %>%
+  ggplot() +
+  geom_point(aes(girth, height_miles, size = Volume, col = vol_fac),
+             alpha = 0.6) +
+  labs(x = "Girth (inches), standardized", y = "Height (miles), standardized",
+       color = "")
+
+trees_scaled_plot +
+  ggtitle("Visualizing the scaled trees data") +
+  coord_equal(xlim = c(-2.3, 2.3), ylim = c(-2.3, 2.3))
+```
+
+## Run PCA
+
+We run PCA on the *height (in miles)* and *girth* variables and inspect the results.
+
+```{r}
+# Run PCA with prcomp function, which uses SVD internally (see ?prcomp)
+# Note that prcomp centers the matrix internally by default but does not scale it
+# (center = TRUE, scale. = FALSE)
+tree_pca <- prcomp(tree_mx)
+summary(tree_pca)
+```
+
+**Note:** The first component explains almost 100% of the variability in the data.
+
+The **loadings** of the PCA are stored in the `$rotation` slot of the `prcomp` result, while the
+`$sdev` slot contains the standard deviations of the principal components.
+
+```{r}
+tree_pca$rotation
+tree_pca$sdev
+```
+
+Remember that the Principal Components are **linear combinations** of the original variables. The
+loadings tell you what the contribution (or weight) of each variable is to the PC. Here we see that
+the first PC is completely dominated by the girth variable, while the second component is basically
+(the negative) height variable. Since the PCs are ordered by the amount of variance they retain from
+the original data, we would conclude that most of the variance in the data comes from the girth
+variable.
+
+> Q: Is this in line with what you expected from the original plot? Why not? (Think about the units
+> we are using here!)
+
+The result from `prcomp` also contains an `$x` slot, which contains the projected values of the
+original data matrix onto the principal components (also called the *PC scores*). This is what we
+will use to construct the PCA plot.
+
+### Visualize Principal Components
+
+Scale the PC loadings by their standard deviations (singular values) to project them back to the
+original data space. We also transpose the `rotation` matrix so that the variables are in columns
+and PCs in the rows, so that we can overlay them on the original trees plot.
+
+```{r tree-plot-PC-loadings}
+## Transpose the loadings so that the PCs are in the rows, for plotting
+pc_loadings <- t(tree_pca$rotation) * tree_pca$sdev
+
+## Reuse plot from before and add PCs
+trees_scaled_plot +
+  geom_segment(
+    data = data.frame(pc_loadings),
+    aes(x = 0, xend = girth, y = 0, yend = height_miles),
+    arrow = arrow(length=unit(0.1,"cm"))
+  ) +
+  geom_text(
+    data = data.frame(pc_loadings),
+    aes(x = girth, y = height_miles, label = rownames(pc_loadings)),
+    vjust = 1.5
+  ) +
+  ggtitle("Trees data overlayed with PCs",
+          subtitle = "Based on PCA on non-standardized data")
+```
+
+From this plot we see that the PCs are not in the directions we expected. PC1 should point in the
+direction of greatest variability.
+
+### Visualize PCA with biplot
+
+```{r tree-pca-biplot}
+ggbiplot(tree_pca, groups = trees$vol_fac, alpha = 0) +
+  ## Add points layer to color and size points
+  geom_point(aes(col = trees$vol_fac, size = trees$Volume), alpha = 0.6) +
+  labs(size = "Volume", col = "") +
+  theme(aspect.ratio = 0.6) +
+  ggtitle("Biplot for the PCA on non-standardized data")
+```
+
+We see that trees high in volume tend to have a high tree girth, but the height does not give any
+information on tree volume. This is likely wrong, since we know that the height of a tree should
+have at least some influence on its volume. The problem here is that because of the 2 very different
+unit measures (*miles* and *inches*), the influence of the girth is inflated just because the order
+of the scale is much larger.
+
+This is also reflected in the variances of these variables:
+
+```{r}
+round(diag(cov(tree_mx)), 8)
+```
+
+We see that the variance of the *girth* variable is several orders of magnitude larger than that of
+the height (again, because of the different units) and this is reflected in the PCA.
+
+We could use the same units, or we could standardize the variables by dividing by their standard
+deviations. Both will lead to a more balanced picture of the variability. Of course in this case one
+can argue that the variables should have the same unit but not be standardized, which may be a valid
+argument, were it not that we are measuring two different things (the height and the diameter). So
+even if we used the same units, it is recommended to also standardize the variables.
+
+Imagine if we would be measuring the mass ($kg$) of the tree and the girth ($m$) of the tree, the
+scale on which both should be measured is no longer clear, since niether kilograms can be converted
+to meters nor meters converted to kilograms. In this case we have a clear argument to work on the
+standardized variables.
+
+## Redo PCA on standardized variables
+
+We will leave the *height* on the *miles* scale, but now we will standardize the variables before
+performing the PCA. I.e. in addition to *centering* the matrix (subtracting the column means), we
+also divide it by its column standard deviations. Note that these operations can be done in one go
+with the `prcomp` function by specifying `center = TRUE` and `scale. = TRUE` (note the `.`!).
+
+```{r}
+## Compute PCA on centered and scaled matrix
+tree_pca_scaled <- prcomp(tree_mx, center = TRUE, scale. = TRUE)
+summary(tree_pca_scaled)
+tree_pca_scaled$rotation
+tree_pca_scaled$sdev
+```
+
+We will again plot the original data, but this time using the **scaled and centered** values, and
+overlay the plot with the PCs.
+
+```{r}
+pc_scaled_loadings <- t(tree_pca_scaled$rotation) * tree_pca_scaled$sdev
+
+## Reuse plot from before and add PCs
+trees_scaled_plot +
+  geom_segment(
+    data = data.frame(pc_scaled_loadings),
+    aes(x = 0, xend = girth, y = 0, yend = height_miles),
+    arrow = arrow(length=unit(0.2,"cm"))
+  ) +
+  geom_text(
+    data = data.frame(pc_scaled_loadings),
+    aes(x = girth, y = height_miles, label = rownames(pc_scaled_loadings)),
+    nudge_x = 0.1, nudge_y = 0.2
+  ) +
+  coord_equal(xlim = c(-2.3, 2.3), ylim = c(-2.1, 2.1)) +
+  ggtitle("Trees data overlayed with PCs",
+          subtitle = "Based on PCA on standardized data")
+```
+
+This is more in line with our expectations. PC1 point in the direction of greatest variability, with
+PC2 orthogonal and pointing in the direction of second greatest variabilty.
+
+Also note from the lengths of the PC vectors that the contributions of height and girth are equal to
+both PCs.
+
+The biplot:
+
+```{r tree-scaled-pca-biplot}
+ggbiplot(tree_pca_scaled, groups = trees$vol_fac, alpha = 0) +
+  ## Add points layer to color and size points
+  geom_point(aes(col = trees$vol_fac, size = trees$Volume), alpha = 0.6) +
+  labs(size = "Volume", col = "") +
+  theme(aspect.ratio = 0.5) +
+  ggtitle("Biplot for the PCA on standardized data")
+```
+
+We now get a much more realistic result, where the *height* and *girth* variables have more equal
+contributions to the PCs.
+
+PC1 can be interpreted as separating small and large volume trees. A potential explanation of PC2
+would be the separation between trees that have a similar volume but differ in their height-to-girth
+ratios, i.e. short wide trees and long thin trees.
+
+Note that we would get the exact same result (apart maybe from the signs) if we used *height* on the
+original *feet* scale. Since the conversion is just a multiplication by a constant, scaling the
+column by its standard deviation will give the same result. (You can verify this for yourself by
+redoing the PCA using the original height column from `trees`, without converting it to miles.)
+
+# Exercises
+
+## Heavy metals near the Schelde
+
+### Data prep {.unnumbered}
+
+At the department of analytical and physical chemistry, researchers wanted to investigate the
+pollution of grasslands in the vicinity of the river Schelde. Concentrations of 8 heavy metals were
+measured on 19 different locations, each time at a depth of 5 cm and at a depth of 20 cm; the data
+set is called heavymetals. Vicinity to the river was 0 (far) or 1 (close).
+
+Load in the data as follows:
+
+```{r load-heavymetals-data, collapse=FALSE}
+data("heavymetals")
+
+## Recode the "river" variable
+heavymetals$river <- ifelse(heavymetals$river, "close", "far")
+
+heavymetals
+dim(heavymetals)
+```
+
+Note that there are 2 columns per heavy metal, one for the measurement at 5 cm depth and one at 20
+cm depth.
+
+### Tasks {.unnumbered}
+
+##### 1. Conduct a PCA using *standardized variables*. How many PCs would you retain? Motivate the answer/interpret. {.unnumbered}
+
+Think about which columns you need from the original data!
+
+<details>
+
+<summary>
+
+Solution
+
+</summary>
+
+First do the PCA, excluding the `location` and `river` columns.
+
+```{r heavymetals-pca}
+## Remove 'location' and 'river' columns when creating matrix
+heavymetals_mx <- dplyr::select(heavymetals, -location, -river) %>%
+  as.matrix()
+
+## Run PCA on centered and scaled data
+heavymetals_pca <- prcomp(heavymetals_mx, center = TRUE, scale. = TRUE)
+summary(heavymetals_pca)
+```
+
+To choose the number of PCs to retain, we look at the proportion of variance that each PC explains.
+This can be visualized using what is known as a *scree plot*.
+
+```{r heavymetals-pca-screeplot}
+## Calculate total variance by summing the PC variances (sdev's squared)
+tot_var <- sum(heavymetals_pca$sdev^2)
+
+## Create data.frame of the proportion of variance explained by each PC
+heavymetals_prop_var <- data.frame(
+  PC = 1:ncol(heavymetals_pca$x),
+  var = heavymetals_pca$sdev^2
+) %>%
+  ## Using `mutate` to calculate prop. var and cum. prop. var
+  mutate(
+    prop_var = var / tot_var,
+    cum_prop_var = cumsum(var / tot_var)
+  )
+
+head(heavymetals_prop_var)
+
+## Plot the proportion of variance explained by each PC
+ggplot(heavymetals_prop_var, aes(PC, prop_var)) +
+  geom_point() +
+  geom_line() +
+  geom_vline(xintercept = 2.5, col = "firebrick") +
+  scale_x_continuous(breaks = 1:ncol(heavymetals_pca$x)) +
+  labs(y = "Proportion of variance") +
+  ggtitle("Proportion of variance explained by each PC",
+          subtitle = "Heavy metals data")
+
+## Plot the cumulative proportion of variance explained by each PC
+ggplot(heavymetals_prop_var, aes(PC, cum_prop_var)) +
+  geom_point() +
+  geom_line() +
+  geom_vline(xintercept = 2.5, col = "firebrick") +
+  scale_x_continuous(breaks = 1:ncol(heavymetals_pca$x)) +
+  labs(y = "Proportion of variance") +
+  ggtitle("Cumulative proportion of variance explained by each PC",
+          subtitle = "Heavy metals data")
+```
+
+We decide to keep the first 2 PCs (indicated by the red vertical line), as this coincides with the
+"elbow" in the scree plot. This leaves us with 88% of the total variance from the original data,
+which is not bad at all given that we went from 16 to only 2 dimensions! Other common cutoffs are to
+keep e.g. 90%, 95% or 99% of the original variance. Which would give us 3, 4 or 7 PCs respectively.
+However, for the purpose of this exercise, the first 2 will be enough.
+
+</details>
+
+##### 2. Make a biplot using the retained PCs and interpret. Is there a relationhsip between vicinity to the river and polution with certain metals? {.unnumbered}
+
+**Hint**: Try to color or label the data points by their vicinity to the river (using the `river`
+variable) to aid with interpretation.
+
+<details>
+
+<summary>
+
+Solution
+
+</summary>
+
+Making the biplot for the first 2 PCs.
+
+```{r heavymetals-pca-biplot}
+ggbiplot(heavymetals_pca, groups = heavymetals$river) +
+  labs(color = "Vicinity to river") +
+  ggtitle("Biplot for the heavy metals PCA")
+```
+
+The distinction that is immediately clear is that the levels of Manganese (Mn) seem to be higher in
+the areas far from the river (at both depths), compared to all other metals.
+
+We can also see this from the loadings, where Mn20 is the only measurement that is negatively
+correlated with PC1, while Mn5 is barely correlated with PC1.
+
+A potential hypothesis would be that as we move farther away from the river, the concentration of Mn
+increases with depth.
+
+```{r}
+heavymetals_pca$rotation[, 1:2]
+```
+
+</details>
+
+##### 3. Calculate the loadings and scores of the PCA using the SVD (function `svd`). Verify that the loadings and scores obtained using the SVD approach are equal to those obtained using the `prcomp` function. {.unnumbered}
+
+<details>
+
+<summary>
+
+Solution
+
+</summary>
+
+First perform the SVD. Remember to **center and scale** the data matrix!
+
+```{r heavymetals-SVD}
+heavymetals_scaled <- scale(heavymetals_mx)
+heavymetals_svd <- svd(heavymetals_scaled)
+```
+
+Now compare the PC loadings with the right singular vectors $\mathbf{V}$ and the scores with the
+projections $\mathbf{Z_k} = \mathbf{XV_k}$.
+
+```{r}
+## Remove dimnames for comparison
+all.equal(unname(heavymetals_pca$rotation), heavymetals_svd$v)
+
+## Calculate projections
+heavymetals_Zk <- heavymetals_scaled %*% heavymetals_svd$v
+heavymetals_scores <- unname(heavymetals_pca$x)
+
+all.equal(heavymetals_Zk, heavymetals_scores)
+```
+
+This again shows that PCA is nothing more than an SVD on the (centered and scaled) data matrix!
+
+</details>
+
+## Employment by industry in European countries
+
+Using the same data as in [Lab
+1](./Lab1-Intro-SVD.html#32_Exercise:_employment_by_industry_in_European_countries).
+
+### Data prep {.unnumbered}
+
+The `"industries"` dataset contains data on the distribution of employment between 9 industrial
+sectors, in 26 European countries. The dataset stems from the Cold-War era; the data are expressed
+as percentages. Load the data and explore its contents.
+
+```{r read-industries-data}
+## Load 'industries' data from the HDDAData package
+data("industries")
+
+# Explore contents
+industries
+summary(industries)
+```
+
+### Tasks {.unnumbered}
+
+##### 1. Perform a PCA. How many PCs would you retain? Explain. {.unnumbered}
+
+<details>
+
+<summary>
+
+Solution
+
+</summary>
+
+Perform the PCA on the centered and scaled data matrix, after removing the `country` column.
+
+```{r industries-pca}
+industries_pca <- prcomp(industries[, -1], scale. = TRUE)
+summary(industries_pca)
+```
+
+```{r industries-pca-screeplot}
+## Calculate total variance by summing the PC variances (sdev's squared)
+tot_var <- sum(industries_pca$sdev^2)
+
+## Create data.frame of the proportion of variance explained by each PC
+industries_prop_var <- data.frame(
+  PC = 1:ncol(industries_pca$x),
+  var = industries_pca$sdev^2
+) %>%
+  ## Using `mutate` to calculate prop. var and cum. prop. var
+  mutate(
+    prop_var = var / tot_var,
+    cum_prop_var = cumsum(var / tot_var)
+  )
+
+industries_prop_var
+
+## Plot the proportion of variance explained by each PC
+ggplot(industries_prop_var, aes(PC, prop_var)) +
+  geom_point() +
+  geom_line() +
+  geom_vline(xintercept = 5.5, col = "firebrick") +
+  scale_x_continuous(breaks = 1:ncol(industries_pca$x)) +
+  labs(y = "Proportion of variance") +
+  ggtitle("Proportion of variance explained by each PC",
+          subtitle = "Industries data")
+
+## Plot the cumulative proportion of variance explained by each PC
+ggplot(industries_prop_var, aes(PC, cum_prop_var)) +
+  geom_point() +
+  geom_line() +
+  geom_vline(xintercept = 5.5, col = "firebrick") +
+  scale_x_continuous(breaks = 1:ncol(industries_pca$x)) +
+  labs(y = "Proportion of variance") +
+  ggtitle("Cumulative proportion of variance explained by each PC",
+          subtitle = "Industries data")
+```
+
+In this case, retaining the first 5-7 PCs would be more appropriate.
+
+</details>
+
+##### 2. What could you say about e.g. Denmark based on the biplot? {.unnumbered}
+
+<details>
+
+<summary>
+
+Solution
+
+</summary>
+
+Construct the biplot. We don't really have a grouping variable to color the points, but we can add
+labels with the country names.
+
+```{r industries-pca-biplot}
+ggbiplot(industries_pca, labels = industries$country, labels.size = 2) +
+  ggtitle("Biplot for the industries PCA") +
+  xlim(c(-3.4, 3.4)) +
+  ylim(c(-2.2, 2.2))
+```
+
+The biplot shows how the work forces of the countries are distributed among the different
+industries.
+
+The employment in Denmark seems to be mainly concentrated in the finance, services and social
+sectors.
+
+</details>
+
+##### 3. Try to interpret the first 2 PCs. {.unnumbered}
+
+<details>
+
+<summary>
+
+Solution
+
+</summary>
+
+We can use the biplot and loadings to interpret the PCs. The biplot is given above, while the
+loadings can be accessed from the `$rotation` slot:
+
+```{r}
+industries_pca$rotation[, 1:2]
+```
+
+The first PC seems to be largely driven by the *agriculture* industry, i.e. it is separating
+countries mostly based on their employment in agriculture () Thus, countries situated on the
+positive side of PC1 will likely have a *higher-than-average* employment in agriculture. On the
+other hand, countries on the negative side of PC1 are less agriculture-based economies and have
+higher employments in e.g. the social sector.
+
+Indeed, if we rank the countries by their agriculture employment, we largely recover the order of
+the countries along PC1, with Turkey clearly being the most agriculture-focused (remember that this
+data is from the Cold War era)!
+
+```{r}
+## Show ranking of agriculture industry
+industries %>%
+  dplyr::select(country, agriculture, social.sector, mining, finance) %>%
+  arrange(desc(agriculture))
+```
+
+We could say that the first PC separates agriculture-based economies from non-agriculture-based. The
+fact that most other industries are negatively correlated with the first PC, seems to indicate that
+countries either have a large agriculture industry or distribute their work force more equally among
+the other industries.
+
+The 2 main exceptions are the mining and finance industries, which are (almost) perpendicular to
+PC1.
+
+The second PC is mostly driven by the difference between more services-based (on the negative side)
+and more industry-based (positive PC) economies. With the main drivers being the *mining* and
+*finance* sectors.
+
+Keep in mind however that these 2 PCs "only" explain 38.7% and 23.7% of the total variance,
+respectively. So there are likely still many patterns we are missing.
+
+</details>
+
+# Further reading
+
+Here are some further resources that can help with the interpretation of the PCA and its link with
+the SVD:
+
+-   <https://setosa.io/ev/principal-component-analysis/>
+-   <https://stats.stackexchange.com/a/134283/264768>
+-   <https://twitter.com/allison_horst/status/1288904459490213888?s=20>
+
+```{r, child="_session-info.Rmd"}
+```

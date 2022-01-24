@@ -1,0 +1,1025 @@
+---
+title: "Large Scale Inference"
+author: "Lieven Clement"
+date: "statOmics, Ghent University (https://statomics.github.io)"
+output:
+  pdf_document:
+    toc: true
+    number_sections: true
+    latex_engine: xelatex
+---
+
+# Motivation
+
+## Brain imaging study
+
+
+```{r fig.align="center", out.width = '80%', echo=FALSE}
+knitr::include_graphics("./figures/DTIColor.jpg")
+library("magick")
+```
+
+- Diffusion Tensor Imaging (DTI) data
+- DTI measures fluid flows in the brain
+- Comparing brain activity of six dyslexic children versus six normal controls
+- From each child, DTI produced observations on 15443 voxels (voxel = small volume at a particular (x, y, x) coordinate)
+- For each voxel, a two-sided two-sample t-test has been performed, resulting in a z-value (15443 z-values) for fractional anisotropy.
+-  Low values for FA indicate diffusion in all directions, high values indicates directional diffusion.
+- Research question: at what brain locations (voxels) show dyslexic children a different brain activity as compared to children without dyslexia?
+
+For each voxel separately, this is a simple problem, but the large scale of the problem (15443 simultaneous hypothesis tests) causes the problem of multiplicity.
+
+### Data Exploration
+
+The dataset `dti` contains
+
+- Spatial location (x, y, z) of each voxel
+- z-statistic for assessing differential brain activity between dyslexic and non-dyslexic children
+
+
+
+```{r, message=FALSE}
+library(tidyverse)
+library(locfdr)
+library(gganimate)
+
+dti <- read_csv("https://raw.githubusercontent.com/statOmics/HDA2020/data/dti.csv",
+                col_types = cols())
+```
+
+```{r}
+pZ <- dti %>%
+  ggplot(
+    aes(
+      coord.y,
+      coord.x,
+      color=z.value)
+    ) +
+  geom_point() +
+  scale_colour_gradient2(low = "blue",mid="white",high="red") +
+  transition_manual(coord.z) +
+  labs(title = "transection z = {frame}") +
+  theme_grey()
+```
+
+We will now plot the animated graph
+
+```{r eval=FALSE}
+pZ
+```
+
+
+__WARNING__: The animated graph will only be visible in the HTML output, not in PDF format.
+If you're reading the PDF version, check [online](https://statomics.github.io/HDDA21/lsi.html#111_Data_Exploration)
+for the animated graph.
+
+```{r echo=FALSE, message=FALSE, eval=knitr::is_html_output()}
+animate(pZ, nframes = 103, end_pause = 3)
+```
+
+We visualised the test-statistic of each test per voxel!
+
+Note, that it is difficult to see structure in the data.
+
+### Inference
+
+We can convert the z-statistic in a two-sided p-value for each voxel to assess
+
+\[H_0: \text{There is on average no difference in brain activity in voxel xyz between dyslexic and non-dyslexic children}\]
+  \[\mu_d=\mu_{nd}\]
+
+vs
+
+\[H_0: \text{There is on average a difference in brain activity in voxel xyz between dyslexic and non-dyslexic children}\]
+  \[\mu_d\neq\mu_{nd}\]
+
+
+Below, we calculate the p-values and a variable zP for which we keep the z-value if it is statistical significant at the 5% level otherwise we set it equal to zP=0.
+
+```{r}
+dti <- dti %>%
+  mutate(
+    p.value = pnorm(abs(z.value),lower=FALSE)*2,
+    zP = (p.value < 0.05) * z.value)
+
+pPval <- dti %>%
+  ggplot(
+    aes(
+      coord.y,
+      coord.x,
+      color=zP)
+    ) +
+  geom_point() +
+  scale_colour_gradient2(low = "blue",mid="white",high="red") +
+  transition_manual(coord.z) +
+  labs(title = "transection z = {frame}") +
+  theme_grey()
+```
+
+
+We will now plot the animated graph
+
+```{r eval=FALSE}
+pPval
+```
+
+```{r echo=FALSE, message=FALSE, eval=knitr::is_html_output()}
+animate(pPval, nframes = 103, end_pause = 3)
+```
+
+It is much more easy to observe patterns of activity.
+
+Note, however that
+
+- Higher average FA (z > 0 and p < 0.05) in dyslexic children is appearing in spatial patterns in some locations.
+- Lower average FA (z < 0 and p > 0.05) in dyslexic children is scattered throughout the brain.
+- Multiple testing problem.
+- If there would be no association between brain activity and dyslexia we can expect on average $`r nrow(dti)`\times\alpha=`r round(nrow(dti) * 0.05,0)`$ false positive voxels at the 5% level of significance.
+- Note, that only `r sum(dti$p.value < 0.05)` were significant at the 5% significance level, so we can expect that the majority of the returned voxels are false positives.
+
+```{r}
+FPexpected  <- nrow(dti) * 0.05
+Preported <- sum(dti$p.value < 0.05)
+
+FPexpected
+Preported
+```
+
+## Challenges
+
+Large Scale Inference implies
+
+- Many hypothesis to be evaluated
+- Huge multiple testing problem
+- Many false positives can be expected if we do not correct for multiple testing
+
+Issue is widespread in many disciplines
+
+- genomics
+- transcriptomics
+- proteomics
+- brain imaging
+- high throughput single cell technologies
+- detection of anomalous events: e.g. credit card fraud
+- evaluation of trading rules
+- academic performance of schools
+
+## Multiplicity Problem
+
+Suppose only a single hypothesis test is required for answering the research question. A statistical test controls the probability of making a **type I error** (type I error rate),
+\[
+   \alpha =\text{P}\left[\text{reject }H_0 \mid H_0\right] .
+\]
+The type I error is also known as a **false positive** (i.e. $H_0$ expresses an negative result, and $H_1$ a positive result): $\alpha=\text{P}\left[\text{false positive}\right]$.
+
+An important property:
+
+When $H_0$ is true, and the assumptions underlying the test hold true, then
+\[
+  P \sim U[0,1] .
+\]
+Hence, for any $0<\alpha<1$,
+\[
+  \text{P}\left[\text{reject }H_0 \mid H_0\right] = \text{P}\left[P<\alpha \mid H_0\right] = \alpha.
+\]
+
+The distribution of the z-statistic and the p-values under $H_0$ are illustrated below:
+
+```{r}
+library(gridExtra)
+
+simData <- tibble(
+  z.value = rnorm(20000)
+  )
+
+simData <- simData %>% mutate(p.value = 2*(1-pnorm(abs(z.value))))
+
+p1 <- simData %>%
+  ggplot(aes(x = z.value)) +
+  geom_histogram(
+    aes(y=..density..),
+    color = "black") +
+  stat_function(fun = dnorm, args=list(mean=0, sd=1))
+
+p2 <- simData %>%
+  ggplot(aes(x = p.value)) +
+  geom_histogram(color = "black", breaks = seq(0,1,.05))
+
+grid.arrange(p1, p2, ncol=2)
+```
+
+We indeed observe that the p-values are uniform under the null hypothesis. So statistical hypothesis testing provides a uniform testing strategy.
+
+
+### Notation
+
+In the multiple testing literature the number of features that for which a test is conducted is denoted by $m$ instead of $p$ to avoid confusion with the symbol for a p-value.
+
+
+Consider testing all $m=15443$ voxels simultaneously
+
+- What if we assess each individual test at level $\alpha$?
+$\rightarrow$ Probability to have a false positive (FP) among all m simultatenous
+test $>>>  \alpha= 0.05$
+
+- Indeed for each non differential voxel we have a probability of 5% to return a FP.
+- In a typical experiment the majority of the voxel are non differential. 
+- So an upperbound of the expected FP is $m \times \alpha$ or $15443 \times 0.05=`r round(15443*0.05,0)`$. 
+
+$\rightarrow$ Hence, we are bound to call many false positive voxels each time we run the experiment.
+
+
+###  Familywise error rate
+
+Suppose that $m$ hypotheses have to be tested simultaneously for answering a single research question.
+
+Let $H_{0i}$ denote the $i$th null hypothesis ($i=1,\ldots, m$) and let $H_0$ denote the intersection of all these partial null hypotheses.
+
+ In this case the type I error rate is no longer relevant. Instead one may consider the **Familywise Error Rate (FWER)**
+ \[
+   \text{FWER}=\text{P}\left[\text{reject at least one }H_{0i} \mid H_0\right].
+ \]
+
+
+Assuming independence among the $m$ tests and assuming that all individual tests are performed at the $\alpha$ level of significance, the FWER can be computed as
+
+\[
+\begin{array}{rcl}
+\text{FWER}
+&=& \text{P}\left[\text{reject at least one }H_{0i} \mid H_0\right] \\
+&=& 1 - \text{P}\left[\text{reject no }H_{0i} \mid H_0\right] \\
+&=& 1- \text{P}\left[\text{not reject }H_{01}\text{ and }\ldots\text{ and not reject }H_{0m} \mid H_0\right] \\
+&=& 1- \prod_{i=1}^m \text{P}\left[\text{not reject }H_{0i} \mid H_0\right] \\
+&=& 1- (1-\alpha)^m .
+\end{array}
+\]
+
+ Examples:
+
+  $\alpha=0.05$ and $m=5$: FWER$=0.23$
+
+ $\alpha=0.05$ and $m=100$: FWER$=0.99$
+
+ $\alpha=0.05$ and $m=15443$: FWER$\approx 1$.
+
+---
+
+ These calculations illustrate the problem of multiplicity: the more tests that are performed, the larger the probability that at least one false positive conclusion is obtained. Thus if all significant results are listed, and suppose that all null hypotheses hold true, then the FWER is the probability that at least one of the listed positive results is a false positive. Sometimes, a list of significant results represent the "discoveries" from the study, and therefore a false positive result is often also referred to as a false discovery.
+
+For example, with $m=100$ and $\alpha=0.05$ the chance that at least one of the "discoveries" is false, is about $99\%$. Even worse, with $m\approx 15000$ the FWER increases to virtually $100\%$. In general we also expect that lists of significant results (discoveries) get longer with increasing $m$.
+
+Many researchers, however, when presented a long list of significant results (or discoveries), would not mind too much if one or a few false discoveries appear in the list. Hence, the FWER is not the most relevant risk measure, as the FWER is allowed to be $100\%$ in case researchers do not mind to have a few false discoveries among the (perhaps many) positive results in the list of discoveries. A better solution will be given later, but first we continue with the use of FWER.
+
+---
+
+### Method of Sidàk: invert FWER to significant level for individual test
+
+The identity FWER$=1- (1-\alpha)^m$ may be inverted to find the significance level at which each individual test should be tested to attain the nominal familywise error rate at FWER,
+\[
+   \alpha = 1-(1-\text{FWER})^{1/m}
+\]
+so that the simultaneous testing procedure controls the FWER at the desired level (method of Sidàk).
+
+Examples:
+
+FWER$=0.05$ and $m=5$: $\alpha=0.0102$
+
+FWER$=0.05$ and $m=100$: $\alpha=0.00051$
+
+FWER$=0.05$ and $m=15443$: $\alpha=0.0000033$.
+
+We will argue that this procedure is too stringent for large $m$.
+
+### Bonferroni method 
+
+The Bonferroni method is another method that is widely used to control the FWER: 
+
+- assess each test at 
+\[\alpha_\text{adj}=\frac{\alpha}{m}\]
+
+- The method does not assume independence of the test statistics.
+- Again, the method is very conservative! 
+
+---
+
+To attain the familywise error rate at level FWER the individual hypotheses should be tested at very stringent significance levels when $m$ is large. The consequence of testing at a small significance level $\alpha$ is that it is hard to find significant results, and thus the lists of significant results (discoveries) is likely to be short. Controlling the FWER means that the chance is small that these lists contain one or more false positives. A negative consequence, however, is that many of the true positive hypothesis (i.e. $H_1$ is true) will not appear in these short lists. Hence, the "power" is small (power is not well defined in this multiple testing setting -- extensions of the concept are possible). Thus, avoiding false positives by controlling the FWER comes at a price: many of the true positive hypothesis may be missed.
+
+---
+
+### Adjusted p-value
+
+First we give a very general definition of an **adjusted $p$-value**.
+
+ Define the adjusted $p$-value as
+ \[
+   \tilde{p}_i = \{\inf \alpha\in[0,1]: \text{ reject }H_{0i} \text{ at FWER } \alpha\} .
+ \]
+ With these adjusted $p$-value, the $i$th partial null hypothesis may  be rejected when
+ \[
+   \tilde{p}_i < \alpha
+ \]
+ while controlling the FWER at $\alpha$.
+
+ The corrected $p$-value should be reported. It accounts for the multiplicity problem and it can be compared directly to the nominal FWER level to make calls at the FWER level.
+
+- adjusted p-values for Bonferroni method: 
+\[p_\text{adj}=\text{min}\left(p \times m,1\right)\]
+
+---
+
+# False Discovery Rate
+
+## Introduction
+
+In large scale inference it would be more interesting to tolerate a few false positives as long as they do not dominate the toplist 
+
+
+We first introduce some notation:
+
+The table shows the results of $m$ hypothesis tests in a single experiment.
+
+|                         | accept $H_{0i}$ | reject $H_{0i}$ | Total |
+|:------------------------|:---------------:|:---------------:|:-----:|
+| null | TN | FP | $m_0$ |
+| non-null | FN | TP | $m_1$ |
+| Total | NR | R | m |
+
+
+- $TN$: number of true negative: random and unobserved
+- $FP$: number of false positives: random and unobserved
+- $FN$: number of false negatives: random and unobserved
+- $TP$: number of true positives: random and unobserved
+- $NR$: number of acceptances (negative results): random and observed
+- $R$: number of rejections (positive results): random and observed
+- $m_0$ and $m_1$: fixed and unobserved
+- $m$: fixed and observed
+
+---
+
+- Note that the table is not completely observable. 
+- Indeed, we can only observe the bottom row! 
+- The table is introduced to better understand the concept of FWER and to introduce the concept of the false discovery rate (FDR).
+
+---
+
+|                         | accept $H_{0i}$ | reject $H_{0i}$ | Total |
+|:------------------------|:---------------:|:---------------:|:-----:|
+| null | TN | FP | $m_0$ |
+| non-null | FN | TP | $m_1$ |
+| Total | NR | R | m |
+
+The FWER can now be reexpressed as
+ \[
+   \text{FWER}=\text{P}\left[\text{reject at least one }H_{0i} \mid H_0\right] = \text{P}\left[FP>0\right] .
+ \]
+ 
+
+- However, we know that the FWER is very conservative in large scale inference problems. 
+- Therefore it would be more interesting to tolerate a few false positives as long as they do not dominate the toplist 
+
+The **False Discovery Proportion (FDP)** is the fraction of false positives that are returned, i.e. 
+
+\[
+FDP = \frac{FP}{R}
+\]
+
+- However, this quantity cannot be observed because in practice we only know the number of voxels for which we rejected $H_0$, $R$. 
+
+- But, we do not know the number of false positives, $FP$.
+
+Therefore, Benjamini and Hochberg, 1995, defined The **False Discovery Rate (FDR)** as
+\[
+   \text{FDR} = \text{E}\left[\frac{FP}{R}\right] =\text{E}\left[\text{FDP}\right]
+\]
+the expected FDP, in their seminal paper Benjamini, Y. and Hochberg, Y. (1995). "Controlling the false discovery rate: a practical and powerful approach to multiple testing". Journal of the Royal Statistical Society Series B, 57 (1): 289–300. 
+
+- An FDR of 1% means that on average we expect 1% false positive voxels in the list of voxels that are called significant.
+
+- Controlling the FDR allows for more discoveries (i.e. longer lists with significant results), while the fraction of false discoveries among the significant results in well controlled on average. As a consequence, more of the true positive hypotheses will be detected.
+
+## Intuition of BH-FDR procedure
+
+Consider $m = 1000$ voxels
+
+- Suppose that a researcher rejects all null hypotheses for which $p < 0.01$. 
+
+- If we use $p < 0.01$, we expect $0.01 \times m_0$ tests to return false positives. 
+- A conservative estimate of the number of false positives that we can expect can be obtained by considering that the null hypotheses are true for all features, $m_0 = m =  1000$. 
+- We then would expect $0.01 \times 1000 = 10$ false positives ($FP=10$).
+
+- Suppose that the researcher found 200 voxels with $p<0.01$ ($R=200$).
+
+- The proportion of false positive results (FDP = false positive proportion) among the list of $R=200$ genes can then be estimated as
+ \[
+   \widehat{\text{FDP}}=\frac{FP}{R}=\frac{10}{200}=\frac{0.01 \times 1000}{200} = 0.05.
+ \]
+
+
+## Benjamini and Hochberg (1995) procedure for controlling the FDR at $\alpha$
+
+1. Let $p_{(1)}\leq \ldots \leq p_{(m)}$ denote the ordered $p$-values.
+
+2. Find the largest integer $k$ so that 
+$$
+\frac{p_{(k)} \times m}{k} \leq \alpha
+$$
+$$\text{or}$$
+$$
+p_{(k)} \leq k \times \alpha/m
+$$
+
+3. If such a $k$ exists, reject the $k$ null hypotheses associated with $p_{(1)}, \ldots, p_{(k)}$.
+Otherwise none of the null hypotheses is rejected.
+
+The adjusted $p$-value (also known as the $q$-value in FDR literature):
+ $$
+   q_{(i)}=\tilde{p}_{(i)} = \min\left[\min_{j=i,\ldots, m}\left(m p_{(j)}/j\right), 1 \right].
+ $$
+ In the hypothetical example above: $k=200$, $p_{(k)}=0.01$, $m=1000$ and $\alpha=0.05$.
+
+
+---
+
+## Brain Example
+
+```{r}
+dti %>%
+  ggplot(aes(x = p.value)) +
+  geom_histogram(color = "black",breaks = seq(0,1,.05))
+```
+
+- The graph shows the histogram of the $m=15443$ $p$-values. It shows a distribution which is close to a uniform distribution for the larger p-values, but with more small $p$-values than expected under a uniform distribution.
+
+- This is a trend that would arise if most of the hypotheses are nulls (resulting in $p$-values from a uniform distribution), but some are non-nulls (more likely to result in small $p$-values).
+
+---
+
+
+```{r}
+dti <- dti %>%
+  mutate(
+    padj = p.adjust(p.value, method="fdr"),
+    zFDR = (padj < 0.05) * z.value)
+
+pPadj <- dti %>%
+  ggplot(aes(p.value,padj)) +
+  geom_point() +
+  geom_segment(x=0,y=0,xend=1,yend=1) +
+  ylab("adjusted p-value (BH, 1995)")
+
+grid.arrange(pPadj,
+  pPadj + ylim(c(0,0.05)),
+  ncol=2)
+
+# BH corrected p-values
+table(dti$padj < 0.05)
+
+# uncorrected p-values
+table(dti$p.value < 0.05)
+
+```
+
+At the 5% FDR, `r sum(dti$padj < 0.05)` voxels are returned as significantly differentially active between dyslexic and non-dyslexic children.
+
+### Ordered table of results to explain the method
+
+- Bonferroni: $\alpha_\text{adj}=`r format(0.05/nrow(dti),digits=2)` \rightarrow$  `r sum(dti$p.value<(0.05/nrow(dti)))` voxels are significant at the Bonferroni FWER
+
+- BH-FDR: 
+
+1. ordered $p$-values.
+
+2. Find the largest integer $k$ so that 
+$$
+\frac{p_{(k)} \times m}{k} \leq \alpha
+$$
+$$\text{or}$$
+$$
+p_{(k)} \leq k \times \alpha/m
+$$
+
+3. If such a $k$ exists, reject the $k$ null hypotheses associated with $p_{(1)}, \ldots, p_{(k)}$.
+Otherwise none of the null hypotheses is rejected.
+
+
+```{r echo=FALSE}
+alpha <- 0.05
+res <-  dti %>% 
+  select("z.value","p.value","padj") %>%
+  arrange(p.value)
+res$padjNonMonoForm  <- paste0(nrow(res)," x pval /",1:nrow(res))
+res$padjNonMono <- res$p.value *nrow(res) /(1:nrow(res))
+res$adjAlphaForm <- paste0(1:nrow(res)," x ",alpha,"/",nrow(res))
+res$adjAlpha <- alpha * (1:nrow(res))/nrow(res) 
+res$"pval < adjAlpha" <- res$p.value < res$adjAlpha 
+res$"padj < alpha" <- res$padj < alpha 
+res[1:10,] %>% knitr::kable()
+res[11:20,] %>% knitr::kable()
+res[21:30,] %>% knitr::kable()
+res[31:35,] %>% knitr::kable()
+```
+| ... | ... | ... | ... | ... | ... | ... | ... | ... |
+```{r echo=FALSE}
+res[nrow(res)-(3:0),] %>% knitr::kable()
+```
+
+```{r}
+pFDR <- dti %>%
+  ggplot(
+    aes(
+      coord.y,
+      coord.x,
+      color=zFDR)
+    ) +
+  geom_point() +
+  scale_colour_gradient2(low = "blue",mid="white",high="red") +
+  transition_manual(coord.z) +
+  labs(title = "transection z = {frame}") +
+  theme_grey()
+```
+
+### Visualisation of significant differences in brain activity at the 5% FDR
+
+```{r echo = FALSE, message = FALSE, eval=knitr::is_html_output()}
+animate(pFDR, nframes = 103, end_pause = 3)
+```
+
+---
+
+## Comments and Extensions
+
+- Benjamini and Hochberg published their method in 1995; it was one of the first FDR control methods.
+- The same authors published later yet other FDR control methods.
+- For this reason their 1995 method is often referred to as the Benjamini and Hochberg 1995 method, or BH95.
+- As input the method only needs the $p$-values from the $m$ hypotheses tests.
+- When controlling FDR, the adjusted $p$-values are often referred to as $q$-values.
+
+---
+
+- It is a **linear step-up procedure** : it starts from the least significant result (largest p-value) and steps-up to more significant results (lower p-values).
+- In FDR terminology the adjusted $p$-value is often referred to as a $q$-value.
+- The BH95 method assumes that all tests are mutually independent (or at least a particular form of positive dependence between the p-values).
+- When the assumptions hold, it guarantees
+  \[
+    \text{FDR}=\text{E}\left[TP/R\right]=\text{E}\left[\text{FDP}\right] \leq \frac{m_0}{m} \alpha \leq \alpha .
+  \]
+
+--- 
+
+### Extension
+
+Thus, if we knew $m_0$ (the number of true nulls), we could improve the method by applying it to the level $\alpha m/m_0$ (cfr. Bonferroni).
+
+ $\longrightarrow$ many FDR methods consist in estimating $m_0$ or the fraction of null genes $m_0/m$.
+
+
+The inequality
+\[
+  \text{FDR} \leq \frac{m_0}{m} \alpha \leq \alpha
+\]
+shows that BH1995 is a conservative method, i.e. it controls the FDR at the safe side, i.e. when one is prepared to control the FDR at the nominal level $\alpha$, the BH95 will guarantee that the true FDR is not larger than the nominal level (when the assumptions hold).
+
+- More interestingly is that $\frac{m_0}{m} \alpha$ is in between the true FDR and the nominal FDR. 
+
+- Suppose that $m_0$ were known and that the BH95 method were applied at the nominal FDR level of $\alpha=m/m_0 \alpha^*$, in which $\alpha^*$ is the FDR level we want to control. Then the inequality gives
+\[
+  \text{FDR} \leq \frac{m_0}{m} \alpha = \frac{m_0}{m} \frac{m}{m_0}\alpha^* = \alpha^* ,
+\]
+and hence BH95 would better control the FDR  at $\alpha^*$.
+
+- Note that $\alpha=m/m_0 \alpha^*>\alpha^*$ and hence the results is less conservative than the original BH95 method.
+
+---
+
+The above reasoning implies a **generalized adaptive linear step-up procedure**:
+
+- estimate $m_0$: $\hat{m}_0$
+- of $\hat{m}_0=0$, reject all null hypotheses;
+ otherwise, apply the step-up procedure of BH 95 at the level $\alpha=m \alpha^*/\hat{m}_0$ to control the FDR at $\alpha^*$.
+
+The adjusted $p$-values (=$q$-values) are obtained as
+\[
+  \tilde{p}_{(i)} = \frac{\hat{m}_0}{m} \min\left\{\min_{j=i,\ldots, m}\{m p_{(j)}/j\} ,1 \right\}.
+\]
+
+- Many FDR procedures can be fit into this definition (e.g. Benjamini and Hochberg (2000) and Tibshirani (2003)).
+- We do not give details on the methods for estimating $m_0$, but some of them are implemented in the R software. On the next page we illustrate with simulated data that BH can be improved with estimated $m_0$.
+
+---
+
+### Other important considerations
+
+- It can be shown  that the BH-FDR method weakly controls the FWER, i.e. it controls the FWER if all features are false ($m_0=m$).
+
+- The BH-FDR is derived under the assumption of independence of the features and has been shown to be only valid under special forms of dependence between the features.
+
+
+# local fdr
+
+## Introduction
+
+Suppose that the test statistic for testing $H_{0i}$ is denoted by $z_i$, and that the test statistics have a $N(0,1)$ null distribution.
+
+If all $m$ null hypotheses are true, the histogram of the $m$ test statistics should approximate the theoretical null distribution (density $f_0(z)$).
+
+```{r echo=FALSE}
+p1
+```
+
+Assuming that the test statistic has a standard normal null distribution is not restrictive. For example, suppose that $t$-tests have been applied and that the null distribution is $t_d$, with $d$ representing the degrees of freedom. Let $F_{td}$ denote the distribution function of $t_d$ and let $\Phi$ denote the distribution function of the standard normal distribution. If $T$ denotes the $t$-test statistic, then, under the null hypothesis,
+\[
+  T \sim t_d
+\]
+and hence
+\[
+  F_{td}(T) \sim U[0,1]
+\]
+and
+\[
+  Z = \Phi^{-1}(F_{td}(T)) \sim N(0,1).
+\]
+If all $m$ null hypotheses are true, then each of the $Z_i$ is $N(0,1)$ and the set of $m$ calculated $z_i$ test statistics may be considered as a sample from $N(0,1)$. Hence, under these conditions we expect the histogram of the $m$ $z_i$'s to look like the density of the null distribution.
+
+## Two group model
+
+- Suppose that under the alternative hypothesis the test statistic has density function $f_1(z)$.
+
+- We use the term "null" to refer to a case $i$ for which $H_{0i}$ is true, and "non-null" for a case $i$ for which $H_{0i}$ is not true.
+
+
+- Consider the **prior probabilities**
+\[
+  \pi_0 = \text{P}\left[\text{null}\right] \text{ and } \pi_1=\text{P}\left[\text{non-null}\right] = 1-\pi_0.
+\]
+
+- The marginal distribution of the $m$ test statistics is then given by the **mixture distribution**
+
+\[
+  f(z) = \pi_0 f_0(z) + \pi_1 f_1(z)
+\]
+
+### Examples of mixture distributions
+
+We have already explored mixture distributions in detail in the paper reading session on model based clustering.
+
+- blue: $f_0$: $N(0,1)$, red: $f_1$: $N(1,1)$
+
+```{r}
+components <- tibble(z = seq(-6,6,.01)) %>%
+  mutate(
+    f0 = dnorm(z),
+    f1 = dnorm(z, mean = 1))
+
+components %>%
+  gather(component, density, -z) %>%
+  ggplot(aes(z,density,color = component)) +
+  geom_line() +
+  scale_color_manual(values=c("blue","red"))
+ ```
+
+The graphs shows the two component distributions separately.
+
+
+---
+
+- blue: $\pi_0 \times f_0$ with $\pi_0=0.9$ and $f_0 = N(0,1)$
+- red: $\pi_1\times f_1$ with $\pi_1=1-\pi_0=0.1$ and $f_1 = N(1,1)$
+
+```{r}
+p0 <- 0.9
+p1 <- 1-p0
+mu1 <- 1
+scaledComponents <- tibble(z = seq(-6,6,.01)) %>%
+  mutate(
+    p0xf0 = dnorm(z) * p0,
+    p1xf1 = dnorm(z, mean = mu1)*p1
+    )
+
+scaledComponents %>%
+  gather(component, density, -z) %>%
+  ggplot(aes(z,density,color = component)) +
+  geom_line() +
+  scale_color_manual(values=c("blue","red")) +
+  ggtitle("Scaled components")
+```
+
+---
+
+Mixture distribution
+
+- blue: $\pi_0 \times f_0$ with $\pi_0=0.9$ and $f_0 = N(0,1)$
+- red: $\pi_1\times f_1$ with $\pi_1=1-\pi_0=0.1$ and $f_1 = N(1,1)$
+- black: $f=\pi_0 f_0 + \pi_1 f_1$
+
+```{r}
+scaledComponents %>%
+  mutate(f=p0xf0+p1xf1) %>%
+  gather(component, density, -z) %>%
+  ggplot(aes(z,density,color = component)) +
+  geom_line() +
+  scale_color_manual(values=c("black","blue","red")) +
+  ggtitle("Mixture and scaled components")
+```
+
+---
+
+Mixture $\pi_0 f_0(z)+\pi_1 f_1(z)$ with $\pi_0=0.65$ and $f_1= N(2,1)$ and $f_0 = N(0,1)$
+
+```{r}
+```{r}
+p0 <- 0.65
+p1 <- 1-p0
+mu1 <- 2
+scaledComponents <- tibble(z = seq(-6,6,.01)) %>%
+  mutate(
+    p0xf0 = dnorm(z) * p0,
+    p1xf1 = dnorm(z, mean = mu1)*p1)
+
+scaledComponents %>%
+  mutate(f=p0xf0+p1xf1) %>%
+  gather(component, density, -z) %>%
+  ggplot(aes(z,density,color = component)) +
+  geom_line() +
+  scale_color_manual(values=c("black","blue","red")) +
+  ggtitle("Mixture and scaled components (p0 = 0.35)")
+```
+
+### simulations
+
+Simulated data: 20000 $z$-statistics with $\pi_1=0.10$ non-nulls with $f_1=N(1,1)$.
+
+```{r}
+p0 <- .9
+p1 <- 1-p0
+mu1 <- 1
+m <- 20000
+
+zSim <- c(
+  rnorm(m * p0),
+  rnorm(m * p1, mean=mu1)
+  )
+
+zSim %>%
+  as_tibble %>%
+  ggplot(aes(x = zSim)) +
+  geom_histogram(
+    aes(y=..density..),
+    color = "black") +
+  stat_function(fun = dnorm,
+    args = list(
+      mean = 0,
+      sd=1),
+    color="blue")
+```
+
+It is hard to see the difference between the histogram and the density function of the null distribution (blue curve), because the mean of $f_1$ is not much larger than 0 and because only $\pi_1=10\%$ non-nulls are included and because the alternative is not far from the null distribution. However, this is not an unrealistic setting.
+
+Note, that in most settings the non-null features will originate from a mixture of multiple distributions with positive and negative means.
+Fortunately, the local fdr method does not require us to estimate $f_1$ as we will see further.
+
+---
+
+## local fdr
+
+We can now calculate the probability that a case is a null given the observed $z$,
+\[
+  \text{P}\left[\text{null}\mid z\right] = \frac{\pi_0 f_0(z)}{f(z)} .
+\]
+This probability is referred to as the **local false discovery rate**, and denoted by fdr$(z)$.
+
+If for an observed $z$, fdr$(z)$ is sufficiently small, one may believe that the case is a true discovery (i.e. $H_{0i}$ may be rejected).
+
+### Link with FDR
+
+Recall the definition of the FDR,
+\begin{eqnarray}
+\text{FDR}
+&=& \text{E}\left[FP/R\right] \\
+&=& \text{E}\left[\text{number of nulls among rejected} / \text{number of rejected}\right] \\
+&=& \text{P}\left[\text{null} \mid \text{rejected}\right]
+\end{eqnarray}
+
+---
+
+
+- The FDR is to be interpreted as an overall risk: *among all rejected hypotheses* (discoveries) it gives the expected fraction (or probability) of a null (false discovery).
+
+- The local fdr, on the other hand, is to be interpreted as a risk for a specific decision: if a null hypothesis is rejected based on a test statistic value of $z$, then the local fdr gives the probability of that single discovery being a false discovery.
+
+- Since the local fdr has a clear interpretation that applies to an individual hypothesis test, it can be used to decide whether or not to reject a null hypothesis.
+
+- In particular, reject a null hypothesis $H_{0i}$ if fdr$(z)<\alpha$, where $\alpha$ is the nominal local fdr level at which the multiple testing problem need to be controlled at.
+
+- The local fdr method can only be applied if $\pi_0$ and $f$ can be estimated from the data (see later).  The density $f_0$ can be either known (null distribution of the test statistic) or it can be estimated from the observed $m$ test statistics.
+
+---
+
+For the sake of simplicity, suppose that $H_{0i}$ is tested against a one-sided alternative and that $H_{0i}$ is rejected for small $z$, i.e.
+
+\[H_0: z = 0 \text{ vs } H_1: z < 0\]
+
+Suppose that all $H_{0i}$ are rejected for which the observed test statistic is at most $z$, then we can write
+
+\begin{eqnarray}
+\text{FDR}(z)
+&=& \text{P}\left[\text{null} \mid \text{rejected}\right] \\\\
+&=& \text{P}\left[\text{null} \mid Z\leq z\right] \\\\
+&=& \text{E}_{Z}\left\{\text{P}\left[\text{null} \mid Z\right] \mid Z\leq z\right\} \\\\
+&=& \text{E}_{Z}\left[\text{fdr}(Z) \mid Z\leq z\right] \\\\
+&=& \frac{\int_{-\infty}^z \text{fdr}(u) f(u) du}{\int_{-\infty}^z f(u) du} \\\\
+&=& \frac{\pi_0\int_{-\infty}^z  f_0(u) du}{F(z)} \\\\
+&=& \frac{\pi_0 F_0(z)}{F(z)} .
+\end{eqnarray}
+
+This shows that fdr$(z)=\frac{\pi_0 f_0(z)}{f(z)}$ and $\text{FDR}(z)=\frac{\pi_0 F_0(z)}{F(z)}$ have similar expression. The former is expressed in terms of density functions, and the latter in terms of the corresponding cumulative distribution functions.
+
+From the equality
+\[
+  \text{FDR}(z) =  \frac{\int_{-\infty}^z \text{fdr}(u) f(u) du}{\int_{-\infty}^z f(u) du}
+\]
+
+we learn that the probability for a false discovery among hypotheses rejected by using threshold $z$, equals the average of the local false discovery rates fdr$(u)$ of the discoveries ($u\leq z$ here).
+
+Note, that the BH-FDR adopts
+
+- $\pi_0=1$, which is a conservative estimate
+- uses the theoretical null for $p=F_0(z)$
+- uses the empirical cumulative distribution function
+ $\bar F(z) = \frac{\#Z < z}{m}$ to estimate $F(z)$.
+
+A similar identity can be easily shown for two-sided tests.
+
+###   Estimation of fdr$(z)=\frac{\pi_0 f_0(z)}{f(z)}$
+
+- $f(z)$ can be estimated by nonparametric density estimation methods ($f(z)$ is the marginal distribution of the test statistics; no knowledge about null / non-null is needed)
+
+- $f_0(z)$ is known or can be estimated from the data
+
+-  $\pi_0$ can be estimated once $f(z)$ and $f_0(z)$ are estimated for all $z$.
+
+---
+
+### Brainscan example
+
+```{r}
+library(locfdr)
+lfdr <- locfdr(dti$z.value, nulltype = 0)
+```
+
+- In the brainscan example the test statistics are supposed to be $N(0,1)$ distributed under the null hypothesis. Tests are performed two-sided.
+
+- The argument `nulltype=0` specifies that the null distribution ($f_0$) is $N(0,1)$.
+
+- The dashed blue line gives $f_0$ and the solid green line is the nonparametric estimate of the marginal density function $f$. The two densities do not coincide and hence we may anticipate that some of the voxels show differential brain activity.
+
+- The purple bars indicate the estimated number of non-nulls (among the hypotheses/voxels for a given $z$-value). The plots shows that more non-nulls are expected for the negative $z$-values than for the positive $z$-values (sign of $z$ corresponds to more or less brain activity in normal versus dyslectic children).
+
+### Problems?
+
+Note, however, that
+
+- we typically expect that the majority of the test statistics follow the null distribution.
+- that the null distribution in the plot is rescaled
+- So, we would expect that the two distributions to overlay in the middle part.
+- However, we observe a shift.
+
+In practise it often happens that the theoretical null distribution is not valid.
+
+This can happen due to
+
+1. Failed mathematical assumptions: null distribution is incorrect
+2. Correlation between the samples
+3. Correlation between the features
+4. Confounding that is not corrected for.
+
+## Advantage of having a massive parallel data structure
+
+The massive parallel data structure enables us
+
+- to spot deviations from the theoretical null distribution.
+- to estimate the null distribution by using all features.
+
+Efron relaxes the local fdr method by assuming that the null distribution is a Normal distribution but with a mean and variance that can be estimated empirically (based on all the features).
+
+This can be done by setting the argument `nulltype` in the locfdr function equal to `nulltype = 1`, which is the default or be setting `nulltype = 2`.
+
+The locfdr method then uses
+
+1. `nulltype = 1` maximum likelihood to estimate the null by only considering the middle part in the distribution of the test statistics (MLE) or
+2. `nulltype = 2` a geometric method that places the best fitting normal under the peak of the estimate of f(z). (CME)
+
+### Brainscan example
+
+```{r}
+lfdr <- locfdr(dti$z.value)
+```
+
+The plot shows that the null distribution is shifted to negative values and has a standard deviation that remains close to 1.
+
+- This often happens if there is correlation between the features.
+
+- Spatial correlation can be expected in the brain, so voxels that are close to each-other typically will be correlated.
+
+- The dashed blue line gives $f_0$ and the solid green line is the nonparametric estimate of the marginal density function $f$. The two densities do not coincide and hence we may anticipate that some of the voxels show differential brain activity.
+
+- The purple bars indicate the estimated number of non-nulls (among the hypotheses/voxels for a given $z$-value). The plots shows that only non-nulls for positive $z$-values are expected (sign of $z$ corresponds to more or less brain activity in normal versus dyslectic children).
+
+---
+
+```{r}
+lfdr <- locfdr(dti$z.value, plot=2)
+```
+
+- The plot at the left is the same as on the previous page.
+
+- The plot at the right shows the local fdr as the black solid line. Close to $z=0$ the fdr is about 1 (i.e. if those hypotheses would be rejected, the probability of a false positive is about $100\%$). When moving away from $z=0$ to larger values the fdr drops.
+
+- This means that we can only discover convincingly differential brain activity for large positive $z$. Rejecting null hypotheses with large negative $z$ would still be risky: large chance of false discovery.
+
+- The reason can be read from the first graph: for negative $z$ the ratio $f_0(z)/f(z)$ is almost 1, whereas for large positive $z$ the ratio $f_0(z)/f(z)$ becomes small.
+
+- Note, that the result is atypically. In most applications we typically pick-up both downregulated (negative z) and upregulated (positive z) features.
+
+---
+
+```{r}
+dti <- dti %>%
+  mutate(
+    lfdr = lfdr$fdr,
+    zfdr = (lfdr<0.2) * z.value)
+
+pfdr <- dti %>%
+  ggplot(
+    aes(
+      coord.y,
+      coord.x,
+      color=zfdr)
+    ) +
+  geom_point() +
+  scale_colour_gradient2(low = "blue",mid="white",high="red") +
+  transition_manual(coord.z) +
+  labs(title = "transection z = {frame}") +
+  theme_grey()
+```
+
+```{r echo=FALSE, message=FALSE, eval=knitr::is_html_output()}
+animate(pfdr, nframes = 103, end_pause = 3)
+```
+
+Note, that the local fdr method allows us to detect differential brain activity in a specific region in the front part of the brain for which a larger fractional anisotropy is observed on average for childeren having dyslexia.
+
+We can also estimate the FDR of the set that we return as the average local fdr in this set.
+
+```{r}
+dti %>%
+  filter(lfdr < 0.2) %>%
+  pull(lfdr) %>%
+  mean
+```
+
+## Power
+
+
+The local false discovery rate may also be used to get **power diagnostics**.
+
+General idea: for $z$'s supported by the alternative hypothesis (i.e. large $f_1(z)$), we hope to see small fdr$(z)$.
+
+The **expected fdr** is an appropriate summary measure:
+\[
+  \text{Efdr} = \text{E}_{f1}\left[\text{fdr}(Z)\right] = \int_{-\infty}^{+\infty} \text{fdr}(z) f_1(z) dz.
+\]
+
+With estimates of fdr$(z)$ and $f_1(z)$, the Efdr can be computed.
+
+A small Efdr is an indication of a powerful study.
+
+```{r}
+lfdr <- locfdr(dti$z.value, plot = 3)
+```
+
+With $\alpha$ the nominal local fdr level, the vertical axis gives
+\[
+  \text{E}_{f_1}\left[\text{fdr}(Z)<\alpha\right].
+\]
+
+where $Z$ is the test statistic distributed under the alternative hypothesis ($f_1$).
+
+- This probability $\text{P}_{f_1}\left[\text{fdr}(Z)<\alpha\right]$ is a kind of extension of the definition of the power of a test: it is the probability that a non-null can be detected when the nominal local fdr is set at $\alpha$.
+
+- The graph shows, for examples, that with $\alpha=0.20$ we only have $\text{P}_{f_1}\left[\text{fdr}(Z)<\alpha\right] =0.24$, i.e. only $24\%$ of the non-nulls are expected to be discovered.
+
+- At the bottom of the graph we read Efdr$=0.486$. Hence, the local fdr for a typical non-null feature is expected to be 48.6% which is rather large. The study is not well powered!
+
+## Comparison with gene expression study
+
+- HIV dataset: 7680 z-values, each relating to a two-sample t-test comparing gene expression of 4 normal to 4 HIV patients.
+
+```{r}
+data(hivdata)
+res <- locfdr(hivdata,plot=2)
+res <- locfdr(hivdata,plot=3)
+```
+
+```{r}
+mean(res$fdr[res$fdr<0.2])
+```
