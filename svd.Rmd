@@ -7,6 +7,7 @@ output:
     toc: true
     number_sections: true
     latex_engine: xelatex
+always_allow_html: true
 ---
 
 # Introduction
@@ -829,11 +830,11 @@ Here we need at least 40 singular vector. This leads to a data compression of $1
 # Geometric interpretation
 
 <div style="position: relative;width: 100%;height: 0;padding-bottom: 56.25%;">
-<iframe 
-src="https://www.youtube.com/embed/srUDBwP9IW8" 
+<iframe
+src="https://www.youtube.com/embed/srUDBwP9IW8"
 style=" position:absolute;top: 0;left: 0;width: 100%;height: 100%;"
 frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div> 
+</div>
 
 </br>
 
@@ -948,7 +949,7 @@ p3 %>%
     )
 ```
 
-## SVD iris dataset 
+## SVD iris dataset
 
 1. We adopt the SVD on the centered data
 

@@ -55,6 +55,5 @@ output:
       include:
         after_body: footer.html
       css: style.css
-always_allow_html: true
 new_session: true
 exclude: ["renv.lock", "raw-data"]
