@@ -43,7 +43,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-### [Change log](https://github.com/statOmics/HDDA21/commits/master/Lab4-Sparse-PCA-LDA.Rmd) {-}
+### [Change log](https://github.com/statOmics/HDDA/commits/master/Lab4-Sparse-PCA-LDA.Rmd) {-}
 
 ***
 

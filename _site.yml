@@ -1,7 +1,7 @@
-name : "HDDA21"
-title : "High Dimensional Data Analysis 2021 (HDDA21)"
+name : "HDDA"
+title : "High Dimensional Data Analysis (HDDA)"
 navbar:
-  title: "HDDA21"
+  title: "HDDA"
   left:
     - icon: fa-home
       href: index.html
@@ -39,7 +39,7 @@ navbar:
     - text: "About"
       href: about.html
     - icon: fab fa-github
-      href: https://github.com/statOmics/HDDA21
+      href: https://github.com/statOmics/HDDA
     - text: "statOmics"
       href: http://statomics.github.io/
 output:
@@ -55,6 +55,6 @@ output:
       include:
         after_body: footer.html
       css: style.css
-      always_allow_html: true
+always_allow_html: true
 new_session: true
 exclude: ["renv.lock", "raw-data"]

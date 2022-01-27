@@ -37,7 +37,7 @@ A primer to R and Data visualisation  in R can be found in:
 
 ## Issues
 
-If you encounter any problems related to the course material (e.g. package installation problems, bugs in the code, typos, ...), please consider [posting an issue on GitHub](https://github.com/statOmics/HDDA21/issues).
+If you encounter any problems related to the course material (e.g. package installation problems, bugs in the code, typos, ...), please consider [posting an issue on GitHub](https://github.com/statOmics/HDDA/issues).
 
 Questions related to the course contents can be asked by posting on
 [UFora](https://ufora.ugent.be/d2l/home/444226), by contacting the teachers by

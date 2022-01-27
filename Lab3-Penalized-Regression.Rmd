@@ -19,7 +19,7 @@ options(
 )
 ```
 
-### [Change log](https://github.com/statOmics/HDDA21/commits/master/Lab3-Penalized-Regression.Rmd) {-}
+### [Change log](https://github.com/statOmics/HDDA/commits/master/Lab3-Penalized-Regression.Rmd) {-}
 
 ***
 

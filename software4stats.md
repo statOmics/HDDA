@@ -27,7 +27,7 @@ Please make sure that your computer’s hardware is sufficiently powered (>4 GB 
 6. In an R session within the R project you just created, install the *renv* environment for this course by running
 
 	```r
-	url <- "https://raw.githubusercontent.com/statOmics/HDDA21/master/renv.lock"
+	url <- "https://raw.githubusercontent.com/statOmics/HDDA/master/renv.lock"
 	renv::restore(lockfile = url)
 
 	## Optionally, record the status of your local renv library
