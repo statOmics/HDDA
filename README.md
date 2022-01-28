@@ -2,8 +2,7 @@
 
 [![Render and Deploy](https://github.com/statOmics/HDDA/workflows/Render%20and%20Deploy/badge.svg)](https://github.com/statOmics/HDDA/actions)
 
-Course site for High Dimensional Data Analysis for the Master of statistical
-data analysis at Ghent University.
+Course site for the High Dimensional Data Analysis course at Ghent University.
 
 https://statomics.github.io/HDDA/
 
