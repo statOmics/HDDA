@@ -35,6 +35,10 @@ A primer to R and Data visualisation  in R can be found in:
 
 - R Data Exploration: <https://dodona.ugent.be/nl/courses/345/>
 
+## Software requirements
+
+See the [installation instructions](./installation-instructions.html).
+
 ## Issues
 
 If you encounter any problems related to the course material (e.g. package installation problems, bugs in the code, typos, ...), please consider [posting an issue on GitHub](https://github.com/statOmics/HDDA/issues).
@@ -50,7 +54,6 @@ email or during the lectures or practical sessions.
 ### 1. Introduction
 
   - Slides: [Lecture 1: Intro](./intro0.html)
-  - Software: [Install and Launch Statistical Software](./software4stats.html)
   - [Introduction](./intro.html) [[PDF](./intro.pdf)]
   - [Introduction to RMarkdown](./Introduction-RMarkdown.html)
   - [Introduction to matrices in R](./Introduction-Matrices-R.html)
