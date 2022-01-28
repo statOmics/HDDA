@@ -19,11 +19,14 @@ jobs:
           fetch-depth: 0
 
       - uses: r-lib/actions/setup-r@v1
-      - uses: r-lib/actions/setup-renv@v1
+
+      - name: Install dependencies
+        run: |
+          Rscript --vanilla -e 'install.packages(c("renv", "jsonlite"), repos = "https://cloud.r-project.org")'
 
       - name: Update install.R script
         run: |
-          Rscript update_install_R.R
+          Rscript --vanilla update_install_R.R
 
       - name: Commit results
         run: |
