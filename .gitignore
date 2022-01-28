@@ -11,6 +11,8 @@ course_admin/
 *_cache/
 _site/
 site_libs/
+*.log
+*.tex
 
 raw-data/
 

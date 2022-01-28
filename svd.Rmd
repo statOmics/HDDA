@@ -1117,30 +1117,32 @@ Note that
 
 More importantly, it can be shown that (thanks to orthonormality of $\mathbf{V}$)
 \[
-\mathbf{X}\mathbf{V}_k = \mathbf{Z}_k.
+    \mathbf{X}\mathbf{V}_k = \mathbf{Z}_k.
 \]
 
 This follows from (w.l.g. rank($\mathbf{X}$)=$r$)
+
 \begin{eqnarray*}
-\mathbf{X}\mathbf{V}_k
-&=& \mathbf{UDV}^T\mathbf{V}_k = \mathbf{UD}\begin{pmatrix}
-\mathbf{v}_1^T \\
-\vdots \\
-\mathbf{v}_r^T
-\end{pmatrix}
-\begin{pmatrix}
-\mathbf{v}_1 \ldots \mathbf{v}_k
-\end{pmatrix} \\
-&=& \mathbf{UDV}^T\mathbf{V}_k = \mathbf{UD}\begin{pmatrix}
-1 & 0 & \ldots & 0 \\
-0 & 1 & \ldots & 0 \\
-\vdots & \vdots & \ddots & 0 \\
-0 & 0 & \ldots & 1 \\
-0 & 0 & \ldots & 0 \\
-\vdots & \vdots & \vdots & \vdots \\
-0 & 0 & \ldots & 0
-\end{pmatrix} \
-= \mathbf{U}_k\boldsymbol{\Delta}_k = \mathbf{Z}_k \end{eqnarray*}
+  \mathbf{X}\mathbf{V}_k
+      &=& \mathbf{UDV}^T\mathbf{V}_k = \mathbf{UD}\begin{pmatrix}
+              \mathbf{v}_1^T \\
+        \vdots \\
+        \mathbf{v}_r^T
+              \end{pmatrix}
+              \begin{pmatrix}
+                \mathbf{v}_1 \ldots \mathbf{v}_k
+              \end{pmatrix} \\
+      &=& \mathbf{UDV}^T\mathbf{V}_k = \mathbf{UD}\begin{pmatrix}
+              1 & 0 & \ldots & 0 \\
+              0 & 1 & \ldots & 0 \\
+              \vdots & \vdots & \ddots & 0 \\
+              0 & 0 & \ldots & 1 \\
+              0 & 0 & \ldots & 0 \\
+              \vdots & \vdots & \vdots & \vdots \\
+              0 & 0 & \ldots & 0
+              \end{pmatrix} \
+              = \mathbf{U}_k\boldsymbol{\Delta}_k = \mathbf{Z}_k
+\end{eqnarray*}
 
 The $p \times k$ matrix $\mathbf{V}_k$ acts as a transformation matrix: transforming $n$ points in a $p$ dimensional space to $n$ points in a $k$ dimensional space.
 
