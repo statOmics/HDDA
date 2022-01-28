@@ -15,7 +15,7 @@
 
 <title>Introduction to RMarkdown</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -675,7 +675,7 @@ div.tocify {
 <span id="cb12-2"><a href="#cb12-2"></a><span class="co"># (mean = 0, standard deviation = 1)</span></span>
 <span id="cb12-3"><a href="#cb12-3"></a>draws &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</span>
 <span id="cb12-4"><a href="#cb12-4"></a><span class="kw">head</span>(draws)</span></code></pre></div>
-<pre><code>## [1] -0.81649585 -0.36016359  0.06334312  0.44010941 -1.06157975  0.11578355</code></pre>
+<pre><code>## [1]  2.23344322 -0.86771004 -0.11006888  0.02282545  1.27502791  0.84888483</code></pre>
 </div>
 <div id="getting-help-in-r" class="section level2">
 <h2><span class="header-section-number">2.5</span> Getting help in R: <code>?</code></h2>
@@ -685,7 +685,7 @@ div.tocify {
 <p>The solution is to specify the <code>mean</code> and <code>sd</code> arguments.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>draws2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">5</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="kw">head</span>(draws2)</span></code></pre></div>
-<pre><code>## [1] 3.354126 4.445041 6.629474 4.203482 8.098818 6.161438</code></pre>
+<pre><code>## [1] 5.108483 7.018284 9.047853 6.155680 5.563944 4.187075</code></pre>
 <p>Each built-in R function or functions loaded through a package has a help page. In addition, there is a wealth of information through the wonderful magic of <a href="https://www.google.com/">Google</a>. Another great place to look for answers or ask questions yourself is <a href="https://stackoverflow.com/">StackOverflow</a>.</p>
 </div>
 <div id="tidyverse" class="section level2">
@@ -719,10 +719,11 @@ div.tocify {
 <h3><span class="header-section-number">2.7.2</span> ggplot2</h3>
 <p>Although powerful, the base R visualization framework can be somewhat challenging to work with. A good alternative is the <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code> package</a>, part of the larger <code>tidyverse</code> which includes more useful packages for data manipulation and analysis. <code>ggplot2</code> uses a visualization framework based on the <a href="https://ggplot2-book.org/introduction.html#what-is-the-grammar-of-graphics"><em>grammar of graphics</em> philosophy</a>, which we won’t get further into here but which can be quite an intuitive way to think about data visualizations.</p>
 <p><code>ggplot2</code> works best with a <code>data.frame</code> as input. As an example, we’ll use the <code>mtcars</code> data, which is available by default in every R installation (for more info on this data set, see <code>?mtcars</code>). With just a few lines, we can create already quite elegant visualizations:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">library</span>(ggplot2)</span>
-<span id="cb20-2"><a href="#cb20-2"></a></span>
-<span id="cb20-3"><a href="#cb20-3"></a><span class="kw">ggplot</span>(mpg, <span class="kw">aes</span>(displ, hwy, <span class="dt">colour =</span> class)) <span class="op">+</span></span>
-<span id="cb20-4"><a href="#cb20-4"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">library</span>(ggplot2)</span></code></pre></div>
+<pre><code>## Warning in register(): Can&#39;t find generic `scale_type` in package ggplot2 to
+## register S3 method.</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">ggplot</span>(mpg, <span class="kw">aes</span>(displ, hwy, <span class="dt">colour =</span> class)) <span class="op">+</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
 <p><img src="Introduction-RMarkdown_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>You could perfectly recreate this plot with base R, but it’s going to take more lines of code and potential headaches. Still, both frameworks have their strengths and weaknesses and they are complementary in many ways, so it pays to learn both of them rather than stubbornly sticking to one.</p>
 <p>There are tons of documentation and tutorials on <code>ggplot2</code> to be found online. A good place to start is <a href="https://ggplot2.tidyverse.org/" class="uri">https://ggplot2.tidyverse.org/</a>.</p>
@@ -732,19 +733,19 @@ div.tocify {
 <h2><span class="header-section-number">2.8</span> Importing data</h2>
 <p>See <a href="https://r4ds.had.co.nz/data-import.html" class="uri">https://r4ds.had.co.nz/data-import.html</a>.</p>
 <p>Note that both the base <code>read.csv</code> and the <em>tidyverse</em> equivalent <code>readr::read_csv()</code> can both use URLs to read in data. That way you don’t have to download the data locally on your machine or worry about different versions.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co">## Example from HDA2020 course (https://statomics.github.io/HDA2020/)</span></span>
-<span id="cb21-2"><a href="#cb21-2"></a>uk_foods &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(</span>
-<span id="cb21-3"><a href="#cb21-3"></a>  <span class="dt">file =</span> <span class="st">&quot;https://raw.githubusercontent.com/statOmics/HDA2020/data/ukFoods.csv&quot;</span>,</span>
-<span id="cb21-4"><a href="#cb21-4"></a>  <span class="dt">col_names =</span> <span class="ot">TRUE</span></span>
-<span id="cb21-5"><a href="#cb21-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co">## Example from HDA2020 course (https://statomics.github.io/HDA2020/)</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>uk_foods &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(</span>
+<span id="cb23-3"><a href="#cb23-3"></a>  <span class="dt">file =</span> <span class="st">&quot;https://raw.githubusercontent.com/statOmics/HDA2020/data/ukFoods.csv&quot;</span>,</span>
+<span id="cb23-4"><a href="#cb23-4"></a>  <span class="dt">col_names =</span> <span class="ot">TRUE</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a>)</span></code></pre></div>
 <pre><code>## New names:
 ## * `` -&gt; ...1</code></pre>
-<pre><code>## Rows: 17 Columns: 5</code></pre>
-<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+<pre><code>## Rows: 17 Columns: 5
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): ...1
-## dbl (4): England, Wales, Scotland, N.Ireland</code></pre>
-<pre><code>## 
+## dbl (4): England, Wales, Scotland, N.Ireland
+## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>uk_foods</span></code></pre></div>
@@ -881,18 +882,21 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 <p>Finally, it’s always good practice to include the <a href="">Session Info</a> for your R session in your document. That way, other persons (including your future self) looking at your document can see what versions of R and loaded packages were used, which can be quite essential for reproducibility.</p>
 <p>You can also include the date with <code>Sys.time()</code> so you have a time stamp of when the report was compiled.</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">Sys.time</span>()</span></code></pre></div>
-<pre><code>## [1] &quot;2022-01-28 13:56:30 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2022-01-28 17:48:49 UTC&quot;</code></pre>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.1.2 (2021-11-01)
-## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Big Sur 10.16
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.3 LTS
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+##  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+##  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+##  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+## [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
@@ -901,24 +905,24 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 ## [1] ggplot2_3.3.5
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.1.1    xfun_0.25           bslib_0.3.0        
+##  [1] tidyselect_1.1.1    xfun_0.29           bslib_0.3.1        
 ##  [4] purrr_0.3.4         colorspace_2.0-2    vctrs_0.3.8        
-##  [7] generics_0.1.0      htmltools_0.5.2     yaml_2.2.1         
-## [10] utf8_1.2.2          rlang_0.4.11        jquerylib_0.1.4    
-## [13] pillar_1.6.3        glue_1.4.2          withr_2.4.2        
-## [16] DBI_1.1.1           bit64_4.0.5         lifecycle_1.0.1    
+##  [7] generics_0.1.1      htmltools_0.5.2     yaml_2.2.2         
+## [10] utf8_1.2.2          rlang_1.0.0         jquerylib_0.1.4    
+## [13] pillar_1.6.5        glue_1.6.1          withr_2.4.3        
+## [16] DBI_1.1.2           bit64_4.0.5         lifecycle_1.0.1    
 ## [19] stringr_1.4.0       munsell_0.5.0       gtable_0.3.0       
-## [22] evaluate_0.14       labeling_0.4.2      knitr_1.33         
-## [25] tzdb_0.1.2          fastmap_1.1.0       parallel_4.1.2     
-## [28] curl_4.3.2          fansi_0.5.0         highr_0.9          
-## [31] readr_2.0.1         renv_0.15.2         scales_1.1.1       
-## [34] BiocManager_1.30.16 vroom_1.5.4         jsonlite_1.7.2     
+## [22] evaluate_0.14       labeling_0.4.2      knitr_1.37         
+## [25] tzdb_0.2.0          fastmap_1.1.0       curl_4.3.2         
+## [28] parallel_4.1.2      fansi_1.0.2         highr_0.9          
+## [31] readr_2.1.1         renv_0.15.2         scales_1.1.1       
+## [34] BiocManager_1.30.16 vroom_1.5.7         jsonlite_1.7.3     
 ## [37] farver_2.1.0        bit_4.0.4           hms_1.1.1          
-## [40] digest_0.6.28       stringi_1.7.4       dplyr_1.0.7        
+## [40] digest_0.6.29       stringi_1.7.6       dplyr_1.0.7        
 ## [43] grid_4.1.2          cli_3.1.1           tools_4.1.2        
-## [46] magrittr_2.0.1      sass_0.4.0          tibble_3.1.5       
-## [49] crayon_1.4.1        pkgconfig_2.0.3     ellipsis_0.3.2     
-## [52] assertthat_0.2.1    rmarkdown_2.10      R6_2.5.1           
+## [46] magrittr_2.0.2      sass_0.4.0          tibble_3.1.6       
+## [49] crayon_1.4.2        pkgconfig_2.0.3     ellipsis_0.3.2     
+## [52] assertthat_0.2.1    rmarkdown_2.11      R6_2.5.1           
 ## [55] compiler_4.1.2</code></pre>
 </div>
 

@@ -14,7 +14,7 @@
 
 <title>Lab 1: Introduction and Singular Value Decomposition</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -1359,93 +1359,93 @@ div.tocify {
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>#&gt; [1] &quot;2022-01-28 13:56:38 UTC&quot;
+<pre><code>#&gt; [1] &quot;2022-01-28 17:48:53 UTC&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.2 (2021-11-01)
-#&gt;  os       macOS Big Sur 10.16
-#&gt;  system   x86_64, darwin17.0
+#&gt;  os       Ubuntu 20.04.3 LTS
+#&gt;  system   x86_64, linux-gnu
 #&gt;  ui       X11
 #&gt;  language (EN)
-#&gt;  collate  en_US.UTF-8
-#&gt;  ctype    en_US.UTF-8
+#&gt;  collate  C.UTF-8
+#&gt;  ctype    C.UTF-8
 #&gt;  tz       UTC
 #&gt;  date     2022-01-28
-#&gt;  pandoc   2.7.3 @ /usr/local/bin/ (via rmarkdown)
+#&gt;  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
 #&gt; 
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
 #&gt;  ! package     * version date (UTC) lib source
-#&gt;  P assertthat    0.2.1   2019-03-21 [?] CRAN (R 4.1.0)
-#&gt;  P backports     1.2.1   2020-12-09 [?] CRAN (R 4.1.0)
-#&gt;  P BiocManager   1.30.16 2021-06-15 [?] CRAN (R 4.1.0)
-#&gt;  P broom         0.7.9   2021-07-27 [?] CRAN (R 4.1.0)
-#&gt;  P bslib         0.3.0   2021-09-02 [?] CRAN (R 4.1.0)
-#&gt;  P cellranger    1.1.0   2016-07-27 [?] CRAN (R 4.1.0)
+#&gt;  P assertthat    0.2.1   2019-03-21 [?] CRAN (R 4.1.2)
+#&gt;  P backports     1.4.1   2021-12-13 [?] CRAN (R 4.1.2)
+#&gt;  P BiocManager   1.30.16 2021-06-15 [?] CRAN (R 4.1.2)
+#&gt;  P broom         0.7.11  2022-01-03 [?] CRAN (R 4.1.2)
+#&gt;  P bslib         0.3.1   2021-10-06 [?] CRAN (R 4.1.2)
+#&gt;  P cellranger    1.1.0   2016-07-27 [?] CRAN (R 4.1.2)
 #&gt;  P cli           3.1.1   2022-01-20 [?] CRAN (R 4.1.2)
-#&gt;  P colorspace    2.0-2   2021-06-24 [?] CRAN (R 4.1.0)
-#&gt;  P crayon        1.4.1   2021-02-08 [?] CRAN (R 4.1.0)
-#&gt;  P DBI           1.1.1   2021-01-15 [?] CRAN (R 4.1.0)
-#&gt;  P dbplyr        2.1.1   2021-04-06 [?] CRAN (R 4.1.0)
-#&gt;  P digest        0.6.28  2021-09-23 [?] CRAN (R 4.1.0)
-#&gt;  P dplyr       * 1.0.7   2021-06-18 [?] CRAN (R 4.1.0)
-#&gt;  P ellipsis      0.3.2   2021-04-29 [?] CRAN (R 4.1.0)
-#&gt;  P evaluate      0.14    2019-05-28 [?] CRAN (R 4.1.0)
-#&gt;  P fansi         0.5.0   2021-05-25 [?] CRAN (R 4.1.0)
-#&gt;  P farver        2.1.0   2021-02-28 [?] CRAN (R 4.1.0)
-#&gt;  P fastmap       1.1.0   2021-01-25 [?] CRAN (R 4.1.0)
-#&gt;  P forcats     * 0.5.1   2021-01-27 [?] CRAN (R 4.1.0)
-#&gt;  P fs            1.5.0   2020-07-31 [?] CRAN (R 4.1.0)
-#&gt;  P generics      0.1.0   2020-10-31 [?] CRAN (R 4.1.0)
-#&gt;  P ggplot2     * 3.3.5   2021-06-25 [?] CRAN (R 4.1.0)
-#&gt;  P glue          1.4.2   2020-08-27 [?] CRAN (R 4.1.0)
-#&gt;  P gtable        0.3.0   2019-03-25 [?] CRAN (R 4.1.0)
-#&gt;  P haven         2.4.3   2021-08-04 [?] CRAN (R 4.1.0)
-#&gt;  P HDDAData    * 0.0.2   2022-01-28 [?] Github (statOmics/HDDAData@d6ab354)
-#&gt;  P highr         0.9     2021-04-16 [?] CRAN (R 4.1.0)
-#&gt;  P hms           1.1.1   2021-09-26 [?] CRAN (R 4.1.0)
-#&gt;  P htmltools     0.5.2   2021-08-25 [?] CRAN (R 4.1.0)
-#&gt;  P httr          1.4.2   2020-07-20 [?] CRAN (R 4.1.0)
-#&gt;  P jquerylib     0.1.4   2021-04-26 [?] CRAN (R 4.1.0)
-#&gt;  P jsonlite      1.7.2   2020-12-09 [?] CRAN (R 4.1.0)
-#&gt;  P knitr         1.33    2021-04-24 [?] CRAN (R 4.1.0)
-#&gt;  P labeling      0.4.2   2020-10-20 [?] CRAN (R 4.1.0)
-#&gt;  P lifecycle     1.0.1   2021-09-24 [?] CRAN (R 4.1.0)
-#&gt;  P lubridate     1.7.10  2021-02-26 [?] CRAN (R 4.1.0)
-#&gt;  P magrittr      2.0.1   2020-11-17 [?] CRAN (R 4.1.0)
-#&gt;  P modelr        0.1.8   2020-05-19 [?] CRAN (R 4.1.0)
-#&gt;  P munsell       0.5.0   2018-06-12 [?] CRAN (R 4.1.0)
-#&gt;  P pillar        1.6.3   2021-09-26 [?] CRAN (R 4.1.0)
+#&gt;  P colorspace    2.0-2   2021-06-24 [?] CRAN (R 4.1.2)
+#&gt;  P crayon        1.4.2   2021-10-29 [?] CRAN (R 4.1.2)
+#&gt;  P DBI           1.1.2   2021-12-20 [?] CRAN (R 4.1.2)
+#&gt;  P dbplyr        2.1.1   2021-04-06 [?] CRAN (R 4.1.2)
+#&gt;  P digest        0.6.29  2021-12-01 [?] CRAN (R 4.1.2)
+#&gt;  P dplyr       * 1.0.7   2021-06-18 [?] CRAN (R 4.1.2)
+#&gt;  P ellipsis      0.3.2   2021-04-29 [?] CRAN (R 4.1.2)
+#&gt;  P evaluate      0.14    2019-05-28 [?] CRAN (R 4.1.2)
+#&gt;  P fansi         1.0.2   2022-01-14 [?] CRAN (R 4.1.2)
+#&gt;  P farver        2.1.0   2021-02-28 [?] CRAN (R 4.1.2)
+#&gt;  P fastmap       1.1.0   2021-01-25 [?] CRAN (R 4.1.2)
+#&gt;  P forcats     * 0.5.1   2021-01-27 [?] CRAN (R 4.1.2)
+#&gt;  P fs            1.5.2   2021-12-08 [?] CRAN (R 4.1.2)
+#&gt;  P generics      0.1.1   2021-10-25 [?] CRAN (R 4.1.2)
+#&gt;  P ggplot2     * 3.3.5   2021-06-25 [?] CRAN (R 4.1.2)
+#&gt;  P glue          1.6.1   2022-01-22 [?] CRAN (R 4.1.2)
+#&gt;  P gtable        0.3.0   2019-03-25 [?] CRAN (R 4.1.2)
+#&gt;  P haven         2.4.3   2021-08-04 [?] CRAN (R 4.1.2)
+#&gt;  P HDDAData    * 1.0.0   2022-01-28 [?] Github (statOmics/HDDAData@f175e96)
+#&gt;  P highr         0.9     2021-04-16 [?] CRAN (R 4.1.2)
+#&gt;  P hms           1.1.1   2021-09-26 [?] CRAN (R 4.1.2)
+#&gt;  P htmltools     0.5.2   2021-08-25 [?] CRAN (R 4.1.2)
+#&gt;  P httr          1.4.2   2020-07-20 [?] CRAN (R 4.1.2)
+#&gt;  P jquerylib     0.1.4   2021-04-26 [?] CRAN (R 4.1.2)
+#&gt;  P jsonlite      1.7.3   2022-01-17 [?] CRAN (R 4.1.2)
+#&gt;  P knitr         1.37    2021-12-16 [?] CRAN (R 4.1.2)
+#&gt;  P labeling      0.4.2   2020-10-20 [?] CRAN (R 4.1.2)
+#&gt;  P lifecycle     1.0.1   2021-09-24 [?] CRAN (R 4.1.2)
+#&gt;  P lubridate     1.8.0   2021-10-07 [?] CRAN (R 4.1.2)
+#&gt;  P magrittr      2.0.2   2022-01-26 [?] CRAN (R 4.1.2)
+#&gt;  P modelr        0.1.8   2020-05-19 [?] CRAN (R 4.1.2)
+#&gt;  P munsell       0.5.0   2018-06-12 [?] CRAN (R 4.1.2)
+#&gt;  P pillar        1.6.5   2022-01-25 [?] CRAN (R 4.1.2)
 #&gt;  P pkgconfig     2.0.3   2022-01-28 [?] Github (r-lib/pkgconfig@b81ae03)
-#&gt;  P purrr       * 0.3.4   2020-04-17 [?] CRAN (R 4.1.0)
-#&gt;  P R6            2.5.1   2021-08-19 [?] CRAN (R 4.1.0)
-#&gt;  P Rcpp          1.0.7   2021-07-07 [?] CRAN (R 4.1.0)
-#&gt;  P readr       * 2.0.1   2021-08-10 [?] CRAN (R 4.1.0)
-#&gt;  P readxl        1.3.1   2019-03-13 [?] CRAN (R 4.1.0)
+#&gt;  P purrr       * 0.3.4   2020-04-17 [?] CRAN (R 4.1.2)
+#&gt;  P R6            2.5.1   2021-08-19 [?] CRAN (R 4.1.2)
+#&gt;  P Rcpp          1.0.8   2022-01-13 [?] CRAN (R 4.1.2)
+#&gt;  P readr       * 2.1.1   2021-11-30 [?] CRAN (R 4.1.2)
+#&gt;  P readxl        1.3.1   2019-03-13 [?] CRAN (R 4.1.2)
 #&gt;  P renv          0.15.2  2022-01-24 [?] CRAN (R 4.1.2)
-#&gt;  P reprex        2.0.1   2021-08-05 [?] CRAN (R 4.1.0)
-#&gt;  P rlang         0.4.11  2021-04-30 [?] CRAN (R 4.1.0)
-#&gt;  P rmarkdown     2.10    2021-08-06 [?] CRAN (R 4.1.0)
-#&gt;  P rstudioapi    0.13    2020-11-12 [?] CRAN (R 4.1.0)
-#&gt;  P rvest         1.0.1   2021-07-26 [?] CRAN (R 4.1.0)
-#&gt;  P sass          0.4.0   2021-05-12 [?] CRAN (R 4.1.0)
-#&gt;  P scales        1.1.1   2020-05-11 [?] CRAN (R 4.1.0)
-#&gt;  P sessioninfo   1.2.2   2021-12-06 [?] CRAN (R 4.1.0)
-#&gt;  P stringi       1.7.4   2021-08-25 [?] CRAN (R 4.1.0)
-#&gt;  P stringr     * 1.4.0   2019-02-10 [?] CRAN (R 4.1.0)
-#&gt;  P tibble      * 3.1.5   2021-09-30 [?] CRAN (R 4.1.0)
-#&gt;  P tidyr       * 1.1.4   2021-09-27 [?] CRAN (R 4.1.0)
-#&gt;  P tidyselect    1.1.1   2021-04-30 [?] CRAN (R 4.1.0)
-#&gt;  P tidyverse   * 1.3.1   2021-04-15 [?] CRAN (R 4.1.0)
-#&gt;  P tzdb          0.1.2   2021-07-20 [?] CRAN (R 4.1.0)
-#&gt;  P utf8          1.2.2   2021-07-24 [?] CRAN (R 4.1.0)
-#&gt;  P vctrs         0.3.8   2021-04-29 [?] CRAN (R 4.1.0)
-#&gt;  P withr         2.4.2   2021-04-18 [?] CRAN (R 4.1.0)
-#&gt;  P xfun          0.25    2021-08-06 [?] CRAN (R 4.1.0)
-#&gt;  P xml2          1.3.2   2020-04-23 [?] CRAN (R 4.1.0)
-#&gt;  P yaml          2.2.1   2020-02-01 [?] CRAN (R 4.1.0)
+#&gt;  P reprex        2.0.1   2021-08-05 [?] CRAN (R 4.1.2)
+#&gt;  P rlang         1.0.0   2022-01-26 [?] CRAN (R 4.1.2)
+#&gt;  P rmarkdown     2.11    2021-09-14 [?] CRAN (R 4.1.2)
+#&gt;  P rstudioapi    0.13    2020-11-12 [?] CRAN (R 4.1.2)
+#&gt;  P rvest         1.0.2   2021-10-16 [?] CRAN (R 4.1.2)
+#&gt;  P sass          0.4.0   2021-05-12 [?] CRAN (R 4.1.2)
+#&gt;  P scales        1.1.1   2020-05-11 [?] CRAN (R 4.1.2)
+#&gt;  P sessioninfo   1.2.2   2021-12-06 [?] CRAN (R 4.1.2)
+#&gt;  P stringi       1.7.6   2021-11-29 [?] CRAN (R 4.1.2)
+#&gt;  P stringr     * 1.4.0   2019-02-10 [?] CRAN (R 4.1.2)
+#&gt;  P tibble      * 3.1.6   2021-11-07 [?] CRAN (R 4.1.2)
+#&gt;  P tidyr       * 1.1.4   2021-09-27 [?] CRAN (R 4.1.2)
+#&gt;  P tidyselect    1.1.1   2021-04-30 [?] CRAN (R 4.1.2)
+#&gt;  P tidyverse   * 1.3.1   2021-04-15 [?] CRAN (R 4.1.2)
+#&gt;  P tzdb          0.2.0   2021-10-27 [?] CRAN (R 4.1.2)
+#&gt;  P utf8          1.2.2   2021-07-24 [?] CRAN (R 4.1.2)
+#&gt;  P vctrs         0.3.8   2021-04-29 [?] CRAN (R 4.1.2)
+#&gt;  P withr         2.4.3   2021-11-30 [?] CRAN (R 4.1.2)
+#&gt;  P xfun          0.29    2021-12-14 [?] CRAN (R 4.1.2)
+#&gt;  P xml2          1.3.3   2021-11-30 [?] CRAN (R 4.1.2)
+#&gt;  P yaml          2.2.2   2022-01-25 [?] CRAN (R 4.1.2)
 #&gt; 
-#&gt;  [1] /Users/runner/work/HDDA/HDDA/renv/library/R-4.1/x86_64-apple-darwin17.0
-#&gt;  [2] /Library/Frameworks/R.framework/Versions/4.1/Resources/library
+#&gt;  [1] /home/runner/work/HDDA/HDDA/renv/library/R-4.1/x86_64-pc-linux-gnu
+#&gt;  [2] /opt/R/4.1.2/lib/R/library
 #&gt; 
 #&gt;  P ── Loaded and on-disk path mismatch.
 #&gt; 
