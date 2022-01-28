@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Lieven Clement" />
+
+
+<title>Large Scale Inference</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HDDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="intro.html">1. Introduction</a>
+    </li>
+    <li>
+      <a href="svd.html">2. Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="prediction.html">3. Prediction with High Dimensional Predictors</a>
+    </li>
+    <li>
+      <a href="sparseSvd.html">4. Sparse Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="lda.html">5. Linear Discriminant Analysis</a>
+    </li>
+    <li>
+      <a href="lsi.html">6. Large Scale Inference</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab1-Intro-SVD.html">Lab 1: Intro &amp; SVD</a>
+    </li>
+    <li>
+      <a href="Lab2-PCA.html">Lab 2: SVD - PCA</a>
+    </li>
+    <li>
+      <a href="Lab3-Penalized-Regression.html">Lab 3: Prediction</a>
+    </li>
+    <li>
+      <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
+    </li>
+    <li>
+      <a href="Lab5-Large-Scale-Inference.html">Lab 5: LSI</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="https://github.com/statOmics/HDDA">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Large Scale Inference</h1>
+<h4 class="author">Lieven Clement</h4>
+<h4 class="date">statOmics, Ghent University (<a href="https://statomics.github.io" class="uri">https://statomics.github.io</a>)</h4>
+
+</div>
+
+
+<div id="motivation" class="section level1">
+<h1><span class="header-section-number">1</span> Motivation</h1>
+<div id="brain-imaging-study" class="section level2">
+<h2><span class="header-section-number">1.1</span> Brain imaging study</h2>
+<p><img src="figures/DTIColor.jpg" width="80%" style="display: block; margin: auto;" /></p>
+<pre><code>## Linking to ImageMagick 6.9.12.3
+## Enabled features: cairo, fontconfig, freetype, heic, lcms, pango, raw, rsvg, webp
+## Disabled features: fftw, ghostscript, x11</code></pre>
+<ul>
+<li>Diffusion Tensor Imaging (DTI) data</li>
+<li>DTI measures fluid flows in the brain</li>
+<li>Comparing brain activity of six dyslexic children versus six normal controls</li>
+<li>From each child, DTI produced observations on 15443 voxels (voxel = small volume at a particular (x, y, x) coordinate)</li>
+<li>For each voxel, a two-sided two-sample t-test has been performed, resulting in a z-value (15443 z-values) for fractional anisotropy.</li>
+<li>Low values for FA indicate diffusion in all directions, high values indicates directional diffusion.</li>
+<li>Research question: at what brain locations (voxels) show dyslexic children a different brain activity as compared to children without dyslexia?</li>
+</ul>
+<p>For each voxel separately, this is a simple problem, but the large scale of the problem (15443 simultaneous hypothesis tests) causes the problem of multiplicity.</p>
+<div id="data-exploration" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> Data Exploration</h3>
+<p>The dataset <code>dti</code> contains</p>
+<ul>
+<li>Spatial location (x, y, z) of each voxel</li>
+<li>z-statistic for assessing differential brain activity between dyslexic and non-dyslexic children</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">library</span>(locfdr)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">library</span>(gganimate)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>dti &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/statOmics/HDA2020/data/dti.csv&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6"></a>                <span class="dt">col_types =</span> <span class="kw">cols</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>pZ &lt;-<span class="st"> </span>dti <span class="op">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw">ggplot</span>(</span>
+<span id="cb3-3"><a href="#cb3-3"></a>    <span class="kw">aes</span>(</span>
+<span id="cb3-4"><a href="#cb3-4"></a>      coord.y,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>      coord.x,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>      <span class="dt">color=</span>z.value)</span>
+<span id="cb3-7"><a href="#cb3-7"></a>    ) <span class="op">+</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="st">  </span><span class="kw">scale_colour_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;blue&quot;</span>,<span class="dt">mid=</span><span class="st">&quot;white&quot;</span>,<span class="dt">high=</span><span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="st">  </span><span class="kw">transition_manual</span>(coord.z) <span class="op">+</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;transection z = {frame}&quot;</span>) <span class="op">+</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="st">  </span><span class="kw">theme_grey</span>()</span></code></pre></div>
+<p>We will now plot the animated graph</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>pZ</span></code></pre></div>
+<p><strong>WARNING</strong>: The animated graph will only be visible in the HTML output, not in PDF format. If you’re reading the PDF version, check <a href="https://statomics.github.io/HDDA/lsi.html#111_Data_Exploration">online</a> for the animated graph.</p>
+<p><img src="lsi_files/figure-html/unnamed-chunk-5-1.gif" /><!-- --></p>
+<p>We visualised the test-statistic of each test per voxel!</p>
+<p>Note, that it is difficult to see structure in the data.</p>
+</div>
+<div id="inference" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> Inference</h3>
+<p>We can convert the z-statistic in a two-sided p-value for each voxel to assess</p>
+<p><span class="math display">\[H_0: \text{There is on average no difference in brain activity in voxel xyz between dyslexic and non-dyslexic children}\]</span> <span class="math display">\[\mu_d=\mu_{nd}\]</span></p>
+<p>vs</p>
+<p><span class="math display">\[H_0: \text{There is on average a difference in brain activity in voxel xyz between dyslexic and non-dyslexic children}\]</span> <span class="math display">\[\mu_d\neq\mu_{nd}\]</span></p>
+<p>Below, we calculate the p-values and a variable zP for which we keep the z-value if it is statistical significant at the 5% level otherwise we set it equal to zP=0.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>dti &lt;-<span class="st"> </span>dti <span class="op">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="dt">p.value =</span> <span class="kw">pnorm</span>(<span class="kw">abs</span>(z.value),<span class="dt">lower=</span><span class="ot">FALSE</span>)<span class="op">*</span><span class="dv">2</span>,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="dt">zP =</span> (p.value <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>) <span class="op">*</span><span class="st"> </span>z.value)</span>
+<span id="cb5-5"><a href="#cb5-5"></a></span>
+<span id="cb5-6"><a href="#cb5-6"></a>pPval &lt;-<span class="st"> </span>dti <span class="op">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="st">  </span><span class="kw">ggplot</span>(</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="kw">aes</span>(</span>
+<span id="cb5-9"><a href="#cb5-9"></a>      coord.y,</span>
+<span id="cb5-10"><a href="#cb5-10"></a>      coord.x,</span>
+<span id="cb5-11"><a href="#cb5-11"></a>      <span class="dt">color=</span>zP)</span>
+<span id="cb5-12"><a href="#cb5-12"></a>    ) <span class="op">+</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="st">  </span><span class="kw">scale_colour_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;blue&quot;</span>,<span class="dt">mid=</span><span class="st">&quot;white&quot;</span>,<span class="dt">high=</span><span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="st">  </span><span class="kw">transition_manual</span>(coord.z) <span class="op">+</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;transection z = {frame}&quot;</span>) <span class="op">+</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="st">  </span><span class="kw">theme_grey</span>()</span></code></pre></div>
+<p>We will now plot the animated graph</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>pPval</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-8-1.gif" /><!-- --></p>
+<p>It is much more easy to observe patterns of activity.</p>
+<p>Note, however that</p>
+<ul>
+<li>Higher average FA (z &gt; 0 and p &lt; 0.05) in dyslexic children is appearing in spatial patterns in some locations.</li>
+<li>Lower average FA (z &lt; 0 and p &gt; 0.05) in dyslexic children is scattered throughout the brain.</li>
+<li>Multiple testing problem.</li>
+<li>If there would be no association between brain activity and dyslexia we can expect on average <span class="math inline">\(15443\times\alpha=772\)</span> false positive voxels at the 5% level of significance.</li>
+<li>Note, that only 1241 were significant at the 5% significance level, so we can expect that the majority of the returned voxels are false positives.</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>FPexpected  &lt;-<span class="st"> </span><span class="kw">nrow</span>(dti) <span class="op">*</span><span class="st"> </span><span class="fl">0.05</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>Preported &lt;-<span class="st"> </span><span class="kw">sum</span>(dti<span class="op">$</span>p.value <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>)</span>
+<span id="cb7-3"><a href="#cb7-3"></a></span>
+<span id="cb7-4"><a href="#cb7-4"></a>FPexpected</span></code></pre></div>
+<pre><code>## [1] 772.15</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>Preported</span></code></pre></div>
+<pre><code>## [1] 1241</code></pre>
+</div>
+</div>
+<div id="challenges" class="section level2">
+<h2><span class="header-section-number">1.2</span> Challenges</h2>
+<p>Large Scale Inference implies</p>
+<ul>
+<li>Many hypothesis to be evaluated</li>
+<li>Huge multiple testing problem</li>
+<li>Many false positives can be expected if we do not correct for multiple testing</li>
+</ul>
+<p>Issue is widespread in many disciplines</p>
+<ul>
+<li>genomics</li>
+<li>transcriptomics</li>
+<li>proteomics</li>
+<li>brain imaging</li>
+<li>high throughput single cell technologies</li>
+<li>detection of anomalous events: e.g. credit card fraud</li>
+<li>evaluation of trading rules</li>
+<li>academic performance of schools</li>
+</ul>
+</div>
+<div id="multiplicity-problem" class="section level2">
+<h2><span class="header-section-number">1.3</span> Multiplicity Problem</h2>
+<p>Suppose only a single hypothesis test is required for answering the research question. A statistical test controls the probability of making a <strong>type I error</strong> (type I error rate), <span class="math display">\[
+   \alpha =\text{P}\left[\text{reject }H_0 \mid H_0\right] .
+\]</span> The type I error is also known as a <strong>false positive</strong> (i.e. <span class="math inline">\(H_0\)</span> expresses an negative result, and <span class="math inline">\(H_1\)</span> a positive result): <span class="math inline">\(\alpha=\text{P}\left[\text{false positive}\right]\)</span>.</p>
+<p>An important property:</p>
+<p>When <span class="math inline">\(H_0\)</span> is true, and the assumptions underlying the test hold true, then <span class="math display">\[
+  P \sim U[0,1] .
+\]</span> Hence, for any <span class="math inline">\(0&lt;\alpha&lt;1\)</span>, <span class="math display">\[
+  \text{P}\left[\text{reject }H_0 \mid H_0\right] = \text{P}\left[P&lt;\alpha \mid H_0\right] = \alpha.
+\]</span></p>
+<p>The distribution of the z-statistic and the p-values under <span class="math inline">\(H_0\)</span> are illustrated below:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">library</span>(gridExtra)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;gridExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     combine</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>simData &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb14-2"><a href="#cb14-2"></a>  <span class="dt">z.value =</span> <span class="kw">rnorm</span>(<span class="dv">20000</span>)</span>
+<span id="cb14-3"><a href="#cb14-3"></a>  )</span>
+<span id="cb14-4"><a href="#cb14-4"></a></span>
+<span id="cb14-5"><a href="#cb14-5"></a>simData &lt;-<span class="st"> </span>simData <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">p.value =</span> <span class="dv">2</span><span class="op">*</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">pnorm</span>(<span class="kw">abs</span>(z.value))))</span>
+<span id="cb14-6"><a href="#cb14-6"></a></span>
+<span id="cb14-7"><a href="#cb14-7"></a>p1 &lt;-<span class="st"> </span>simData <span class="op">%&gt;%</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> z.value)) <span class="op">+</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="st">  </span><span class="kw">geom_histogram</span>(</span>
+<span id="cb14-10"><a href="#cb14-10"></a>    <span class="kw">aes</span>(<span class="dt">y=</span>..density..),</span>
+<span id="cb14-11"><a href="#cb14-11"></a>    <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
+<span id="cb14-12"><a href="#cb14-12"></a><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> dnorm, <span class="dt">args=</span><span class="kw">list</span>(<span class="dt">mean=</span><span class="dv">0</span>, <span class="dt">sd=</span><span class="dv">1</span>))</span>
+<span id="cb14-13"><a href="#cb14-13"></a></span>
+<span id="cb14-14"><a href="#cb14-14"></a>p2 &lt;-<span class="st"> </span>simData <span class="op">%&gt;%</span></span>
+<span id="cb14-15"><a href="#cb14-15"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> p.value)) <span class="op">+</span></span>
+<span id="cb14-16"><a href="#cb14-16"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,.<span class="dv">05</span>))</span>
+<span id="cb14-17"><a href="#cb14-17"></a></span>
+<span id="cb14-18"><a href="#cb14-18"></a><span class="kw">grid.arrange</span>(p1, p2, <span class="dt">ncol=</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="lsi_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>We indeed observe that the p-values are uniform under the null hypothesis. So statistical hypothesis testing provides a uniform testing strategy.</p>
+<div id="notation" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Notation</h3>
+<p>In the multiple testing literature the number of features that for which a test is conducted is denoted by <span class="math inline">\(m\)</span> instead of <span class="math inline">\(p\)</span> to avoid confusion with the symbol for a p-value.</p>
+<p>Consider testing all <span class="math inline">\(m=15443\)</span> voxels simultaneously</p>
+<ul>
+<li><p>What if we assess each individual test at level <span class="math inline">\(\alpha\)</span>? <span class="math inline">\(\rightarrow\)</span> Probability to have a false positive (FP) among all m simultatenous test <span class="math inline">\(&gt;&gt;&gt; \alpha= 0.05\)</span></p></li>
+<li><p>Indeed for each non differential voxel we have a probability of 5% to return a FP.</p></li>
+<li><p>In a typical experiment the majority of the voxel are non differential.</p></li>
+<li><p>So an upperbound of the expected FP is <span class="math inline">\(m \times \alpha\)</span> or <span class="math inline">\(15443 \times 0.05=772\)</span>.</p></li>
+</ul>
+<p><span class="math inline">\(\rightarrow\)</span> Hence, we are bound to call many false positive voxels each time we run the experiment.</p>
+</div>
+<div id="familywise-error-rate" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> Familywise error rate</h3>
+<p>Suppose that <span class="math inline">\(m\)</span> hypotheses have to be tested simultaneously for answering a single research question.</p>
+<p>Let <span class="math inline">\(H_{0i}\)</span> denote the <span class="math inline">\(i\)</span>th null hypothesis (<span class="math inline">\(i=1,\ldots, m\)</span>) and let <span class="math inline">\(H_0\)</span> denote the intersection of all these partial null hypotheses.</p>
+<p>In this case the type I error rate is no longer relevant. Instead one may consider the <strong>Familywise Error Rate (FWER)</strong> <span class="math display">\[
+   \text{FWER}=\text{P}\left[\text{reject at least one }H_{0i} \mid H_0\right].
+ \]</span></p>
+<p>Assuming independence among the <span class="math inline">\(m\)</span> tests and assuming that all individual tests are performed at the <span class="math inline">\(\alpha\)</span> level of significance, the FWER can be computed as</p>
+<p><span class="math display">\[
+\begin{array}{rcl}
+\text{FWER}
+&amp;=&amp; \text{P}\left[\text{reject at least one }H_{0i} \mid H_0\right] \\
+&amp;=&amp; 1 - \text{P}\left[\text{reject no }H_{0i} \mid H_0\right] \\
+&amp;=&amp; 1- \text{P}\left[\text{not reject }H_{01}\text{ and }\ldots\text{ and not reject }H_{0m} \mid H_0\right] \\
+&amp;=&amp; 1- \prod_{i=1}^m \text{P}\left[\text{not reject }H_{0i} \mid H_0\right] \\
+&amp;=&amp; 1- (1-\alpha)^m .
+\end{array}
+\]</span></p>
+<p>Examples:</p>
+<p><span class="math inline">\(\alpha=0.05\)</span> and <span class="math inline">\(m=5\)</span>: FWER<span class="math inline">\(=0.23\)</span></p>
+<p><span class="math inline">\(\alpha=0.05\)</span> and <span class="math inline">\(m=100\)</span>: FWER<span class="math inline">\(=0.99\)</span></p>
+<p><span class="math inline">\(\alpha=0.05\)</span> and <span class="math inline">\(m=15443\)</span>: FWER<span class="math inline">\(\approx 1\)</span>.</p>
+<hr />
+<p>These calculations illustrate the problem of multiplicity: the more tests that are performed, the larger the probability that at least one false positive conclusion is obtained. Thus if all significant results are listed, and suppose that all null hypotheses hold true, then the FWER is the probability that at least one of the listed positive results is a false positive. Sometimes, a list of significant results represent the “discoveries” from the study, and therefore a false positive result is often also referred to as a false discovery.</p>
+<p>For example, with <span class="math inline">\(m=100\)</span> and <span class="math inline">\(\alpha=0.05\)</span> the chance that at least one of the “discoveries” is false, is about <span class="math inline">\(99\%\)</span>. Even worse, with <span class="math inline">\(m\approx 15000\)</span> the FWER increases to virtually <span class="math inline">\(100\%\)</span>. In general we also expect that lists of significant results (discoveries) get longer with increasing <span class="math inline">\(m\)</span>.</p>
+<p>Many researchers, however, when presented a long list of significant results (or discoveries), would not mind too much if one or a few false discoveries appear in the list. Hence, the FWER is not the most relevant risk measure, as the FWER is allowed to be <span class="math inline">\(100\%\)</span> in case researchers do not mind to have a few false discoveries among the (perhaps many) positive results in the list of discoveries. A better solution will be given later, but first we continue with the use of FWER.</p>
+<hr />
+</div>
+<div id="method-of-sidàk-invert-fwer-to-significant-level-for-individual-test" class="section level3">
+<h3><span class="header-section-number">1.3.3</span> Method of Sidàk: invert FWER to significant level for individual test</h3>
+<p>The identity FWER<span class="math inline">\(=1- (1-\alpha)^m\)</span> may be inverted to find the significance level at which each individual test should be tested to attain the nominal familywise error rate at FWER, <span class="math display">\[
+   \alpha = 1-(1-\text{FWER})^{1/m}
+\]</span> so that the simultaneous testing procedure controls the FWER at the desired level (method of Sidàk).</p>
+<p>Examples:</p>
+<p>FWER<span class="math inline">\(=0.05\)</span> and <span class="math inline">\(m=5\)</span>: <span class="math inline">\(\alpha=0.0102\)</span></p>
+<p>FWER<span class="math inline">\(=0.05\)</span> and <span class="math inline">\(m=100\)</span>: <span class="math inline">\(\alpha=0.00051\)</span></p>
+<p>FWER<span class="math inline">\(=0.05\)</span> and <span class="math inline">\(m=15443\)</span>: <span class="math inline">\(\alpha=0.0000033\)</span>.</p>
+<p>We will argue that this procedure is too stringent for large <span class="math inline">\(m\)</span>.</p>
+</div>
+<div id="bonferroni-method" class="section level3">
+<h3><span class="header-section-number">1.3.4</span> Bonferroni method</h3>
+<p>The Bonferroni method is another method that is widely used to control the FWER:</p>
+<ul>
+<li><p>assess each test at <span class="math display">\[\alpha_\text{adj}=\frac{\alpha}{m}\]</span></p></li>
+<li><p>The method does not assume independence of the test statistics.</p></li>
+<li><p>Again, the method is very conservative!</p></li>
+</ul>
+<hr />
+<p>To attain the familywise error rate at level FWER the individual hypotheses should be tested at very stringent significance levels when <span class="math inline">\(m\)</span> is large. The consequence of testing at a small significance level <span class="math inline">\(\alpha\)</span> is that it is hard to find significant results, and thus the lists of significant results (discoveries) is likely to be short. Controlling the FWER means that the chance is small that these lists contain one or more false positives. A negative consequence, however, is that many of the true positive hypothesis (i.e. <span class="math inline">\(H_1\)</span> is true) will not appear in these short lists. Hence, the “power” is small (power is not well defined in this multiple testing setting – extensions of the concept are possible). Thus, avoiding false positives by controlling the FWER comes at a price: many of the true positive hypothesis may be missed.</p>
+<hr />
+</div>
+<div id="adjusted-p-value" class="section level3">
+<h3><span class="header-section-number">1.3.5</span> Adjusted p-value</h3>
+<p>First we give a very general definition of an <strong>adjusted <span class="math inline">\(p\)</span>-value</strong>.</p>
+<p>Define the adjusted <span class="math inline">\(p\)</span>-value as <span class="math display">\[
+   \tilde{p}_i = \{\inf \alpha\in[0,1]: \text{ reject }H_{0i} \text{ at FWER } \alpha\} .
+ \]</span> With these adjusted <span class="math inline">\(p\)</span>-value, the <span class="math inline">\(i\)</span>th partial null hypothesis may be rejected when <span class="math display">\[
+   \tilde{p}_i &lt; \alpha
+ \]</span> while controlling the FWER at <span class="math inline">\(\alpha\)</span>.</p>
+<p>The corrected <span class="math inline">\(p\)</span>-value should be reported. It accounts for the multiplicity problem and it can be compared directly to the nominal FWER level to make calls at the FWER level.</p>
+<ul>
+<li>adjusted p-values for Bonferroni method: <span class="math display">\[p_\text{adj}=\text{min}\left(p \times m,1\right)\]</span></li>
+</ul>
+<hr />
+</div>
+</div>
+</div>
+<div id="false-discovery-rate" class="section level1">
+<h1><span class="header-section-number">2</span> False Discovery Rate</h1>
+<div id="introduction" class="section level2">
+<h2><span class="header-section-number">2.1</span> Introduction</h2>
+<p>In large scale inference it would be more interesting to tolerate a few false positives as long as they do not dominate the toplist</p>
+<p>We first introduce some notation:</p>
+<p>The table shows the results of <span class="math inline">\(m\)</span> hypothesis tests in a single experiment.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="center">accept <span class="math inline">\(H_{0i}\)</span></th>
+<th align="center">reject <span class="math inline">\(H_{0i}\)</span></th>
+<th align="center">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">null</td>
+<td align="center">TN</td>
+<td align="center">FP</td>
+<td align="center"><span class="math inline">\(m_0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">non-null</td>
+<td align="center">FN</td>
+<td align="center">TP</td>
+<td align="center"><span class="math inline">\(m_1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Total</td>
+<td align="center">NR</td>
+<td align="center">R</td>
+<td align="center">m</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><span class="math inline">\(TN\)</span>: number of true negative: random and unobserved</li>
+<li><span class="math inline">\(FP\)</span>: number of false positives: random and unobserved</li>
+<li><span class="math inline">\(FN\)</span>: number of false negatives: random and unobserved</li>
+<li><span class="math inline">\(TP\)</span>: number of true positives: random and unobserved</li>
+<li><span class="math inline">\(NR\)</span>: number of acceptances (negative results): random and observed</li>
+<li><span class="math inline">\(R\)</span>: number of rejections (positive results): random and observed</li>
+<li><span class="math inline">\(m_0\)</span> and <span class="math inline">\(m_1\)</span>: fixed and unobserved</li>
+<li><span class="math inline">\(m\)</span>: fixed and observed</li>
+</ul>
+<hr />
+<ul>
+<li>Note that the table is not completely observable.</li>
+<li>Indeed, we can only observe the bottom row!</li>
+<li>The table is introduced to better understand the concept of FWER and to introduce the concept of the false discovery rate (FDR).</li>
+</ul>
+<hr />
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="center">accept <span class="math inline">\(H_{0i}\)</span></th>
+<th align="center">reject <span class="math inline">\(H_{0i}\)</span></th>
+<th align="center">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">null</td>
+<td align="center">TN</td>
+<td align="center">FP</td>
+<td align="center"><span class="math inline">\(m_0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">non-null</td>
+<td align="center">FN</td>
+<td align="center">TP</td>
+<td align="center"><span class="math inline">\(m_1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Total</td>
+<td align="center">NR</td>
+<td align="center">R</td>
+<td align="center">m</td>
+</tr>
+</tbody>
+</table>
+<p>The FWER can now be reexpressed as <span class="math display">\[
+   \text{FWER}=\text{P}\left[\text{reject at least one }H_{0i} \mid H_0\right] = \text{P}\left[FP&gt;0\right] .
+ \]</span></p>
+<ul>
+<li>However, we know that the FWER is very conservative in large scale inference problems.</li>
+<li>Therefore it would be more interesting to tolerate a few false positives as long as they do not dominate the toplist</li>
+</ul>
+<p>The <strong>False Discovery Proportion (FDP)</strong> is the fraction of false positives that are returned, i.e.</p>
+<p><span class="math display">\[
+FDP = \frac{FP}{R}
+\]</span></p>
+<ul>
+<li><p>However, this quantity cannot be observed because in practice we only know the number of voxels for which we rejected <span class="math inline">\(H_0\)</span>, <span class="math inline">\(R\)</span>.</p></li>
+<li><p>But, we do not know the number of false positives, <span class="math inline">\(FP\)</span>.</p></li>
+</ul>
+<p>Therefore, Benjamini and Hochberg, 1995, defined The <strong>False Discovery Rate (FDR)</strong> as <span class="math display">\[
+   \text{FDR} = \text{E}\left[\frac{FP}{R}\right] =\text{E}\left[\text{FDP}\right]
+\]</span> the expected FDP, in their seminal paper Benjamini, Y. and Hochberg, Y. (1995). “Controlling the false discovery rate: a practical and powerful approach to multiple testing”. Journal of the Royal Statistical Society Series B, 57 (1): 289–300.</p>
+<ul>
+<li><p>An FDR of 1% means that on average we expect 1% false positive voxels in the list of voxels that are called significant.</p></li>
+<li><p>Controlling the FDR allows for more discoveries (i.e. longer lists with significant results), while the fraction of false discoveries among the significant results in well controlled on average. As a consequence, more of the true positive hypotheses will be detected.</p></li>
+</ul>
+</div>
+<div id="intuition-of-bh-fdr-procedure" class="section level2">
+<h2><span class="header-section-number">2.2</span> Intuition of BH-FDR procedure</h2>
+<p>Consider <span class="math inline">\(m = 1000\)</span> voxels</p>
+<ul>
+<li><p>Suppose that a researcher rejects all null hypotheses for which <span class="math inline">\(p &lt; 0.01\)</span>.</p></li>
+<li><p>If we use <span class="math inline">\(p &lt; 0.01\)</span>, we expect <span class="math inline">\(0.01 \times m_0\)</span> tests to return false positives.</p></li>
+<li><p>A conservative estimate of the number of false positives that we can expect can be obtained by considering that the null hypotheses are true for all features, <span class="math inline">\(m_0 = m = 1000\)</span>.</p></li>
+<li><p>We then would expect <span class="math inline">\(0.01 \times 1000 = 10\)</span> false positives (<span class="math inline">\(FP=10\)</span>).</p></li>
+<li><p>Suppose that the researcher found 200 voxels with <span class="math inline">\(p&lt;0.01\)</span> (<span class="math inline">\(R=200\)</span>).</p></li>
+<li><p>The proportion of false positive results (FDP = false positive proportion) among the list of <span class="math inline">\(R=200\)</span> genes can then be estimated as <span class="math display">\[
+ \widehat{\text{FDP}}=\frac{FP}{R}=\frac{10}{200}=\frac{0.01 \times 1000}{200} = 0.05.
+ \]</span></p></li>
+</ul>
+</div>
+<div id="benjamini-and-hochberg-1995-procedure-for-controlling-the-fdr-at-alpha" class="section level2">
+<h2><span class="header-section-number">2.3</span> Benjamini and Hochberg (1995) procedure for controlling the FDR at <span class="math inline">\(\alpha\)</span></h2>
+<ol style="list-style-type: decimal">
+<li><p>Let <span class="math inline">\(p_{(1)}\leq \ldots \leq p_{(m)}\)</span> denote the ordered <span class="math inline">\(p\)</span>-values.</p></li>
+<li><p>Find the largest integer <span class="math inline">\(k\)</span> so that <span class="math display">\[
+\frac{p_{(k)} \times m}{k} \leq \alpha
+\]</span> <span class="math display">\[\text{or}\]</span> <span class="math display">\[
+p_{(k)} \leq k \times \alpha/m
+\]</span></p></li>
+<li><p>If such a <span class="math inline">\(k\)</span> exists, reject the <span class="math inline">\(k\)</span> null hypotheses associated with <span class="math inline">\(p_{(1)}, \ldots, p_{(k)}\)</span>. Otherwise none of the null hypotheses is rejected.</p></li>
+</ol>
+<p>The adjusted <span class="math inline">\(p\)</span>-value (also known as the <span class="math inline">\(q\)</span>-value in FDR literature): <span class="math display">\[
+   q_{(i)}=\tilde{p}_{(i)} = \min\left[\min_{j=i,\ldots, m}\left(m p_{(j)}/j\right), 1 \right].
+ \]</span> In the hypothetical example above: <span class="math inline">\(k=200\)</span>, <span class="math inline">\(p_{(k)}=0.01\)</span>, <span class="math inline">\(m=1000\)</span> and <span class="math inline">\(\alpha=0.05\)</span>.</p>
+<hr />
+</div>
+<div id="brain-example" class="section level2">
+<h2><span class="header-section-number">2.4</span> Brain Example</h2>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>dti <span class="op">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> p.value)) <span class="op">+</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>,<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,.<span class="dv">05</span>))</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<ul>
+<li><p>The graph shows the histogram of the <span class="math inline">\(m=15443\)</span> <span class="math inline">\(p\)</span>-values. It shows a distribution which is close to a uniform distribution for the larger p-values, but with more small <span class="math inline">\(p\)</span>-values than expected under a uniform distribution.</p></li>
+<li><p>This is a trend that would arise if most of the hypotheses are nulls (resulting in <span class="math inline">\(p\)</span>-values from a uniform distribution), but some are non-nulls (more likely to result in small <span class="math inline">\(p\)</span>-values).</p></li>
+</ul>
+<hr />
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>dti &lt;-<span class="st"> </span>dti <span class="op">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    <span class="dt">padj =</span> <span class="kw">p.adjust</span>(p.value, <span class="dt">method=</span><span class="st">&quot;fdr&quot;</span>),</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    <span class="dt">zFDR =</span> (padj <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>) <span class="op">*</span><span class="st"> </span>z.value)</span>
+<span id="cb17-5"><a href="#cb17-5"></a></span>
+<span id="cb17-6"><a href="#cb17-6"></a>pPadj &lt;-<span class="st"> </span>dti <span class="op">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(p.value,padj)) <span class="op">+</span></span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">x=</span><span class="dv">0</span>,<span class="dt">y=</span><span class="dv">0</span>,<span class="dt">xend=</span><span class="dv">1</span>,<span class="dt">yend=</span><span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;adjusted p-value (BH, 1995)&quot;</span>)</span>
+<span id="cb17-11"><a href="#cb17-11"></a></span>
+<span id="cb17-12"><a href="#cb17-12"></a><span class="kw">grid.arrange</span>(pPadj,</span>
+<span id="cb17-13"><a href="#cb17-13"></a>  pPadj <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.05</span>)),</span>
+<span id="cb17-14"><a href="#cb17-14"></a>  <span class="dt">ncol=</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 15411 rows containing missing values (geom_point).</code></pre>
+<p><img src="lsi_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># BH corrected p-values</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">table</span>(dti<span class="op">$</span>padj <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>)</span></code></pre></div>
+<pre><code>## 
+## FALSE  TRUE 
+## 15411    32</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># uncorrected p-values</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="kw">table</span>(dti<span class="op">$</span>p.value <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>)</span></code></pre></div>
+<pre><code>## 
+## FALSE  TRUE 
+## 14202  1241</code></pre>
+<p>At the 5% FDR, 32 voxels are returned as significantly differentially active between dyslexic and non-dyslexic children.</p>
+<div id="ordered-table-of-results-to-explain-the-method" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Ordered table of results to explain the method</h3>
+<ul>
+<li><p>Bonferroni: <span class="math inline">\(\alpha_\text{adj}=3.2e-06 \rightarrow\)</span> 0 voxels are significant at the Bonferroni FWER</p></li>
+<li><p>BH-FDR:</p></li>
+</ul>
+<ol style="list-style-type: decimal">
+<li><p>ordered <span class="math inline">\(p\)</span>-values.</p></li>
+<li><p>Find the largest integer <span class="math inline">\(k\)</span> so that <span class="math display">\[
+\frac{p_{(k)} \times m}{k} \leq \alpha
+\]</span> <span class="math display">\[\text{or}\]</span> <span class="math display">\[
+p_{(k)} \leq k \times \alpha/m
+\]</span></p></li>
+<li><p>If such a <span class="math inline">\(k\)</span> exists, reject the <span class="math inline">\(k\)</span> null hypotheses associated with <span class="math inline">\(p_{(1)}, \ldots, p_{(k)}\)</span>. Otherwise none of the null hypotheses is rejected.</p></li>
+</ol>
+<table>
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="9%" />
+<col width="15%" />
+<col width="10%" />
+<col width="14%" />
+<col width="8%" />
+<col width="14%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">z.value</th>
+<th align="right">p.value</th>
+<th align="right">padj</th>
+<th align="left">padjNonMonoForm</th>
+<th align="right">padjNonMono</th>
+<th align="left">adjAlphaForm</th>
+<th align="right">adjAlpha</th>
+<th align="left">pval &lt; adjAlpha</th>
+<th align="left">padj &lt; alpha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">4.399743</td>
+<td align="right">1.08e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /1</td>
+<td align="right">0.1673701</td>
+<td align="left">1 x 0.05/15443</td>
+<td align="right">3.20e-06</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">4.336268</td>
+<td align="right">1.45e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /2</td>
+<td align="right">0.1119018</td>
+<td align="left">2 x 0.05/15443</td>
+<td align="right">6.50e-06</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">4.322818</td>
+<td align="right">1.54e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /3</td>
+<td align="right">0.0792992</td>
+<td align="left">3 x 0.05/15443</td>
+<td align="right">9.70e-06</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">4.290481</td>
+<td align="right">1.78e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /4</td>
+<td align="right">0.0688318</td>
+<td align="left">4 x 0.05/15443</td>
+<td align="right">1.30e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">4.273432</td>
+<td align="right">1.92e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /5</td>
+<td align="right">0.0594516</td>
+<td align="left">5 x 0.05/15443</td>
+<td align="right">1.62e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">4.211374</td>
+<td align="right">2.54e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /6</td>
+<td align="right">0.0653297</td>
+<td align="left">6 x 0.05/15443</td>
+<td align="right">1.94e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">4.200357</td>
+<td align="right">2.66e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /7</td>
+<td align="right">0.0587925</td>
+<td align="left">7 x 0.05/15443</td>
+<td align="right">2.27e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">4.116663</td>
+<td align="right">3.84e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /8</td>
+<td align="right">0.0742030</td>
+<td align="left">8 x 0.05/15443</td>
+<td align="right">2.59e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">4.100929</td>
+<td align="right">4.11e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /9</td>
+<td align="right">0.0706081</td>
+<td align="left">9 x 0.05/15443</td>
+<td align="right">2.91e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">4.093178</td>
+<td align="right">4.26e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /10</td>
+<td align="right">0.0657102</td>
+<td align="left">10 x 0.05/15443</td>
+<td align="right">3.24e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="15%" />
+<col width="10%" />
+<col width="14%" />
+<col width="8%" />
+<col width="14%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">z.value</th>
+<th align="right">p.value</th>
+<th align="right">padj</th>
+<th align="left">padjNonMonoForm</th>
+<th align="right">padjNonMono</th>
+<th align="left">adjAlphaForm</th>
+<th align="right">adjAlpha</th>
+<th align="left">pval &lt; adjAlpha</th>
+<th align="left">padj &lt; alpha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">4.077959</td>
+<td align="right">4.54e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /11</td>
+<td align="right">0.0637835</td>
+<td align="left">11 x 0.05/15443</td>
+<td align="right">3.56e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">4.077082</td>
+<td align="right">4.56e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /12</td>
+<td align="right">0.0586891</td>
+<td align="left">12 x 0.05/15443</td>
+<td align="right">3.89e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">4.062125</td>
+<td align="right">4.86e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /13</td>
+<td align="right">0.0577663</td>
+<td align="left">13 x 0.05/15443</td>
+<td align="right">4.21e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">4.047767</td>
+<td align="right">5.17e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /14</td>
+<td align="right">0.0570383</td>
+<td align="left">14 x 0.05/15443</td>
+<td align="right">4.53e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">4.034977</td>
+<td align="right">5.46e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /15</td>
+<td align="right">0.0562204</td>
+<td align="left">15 x 0.05/15443</td>
+<td align="right">4.86e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">4.017347</td>
+<td align="right">5.89e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /16</td>
+<td align="right">0.0568081</td>
+<td align="left">16 x 0.05/15443</td>
+<td align="right">5.18e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">4.010879</td>
+<td align="right">6.05e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /17</td>
+<td align="right">0.0549527</td>
+<td align="left">17 x 0.05/15443</td>
+<td align="right">5.50e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">4.009839</td>
+<td align="right">6.08e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /18</td>
+<td align="right">0.0521289</td>
+<td align="left">18 x 0.05/15443</td>
+<td align="right">5.83e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">-4.000404</td>
+<td align="right">6.32e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /19</td>
+<td align="right">0.0513964</td>
+<td align="left">19 x 0.05/15443</td>
+<td align="right">6.15e-05</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">-4.000404</td>
+<td align="right">6.32e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /20</td>
+<td align="right">0.0488265</td>
+<td align="left">20 x 0.05/15443</td>
+<td align="right">6.48e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="8%" />
+<col width="8%" />
+<col width="9%" />
+<col width="15%" />
+<col width="10%" />
+<col width="14%" />
+<col width="8%" />
+<col width="14%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">z.value</th>
+<th align="right">p.value</th>
+<th align="right">padj</th>
+<th align="left">padjNonMonoForm</th>
+<th align="right">padjNonMono</th>
+<th align="left">adjAlphaForm</th>
+<th align="right">adjAlpha</th>
+<th align="left">pval &lt; adjAlpha</th>
+<th align="left">padj &lt; alpha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">3.992576</td>
+<td align="right">6.54e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /21</td>
+<td align="right">0.0480641</td>
+<td align="left">21 x 0.05/15443</td>
+<td align="right">6.80e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">3.977098</td>
+<td align="right">6.98e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /22</td>
+<td align="right">0.0489694</td>
+<td align="left">22 x 0.05/15443</td>
+<td align="right">7.12e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">3.969507</td>
+<td align="right">7.20e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /23</td>
+<td align="right">0.0483578</td>
+<td align="left">23 x 0.05/15443</td>
+<td align="right">7.45e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">3.954553</td>
+<td align="right">7.67e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /24</td>
+<td align="right">0.0493390</td>
+<td align="left">24 x 0.05/15443</td>
+<td align="right">7.77e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">3.950404</td>
+<td align="right">7.80e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /25</td>
+<td align="right">0.0481941</td>
+<td align="left">25 x 0.05/15443</td>
+<td align="right">8.09e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">3.947772</td>
+<td align="right">7.89e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /26</td>
+<td align="right">0.0468528</td>
+<td align="left">26 x 0.05/15443</td>
+<td align="right">8.42e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">3.947240</td>
+<td align="right">7.91e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /27</td>
+<td align="right">0.0452178</td>
+<td align="left">27 x 0.05/15443</td>
+<td align="right">8.74e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">3.946177</td>
+<td align="right">7.94e-05</td>
+<td align="right">0.0437969</td>
+<td align="left">15443 x pval /28</td>
+<td align="right">0.0437969</td>
+<td align="left">28 x 0.05/15443</td>
+<td align="right">9.07e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">3.923751</td>
+<td align="right">8.72e-05</td>
+<td align="right">0.0454537</td>
+<td align="left">15443 x pval /29</td>
+<td align="right">0.0464252</td>
+<td align="left">29 x 0.05/15443</td>
+<td align="right">9.39e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">3.920680</td>
+<td align="right">8.83e-05</td>
+<td align="right">0.0454537</td>
+<td align="left">15443 x pval /30</td>
+<td align="right">0.0454537</td>
+<td align="left">30 x 0.05/15443</td>
+<td align="right">9.71e-05</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+<table style="width:100%;">
+<colgroup>
+<col width="7%" />
+<col width="8%" />
+<col width="8%" />
+<col width="15%" />
+<col width="10%" />
+<col width="14%" />
+<col width="8%" />
+<col width="14%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">z.value</th>
+<th align="right">p.value</th>
+<th align="right">padj</th>
+<th align="left">padjNonMonoForm</th>
+<th align="right">padjNonMono</th>
+<th align="left">adjAlphaForm</th>
+<th align="right">adjAlpha</th>
+<th align="left">pval &lt; adjAlpha</th>
+<th align="left">padj &lt; alpha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">3.899404</td>
+<td align="right">0.0000964</td>
+<td align="right">0.0478784</td>
+<td align="left">15443 x pval /31</td>
+<td align="right">0.0480376</td>
+<td align="left">31 x 0.05/15443</td>
+<td align="right">0.0001004</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">3.892514</td>
+<td align="right">0.0000992</td>
+<td align="right">0.0478784</td>
+<td align="left">15443 x pval /32</td>
+<td align="right">0.0478784</td>
+<td align="left">32 x 0.05/15443</td>
+<td align="right">0.0001036</td>
+<td align="left">TRUE</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">3.863097</td>
+<td align="right">0.0001120</td>
+<td align="right">0.0523932</td>
+<td align="left">15443 x pval /33</td>
+<td align="right">0.0523932</td>
+<td align="left">33 x 0.05/15443</td>
+<td align="right">0.0001068</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="right">3.847472</td>
+<td align="right">0.0001193</td>
+<td align="right">0.0527813</td>
+<td align="left">15443 x pval /34</td>
+<td align="right">0.0542062</td>
+<td align="left">34 x 0.05/15443</td>
+<td align="right">0.0001101</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="right">3.846897</td>
+<td align="right">0.0001196</td>
+<td align="right">0.0527813</td>
+<td align="left">15443 x pval /35</td>
+<td align="right">0.0527813</td>
+<td align="left">35 x 0.05/15443</td>
+<td align="right">0.0001133</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="right">…</td>
+<td align="right">…</td>
+<td align="right">…</td>
+<td align="left">…</td>
+<td align="right">…</td>
+<td align="left">…</td>
+<td align="right">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+</tbody>
+</table>
+<table style="width:100%;">
+<colgroup>
+<col width="9%" />
+<col width="8%" />
+<col width="8%" />
+<col width="16%" />
+<col width="9%" />
+<col width="15%" />
+<col width="8%" />
+<col width="13%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">z.value</th>
+<th align="right">p.value</th>
+<th align="right">padj</th>
+<th align="left">padjNonMonoForm</th>
+<th align="right">padjNonMono</th>
+<th align="left">adjAlphaForm</th>
+<th align="right">adjAlpha</th>
+<th align="left">pval &lt; adjAlpha</th>
+<th align="left">padj &lt; alpha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.0003165</td>
+<td align="right">0.9997475</td>
+<td align="right">0.9999417</td>
+<td align="left">15443 x pval /15440</td>
+<td align="right">0.9999417</td>
+<td align="left">15440 x 0.05/15443</td>
+<td align="right">0.0499903</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="right">-0.0002325</td>
+<td align="right">0.9998145</td>
+<td align="right">0.9999440</td>
+<td align="left">15443 x pval /15441</td>
+<td align="right">0.9999440</td>
+<td align="left">15441 x 0.05/15443</td>
+<td align="right">0.0499935</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="right">-0.0000953</td>
+<td align="right">0.9999240</td>
+<td align="right">0.9999665</td>
+<td align="left">15443 x pval /15442</td>
+<td align="right">0.9999887</td>
+<td align="left">15442 x 0.05/15443</td>
+<td align="right">0.0499968</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="right">0.0000420</td>
+<td align="right">0.9999665</td>
+<td align="right">0.9999665</td>
+<td align="left">15443 x pval /15443</td>
+<td align="right">0.9999665</td>
+<td align="left">15443 x 0.05/15443</td>
+<td align="right">0.0500000</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>pFDR &lt;-<span class="st"> </span>dti <span class="op">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="st">  </span><span class="kw">ggplot</span>(</span>
+<span id="cb23-3"><a href="#cb23-3"></a>    <span class="kw">aes</span>(</span>
+<span id="cb23-4"><a href="#cb23-4"></a>      coord.y,</span>
+<span id="cb23-5"><a href="#cb23-5"></a>      coord.x,</span>
+<span id="cb23-6"><a href="#cb23-6"></a>      <span class="dt">color=</span>zFDR)</span>
+<span id="cb23-7"><a href="#cb23-7"></a>    ) <span class="op">+</span></span>
+<span id="cb23-8"><a href="#cb23-8"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb23-9"><a href="#cb23-9"></a><span class="st">  </span><span class="kw">scale_colour_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;blue&quot;</span>,<span class="dt">mid=</span><span class="st">&quot;white&quot;</span>,<span class="dt">high=</span><span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb23-10"><a href="#cb23-10"></a><span class="st">  </span><span class="kw">transition_manual</span>(coord.z) <span class="op">+</span></span>
+<span id="cb23-11"><a href="#cb23-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;transection z = {frame}&quot;</span>) <span class="op">+</span></span>
+<span id="cb23-12"><a href="#cb23-12"></a><span class="st">  </span><span class="kw">theme_grey</span>()</span></code></pre></div>
+</div>
+<div id="visualisation-of-significant-differences-in-brain-activity-at-the-5-fdr" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Visualisation of significant differences in brain activity at the 5% FDR</h3>
+<p><img src="lsi_files/figure-html/unnamed-chunk-16-1.gif" /><!-- --></p>
+<hr />
+</div>
+</div>
+<div id="comments-and-extensions" class="section level2">
+<h2><span class="header-section-number">2.5</span> Comments and Extensions</h2>
+<ul>
+<li>Benjamini and Hochberg published their method in 1995; it was one of the first FDR control methods.</li>
+<li>The same authors published later yet other FDR control methods.</li>
+<li>For this reason their 1995 method is often referred to as the Benjamini and Hochberg 1995 method, or BH95.</li>
+<li>As input the method only needs the <span class="math inline">\(p\)</span>-values from the <span class="math inline">\(m\)</span> hypotheses tests.</li>
+<li>When controlling FDR, the adjusted <span class="math inline">\(p\)</span>-values are often referred to as <span class="math inline">\(q\)</span>-values.</li>
+</ul>
+<hr />
+<ul>
+<li>It is a <strong>linear step-up procedure</strong> : it starts from the least significant result (largest p-value) and steps-up to more significant results (lower p-values).</li>
+<li>In FDR terminology the adjusted <span class="math inline">\(p\)</span>-value is often referred to as a <span class="math inline">\(q\)</span>-value.</li>
+<li>The BH95 method assumes that all tests are mutually independent (or at least a particular form of positive dependence between the p-values).</li>
+<li>When the assumptions hold, it guarantees <span class="math display">\[
+  \text{FDR}=\text{E}\left[TP/R\right]=\text{E}\left[\text{FDP}\right] \leq \frac{m_0}{m} \alpha \leq \alpha .
+\]</span></li>
+</ul>
+<hr />
+<div id="extension" class="section level3">
+<h3><span class="header-section-number">2.5.1</span> Extension</h3>
+<p>Thus, if we knew <span class="math inline">\(m_0\)</span> (the number of true nulls), we could improve the method by applying it to the level <span class="math inline">\(\alpha m/m_0\)</span> (cfr. Bonferroni).</p>
+<p><span class="math inline">\(\longrightarrow\)</span> many FDR methods consist in estimating <span class="math inline">\(m_0\)</span> or the fraction of null genes <span class="math inline">\(m_0/m\)</span>.</p>
+<p>The inequality <span class="math display">\[
+  \text{FDR} \leq \frac{m_0}{m} \alpha \leq \alpha
+\]</span> shows that BH1995 is a conservative method, i.e. it controls the FDR at the safe side, i.e. when one is prepared to control the FDR at the nominal level <span class="math inline">\(\alpha\)</span>, the BH95 will guarantee that the true FDR is not larger than the nominal level (when the assumptions hold).</p>
+<ul>
+<li><p>More interestingly is that <span class="math inline">\(\frac{m_0}{m} \alpha\)</span> is in between the true FDR and the nominal FDR.</p></li>
+<li><p>Suppose that <span class="math inline">\(m_0\)</span> were known and that the BH95 method were applied at the nominal FDR level of <span class="math inline">\(\alpha=m/m_0 \alpha^*\)</span>, in which <span class="math inline">\(\alpha^*\)</span> is the FDR level we want to control. Then the inequality gives <span class="math display">\[
+\text{FDR} \leq \frac{m_0}{m} \alpha = \frac{m_0}{m} \frac{m}{m_0}\alpha^* = \alpha^* ,
+\]</span> and hence BH95 would better control the FDR at <span class="math inline">\(\alpha^*\)</span>.</p></li>
+<li><p>Note that <span class="math inline">\(\alpha=m/m_0 \alpha^*&gt;\alpha^*\)</span> and hence the results is less conservative than the original BH95 method.</p></li>
+</ul>
+<hr />
+<p>The above reasoning implies a <strong>generalized adaptive linear step-up procedure</strong>:</p>
+<ul>
+<li>estimate <span class="math inline">\(m_0\)</span>: <span class="math inline">\(\hat{m}_0\)</span></li>
+<li>of <span class="math inline">\(\hat{m}_0=0\)</span>, reject all null hypotheses; otherwise, apply the step-up procedure of BH 95 at the level <span class="math inline">\(\alpha=m \alpha^*/\hat{m}_0\)</span> to control the FDR at <span class="math inline">\(\alpha^*\)</span>.</li>
+</ul>
+<p>The adjusted <span class="math inline">\(p\)</span>-values (=<span class="math inline">\(q\)</span>-values) are obtained as <span class="math display">\[
+  \tilde{p}_{(i)} = \frac{\hat{m}_0}{m} \min\left\{\min_{j=i,\ldots, m}\{m p_{(j)}/j\} ,1 \right\}.
+\]</span></p>
+<ul>
+<li>Many FDR procedures can be fit into this definition (e.g. Benjamini and Hochberg (2000) and Tibshirani (2003)).</li>
+<li>We do not give details on the methods for estimating <span class="math inline">\(m_0\)</span>, but some of them are implemented in the R software. On the next page we illustrate with simulated data that BH can be improved with estimated <span class="math inline">\(m_0\)</span>.</li>
+</ul>
+<hr />
+</div>
+<div id="other-important-considerations" class="section level3">
+<h3><span class="header-section-number">2.5.2</span> Other important considerations</h3>
+<ul>
+<li><p>It can be shown that the BH-FDR method weakly controls the FWER, i.e. it controls the FWER if all features are false (<span class="math inline">\(m_0=m\)</span>).</p></li>
+<li><p>The BH-FDR is derived under the assumption of independence of the features and has been shown to be only valid under special forms of dependence between the features.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="local-fdr" class="section level1">
+<h1><span class="header-section-number">3</span> local fdr</h1>
+<div id="introduction-1" class="section level2">
+<h2><span class="header-section-number">3.1</span> Introduction</h2>
+<p>Suppose that the test statistic for testing <span class="math inline">\(H_{0i}\)</span> is denoted by <span class="math inline">\(z_i\)</span>, and that the test statistics have a <span class="math inline">\(N(0,1)\)</span> null distribution.</p>
+<p>If all <span class="math inline">\(m\)</span> null hypotheses are true, the histogram of the <span class="math inline">\(m\)</span> test statistics should approximate the theoretical null distribution (density <span class="math inline">\(f_0(z)\)</span>).</p>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="lsi_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Assuming that the test statistic has a standard normal null distribution is not restrictive. For example, suppose that <span class="math inline">\(t\)</span>-tests have been applied and that the null distribution is <span class="math inline">\(t_d\)</span>, with <span class="math inline">\(d\)</span> representing the degrees of freedom. Let <span class="math inline">\(F_{td}\)</span> denote the distribution function of <span class="math inline">\(t_d\)</span> and let <span class="math inline">\(\Phi\)</span> denote the distribution function of the standard normal distribution. If <span class="math inline">\(T\)</span> denotes the <span class="math inline">\(t\)</span>-test statistic, then, under the null hypothesis, <span class="math display">\[
+  T \sim t_d
+\]</span> and hence <span class="math display">\[
+  F_{td}(T) \sim U[0,1]
+\]</span> and <span class="math display">\[
+  Z = \Phi^{-1}(F_{td}(T)) \sim N(0,1).
+\]</span> If all <span class="math inline">\(m\)</span> null hypotheses are true, then each of the <span class="math inline">\(Z_i\)</span> is <span class="math inline">\(N(0,1)\)</span> and the set of <span class="math inline">\(m\)</span> calculated <span class="math inline">\(z_i\)</span> test statistics may be considered as a sample from <span class="math inline">\(N(0,1)\)</span>. Hence, under these conditions we expect the histogram of the <span class="math inline">\(m\)</span> <span class="math inline">\(z_i\)</span>’s to look like the density of the null distribution.</p>
+</div>
+<div id="two-group-model" class="section level2">
+<h2><span class="header-section-number">3.2</span> Two group model</h2>
+<ul>
+<li><p>Suppose that under the alternative hypothesis the test statistic has density function <span class="math inline">\(f_1(z)\)</span>.</p></li>
+<li><p>We use the term “null” to refer to a case <span class="math inline">\(i\)</span> for which <span class="math inline">\(H_{0i}\)</span> is true, and “non-null” for a case <span class="math inline">\(i\)</span> for which <span class="math inline">\(H_{0i}\)</span> is not true.</p></li>
+<li><p>Consider the <strong>prior probabilities</strong> <span class="math display">\[
+\pi_0 = \text{P}\left[\text{null}\right] \text{ and } \pi_1=\text{P}\left[\text{non-null}\right] = 1-\pi_0.
+\]</span></p></li>
+<li><p>The marginal distribution of the <span class="math inline">\(m\)</span> test statistics is then given by the <strong>mixture distribution</strong></p></li>
+</ul>
+<p><span class="math display">\[
+  f(z) = \pi_0 f_0(z) + \pi_1 f_1(z)
+\]</span></p>
+<div id="examples-of-mixture-distributions" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Examples of mixture distributions</h3>
+<p>We have already explored mixture distributions in detail in the paper reading session on model based clustering.</p>
+<ul>
+<li>blue: <span class="math inline">\(f_0\)</span>: <span class="math inline">\(N(0,1)\)</span>, red: <span class="math inline">\(f_1\)</span>: <span class="math inline">\(N(1,1)\)</span></li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>components &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">z =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>,.<span class="dv">01</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb25-3"><a href="#cb25-3"></a>    <span class="dt">f0 =</span> <span class="kw">dnorm</span>(z),</span>
+<span id="cb25-4"><a href="#cb25-4"></a>    <span class="dt">f1 =</span> <span class="kw">dnorm</span>(z, <span class="dt">mean =</span> <span class="dv">1</span>))</span>
+<span id="cb25-5"><a href="#cb25-5"></a></span>
+<span id="cb25-6"><a href="#cb25-6"></a>components <span class="op">%&gt;%</span></span>
+<span id="cb25-7"><a href="#cb25-7"></a><span class="st">  </span><span class="kw">gather</span>(component, density, <span class="op">-</span>z) <span class="op">%&gt;%</span></span>
+<span id="cb25-8"><a href="#cb25-8"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(z,density,<span class="dt">color =</span> component)) <span class="op">+</span></span>
+<span id="cb25-9"><a href="#cb25-9"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb25-10"><a href="#cb25-10"></a><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;red&quot;</span>))</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>The graphs shows the two component distributions separately.</p>
+<hr />
+<ul>
+<li>blue: <span class="math inline">\(\pi_0 \times f_0\)</span> with <span class="math inline">\(\pi_0=0.9\)</span> and <span class="math inline">\(f_0 = N(0,1)\)</span></li>
+<li>red: <span class="math inline">\(\pi_1\times f_1\)</span> with <span class="math inline">\(\pi_1=1-\pi_0=0.1\)</span> and <span class="math inline">\(f_1 = N(1,1)\)</span></li>
+</ul>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>p0 &lt;-<span class="st"> </span><span class="fl">0.9</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>p1 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>p0</span>
+<span id="cb26-3"><a href="#cb26-3"></a>mu1 &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb26-4"><a href="#cb26-4"></a>scaledComponents &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">z =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>,.<span class="dv">01</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb26-6"><a href="#cb26-6"></a>    <span class="dt">p0xf0 =</span> <span class="kw">dnorm</span>(z) <span class="op">*</span><span class="st"> </span>p0,</span>
+<span id="cb26-7"><a href="#cb26-7"></a>    <span class="dt">p1xf1 =</span> <span class="kw">dnorm</span>(z, <span class="dt">mean =</span> mu1)<span class="op">*</span>p1</span>
+<span id="cb26-8"><a href="#cb26-8"></a>    )</span>
+<span id="cb26-9"><a href="#cb26-9"></a></span>
+<span id="cb26-10"><a href="#cb26-10"></a>scaledComponents <span class="op">%&gt;%</span></span>
+<span id="cb26-11"><a href="#cb26-11"></a><span class="st">  </span><span class="kw">gather</span>(component, density, <span class="op">-</span>z) <span class="op">%&gt;%</span></span>
+<span id="cb26-12"><a href="#cb26-12"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(z,density,<span class="dt">color =</span> component)) <span class="op">+</span></span>
+<span id="cb26-13"><a href="#cb26-13"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb26-14"><a href="#cb26-14"></a><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;red&quot;</span>)) <span class="op">+</span></span>
+<span id="cb26-15"><a href="#cb26-15"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Scaled components&quot;</span>)</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<hr />
+<p>Mixture distribution</p>
+<ul>
+<li>blue: <span class="math inline">\(\pi_0 \times f_0\)</span> with <span class="math inline">\(\pi_0=0.9\)</span> and <span class="math inline">\(f_0 = N(0,1)\)</span></li>
+<li>red: <span class="math inline">\(\pi_1\times f_1\)</span> with <span class="math inline">\(\pi_1=1-\pi_0=0.1\)</span> and <span class="math inline">\(f_1 = N(1,1)\)</span></li>
+<li>black: <span class="math inline">\(f=\pi_0 f_0 + \pi_1 f_1\)</span></li>
+</ul>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>scaledComponents <span class="op">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">f=</span>p0xf0<span class="op">+</span>p1xf1) <span class="op">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span><span class="kw">gather</span>(component, density, <span class="op">-</span>z) <span class="op">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(z,density,<span class="dt">color =</span> component)) <span class="op">+</span></span>
+<span id="cb27-5"><a href="#cb27-5"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb27-6"><a href="#cb27-6"></a><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;black&quot;</span>,<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;red&quot;</span>)) <span class="op">+</span></span>
+<span id="cb27-7"><a href="#cb27-7"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Mixture and scaled components&quot;</span>)</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<hr />
+<p>Mixture <span class="math inline">\(\pi_0 f_0(z)+\pi_1 f_1(z)\)</span> with <span class="math inline">\(\pi_0=0.65\)</span> and <span class="math inline">\(f_1= N(2,1)\)</span> and <span class="math inline">\(f_0 = N(0,1)\)</span></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>p0 &lt;-<span class="st"> </span><span class="fl">0.65</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a>p1 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>p0</span>
+<span id="cb28-3"><a href="#cb28-3"></a>mu1 &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb28-4"><a href="#cb28-4"></a>scaledComponents &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">z =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>,.<span class="dv">01</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb28-5"><a href="#cb28-5"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb28-6"><a href="#cb28-6"></a>    <span class="dt">p0xf0 =</span> <span class="kw">dnorm</span>(z) <span class="op">*</span><span class="st"> </span>p0,</span>
+<span id="cb28-7"><a href="#cb28-7"></a>    <span class="dt">p1xf1 =</span> <span class="kw">dnorm</span>(z, <span class="dt">mean =</span> mu1)<span class="op">*</span>p1)</span>
+<span id="cb28-8"><a href="#cb28-8"></a></span>
+<span id="cb28-9"><a href="#cb28-9"></a>scaledComponents <span class="op">%&gt;%</span></span>
+<span id="cb28-10"><a href="#cb28-10"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">f=</span>p0xf0<span class="op">+</span>p1xf1) <span class="op">%&gt;%</span></span>
+<span id="cb28-11"><a href="#cb28-11"></a><span class="st">  </span><span class="kw">gather</span>(component, density, <span class="op">-</span>z) <span class="op">%&gt;%</span></span>
+<span id="cb28-12"><a href="#cb28-12"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(z,density,<span class="dt">color =</span> component)) <span class="op">+</span></span>
+<span id="cb28-13"><a href="#cb28-13"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb28-14"><a href="#cb28-14"></a><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;black&quot;</span>,<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;red&quot;</span>)) <span class="op">+</span></span>
+<span id="cb28-15"><a href="#cb28-15"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Mixture and scaled components (p0 = 0.35)&quot;</span>)</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+<div id="simulations" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> simulations</h3>
+<p>Simulated data: 20000 <span class="math inline">\(z\)</span>-statistics with <span class="math inline">\(\pi_1=0.10\)</span> non-nulls with <span class="math inline">\(f_1=N(1,1)\)</span>.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>p0 &lt;-<span class="st"> </span><span class="fl">.9</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>p1 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>p0</span>
+<span id="cb29-3"><a href="#cb29-3"></a>mu1 &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb29-4"><a href="#cb29-4"></a>m &lt;-<span class="st"> </span><span class="dv">20000</span></span>
+<span id="cb29-5"><a href="#cb29-5"></a></span>
+<span id="cb29-6"><a href="#cb29-6"></a>zSim &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb29-7"><a href="#cb29-7"></a>  <span class="kw">rnorm</span>(m <span class="op">*</span><span class="st"> </span>p0),</span>
+<span id="cb29-8"><a href="#cb29-8"></a>  <span class="kw">rnorm</span>(m <span class="op">*</span><span class="st"> </span>p1, <span class="dt">mean=</span>mu1)</span>
+<span id="cb29-9"><a href="#cb29-9"></a>  )</span>
+<span id="cb29-10"><a href="#cb29-10"></a></span>
+<span id="cb29-11"><a href="#cb29-11"></a>zSim <span class="op">%&gt;%</span></span>
+<span id="cb29-12"><a href="#cb29-12"></a><span class="st">  </span>as_tibble <span class="op">%&gt;%</span></span>
+<span id="cb29-13"><a href="#cb29-13"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> zSim)) <span class="op">+</span></span>
+<span id="cb29-14"><a href="#cb29-14"></a><span class="st">  </span><span class="kw">geom_histogram</span>(</span>
+<span id="cb29-15"><a href="#cb29-15"></a>    <span class="kw">aes</span>(<span class="dt">y=</span>..density..),</span>
+<span id="cb29-16"><a href="#cb29-16"></a>    <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
+<span id="cb29-17"><a href="#cb29-17"></a><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> dnorm,</span>
+<span id="cb29-18"><a href="#cb29-18"></a>    <span class="dt">args =</span> <span class="kw">list</span>(</span>
+<span id="cb29-19"><a href="#cb29-19"></a>      <span class="dt">mean =</span> <span class="dv">0</span>,</span>
+<span id="cb29-20"><a href="#cb29-20"></a>      <span class="dt">sd=</span><span class="dv">1</span>),</span>
+<span id="cb29-21"><a href="#cb29-21"></a>    <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="lsi_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>It is hard to see the difference between the histogram and the density function of the null distribution (blue curve), because the mean of <span class="math inline">\(f_1\)</span> is not much larger than 0 and because only <span class="math inline">\(\pi_1=10\%\)</span> non-nulls are included and because the alternative is not far from the null distribution. However, this is not an unrealistic setting.</p>
+<p>Note, that in most settings the non-null features will originate from a mixture of multiple distributions with positive and negative means. Fortunately, the local fdr method does not require us to estimate <span class="math inline">\(f_1\)</span> as we will see further.</p>
+<hr />
+</div>
+</div>
+<div id="local-fdr-1" class="section level2">
+<h2><span class="header-section-number">3.3</span> local fdr</h2>
+<p>We can now calculate the probability that a case is a null given the observed <span class="math inline">\(z\)</span>, <span class="math display">\[
+  \text{P}\left[\text{null}\mid z\right] = \frac{\pi_0 f_0(z)}{f(z)} .
+\]</span> This probability is referred to as the <strong>local false discovery rate</strong>, and denoted by fdr<span class="math inline">\((z)\)</span>.</p>
+<p>If for an observed <span class="math inline">\(z\)</span>, fdr<span class="math inline">\((z)\)</span> is sufficiently small, one may believe that the case is a true discovery (i.e. <span class="math inline">\(H_{0i}\)</span> may be rejected).</p>
+<div id="link-with-fdr" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Link with FDR</h3>
+<p>Recall the definition of the FDR, <span class="math display">\[\begin{eqnarray}
+\text{FDR}
+&amp;=&amp; \text{E}\left[FP/R\right] \\
+&amp;=&amp; \text{E}\left[\text{number of nulls among rejected} / \text{number of rejected}\right] \\
+&amp;=&amp; \text{P}\left[\text{null} \mid \text{rejected}\right]
+\end{eqnarray}\]</span></p>
+<hr />
+<ul>
+<li><p>The FDR is to be interpreted as an overall risk: <em>among all rejected hypotheses</em> (discoveries) it gives the expected fraction (or probability) of a null (false discovery).</p></li>
+<li><p>The local fdr, on the other hand, is to be interpreted as a risk for a specific decision: if a null hypothesis is rejected based on a test statistic value of <span class="math inline">\(z\)</span>, then the local fdr gives the probability of that single discovery being a false discovery.</p></li>
+<li><p>Since the local fdr has a clear interpretation that applies to an individual hypothesis test, it can be used to decide whether or not to reject a null hypothesis.</p></li>
+<li><p>In particular, reject a null hypothesis <span class="math inline">\(H_{0i}\)</span> if fdr<span class="math inline">\((z)&lt;\alpha\)</span>, where <span class="math inline">\(\alpha\)</span> is the nominal local fdr level at which the multiple testing problem need to be controlled at.</p></li>
+<li><p>The local fdr method can only be applied if <span class="math inline">\(\pi_0\)</span> and <span class="math inline">\(f\)</span> can be estimated from the data (see later). The density <span class="math inline">\(f_0\)</span> can be either known (null distribution of the test statistic) or it can be estimated from the observed <span class="math inline">\(m\)</span> test statistics.</p></li>
+</ul>
+<hr />
+<p>For the sake of simplicity, suppose that <span class="math inline">\(H_{0i}\)</span> is tested against a one-sided alternative and that <span class="math inline">\(H_{0i}\)</span> is rejected for small <span class="math inline">\(z\)</span>, i.e.</p>
+<p><span class="math display">\[H_0: z = 0 \text{ vs } H_1: z &lt; 0\]</span></p>
+<p>Suppose that all <span class="math inline">\(H_{0i}\)</span> are rejected for which the observed test statistic is at most <span class="math inline">\(z\)</span>, then we can write</p>
+<p><span class="math display">\[\begin{eqnarray}
+\text{FDR}(z)
+&amp;=&amp; \text{P}\left[\text{null} \mid \text{rejected}\right] \\\\
+&amp;=&amp; \text{P}\left[\text{null} \mid Z\leq z\right] \\\\
+&amp;=&amp; \text{E}_{Z}\left\{\text{P}\left[\text{null} \mid Z\right] \mid Z\leq z\right\} \\\\
+&amp;=&amp; \text{E}_{Z}\left[\text{fdr}(Z) \mid Z\leq z\right] \\\\
+&amp;=&amp; \frac{\int_{-\infty}^z \text{fdr}(u) f(u) du}{\int_{-\infty}^z f(u) du} \\\\
+&amp;=&amp; \frac{\pi_0\int_{-\infty}^z  f_0(u) du}{F(z)} \\\\
+&amp;=&amp; \frac{\pi_0 F_0(z)}{F(z)} .
+\end{eqnarray}\]</span></p>
+<p>This shows that fdr<span class="math inline">\((z)=\frac{\pi_0 f_0(z)}{f(z)}\)</span> and <span class="math inline">\(\text{FDR}(z)=\frac{\pi_0 F_0(z)}{F(z)}\)</span> have similar expression. The former is expressed in terms of density functions, and the latter in terms of the corresponding cumulative distribution functions.</p>
+<p>From the equality <span class="math display">\[
+  \text{FDR}(z) =  \frac{\int_{-\infty}^z \text{fdr}(u) f(u) du}{\int_{-\infty}^z f(u) du}
+\]</span></p>
+<p>we learn that the probability for a false discovery among hypotheses rejected by using threshold <span class="math inline">\(z\)</span>, equals the average of the local false discovery rates fdr<span class="math inline">\((u)\)</span> of the discoveries (<span class="math inline">\(u\leq z\)</span> here).</p>
+<p>Note, that the BH-FDR adopts</p>
+<ul>
+<li><span class="math inline">\(\pi_0=1\)</span>, which is a conservative estimate</li>
+<li>uses the theoretical null for <span class="math inline">\(p=F_0(z)\)</span></li>
+<li>uses the empirical cumulative distribution function <span class="math inline">\(\bar F(z) = \frac{\#Z &lt; z}{m}\)</span> to estimate <span class="math inline">\(F(z)\)</span>.</li>
+</ul>
+<p>A similar identity can be easily shown for two-sided tests.</p>
+</div>
+<div id="estimation-of-fdrzfracpi_0-f_0zfz" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Estimation of fdr<span class="math inline">\((z)=\frac{\pi_0 f_0(z)}{f(z)}\)</span></h3>
+<ul>
+<li><p><span class="math inline">\(f(z)\)</span> can be estimated by nonparametric density estimation methods (<span class="math inline">\(f(z)\)</span> is the marginal distribution of the test statistics; no knowledge about null / non-null is needed)</p></li>
+<li><p><span class="math inline">\(f_0(z)\)</span> is known or can be estimated from the data</p></li>
+<li><p><span class="math inline">\(\pi_0\)</span> can be estimated once <span class="math inline">\(f(z)\)</span> and <span class="math inline">\(f_0(z)\)</span> are estimated for all <span class="math inline">\(z\)</span>.</p></li>
+</ul>
+<hr />
+</div>
+<div id="brainscan-example" class="section level3">
+<h3><span class="header-section-number">3.3.3</span> Brainscan example</h3>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">library</span>(locfdr)</span>
+<span id="cb31-2"><a href="#cb31-2"></a>lfdr &lt;-<span class="st"> </span><span class="kw">locfdr</span>(dti<span class="op">$</span>z.value, <span class="dt">nulltype =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<ul>
+<li><p>In the brainscan example the test statistics are supposed to be <span class="math inline">\(N(0,1)\)</span> distributed under the null hypothesis. Tests are performed two-sided.</p></li>
+<li><p>The argument <code>nulltype=0</code> specifies that the null distribution (<span class="math inline">\(f_0\)</span>) is <span class="math inline">\(N(0,1)\)</span>.</p></li>
+<li><p>The dashed blue line gives <span class="math inline">\(f_0\)</span> and the solid green line is the nonparametric estimate of the marginal density function <span class="math inline">\(f\)</span>. The two densities do not coincide and hence we may anticipate that some of the voxels show differential brain activity.</p></li>
+<li><p>The purple bars indicate the estimated number of non-nulls (among the hypotheses/voxels for a given <span class="math inline">\(z\)</span>-value). The plots shows that more non-nulls are expected for the negative <span class="math inline">\(z\)</span>-values than for the positive <span class="math inline">\(z\)</span>-values (sign of <span class="math inline">\(z\)</span> corresponds to more or less brain activity in normal versus dyslectic children).</p></li>
+</ul>
+</div>
+<div id="problems" class="section level3">
+<h3><span class="header-section-number">3.3.4</span> Problems?</h3>
+<p>Note, however, that</p>
+<ul>
+<li>we typically expect that the majority of the test statistics follow the null distribution.</li>
+<li>that the null distribution in the plot is rescaled</li>
+<li>So, we would expect that the two distributions to overlay in the middle part.</li>
+<li>However, we observe a shift.</li>
+</ul>
+<p>In practise it often happens that the theoretical null distribution is not valid.</p>
+<p>This can happen due to</p>
+<ol style="list-style-type: decimal">
+<li>Failed mathematical assumptions: null distribution is incorrect</li>
+<li>Correlation between the samples</li>
+<li>Correlation between the features</li>
+<li>Confounding that is not corrected for.</li>
+</ol>
+</div>
+</div>
+<div id="advantage-of-having-a-massive-parallel-data-structure" class="section level2">
+<h2><span class="header-section-number">3.4</span> Advantage of having a massive parallel data structure</h2>
+<p>The massive parallel data structure enables us</p>
+<ul>
+<li>to spot deviations from the theoretical null distribution.</li>
+<li>to estimate the null distribution by using all features.</li>
+</ul>
+<p>Efron relaxes the local fdr method by assuming that the null distribution is a Normal distribution but with a mean and variance that can be estimated empirically (based on all the features).</p>
+<p>This can be done by setting the argument <code>nulltype</code> in the locfdr function equal to <code>nulltype = 1</code>, which is the default or be setting <code>nulltype = 2</code>.</p>
+<p>The locfdr method then uses</p>
+<ol style="list-style-type: decimal">
+<li><code>nulltype = 1</code> maximum likelihood to estimate the null by only considering the middle part in the distribution of the test statistics (MLE) or</li>
+<li><code>nulltype = 2</code> a geometric method that places the best fitting normal under the peak of the estimate of f(z). (CME)</li>
+</ol>
+<div id="brainscan-example-1" class="section level3">
+<h3><span class="header-section-number">3.4.1</span> Brainscan example</h3>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>lfdr &lt;-<span class="st"> </span><span class="kw">locfdr</span>(dti<span class="op">$</span>z.value)</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>The plot shows that the null distribution is shifted to negative values and has a standard deviation that remains close to 1.</p>
+<ul>
+<li><p>This often happens if there is correlation between the features.</p></li>
+<li><p>Spatial correlation can be expected in the brain, so voxels that are close to each-other typically will be correlated.</p></li>
+<li><p>The dashed blue line gives <span class="math inline">\(f_0\)</span> and the solid green line is the nonparametric estimate of the marginal density function <span class="math inline">\(f\)</span>. The two densities do not coincide and hence we may anticipate that some of the voxels show differential brain activity.</p></li>
+<li><p>The purple bars indicate the estimated number of non-nulls (among the hypotheses/voxels for a given <span class="math inline">\(z\)</span>-value). The plots shows that only non-nulls for positive <span class="math inline">\(z\)</span>-values are expected (sign of <span class="math inline">\(z\)</span> corresponds to more or less brain activity in normal versus dyslectic children).</p></li>
+</ul>
+<hr />
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>lfdr &lt;-<span class="st"> </span><span class="kw">locfdr</span>(dti<span class="op">$</span>z.value, <span class="dt">plot=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<ul>
+<li><p>The plot at the left is the same as on the previous page.</p></li>
+<li><p>The plot at the right shows the local fdr as the black solid line. Close to <span class="math inline">\(z=0\)</span> the fdr is about 1 (i.e. if those hypotheses would be rejected, the probability of a false positive is about <span class="math inline">\(100\%\)</span>). When moving away from <span class="math inline">\(z=0\)</span> to larger values the fdr drops.</p></li>
+<li><p>This means that we can only discover convincingly differential brain activity for large positive <span class="math inline">\(z\)</span>. Rejecting null hypotheses with large negative <span class="math inline">\(z\)</span> would still be risky: large chance of false discovery.</p></li>
+<li><p>The reason can be read from the first graph: for negative <span class="math inline">\(z\)</span> the ratio <span class="math inline">\(f_0(z)/f(z)\)</span> is almost 1, whereas for large positive <span class="math inline">\(z\)</span> the ratio <span class="math inline">\(f_0(z)/f(z)\)</span> becomes small.</p></li>
+<li><p>Note, that the result is atypically. In most applications we typically pick-up both downregulated (negative z) and upregulated (positive z) features.</p></li>
+</ul>
+<hr />
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>dti &lt;-<span class="st"> </span>dti <span class="op">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb34-3"><a href="#cb34-3"></a>    <span class="dt">lfdr =</span> lfdr<span class="op">$</span>fdr,</span>
+<span id="cb34-4"><a href="#cb34-4"></a>    <span class="dt">zfdr =</span> (lfdr<span class="op">&lt;</span><span class="fl">0.2</span>) <span class="op">*</span><span class="st"> </span>z.value)</span>
+<span id="cb34-5"><a href="#cb34-5"></a></span>
+<span id="cb34-6"><a href="#cb34-6"></a>pfdr &lt;-<span class="st"> </span>dti <span class="op">%&gt;%</span></span>
+<span id="cb34-7"><a href="#cb34-7"></a><span class="st">  </span><span class="kw">ggplot</span>(</span>
+<span id="cb34-8"><a href="#cb34-8"></a>    <span class="kw">aes</span>(</span>
+<span id="cb34-9"><a href="#cb34-9"></a>      coord.y,</span>
+<span id="cb34-10"><a href="#cb34-10"></a>      coord.x,</span>
+<span id="cb34-11"><a href="#cb34-11"></a>      <span class="dt">color=</span>zfdr)</span>
+<span id="cb34-12"><a href="#cb34-12"></a>    ) <span class="op">+</span></span>
+<span id="cb34-13"><a href="#cb34-13"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb34-14"><a href="#cb34-14"></a><span class="st">  </span><span class="kw">scale_colour_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;blue&quot;</span>,<span class="dt">mid=</span><span class="st">&quot;white&quot;</span>,<span class="dt">high=</span><span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb34-15"><a href="#cb34-15"></a><span class="st">  </span><span class="kw">transition_manual</span>(coord.z) <span class="op">+</span></span>
+<span id="cb34-16"><a href="#cb34-16"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;transection z = {frame}&quot;</span>) <span class="op">+</span></span>
+<span id="cb34-17"><a href="#cb34-17"></a><span class="st">  </span><span class="kw">theme_grey</span>()</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-28-1.gif" /><!-- --></p>
+<p>Note, that the local fdr method allows us to detect differential brain activity in a specific region in the front part of the brain for which a larger fractional anisotropy is observed on average for childeren having dyslexia.</p>
+<p>We can also estimate the FDR of the set that we return as the average local fdr in this set.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>dti <span class="op">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="st">  </span><span class="kw">filter</span>(lfdr <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.2</span>) <span class="op">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3"></a><span class="st">  </span><span class="kw">pull</span>(lfdr) <span class="op">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4"></a><span class="st">  </span>mean</span></code></pre></div>
+<pre><code>## [1] 0.1034925</code></pre>
+</div>
+</div>
+<div id="power" class="section level2">
+<h2><span class="header-section-number">3.5</span> Power</h2>
+<p>The local false discovery rate may also be used to get <strong>power diagnostics</strong>.</p>
+<p>General idea: for <span class="math inline">\(z\)</span>’s supported by the alternative hypothesis (i.e. large <span class="math inline">\(f_1(z)\)</span>), we hope to see small fdr<span class="math inline">\((z)\)</span>.</p>
+<p>The <strong>expected fdr</strong> is an appropriate summary measure: <span class="math display">\[
+  \text{Efdr} = \text{E}_{f1}\left[\text{fdr}(Z)\right] = \int_{-\infty}^{+\infty} \text{fdr}(z) f_1(z) dz.
+\]</span></p>
+<p>With estimates of fdr<span class="math inline">\((z)\)</span> and <span class="math inline">\(f_1(z)\)</span>, the Efdr can be computed.</p>
+<p>A small Efdr is an indication of a powerful study.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>lfdr &lt;-<span class="st"> </span><span class="kw">locfdr</span>(dti<span class="op">$</span>z.value, <span class="dt">plot =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p>With <span class="math inline">\(\alpha\)</span> the nominal local fdr level, the vertical axis gives <span class="math display">\[
+  \text{E}_{f_1}\left[\text{fdr}(Z)&lt;\alpha\right].
+\]</span></p>
+<p>where <span class="math inline">\(Z\)</span> is the test statistic distributed under the alternative hypothesis (<span class="math inline">\(f_1\)</span>).</p>
+<ul>
+<li><p>This probability <span class="math inline">\(\text{P}_{f_1}\left[\text{fdr}(Z)&lt;\alpha\right]\)</span> is a kind of extension of the definition of the power of a test: it is the probability that a non-null can be detected when the nominal local fdr is set at <span class="math inline">\(\alpha\)</span>.</p></li>
+<li><p>The graph shows, for examples, that with <span class="math inline">\(\alpha=0.20\)</span> we only have <span class="math inline">\(\text{P}_{f_1}\left[\text{fdr}(Z)&lt;\alpha\right] =0.24\)</span>, i.e. only <span class="math inline">\(24\%\)</span> of the non-nulls are expected to be discovered.</p></li>
+<li><p>At the bottom of the graph we read Efdr<span class="math inline">\(=0.486\)</span>. Hence, the local fdr for a typical non-null feature is expected to be 48.6% which is rather large. The study is not well powered!</p></li>
+</ul>
+</div>
+<div id="comparison-with-gene-expression-study" class="section level2">
+<h2><span class="header-section-number">3.6</span> Comparison with gene expression study</h2>
+<ul>
+<li>HIV dataset: 7680 z-values, each relating to a two-sample t-test comparing gene expression of 4 normal to 4 HIV patients.</li>
+</ul>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">data</span>(hivdata)</span>
+<span id="cb38-2"><a href="#cb38-2"></a>res &lt;-<span class="st"> </span><span class="kw">locfdr</span>(hivdata,<span class="dt">plot=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>res &lt;-<span class="st"> </span><span class="kw">locfdr</span>(hivdata,<span class="dt">plot=</span><span class="dv">3</span>)</span></code></pre></div>
+<p><img src="lsi_files/figure-html/unnamed-chunk-31-2.png" width="672" /></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">mean</span>(res<span class="op">$</span>fdr[res<span class="op">$</span>fdr<span class="op">&lt;</span><span class="fl">0.2</span>])</span></code></pre></div>
+<pre><code>## [1] 0.07539095</code></pre>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTGFyZ2UgU2NhbGUgSW5mZXJlbmNlIgphdXRob3I6ICJMaWV2ZW4gQ2xlbWVudCIKZGF0ZTogInN0YXRPbWljcywgR2hlbnQgVW5pdmVyc2l0eSAoaHR0cHM6Ly9zdGF0b21pY3MuZ2l0aHViLmlvKSIKb3V0cHV0OgogIHBkZl9kb2N1bWVudDoKICAgIHRvYzogdHJ1ZQogICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlCiAgICBsYXRleF9lbmdpbmU6IHhlbGF0ZXgKLS0tCgojIE1vdGl2YXRpb24KCiMjIEJyYWluIGltYWdpbmcgc3R1ZHkKCgpgYGB7ciBmaWcuYWxpZ249ImNlbnRlciIsIG91dC53aWR0aCA9ICc4MCUnLCBlY2hvPUZBTFNFfQprbml0cjo6aW5jbHVkZV9ncmFwaGljcygiLi9maWd1cmVzL0RUSUNvbG9yLmpwZyIpCmxpYnJhcnkoIm1hZ2ljayIpCmBgYAoKLSBEaWZmdXNpb24gVGVuc29yIEltYWdpbmcgKERUSSkgZGF0YQotIERUSSBtZWFzdXJlcyBmbHVpZCBmbG93cyBpbiB0aGUgYnJhaW4KLSBDb21wYXJpbmcgYnJhaW4gYWN0aXZpdHkgb2Ygc2l4IGR5c2xleGljIGNoaWxkcmVuIHZlcnN1cyBzaXggbm9ybWFsIGNvbnRyb2xzCi0gRnJvbSBlYWNoIGNoaWxkLCBEVEkgcHJvZHVjZWQgb2JzZXJ2YXRpb25zIG9uIDE1NDQzIHZveGVscyAodm94ZWwgPSBzbWFsbCB2b2x1bWUgYXQgYSBwYXJ0aWN1bGFyICh4LCB5LCB4KSBjb29yZGluYXRlKQotIEZvciBlYWNoIHZveGVsLCBhIHR3by1zaWRlZCB0d28tc2FtcGxlIHQtdGVzdCBoYXMgYmVlbiBwZXJmb3JtZWQsIHJlc3VsdGluZyBpbiBhIHotdmFsdWUgKDE1NDQzIHotdmFsdWVzKSBmb3IgZnJhY3Rpb25hbCBhbmlzb3Ryb3B5LgotICBMb3cgdmFsdWVzIGZvciBGQSBpbmRpY2F0ZSBkaWZmdXNpb24gaW4gYWxsIGRpcmVjdGlvbnMsIGhpZ2ggdmFsdWVzIGluZGljYXRlcyBkaXJlY3Rpb25hbCBkaWZmdXNpb24uCi0gUmVzZWFyY2ggcXVlc3Rpb246IGF0IHdoYXQgYnJhaW4gbG9jYXRpb25zICh2b3hlbHMpIHNob3cgZHlzbGV4aWMgY2hpbGRyZW4gYSBkaWZmZXJlbnQgYnJhaW4gYWN0aXZpdHkgYXMgY29tcGFyZWQgdG8gY2hpbGRyZW4gd2l0aG91dCBkeXNsZXhpYT8KCkZvciBlYWNoIHZveGVsIHNlcGFyYXRlbHksIHRoaXMgaXMgYSBzaW1wbGUgcHJvYmxlbSwgYnV0IHRoZSBsYXJnZSBzY2FsZSBvZiB0aGUgcHJvYmxlbSAoMTU0NDMgc2ltdWx0YW5lb3VzIGh5cG90aGVzaXMgdGVzdHMpIGNhdXNlcyB0aGUgcHJvYmxlbSBvZiBtdWx0aXBsaWNpdHkuCgojIyMgRGF0YSBFeHBsb3JhdGlvbgoKVGhlIGRhdGFzZXQgYGR0aWAgY29udGFpbnMKCi0gU3BhdGlhbCBsb2NhdGlvbiAoeCwgeSwgeikgb2YgZWFjaCB2b3hlbAotIHotc3RhdGlzdGljIGZvciBhc3Nlc3NpbmcgZGlmZmVyZW50aWFsIGJyYWluIGFjdGl2aXR5IGJldHdlZW4gZHlzbGV4aWMgYW5kIG5vbi1keXNsZXhpYyBjaGlsZHJlbgoKCgpgYGB7ciwgbWVzc2FnZT1GQUxTRX0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkobG9jZmRyKQpsaWJyYXJ5KGdnYW5pbWF0ZSkKCmR0aSA8LSByZWFkX2NzdigiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3N0YXRPbWljcy9IREEyMDIwL2RhdGEvZHRpLmNzdiIsCiAgICAgICAgICAgICAgICBjb2xfdHlwZXMgPSBjb2xzKCkpCmBgYAoKYGBge3J9CnBaIDwtIGR0aSAlPiUKICBnZ3Bsb3QoCiAgICBhZXMoCiAgICAgIGNvb3JkLnksCiAgICAgIGNvb3JkLngsCiAgICAgIGNvbG9yPXoudmFsdWUpCiAgICApICsKICBnZW9tX3BvaW50KCkgKwogIHNjYWxlX2NvbG91cl9ncmFkaWVudDIobG93ID0gImJsdWUiLG1pZD0id2hpdGUiLGhpZ2g9InJlZCIpICsKICB0cmFuc2l0aW9uX21hbnVhbChjb29yZC56KSArCiAgbGFicyh0aXRsZSA9ICJ0cmFuc2VjdGlvbiB6ID0ge2ZyYW1lfSIpICsKICB0aGVtZV9ncmV5KCkKYGBgCgpXZSB3aWxsIG5vdyBwbG90IHRoZSBhbmltYXRlZCBncmFwaAoKYGBge3IgZXZhbD1GQUxTRX0KcFoKYGBgCgoKX19XQVJOSU5HX186IFRoZSBhbmltYXRlZCBncmFwaCB3aWxsIG9ubHkgYmUgdmlzaWJsZSBpbiB0aGUgSFRNTCBvdXRwdXQsIG5vdCBpbiBQREYgZm9ybWF0LgpJZiB5b3UncmUgcmVhZGluZyB0aGUgUERGIHZlcnNpb24sIGNoZWNrIFtvbmxpbmVdKGh0dHBzOi8vc3RhdG9taWNzLmdpdGh1Yi5pby9IRERBL2xzaS5odG1sIzExMV9EYXRhX0V4cGxvcmF0aW9uKQpmb3IgdGhlIGFuaW1hdGVkIGdyYXBoLgoKYGBge3IgZWNobz1GQUxTRSwgbWVzc2FnZT1GQUxTRSwgZXZhbD1rbml0cjo6aXNfaHRtbF9vdXRwdXQoKX0KYW5pbWF0ZShwWiwgbmZyYW1lcyA9IDEwMywgZW5kX3BhdXNlID0gMykKYGBgCgpXZSB2aXN1YWxpc2VkIHRoZSB0ZXN0LXN0YXRpc3RpYyBvZiBlYWNoIHRlc3QgcGVyIHZveGVsIQoKTm90ZSwgdGhhdCBpdCBpcyBkaWZmaWN1bHQgdG8gc2VlIHN0cnVjdHVyZSBpbiB0aGUgZGF0YS4KCiMjIyBJbmZlcmVuY2UKCldlIGNhbiBjb252ZXJ0IHRoZSB6LXN0YXRpc3RpYyBpbiBhIHR3by1zaWRlZCBwLXZhbHVlIGZvciBlYWNoIHZveGVsIHRvIGFzc2VzcwoKXFtIXzA6IFx0ZXh0e1RoZXJlIGlzIG9uIGF2ZXJhZ2Ugbm8gZGlmZmVyZW5jZSBpbiBicmFpbiBhY3Rpdml0eSBpbiB2b3hlbCB4eXogYmV0d2VlbiBkeXNsZXhpYyBhbmQgbm9uLWR5c2xleGljIGNoaWxkcmVufVxdCiAgXFtcbXVfZD1cbXVfe25kfVxdCgp2cwoKXFtIXzA6IFx0ZXh0e1RoZXJlIGlzIG9uIGF2ZXJhZ2UgYSBkaWZmZXJlbmNlIGluIGJyYWluIGFjdGl2aXR5IGluIHZveGVsIHh5eiBiZXR3ZWVuIGR5c2xleGljIGFuZCBub24tZHlzbGV4aWMgY2hpbGRyZW59XF0KICBcW1xtdV9kXG5lcVxtdV97bmR9XF0KCgpCZWxvdywgd2UgY2FsY3VsYXRlIHRoZSBwLXZhbHVlcyBhbmQgYSB2YXJpYWJsZSB6UCBmb3Igd2hpY2ggd2Uga2VlcCB0aGUgei12YWx1ZSBpZiBpdCBpcyBzdGF0aXN0aWNhbCBzaWduaWZpY2FudCBhdCB0aGUgNSUgbGV2ZWwgb3RoZXJ3aXNlIHdlIHNldCBpdCBlcXVhbCB0byB6UD0wLgoKYGBge3J9CmR0aSA8LSBkdGkgJT4lCiAgbXV0YXRlKAogICAgcC52YWx1ZSA9IHBub3JtKGFicyh6LnZhbHVlKSxsb3dlcj1GQUxTRSkqMiwKICAgIHpQID0gKHAudmFsdWUgPCAwLjA1KSAqIHoudmFsdWUpCgpwUHZhbCA8LSBkdGkgJT4lCiAgZ2dwbG90KAogICAgYWVzKAogICAgICBjb29yZC55LAogICAgICBjb29yZC54LAogICAgICBjb2xvcj16UCkKICAgICkgKwogIGdlb21fcG9pbnQoKSArCiAgc2NhbGVfY29sb3VyX2dyYWRpZW50Mihsb3cgPSAiYmx1ZSIsbWlkPSJ3aGl0ZSIsaGlnaD0icmVkIikgKwogIHRyYW5zaXRpb25fbWFudWFsKGNvb3JkLnopICsKICBsYWJzKHRpdGxlID0gInRyYW5zZWN0aW9uIHogPSB7ZnJhbWV9IikgKwogIHRoZW1lX2dyZXkoKQpgYGAKCgpXZSB3aWxsIG5vdyBwbG90IHRoZSBhbmltYXRlZCBncmFwaAoKYGBge3IgZXZhbD1GQUxTRX0KcFB2YWwKYGBgCgpgYGB7ciBlY2hvPUZBTFNFLCBtZXNzYWdlPUZBTFNFLCBldmFsPWtuaXRyOjppc19odG1sX291dHB1dCgpfQphbmltYXRlKHBQdmFsLCBuZnJhbWVzID0gMTAzLCBlbmRfcGF1c2UgPSAzKQpgYGAKCkl0IGlzIG11Y2ggbW9yZSBlYXN5IHRvIG9ic2VydmUgcGF0dGVybnMgb2YgYWN0aXZpdHkuCgpOb3RlLCBob3dldmVyIHRoYXQKCi0gSGlnaGVyIGF2ZXJhZ2UgRkEgKHogPiAwIGFuZCBwIDwgMC4wNSkgaW4gZHlzbGV4aWMgY2hpbGRyZW4gaXMgYXBwZWFyaW5nIGluIHNwYXRpYWwgcGF0dGVybnMgaW4gc29tZSBsb2NhdGlvbnMuCi0gTG93ZXIgYXZlcmFnZSBGQSAoeiA8IDAgYW5kIHAgPiAwLjA1KSBpbiBkeXNsZXhpYyBjaGlsZHJlbiBpcyBzY2F0dGVyZWQgdGhyb3VnaG91dCB0aGUgYnJhaW4uCi0gTXVsdGlwbGUgdGVzdGluZyBwcm9ibGVtLgotIElmIHRoZXJlIHdvdWxkIGJlIG5vIGFzc29jaWF0aW9uIGJldHdlZW4gYnJhaW4gYWN0aXZpdHkgYW5kIGR5c2xleGlhIHdlIGNhbiBleHBlY3Qgb24gYXZlcmFnZSAkYHIgbnJvdyhkdGkpYFx0aW1lc1xhbHBoYT1gciByb3VuZChucm93KGR0aSkgKiAwLjA1LDApYCQgZmFsc2UgcG9zaXRpdmUgdm94ZWxzIGF0IHRoZSA1JSBsZXZlbCBvZiBzaWduaWZpY2FuY2UuCi0gTm90ZSwgdGhhdCBvbmx5IGByIHN1bShkdGkkcC52YWx1ZSA8IDAuMDUpYCB3ZXJlIHNpZ25pZmljYW50IGF0IHRoZSA1JSBzaWduaWZpY2FuY2UgbGV2ZWwsIHNvIHdlIGNhbiBleHBlY3QgdGhhdCB0aGUgbWFqb3JpdHkgb2YgdGhlIHJldHVybmVkIHZveGVscyBhcmUgZmFsc2UgcG9zaXRpdmVzLgoKYGBge3J9CkZQZXhwZWN0ZWQgIDwtIG5yb3coZHRpKSAqIDAuMDUKUHJlcG9ydGVkIDwtIHN1bShkdGkkcC52YWx1ZSA8IDAuMDUpCgpGUGV4cGVjdGVkClByZXBvcnRlZApgYGAKCiMjIENoYWxsZW5nZXMKCkxhcmdlIFNjYWxlIEluZmVyZW5jZSBpbXBsaWVzCgotIE1hbnkgaHlwb3RoZXNpcyB0byBiZSBldmFsdWF0ZWQKLSBIdWdlIG11bHRpcGxlIHRlc3RpbmcgcHJvYmxlbQotIE1hbnkgZmFsc2UgcG9zaXRpdmVzIGNhbiBiZSBleHBlY3RlZCBpZiB3ZSBkbyBub3QgY29ycmVjdCBmb3IgbXVsdGlwbGUgdGVzdGluZwoKSXNzdWUgaXMgd2lkZXNwcmVhZCBpbiBtYW55IGRpc2NpcGxpbmVzCgotIGdlbm9taWNzCi0gdHJhbnNjcmlwdG9taWNzCi0gcHJvdGVvbWljcwotIGJyYWluIGltYWdpbmcKLSBoaWdoIHRocm91Z2hwdXQgc2luZ2xlIGNlbGwgdGVjaG5vbG9naWVzCi0gZGV0ZWN0aW9uIG9mIGFub21hbG91cyBldmVudHM6IGUuZy4gY3JlZGl0IGNhcmQgZnJhdWQKLSBldmFsdWF0aW9uIG9mIHRyYWRpbmcgcnVsZXMKLSBhY2FkZW1pYyBwZXJmb3JtYW5jZSBvZiBzY2hvb2xzCgojIyBNdWx0aXBsaWNpdHkgUHJvYmxlbQoKU3VwcG9zZSBvbmx5IGEgc2luZ2xlIGh5cG90aGVzaXMgdGVzdCBpcyByZXF1aXJlZCBmb3IgYW5zd2VyaW5nIHRoZSByZXNlYXJjaCBxdWVzdGlvbi4gQSBzdGF0aXN0aWNhbCB0ZXN0IGNvbnRyb2xzIHRoZSBwcm9iYWJpbGl0eSBvZiBtYWtpbmcgYSAqKnR5cGUgSSBlcnJvcioqICh0eXBlIEkgZXJyb3IgcmF0ZSksClxbCiAgIFxhbHBoYSA9XHRleHR7UH1cbGVmdFtcdGV4dHtyZWplY3QgfUhfMCBcbWlkIEhfMFxyaWdodF0gLgpcXQpUaGUgdHlwZSBJIGVycm9yIGlzIGFsc28ga25vd24gYXMgYSAqKmZhbHNlIHBvc2l0aXZlKiogKGkuZS4gJEhfMCQgZXhwcmVzc2VzIGFuIG5lZ2F0aXZlIHJlc3VsdCwgYW5kICRIXzEkIGEgcG9zaXRpdmUgcmVzdWx0KTogJFxhbHBoYT1cdGV4dHtQfVxsZWZ0W1x0ZXh0e2ZhbHNlIHBvc2l0aXZlfVxyaWdodF0kLgoKQW4gaW1wb3J0YW50IHByb3BlcnR5OgoKV2hlbiAkSF8wJCBpcyB0cnVlLCBhbmQgdGhlIGFzc3VtcHRpb25zIHVuZGVybHlpbmcgdGhlIHRlc3QgaG9sZCB0cnVlLCB0aGVuClxbCiAgUCBcc2ltIFVbMCwxXSAuClxdCkhlbmNlLCBmb3IgYW55ICQwPFxhbHBoYTwxJCwKXFsKICBcdGV4dHtQfVxsZWZ0W1x0ZXh0e3JlamVjdCB9SF8wIFxtaWQgSF8wXHJpZ2h0XSA9IFx0ZXh0e1B9XGxlZnRbUDxcYWxwaGEgXG1pZCBIXzBccmlnaHRdID0gXGFscGhhLgpcXQoKVGhlIGRpc3RyaWJ1dGlvbiBvZiB0aGUgei1zdGF0aXN0aWMgYW5kIHRoZSBwLXZhbHVlcyB1bmRlciAkSF8wJCBhcmUgaWxsdXN0cmF0ZWQgYmVsb3c6CgpgYGB7cn0KbGlicmFyeShncmlkRXh0cmEpCgpzaW1EYXRhIDwtIHRpYmJsZSgKICB6LnZhbHVlID0gcm5vcm0oMjAwMDApCiAgKQoKc2ltRGF0YSA8LSBzaW1EYXRhICU+JSBtdXRhdGUocC52YWx1ZSA9IDIqKDEtcG5vcm0oYWJzKHoudmFsdWUpKSkpCgpwMSA8LSBzaW1EYXRhICU+JQogIGdncGxvdChhZXMoeCA9IHoudmFsdWUpKSArCiAgZ2VvbV9oaXN0b2dyYW0oCiAgICBhZXMoeT0uLmRlbnNpdHkuLiksCiAgICBjb2xvciA9ICJibGFjayIpICsKICBzdGF0X2Z1bmN0aW9uKGZ1biA9IGRub3JtLCBhcmdzPWxpc3QobWVhbj0wLCBzZD0xKSkKCnAyIDwtIHNpbURhdGEgJT4lCiAgZ2dwbG90KGFlcyh4ID0gcC52YWx1ZSkpICsKICBnZW9tX2hpc3RvZ3JhbShjb2xvciA9ICJibGFjayIsIGJyZWFrcyA9IHNlcSgwLDEsLjA1KSkKCmdyaWQuYXJyYW5nZShwMSwgcDIsIG5jb2w9MikKYGBgCgpXZSBpbmRlZWQgb2JzZXJ2ZSB0aGF0IHRoZSBwLXZhbHVlcyBhcmUgdW5pZm9ybSB1bmRlciB0aGUgbnVsbCBoeXBvdGhlc2lzLiBTbyBzdGF0aXN0aWNhbCBoeXBvdGhlc2lzIHRlc3RpbmcgcHJvdmlkZXMgYSB1bmlmb3JtIHRlc3Rpbmcgc3RyYXRlZ3kuCgoKIyMjIE5vdGF0aW9uCgpJbiB0aGUgbXVsdGlwbGUgdGVzdGluZyBsaXRlcmF0dXJlIHRoZSBudW1iZXIgb2YgZmVhdHVyZXMgdGhhdCBmb3Igd2hpY2ggYSB0ZXN0IGlzIGNvbmR1Y3RlZCBpcyBkZW5vdGVkIGJ5ICRtJCBpbnN0ZWFkIG9mICRwJCB0byBhdm9pZCBjb25mdXNpb24gd2l0aCB0aGUgc3ltYm9sIGZvciBhIHAtdmFsdWUuCgoKQ29uc2lkZXIgdGVzdGluZyBhbGwgJG09MTU0NDMkIHZveGVscyBzaW11bHRhbmVvdXNseQoKLSBXaGF0IGlmIHdlIGFzc2VzcyBlYWNoIGluZGl2aWR1YWwgdGVzdCBhdCBsZXZlbCAkXGFscGhhJD8KJFxyaWdodGFycm93JCBQcm9iYWJpbGl0eSB0byBoYXZlIGEgZmFsc2UgcG9zaXRpdmUgKEZQKSBhbW9uZyBhbGwgbSBzaW11bHRhdGVub3VzCnRlc3QgJD4+PiAgXGFscGhhPSAwLjA1JAoKLSBJbmRlZWQgZm9yIGVhY2ggbm9uIGRpZmZlcmVudGlhbCB2b3hlbCB3ZSBoYXZlIGEgcHJvYmFiaWxpdHkgb2YgNSUgdG8gcmV0dXJuIGEgRlAuCi0gSW4gYSB0eXBpY2FsIGV4cGVyaW1lbnQgdGhlIG1ham9yaXR5IG9mIHRoZSB2b3hlbCBhcmUgbm9uIGRpZmZlcmVudGlhbC4KLSBTbyBhbiB1cHBlcmJvdW5kIG9mIHRoZSBleHBlY3RlZCBGUCBpcyAkbSBcdGltZXMgXGFscGhhJCBvciAkMTU0NDMgXHRpbWVzIDAuMDU9YHIgcm91bmQoMTU0NDMqMC4wNSwwKWAkLgoKJFxyaWdodGFycm93JCBIZW5jZSwgd2UgYXJlIGJvdW5kIHRvIGNhbGwgbWFueSBmYWxzZSBwb3NpdGl2ZSB2b3hlbHMgZWFjaCB0aW1lIHdlIHJ1biB0aGUgZXhwZXJpbWVudC4KCgojIyMgIEZhbWlseXdpc2UgZXJyb3IgcmF0ZQoKU3VwcG9zZSB0aGF0ICRtJCBoeXBvdGhlc2VzIGhhdmUgdG8gYmUgdGVzdGVkIHNpbXVsdGFuZW91c2x5IGZvciBhbnN3ZXJpbmcgYSBzaW5nbGUgcmVzZWFyY2ggcXVlc3Rpb24uCgpMZXQgJEhfezBpfSQgZGVub3RlIHRoZSAkaSR0aCBudWxsIGh5cG90aGVzaXMgKCRpPTEsXGxkb3RzLCBtJCkgYW5kIGxldCAkSF8wJCBkZW5vdGUgdGhlIGludGVyc2VjdGlvbiBvZiBhbGwgdGhlc2UgcGFydGlhbCBudWxsIGh5cG90aGVzZXMuCgogSW4gdGhpcyBjYXNlIHRoZSB0eXBlIEkgZXJyb3IgcmF0ZSBpcyBubyBsb25nZXIgcmVsZXZhbnQuIEluc3RlYWQgb25lIG1heSBjb25zaWRlciB0aGUgKipGYW1pbHl3aXNlIEVycm9yIFJhdGUgKEZXRVIpKioKIFxbCiAgIFx0ZXh0e0ZXRVJ9PVx0ZXh0e1B9XGxlZnRbXHRleHR7cmVqZWN0IGF0IGxlYXN0IG9uZSB9SF97MGl9IFxtaWQgSF8wXHJpZ2h0XS4KIFxdCgoKQXNzdW1pbmcgaW5kZXBlbmRlbmNlIGFtb25nIHRoZSAkbSQgdGVzdHMgYW5kIGFzc3VtaW5nIHRoYXQgYWxsIGluZGl2aWR1YWwgdGVzdHMgYXJlIHBlcmZvcm1lZCBhdCB0aGUgJFxhbHBoYSQgbGV2ZWwgb2Ygc2lnbmlmaWNhbmNlLCB0aGUgRldFUiBjYW4gYmUgY29tcHV0ZWQgYXMKClxbClxiZWdpbnthcnJheX17cmNsfQpcdGV4dHtGV0VSfQomPSYgXHRleHR7UH1cbGVmdFtcdGV4dHtyZWplY3QgYXQgbGVhc3Qgb25lIH1IX3swaX0gXG1pZCBIXzBccmlnaHRdIFxcCiY9JiAxIC0gXHRleHR7UH1cbGVmdFtcdGV4dHtyZWplY3Qgbm8gfUhfezBpfSBcbWlkIEhfMFxyaWdodF0gXFwKJj0mIDEtIFx0ZXh0e1B9XGxlZnRbXHRleHR7bm90IHJlamVjdCB9SF97MDF9XHRleHR7IGFuZCB9XGxkb3RzXHRleHR7IGFuZCBub3QgcmVqZWN0IH1IX3swbX0gXG1pZCBIXzBccmlnaHRdIFxcCiY9JiAxLSBccHJvZF97aT0xfV5tIFx0ZXh0e1B9XGxlZnRbXHRleHR7bm90IHJlamVjdCB9SF97MGl9IFxtaWQgSF8wXHJpZ2h0XSBcXAomPSYgMS0gKDEtXGFscGhhKV5tIC4KXGVuZHthcnJheX0KXF0KCiBFeGFtcGxlczoKCiAgJFxhbHBoYT0wLjA1JCBhbmQgJG09NSQ6IEZXRVIkPTAuMjMkCgogJFxhbHBoYT0wLjA1JCBhbmQgJG09MTAwJDogRldFUiQ9MC45OSQKCiAkXGFscGhhPTAuMDUkIGFuZCAkbT0xNTQ0MyQ6IEZXRVIkXGFwcHJveCAxJC4KCi0tLQoKIFRoZXNlIGNhbGN1bGF0aW9ucyBpbGx1c3RyYXRlIHRoZSBwcm9ibGVtIG9mIG11bHRpcGxpY2l0eTogdGhlIG1vcmUgdGVzdHMgdGhhdCBhcmUgcGVyZm9ybWVkLCB0aGUgbGFyZ2VyIHRoZSBwcm9iYWJpbGl0eSB0aGF0IGF0IGxlYXN0IG9uZSBmYWxzZSBwb3NpdGl2ZSBjb25jbHVzaW9uIGlzIG9idGFpbmVkLiBUaHVzIGlmIGFsbCBzaWduaWZpY2FudCByZXN1bHRzIGFyZSBsaXN0ZWQsIGFuZCBzdXBwb3NlIHRoYXQgYWxsIG51bGwgaHlwb3RoZXNlcyBob2xkIHRydWUsIHRoZW4gdGhlIEZXRVIgaXMgdGhlIHByb2JhYmlsaXR5IHRoYXQgYXQgbGVhc3Qgb25lIG9mIHRoZSBsaXN0ZWQgcG9zaXRpdmUgcmVzdWx0cyBpcyBhIGZhbHNlIHBvc2l0aXZlLiBTb21ldGltZXMsIGEgbGlzdCBvZiBzaWduaWZpY2FudCByZXN1bHRzIHJlcHJlc2VudCB0aGUgImRpc2NvdmVyaWVzIiBmcm9tIHRoZSBzdHVkeSwgYW5kIHRoZXJlZm9yZSBhIGZhbHNlIHBvc2l0aXZlIHJlc3VsdCBpcyBvZnRlbiBhbHNvIHJlZmVycmVkIHRvIGFzIGEgZmFsc2UgZGlzY292ZXJ5LgoKRm9yIGV4YW1wbGUsIHdpdGggJG09MTAwJCBhbmQgJFxhbHBoYT0wLjA1JCB0aGUgY2hhbmNlIHRoYXQgYXQgbGVhc3Qgb25lIG9mIHRoZSAiZGlzY292ZXJpZXMiIGlzIGZhbHNlLCBpcyBhYm91dCAkOTlcJSQuIEV2ZW4gd29yc2UsIHdpdGggJG1cYXBwcm94IDE1MDAwJCB0aGUgRldFUiBpbmNyZWFzZXMgdG8gdmlydHVhbGx5ICQxMDBcJSQuIEluIGdlbmVyYWwgd2UgYWxzbyBleHBlY3QgdGhhdCBsaXN0cyBvZiBzaWduaWZpY2FudCByZXN1bHRzIChkaXNjb3ZlcmllcykgZ2V0IGxvbmdlciB3aXRoIGluY3JlYXNpbmcgJG0kLgoKTWFueSByZXNlYXJjaGVycywgaG93ZXZlciwgd2hlbiBwcmVzZW50ZWQgYSBsb25nIGxpc3Qgb2Ygc2lnbmlmaWNhbnQgcmVzdWx0cyAob3IgZGlzY292ZXJpZXMpLCB3b3VsZCBub3QgbWluZCB0b28gbXVjaCBpZiBvbmUgb3IgYSBmZXcgZmFsc2UgZGlzY292ZXJpZXMgYXBwZWFyIGluIHRoZSBsaXN0LiBIZW5jZSwgdGhlIEZXRVIgaXMgbm90IHRoZSBtb3N0IHJlbGV2YW50IHJpc2sgbWVhc3VyZSwgYXMgdGhlIEZXRVIgaXMgYWxsb3dlZCB0byBiZSAkMTAwXCUkIGluIGNhc2UgcmVzZWFyY2hlcnMgZG8gbm90IG1pbmQgdG8gaGF2ZSBhIGZldyBmYWxzZSBkaXNjb3ZlcmllcyBhbW9uZyB0aGUgKHBlcmhhcHMgbWFueSkgcG9zaXRpdmUgcmVzdWx0cyBpbiB0aGUgbGlzdCBvZiBkaXNjb3Zlcmllcy4gQSBiZXR0ZXIgc29sdXRpb24gd2lsbCBiZSBnaXZlbiBsYXRlciwgYnV0IGZpcnN0IHdlIGNvbnRpbnVlIHdpdGggdGhlIHVzZSBvZiBGV0VSLgoKLS0tCgojIyMgTWV0aG9kIG9mIFNpZMOgazogaW52ZXJ0IEZXRVIgdG8gc2lnbmlmaWNhbnQgbGV2ZWwgZm9yIGluZGl2aWR1YWwgdGVzdAoKVGhlIGlkZW50aXR5IEZXRVIkPTEtICgxLVxhbHBoYSlebSQgbWF5IGJlIGludmVydGVkIHRvIGZpbmQgdGhlIHNpZ25pZmljYW5jZSBsZXZlbCBhdCB3aGljaCBlYWNoIGluZGl2aWR1YWwgdGVzdCBzaG91bGQgYmUgdGVzdGVkIHRvIGF0dGFpbiB0aGUgbm9taW5hbCBmYW1pbHl3aXNlIGVycm9yIHJhdGUgYXQgRldFUiwKXFsKICAgXGFscGhhID0gMS0oMS1cdGV4dHtGV0VSfSleezEvbX0KXF0Kc28gdGhhdCB0aGUgc2ltdWx0YW5lb3VzIHRlc3RpbmcgcHJvY2VkdXJlIGNvbnRyb2xzIHRoZSBGV0VSIGF0IHRoZSBkZXNpcmVkIGxldmVsIChtZXRob2Qgb2YgU2lkw6BrKS4KCkV4YW1wbGVzOgoKRldFUiQ9MC4wNSQgYW5kICRtPTUkOiAkXGFscGhhPTAuMDEwMiQKCkZXRVIkPTAuMDUkIGFuZCAkbT0xMDAkOiAkXGFscGhhPTAuMDAwNTEkCgpGV0VSJD0wLjA1JCBhbmQgJG09MTU0NDMkOiAkXGFscGhhPTAuMDAwMDAzMyQuCgpXZSB3aWxsIGFyZ3VlIHRoYXQgdGhpcyBwcm9jZWR1cmUgaXMgdG9vIHN0cmluZ2VudCBmb3IgbGFyZ2UgJG0kLgoKIyMjIEJvbmZlcnJvbmkgbWV0aG9kCgpUaGUgQm9uZmVycm9uaSBtZXRob2QgaXMgYW5vdGhlciBtZXRob2QgdGhhdCBpcyB3aWRlbHkgdXNlZCB0byBjb250cm9sIHRoZSBGV0VSOgoKLSBhc3Nlc3MgZWFjaCB0ZXN0IGF0ClxbXGFscGhhX1x0ZXh0e2Fkan09XGZyYWN7XGFscGhhfXttfVxdCgotIFRoZSBtZXRob2QgZG9lcyBub3QgYXNzdW1lIGluZGVwZW5kZW5jZSBvZiB0aGUgdGVzdCBzdGF0aXN0aWNzLgotIEFnYWluLCB0aGUgbWV0aG9kIGlzIHZlcnkgY29uc2VydmF0aXZlIQoKLS0tCgpUbyBhdHRhaW4gdGhlIGZhbWlseXdpc2UgZXJyb3IgcmF0ZSBhdCBsZXZlbCBGV0VSIHRoZSBpbmRpdmlkdWFsIGh5cG90aGVzZXMgc2hvdWxkIGJlIHRlc3RlZCBhdCB2ZXJ5IHN0cmluZ2VudCBzaWduaWZpY2FuY2UgbGV2ZWxzIHdoZW4gJG0kIGlzIGxhcmdlLiBUaGUgY29uc2VxdWVuY2Ugb2YgdGVzdGluZyBhdCBhIHNtYWxsIHNpZ25pZmljYW5jZSBsZXZlbCAkXGFscGhhJCBpcyB0aGF0IGl0IGlzIGhhcmQgdG8gZmluZCBzaWduaWZpY2FudCByZXN1bHRzLCBhbmQgdGh1cyB0aGUgbGlzdHMgb2Ygc2lnbmlmaWNhbnQgcmVzdWx0cyAoZGlzY292ZXJpZXMpIGlzIGxpa2VseSB0byBiZSBzaG9ydC4gQ29udHJvbGxpbmcgdGhlIEZXRVIgbWVhbnMgdGhhdCB0aGUgY2hhbmNlIGlzIHNtYWxsIHRoYXQgdGhlc2UgbGlzdHMgY29udGFpbiBvbmUgb3IgbW9yZSBmYWxzZSBwb3NpdGl2ZXMuIEEgbmVnYXRpdmUgY29uc2VxdWVuY2UsIGhvd2V2ZXIsIGlzIHRoYXQgbWFueSBvZiB0aGUgdHJ1ZSBwb3NpdGl2ZSBoeXBvdGhlc2lzIChpLmUuICRIXzEkIGlzIHRydWUpIHdpbGwgbm90IGFwcGVhciBpbiB0aGVzZSBzaG9ydCBsaXN0cy4gSGVuY2UsIHRoZSAicG93ZXIiIGlzIHNtYWxsIChwb3dlciBpcyBub3Qgd2VsbCBkZWZpbmVkIGluIHRoaXMgbXVsdGlwbGUgdGVzdGluZyBzZXR0aW5nIC0tIGV4dGVuc2lvbnMgb2YgdGhlIGNvbmNlcHQgYXJlIHBvc3NpYmxlKS4gVGh1cywgYXZvaWRpbmcgZmFsc2UgcG9zaXRpdmVzIGJ5IGNvbnRyb2xsaW5nIHRoZSBGV0VSIGNvbWVzIGF0IGEgcHJpY2U6IG1hbnkgb2YgdGhlIHRydWUgcG9zaXRpdmUgaHlwb3RoZXNpcyBtYXkgYmUgbWlzc2VkLgoKLS0tCgojIyMgQWRqdXN0ZWQgcC12YWx1ZQoKRmlyc3Qgd2UgZ2l2ZSBhIHZlcnkgZ2VuZXJhbCBkZWZpbml0aW9uIG9mIGFuICoqYWRqdXN0ZWQgJHAkLXZhbHVlKiouCgogRGVmaW5lIHRoZSBhZGp1c3RlZCAkcCQtdmFsdWUgYXMKIFxbCiAgIFx0aWxkZXtwfV9pID0gXHtcaW5mIFxhbHBoYVxpblswLDFdOiBcdGV4dHsgcmVqZWN0IH1IX3swaX0gXHRleHR7IGF0IEZXRVIgfSBcYWxwaGFcfSAuCiBcXQogV2l0aCB0aGVzZSBhZGp1c3RlZCAkcCQtdmFsdWUsIHRoZSAkaSR0aCBwYXJ0aWFsIG51bGwgaHlwb3RoZXNpcyBtYXkgIGJlIHJlamVjdGVkIHdoZW4KIFxbCiAgIFx0aWxkZXtwfV9pIDwgXGFscGhhCiBcXQogd2hpbGUgY29udHJvbGxpbmcgdGhlIEZXRVIgYXQgJFxhbHBoYSQuCgogVGhlIGNvcnJlY3RlZCAkcCQtdmFsdWUgc2hvdWxkIGJlIHJlcG9ydGVkLiBJdCBhY2NvdW50cyBmb3IgdGhlIG11bHRpcGxpY2l0eSBwcm9ibGVtIGFuZCBpdCBjYW4gYmUgY29tcGFyZWQgZGlyZWN0bHkgdG8gdGhlIG5vbWluYWwgRldFUiBsZXZlbCB0byBtYWtlIGNhbGxzIGF0IHRoZSBGV0VSIGxldmVsLgoKLSBhZGp1c3RlZCBwLXZhbHVlcyBmb3IgQm9uZmVycm9uaSBtZXRob2Q6ClxbcF9cdGV4dHthZGp9PVx0ZXh0e21pbn1cbGVmdChwIFx0aW1lcyBtLDFccmlnaHQpXF0KCi0tLQoKIyBGYWxzZSBEaXNjb3ZlcnkgUmF0ZQoKIyMgSW50cm9kdWN0aW9uCgpJbiBsYXJnZSBzY2FsZSBpbmZlcmVuY2UgaXQgd291bGQgYmUgbW9yZSBpbnRlcmVzdGluZyB0byB0b2xlcmF0ZSBhIGZldyBmYWxzZSBwb3NpdGl2ZXMgYXMgbG9uZyBhcyB0aGV5IGRvIG5vdCBkb21pbmF0ZSB0aGUgdG9wbGlzdAoKCldlIGZpcnN0IGludHJvZHVjZSBzb21lIG5vdGF0aW9uOgoKVGhlIHRhYmxlIHNob3dzIHRoZSByZXN1bHRzIG9mICRtJCBoeXBvdGhlc2lzIHRlc3RzIGluIGEgc2luZ2xlIGV4cGVyaW1lbnQuCgp8ICAgICAgICAgICAgICAgICAgICAgICAgIHwgYWNjZXB0ICRIX3swaX0kIHwgcmVqZWN0ICRIX3swaX0kIHwgVG90YWwgfAp8Oi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXw6LS0tLS0tLS0tLS0tLS0tOnw6LS0tLS0tLS0tLS0tLS0tOnw6LS0tLS06fAp8IG51bGwgfCBUTiB8IEZQIHwgJG1fMCQgfAp8IG5vbi1udWxsIHwgRk4gfCBUUCB8ICRtXzEkIHwKfCBUb3RhbCB8IE5SIHwgUiB8IG0gfAoKCi0gJFROJDogbnVtYmVyIG9mIHRydWUgbmVnYXRpdmU6IHJhbmRvbSBhbmQgdW5vYnNlcnZlZAotICRGUCQ6IG51bWJlciBvZiBmYWxzZSBwb3NpdGl2ZXM6IHJhbmRvbSBhbmQgdW5vYnNlcnZlZAotICRGTiQ6IG51bWJlciBvZiBmYWxzZSBuZWdhdGl2ZXM6IHJhbmRvbSBhbmQgdW5vYnNlcnZlZAotICRUUCQ6IG51bWJlciBvZiB0cnVlIHBvc2l0aXZlczogcmFuZG9tIGFuZCB1bm9ic2VydmVkCi0gJE5SJDogbnVtYmVyIG9mIGFjY2VwdGFuY2VzIChuZWdhdGl2ZSByZXN1bHRzKTogcmFuZG9tIGFuZCBvYnNlcnZlZAotICRSJDogbnVtYmVyIG9mIHJlamVjdGlvbnMgKHBvc2l0aXZlIHJlc3VsdHMpOiByYW5kb20gYW5kIG9ic2VydmVkCi0gJG1fMCQgYW5kICRtXzEkOiBmaXhlZCBhbmQgdW5vYnNlcnZlZAotICRtJDogZml4ZWQgYW5kIG9ic2VydmVkCgotLS0KCi0gTm90ZSB0aGF0IHRoZSB0YWJsZSBpcyBub3QgY29tcGxldGVseSBvYnNlcnZhYmxlLgotIEluZGVlZCwgd2UgY2FuIG9ubHkgb2JzZXJ2ZSB0aGUgYm90dG9tIHJvdyEKLSBUaGUgdGFibGUgaXMgaW50cm9kdWNlZCB0byBiZXR0ZXIgdW5kZXJzdGFuZCB0aGUgY29uY2VwdCBvZiBGV0VSIGFuZCB0byBpbnRyb2R1Y2UgdGhlIGNvbmNlcHQgb2YgdGhlIGZhbHNlIGRpc2NvdmVyeSByYXRlIChGRFIpLgoKLS0tCgp8ICAgICAgICAgICAgICAgICAgICAgICAgIHwgYWNjZXB0ICRIX3swaX0kIHwgcmVqZWN0ICRIX3swaX0kIHwgVG90YWwgfAp8Oi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXw6LS0tLS0tLS0tLS0tLS0tOnw6LS0tLS0tLS0tLS0tLS0tOnw6LS0tLS06fAp8IG51bGwgfCBUTiB8IEZQIHwgJG1fMCQgfAp8IG5vbi1udWxsIHwgRk4gfCBUUCB8ICRtXzEkIHwKfCBUb3RhbCB8IE5SIHwgUiB8IG0gfAoKVGhlIEZXRVIgY2FuIG5vdyBiZSByZWV4cHJlc3NlZCBhcwogXFsKICAgXHRleHR7RldFUn09XHRleHR7UH1cbGVmdFtcdGV4dHtyZWplY3QgYXQgbGVhc3Qgb25lIH1IX3swaX0gXG1pZCBIXzBccmlnaHRdID0gXHRleHR7UH1cbGVmdFtGUD4wXHJpZ2h0XSAuCiBcXQoKCi0gSG93ZXZlciwgd2Uga25vdyB0aGF0IHRoZSBGV0VSIGlzIHZlcnkgY29uc2VydmF0aXZlIGluIGxhcmdlIHNjYWxlIGluZmVyZW5jZSBwcm9ibGVtcy4KLSBUaGVyZWZvcmUgaXQgd291bGQgYmUgbW9yZSBpbnRlcmVzdGluZyB0byB0b2xlcmF0ZSBhIGZldyBmYWxzZSBwb3NpdGl2ZXMgYXMgbG9uZyBhcyB0aGV5IGRvIG5vdCBkb21pbmF0ZSB0aGUgdG9wbGlzdAoKVGhlICoqRmFsc2UgRGlzY292ZXJ5IFByb3BvcnRpb24gKEZEUCkqKiBpcyB0aGUgZnJhY3Rpb24gb2YgZmFsc2UgcG9zaXRpdmVzIHRoYXQgYXJlIHJldHVybmVkLCBpLmUuCgpcWwpGRFAgPSBcZnJhY3tGUH17Un0KXF0KCi0gSG93ZXZlciwgdGhpcyBxdWFudGl0eSBjYW5ub3QgYmUgb2JzZXJ2ZWQgYmVjYXVzZSBpbiBwcmFjdGljZSB3ZSBvbmx5IGtub3cgdGhlIG51bWJlciBvZiB2b3hlbHMgZm9yIHdoaWNoIHdlIHJlamVjdGVkICRIXzAkLCAkUiQuCgotIEJ1dCwgd2UgZG8gbm90IGtub3cgdGhlIG51bWJlciBvZiBmYWxzZSBwb3NpdGl2ZXMsICRGUCQuCgpUaGVyZWZvcmUsIEJlbmphbWluaSBhbmQgSG9jaGJlcmcsIDE5OTUsIGRlZmluZWQgVGhlICoqRmFsc2UgRGlzY292ZXJ5IFJhdGUgKEZEUikqKiBhcwpcWwogICBcdGV4dHtGRFJ9ID0gXHRleHR7RX1cbGVmdFtcZnJhY3tGUH17Un1ccmlnaHRdID1cdGV4dHtFfVxsZWZ0W1x0ZXh0e0ZEUH1ccmlnaHRdClxdCnRoZSBleHBlY3RlZCBGRFAsIGluIHRoZWlyIHNlbWluYWwgcGFwZXIgQmVuamFtaW5pLCBZLiBhbmQgSG9jaGJlcmcsIFkuICgxOTk1KS4gIkNvbnRyb2xsaW5nIHRoZSBmYWxzZSBkaXNjb3ZlcnkgcmF0ZTogYSBwcmFjdGljYWwgYW5kIHBvd2VyZnVsIGFwcHJvYWNoIHRvIG11bHRpcGxlIHRlc3RpbmciLiBKb3VybmFsIG9mIHRoZSBSb3lhbCBTdGF0aXN0aWNhbCBTb2NpZXR5IFNlcmllcyBCLCA1NyAoMSk6IDI4OeKAkzMwMC4KCi0gQW4gRkRSIG9mIDElIG1lYW5zIHRoYXQgb24gYXZlcmFnZSB3ZSBleHBlY3QgMSUgZmFsc2UgcG9zaXRpdmUgdm94ZWxzIGluIHRoZSBsaXN0IG9mIHZveGVscyB0aGF0IGFyZSBjYWxsZWQgc2lnbmlmaWNhbnQuCgotIENvbnRyb2xsaW5nIHRoZSBGRFIgYWxsb3dzIGZvciBtb3JlIGRpc2NvdmVyaWVzIChpLmUuIGxvbmdlciBsaXN0cyB3aXRoIHNpZ25pZmljYW50IHJlc3VsdHMpLCB3aGlsZSB0aGUgZnJhY3Rpb24gb2YgZmFsc2UgZGlzY292ZXJpZXMgYW1vbmcgdGhlIHNpZ25pZmljYW50IHJlc3VsdHMgaW4gd2VsbCBjb250cm9sbGVkIG9uIGF2ZXJhZ2UuIEFzIGEgY29uc2VxdWVuY2UsIG1vcmUgb2YgdGhlIHRydWUgcG9zaXRpdmUgaHlwb3RoZXNlcyB3aWxsIGJlIGRldGVjdGVkLgoKIyMgSW50dWl0aW9uIG9mIEJILUZEUiBwcm9jZWR1cmUKCkNvbnNpZGVyICRtID0gMTAwMCQgdm94ZWxzCgotIFN1cHBvc2UgdGhhdCBhIHJlc2VhcmNoZXIgcmVqZWN0cyBhbGwgbnVsbCBoeXBvdGhlc2VzIGZvciB3aGljaCAkcCA8IDAuMDEkLgoKLSBJZiB3ZSB1c2UgJHAgPCAwLjAxJCwgd2UgZXhwZWN0ICQwLjAxIFx0aW1lcyBtXzAkIHRlc3RzIHRvIHJldHVybiBmYWxzZSBwb3NpdGl2ZXMuCi0gQSBjb25zZXJ2YXRpdmUgZXN0aW1hdGUgb2YgdGhlIG51bWJlciBvZiBmYWxzZSBwb3NpdGl2ZXMgdGhhdCB3ZSBjYW4gZXhwZWN0IGNhbiBiZSBvYnRhaW5lZCBieSBjb25zaWRlcmluZyB0aGF0IHRoZSBudWxsIGh5cG90aGVzZXMgYXJlIHRydWUgZm9yIGFsbCBmZWF0dXJlcywgJG1fMCA9IG0gPSAgMTAwMCQuCi0gV2UgdGhlbiB3b3VsZCBleHBlY3QgJDAuMDEgXHRpbWVzIDEwMDAgPSAxMCQgZmFsc2UgcG9zaXRpdmVzICgkRlA9MTAkKS4KCi0gU3VwcG9zZSB0aGF0IHRoZSByZXNlYXJjaGVyIGZvdW5kIDIwMCB2b3hlbHMgd2l0aCAkcDwwLjAxJCAoJFI9MjAwJCkuCgotIFRoZSBwcm9wb3J0aW9uIG9mIGZhbHNlIHBvc2l0aXZlIHJlc3VsdHMgKEZEUCA9IGZhbHNlIHBvc2l0aXZlIHByb3BvcnRpb24pIGFtb25nIHRoZSBsaXN0IG9mICRSPTIwMCQgZ2VuZXMgY2FuIHRoZW4gYmUgZXN0aW1hdGVkIGFzCiBcWwogICBcd2lkZWhhdHtcdGV4dHtGRFB9fT1cZnJhY3tGUH17Un09XGZyYWN7MTB9ezIwMH09XGZyYWN7MC4wMSBcdGltZXMgMTAwMH17MjAwfSA9IDAuMDUuCiBcXQoKCiMjIEJlbmphbWluaSBhbmQgSG9jaGJlcmcgKDE5OTUpIHByb2NlZHVyZSBmb3IgY29udHJvbGxpbmcgdGhlIEZEUiBhdCAkXGFscGhhJAoKMS4gTGV0ICRwX3soMSl9XGxlcSBcbGRvdHMgXGxlcSBwX3sobSl9JCBkZW5vdGUgdGhlIG9yZGVyZWQgJHAkLXZhbHVlcy4KCjIuIEZpbmQgdGhlIGxhcmdlc3QgaW50ZWdlciAkayQgc28gdGhhdAokJApcZnJhY3twX3soayl9IFx0aW1lcyBtfXtrfSBcbGVxIFxhbHBoYQokJAokJFx0ZXh0e29yfSQkCiQkCnBfeyhrKX0gXGxlcSBrIFx0aW1lcyBcYWxwaGEvbQokJAoKMy4gSWYgc3VjaCBhICRrJCBleGlzdHMsIHJlamVjdCB0aGUgJGskIG51bGwgaHlwb3RoZXNlcyBhc3NvY2lhdGVkIHdpdGggJHBfeygxKX0sIFxsZG90cywgcF97KGspfSQuCk90aGVyd2lzZSBub25lIG9mIHRoZSBudWxsIGh5cG90aGVzZXMgaXMgcmVqZWN0ZWQuCgpUaGUgYWRqdXN0ZWQgJHAkLXZhbHVlIChhbHNvIGtub3duIGFzIHRoZSAkcSQtdmFsdWUgaW4gRkRSIGxpdGVyYXR1cmUpOgogJCQKICAgcV97KGkpfT1cdGlsZGV7cH1feyhpKX0gPSBcbWluXGxlZnRbXG1pbl97aj1pLFxsZG90cywgbX1cbGVmdChtIHBfeyhqKX0valxyaWdodCksIDEgXHJpZ2h0XS4KICQkCiBJbiB0aGUgaHlwb3RoZXRpY2FsIGV4YW1wbGUgYWJvdmU6ICRrPTIwMCQsICRwX3soayl9PTAuMDEkLCAkbT0xMDAwJCBhbmQgJFxhbHBoYT0wLjA1JC4KCgotLS0KCiMjIEJyYWluIEV4YW1wbGUKCmBgYHtyfQpkdGkgJT4lCiAgZ2dwbG90KGFlcyh4ID0gcC52YWx1ZSkpICsKICBnZW9tX2hpc3RvZ3JhbShjb2xvciA9ICJibGFjayIsYnJlYWtzID0gc2VxKDAsMSwuMDUpKQpgYGAKCi0gVGhlIGdyYXBoIHNob3dzIHRoZSBoaXN0b2dyYW0gb2YgdGhlICRtPTE1NDQzJCAkcCQtdmFsdWVzLiBJdCBzaG93cyBhIGRpc3RyaWJ1dGlvbiB3aGljaCBpcyBjbG9zZSB0byBhIHVuaWZvcm0gZGlzdHJpYnV0aW9uIGZvciB0aGUgbGFyZ2VyIHAtdmFsdWVzLCBidXQgd2l0aCBtb3JlIHNtYWxsICRwJC12YWx1ZXMgdGhhbiBleHBlY3RlZCB1bmRlciBhIHVuaWZvcm0gZGlzdHJpYnV0aW9uLgoKLSBUaGlzIGlzIGEgdHJlbmQgdGhhdCB3b3VsZCBhcmlzZSBpZiBtb3N0IG9mIHRoZSBoeXBvdGhlc2VzIGFyZSBudWxscyAocmVzdWx0aW5nIGluICRwJC12YWx1ZXMgZnJvbSBhIHVuaWZvcm0gZGlzdHJpYnV0aW9uKSwgYnV0IHNvbWUgYXJlIG5vbi1udWxscyAobW9yZSBsaWtlbHkgdG8gcmVzdWx0IGluIHNtYWxsICRwJC12YWx1ZXMpLgoKLS0tCgoKYGBge3J9CmR0aSA8LSBkdGkgJT4lCiAgbXV0YXRlKAogICAgcGFkaiA9IHAuYWRqdXN0KHAudmFsdWUsIG1ldGhvZD0iZmRyIiksCiAgICB6RkRSID0gKHBhZGogPCAwLjA1KSAqIHoudmFsdWUpCgpwUGFkaiA8LSBkdGkgJT4lCiAgZ2dwbG90KGFlcyhwLnZhbHVlLHBhZGopKSArCiAgZ2VvbV9wb2ludCgpICsKICBnZW9tX3NlZ21lbnQoeD0wLHk9MCx4ZW5kPTEseWVuZD0xKSArCiAgeWxhYigiYWRqdXN0ZWQgcC12YWx1ZSAoQkgsIDE5OTUpIikKCmdyaWQuYXJyYW5nZShwUGFkaiwKICBwUGFkaiArIHlsaW0oYygwLDAuMDUpKSwKICBuY29sPTIpCgojIEJIIGNvcnJlY3RlZCBwLXZhbHVlcwp0YWJsZShkdGkkcGFkaiA8IDAuMDUpCgojIHVuY29ycmVjdGVkIHAtdmFsdWVzCnRhYmxlKGR0aSRwLnZhbHVlIDwgMC4wNSkKCmBgYAoKQXQgdGhlIDUlIEZEUiwgYHIgc3VtKGR0aSRwYWRqIDwgMC4wNSlgIHZveGVscyBhcmUgcmV0dXJuZWQgYXMgc2lnbmlmaWNhbnRseSBkaWZmZXJlbnRpYWxseSBhY3RpdmUgYmV0d2VlbiBkeXNsZXhpYyBhbmQgbm9uLWR5c2xleGljIGNoaWxkcmVuLgoKIyMjIE9yZGVyZWQgdGFibGUgb2YgcmVzdWx0cyB0byBleHBsYWluIHRoZSBtZXRob2QKCi0gQm9uZmVycm9uaTogJFxhbHBoYV9cdGV4dHthZGp9PWByIGZvcm1hdCgwLjA1L25yb3coZHRpKSxkaWdpdHM9MilgIFxyaWdodGFycm93JCAgYHIgc3VtKGR0aSRwLnZhbHVlPCgwLjA1L25yb3coZHRpKSkpYCB2b3hlbHMgYXJlIHNpZ25pZmljYW50IGF0IHRoZSBCb25mZXJyb25pIEZXRVIKCi0gQkgtRkRSOgoKMS4gb3JkZXJlZCAkcCQtdmFsdWVzLgoKMi4gRmluZCB0aGUgbGFyZ2VzdCBpbnRlZ2VyICRrJCBzbyB0aGF0CiQkClxmcmFje3BfeyhrKX0gXHRpbWVzIG19e2t9IFxsZXEgXGFscGhhCiQkCiQkXHRleHR7b3J9JCQKJCQKcF97KGspfSBcbGVxIGsgXHRpbWVzIFxhbHBoYS9tCiQkCgozLiBJZiBzdWNoIGEgJGskIGV4aXN0cywgcmVqZWN0IHRoZSAkayQgbnVsbCBoeXBvdGhlc2VzIGFzc29jaWF0ZWQgd2l0aCAkcF97KDEpfSwgXGxkb3RzLCBwX3soayl9JC4KT3RoZXJ3aXNlIG5vbmUgb2YgdGhlIG51bGwgaHlwb3RoZXNlcyBpcyByZWplY3RlZC4KCgpgYGB7ciBlY2hvPUZBTFNFfQphbHBoYSA8LSAwLjA1CnJlcyA8LSAgZHRpICU+JQogIHNlbGVjdCgiei52YWx1ZSIsInAudmFsdWUiLCJwYWRqIikgJT4lCiAgYXJyYW5nZShwLnZhbHVlKQpyZXMkcGFkak5vbk1vbm9Gb3JtICA8LSBwYXN0ZTAobnJvdyhyZXMpLCIgeCBwdmFsIC8iLDE6bnJvdyhyZXMpKQpyZXMkcGFkak5vbk1vbm8gPC0gcmVzJHAudmFsdWUgKm5yb3cocmVzKSAvKDE6bnJvdyhyZXMpKQpyZXMkYWRqQWxwaGFGb3JtIDwtIHBhc3RlMCgxOm5yb3cocmVzKSwiIHggIixhbHBoYSwiLyIsbnJvdyhyZXMpKQpyZXMkYWRqQWxwaGEgPC0gYWxwaGEgKiAoMTpucm93KHJlcykpL25yb3cocmVzKQpyZXMkInB2YWwgPCBhZGpBbHBoYSIgPC0gcmVzJHAudmFsdWUgPCByZXMkYWRqQWxwaGEKcmVzJCJwYWRqIDwgYWxwaGEiIDwtIHJlcyRwYWRqIDwgYWxwaGEKcmVzWzE6MTAsXSAlPiUga25pdHI6OmthYmxlKCkKcmVzWzExOjIwLF0gJT4lIGtuaXRyOjprYWJsZSgpCnJlc1syMTozMCxdICU+JSBrbml0cjo6a2FibGUoKQpyZXNbMzE6MzUsXSAlPiUga25pdHI6OmthYmxlKCkKYGBgCnwgLi4uIHwgLi4uIHwgLi4uIHwgLi4uIHwgLi4uIHwgLi4uIHwgLi4uIHwgLi4uIHwgLi4uIHwKYGBge3IgZWNobz1GQUxTRX0KcmVzW25yb3cocmVzKS0oMzowKSxdICU+JSBrbml0cjo6a2FibGUoKQpgYGAKCmBgYHtyfQpwRkRSIDwtIGR0aSAlPiUKICBnZ3Bsb3QoCiAgICBhZXMoCiAgICAgIGNvb3JkLnksCiAgICAgIGNvb3JkLngsCiAgICAgIGNvbG9yPXpGRFIpCiAgICApICsKICBnZW9tX3BvaW50KCkgKwogIHNjYWxlX2NvbG91cl9ncmFkaWVudDIobG93ID0gImJsdWUiLG1pZD0id2hpdGUiLGhpZ2g9InJlZCIpICsKICB0cmFuc2l0aW9uX21hbnVhbChjb29yZC56KSArCiAgbGFicyh0aXRsZSA9ICJ0cmFuc2VjdGlvbiB6ID0ge2ZyYW1lfSIpICsKICB0aGVtZV9ncmV5KCkKYGBgCgojIyMgVmlzdWFsaXNhdGlvbiBvZiBzaWduaWZpY2FudCBkaWZmZXJlbmNlcyBpbiBicmFpbiBhY3Rpdml0eSBhdCB0aGUgNSUgRkRSCgpgYGB7ciBlY2hvID0gRkFMU0UsIG1lc3NhZ2UgPSBGQUxTRSwgZXZhbD1rbml0cjo6aXNfaHRtbF9vdXRwdXQoKX0KYW5pbWF0ZShwRkRSLCBuZnJhbWVzID0gMTAzLCBlbmRfcGF1c2UgPSAzKQpgYGAKCi0tLQoKIyMgQ29tbWVudHMgYW5kIEV4dGVuc2lvbnMKCi0gQmVuamFtaW5pIGFuZCBIb2NoYmVyZyBwdWJsaXNoZWQgdGhlaXIgbWV0aG9kIGluIDE5OTU7IGl0IHdhcyBvbmUgb2YgdGhlIGZpcnN0IEZEUiBjb250cm9sIG1ldGhvZHMuCi0gVGhlIHNhbWUgYXV0aG9ycyBwdWJsaXNoZWQgbGF0ZXIgeWV0IG90aGVyIEZEUiBjb250cm9sIG1ldGhvZHMuCi0gRm9yIHRoaXMgcmVhc29uIHRoZWlyIDE5OTUgbWV0aG9kIGlzIG9mdGVuIHJlZmVycmVkIHRvIGFzIHRoZSBCZW5qYW1pbmkgYW5kIEhvY2hiZXJnIDE5OTUgbWV0aG9kLCBvciBCSDk1LgotIEFzIGlucHV0IHRoZSBtZXRob2Qgb25seSBuZWVkcyB0aGUgJHAkLXZhbHVlcyBmcm9tIHRoZSAkbSQgaHlwb3RoZXNlcyB0ZXN0cy4KLSBXaGVuIGNvbnRyb2xsaW5nIEZEUiwgdGhlIGFkanVzdGVkICRwJC12YWx1ZXMgYXJlIG9mdGVuIHJlZmVycmVkIHRvIGFzICRxJC12YWx1ZXMuCgotLS0KCi0gSXQgaXMgYSAqKmxpbmVhciBzdGVwLXVwIHByb2NlZHVyZSoqIDogaXQgc3RhcnRzIGZyb20gdGhlIGxlYXN0IHNpZ25pZmljYW50IHJlc3VsdCAobGFyZ2VzdCBwLXZhbHVlKSBhbmQgc3RlcHMtdXAgdG8gbW9yZSBzaWduaWZpY2FudCByZXN1bHRzIChsb3dlciBwLXZhbHVlcykuCi0gSW4gRkRSIHRlcm1pbm9sb2d5IHRoZSBhZGp1c3RlZCAkcCQtdmFsdWUgaXMgb2Z0ZW4gcmVmZXJyZWQgdG8gYXMgYSAkcSQtdmFsdWUuCi0gVGhlIEJIOTUgbWV0aG9kIGFzc3VtZXMgdGhhdCBhbGwgdGVzdHMgYXJlIG11dHVhbGx5IGluZGVwZW5kZW50IChvciBhdCBsZWFzdCBhIHBhcnRpY3VsYXIgZm9ybSBvZiBwb3NpdGl2ZSBkZXBlbmRlbmNlIGJldHdlZW4gdGhlIHAtdmFsdWVzKS4KLSBXaGVuIHRoZSBhc3N1bXB0aW9ucyBob2xkLCBpdCBndWFyYW50ZWVzCiAgXFsKICAgIFx0ZXh0e0ZEUn09XHRleHR7RX1cbGVmdFtUUC9SXHJpZ2h0XT1cdGV4dHtFfVxsZWZ0W1x0ZXh0e0ZEUH1ccmlnaHRdIFxsZXEgXGZyYWN7bV8wfXttfSBcYWxwaGEgXGxlcSBcYWxwaGEgLgogIFxdCgotLS0KCiMjIyBFeHRlbnNpb24KClRodXMsIGlmIHdlIGtuZXcgJG1fMCQgKHRoZSBudW1iZXIgb2YgdHJ1ZSBudWxscyksIHdlIGNvdWxkIGltcHJvdmUgdGhlIG1ldGhvZCBieSBhcHBseWluZyBpdCB0byB0aGUgbGV2ZWwgJFxhbHBoYSBtL21fMCQgKGNmci4gQm9uZmVycm9uaSkuCgogJFxsb25ncmlnaHRhcnJvdyQgbWFueSBGRFIgbWV0aG9kcyBjb25zaXN0IGluIGVzdGltYXRpbmcgJG1fMCQgb3IgdGhlIGZyYWN0aW9uIG9mIG51bGwgZ2VuZXMgJG1fMC9tJC4KCgpUaGUgaW5lcXVhbGl0eQpcWwogIFx0ZXh0e0ZEUn0gXGxlcSBcZnJhY3ttXzB9e219IFxhbHBoYSBcbGVxIFxhbHBoYQpcXQpzaG93cyB0aGF0IEJIMTk5NSBpcyBhIGNvbnNlcnZhdGl2ZSBtZXRob2QsIGkuZS4gaXQgY29udHJvbHMgdGhlIEZEUiBhdCB0aGUgc2FmZSBzaWRlLCBpLmUuIHdoZW4gb25lIGlzIHByZXBhcmVkIHRvIGNvbnRyb2wgdGhlIEZEUiBhdCB0aGUgbm9taW5hbCBsZXZlbCAkXGFscGhhJCwgdGhlIEJIOTUgd2lsbCBndWFyYW50ZWUgdGhhdCB0aGUgdHJ1ZSBGRFIgaXMgbm90IGxhcmdlciB0aGFuIHRoZSBub21pbmFsIGxldmVsICh3aGVuIHRoZSBhc3N1bXB0aW9ucyBob2xkKS4KCi0gTW9yZSBpbnRlcmVzdGluZ2x5IGlzIHRoYXQgJFxmcmFje21fMH17bX0gXGFscGhhJCBpcyBpbiBiZXR3ZWVuIHRoZSB0cnVlIEZEUiBhbmQgdGhlIG5vbWluYWwgRkRSLgoKLSBTdXBwb3NlIHRoYXQgJG1fMCQgd2VyZSBrbm93biBhbmQgdGhhdCB0aGUgQkg5NSBtZXRob2Qgd2VyZSBhcHBsaWVkIGF0IHRoZSBub21pbmFsIEZEUiBsZXZlbCBvZiAkXGFscGhhPW0vbV8wIFxhbHBoYV4qJCwgaW4gd2hpY2ggJFxhbHBoYV4qJCBpcyB0aGUgRkRSIGxldmVsIHdlIHdhbnQgdG8gY29udHJvbC4gVGhlbiB0aGUgaW5lcXVhbGl0eSBnaXZlcwpcWwogIFx0ZXh0e0ZEUn0gXGxlcSBcZnJhY3ttXzB9e219IFxhbHBoYSA9IFxmcmFje21fMH17bX0gXGZyYWN7bX17bV8wfVxhbHBoYV4qID0gXGFscGhhXiogLApcXQphbmQgaGVuY2UgQkg5NSB3b3VsZCBiZXR0ZXIgY29udHJvbCB0aGUgRkRSICBhdCAkXGFscGhhXiokLgoKLSBOb3RlIHRoYXQgJFxhbHBoYT1tL21fMCBcYWxwaGFeKj5cYWxwaGFeKiQgYW5kIGhlbmNlIHRoZSByZXN1bHRzIGlzIGxlc3MgY29uc2VydmF0aXZlIHRoYW4gdGhlIG9yaWdpbmFsIEJIOTUgbWV0aG9kLgoKLS0tCgpUaGUgYWJvdmUgcmVhc29uaW5nIGltcGxpZXMgYSAqKmdlbmVyYWxpemVkIGFkYXB0aXZlIGxpbmVhciBzdGVwLXVwIHByb2NlZHVyZSoqOgoKLSBlc3RpbWF0ZSAkbV8wJDogJFxoYXR7bX1fMCQKLSBvZiAkXGhhdHttfV8wPTAkLCByZWplY3QgYWxsIG51bGwgaHlwb3RoZXNlczsKIG90aGVyd2lzZSwgYXBwbHkgdGhlIHN0ZXAtdXAgcHJvY2VkdXJlIG9mIEJIIDk1IGF0IHRoZSBsZXZlbCAkXGFscGhhPW0gXGFscGhhXiovXGhhdHttfV8wJCB0byBjb250cm9sIHRoZSBGRFIgYXQgJFxhbHBoYV4qJC4KClRoZSBhZGp1c3RlZCAkcCQtdmFsdWVzICg9JHEkLXZhbHVlcykgYXJlIG9idGFpbmVkIGFzClxbCiAgXHRpbGRle3B9X3soaSl9ID0gXGZyYWN7XGhhdHttfV8wfXttfSBcbWluXGxlZnRce1xtaW5fe2o9aSxcbGRvdHMsIG19XHttIHBfeyhqKX0valx9ICwxIFxyaWdodFx9LgpcXQoKLSBNYW55IEZEUiBwcm9jZWR1cmVzIGNhbiBiZSBmaXQgaW50byB0aGlzIGRlZmluaXRpb24gKGUuZy4gQmVuamFtaW5pIGFuZCBIb2NoYmVyZyAoMjAwMCkgYW5kIFRpYnNoaXJhbmkgKDIwMDMpKS4KLSBXZSBkbyBub3QgZ2l2ZSBkZXRhaWxzIG9uIHRoZSBtZXRob2RzIGZvciBlc3RpbWF0aW5nICRtXzAkLCBidXQgc29tZSBvZiB0aGVtIGFyZSBpbXBsZW1lbnRlZCBpbiB0aGUgUiBzb2Z0d2FyZS4gT24gdGhlIG5leHQgcGFnZSB3ZSBpbGx1c3RyYXRlIHdpdGggc2ltdWxhdGVkIGRhdGEgdGhhdCBCSCBjYW4gYmUgaW1wcm92ZWQgd2l0aCBlc3RpbWF0ZWQgJG1fMCQuCgotLS0KCiMjIyBPdGhlciBpbXBvcnRhbnQgY29uc2lkZXJhdGlvbnMKCi0gSXQgY2FuIGJlIHNob3duICB0aGF0IHRoZSBCSC1GRFIgbWV0aG9kIHdlYWtseSBjb250cm9scyB0aGUgRldFUiwgaS5lLiBpdCBjb250cm9scyB0aGUgRldFUiBpZiBhbGwgZmVhdHVyZXMgYXJlIGZhbHNlICgkbV8wPW0kKS4KCi0gVGhlIEJILUZEUiBpcyBkZXJpdmVkIHVuZGVyIHRoZSBhc3N1bXB0aW9uIG9mIGluZGVwZW5kZW5jZSBvZiB0aGUgZmVhdHVyZXMgYW5kIGhhcyBiZWVuIHNob3duIHRvIGJlIG9ubHkgdmFsaWQgdW5kZXIgc3BlY2lhbCBmb3JtcyBvZiBkZXBlbmRlbmNlIGJldHdlZW4gdGhlIGZlYXR1cmVzLgoKCiMgbG9jYWwgZmRyCgojIyBJbnRyb2R1Y3Rpb24KClN1cHBvc2UgdGhhdCB0aGUgdGVzdCBzdGF0aXN0aWMgZm9yIHRlc3RpbmcgJEhfezBpfSQgaXMgZGVub3RlZCBieSAkel9pJCwgYW5kIHRoYXQgdGhlIHRlc3Qgc3RhdGlzdGljcyBoYXZlIGEgJE4oMCwxKSQgbnVsbCBkaXN0cmlidXRpb24uCgpJZiBhbGwgJG0kIG51bGwgaHlwb3RoZXNlcyBhcmUgdHJ1ZSwgdGhlIGhpc3RvZ3JhbSBvZiB0aGUgJG0kIHRlc3Qgc3RhdGlzdGljcyBzaG91bGQgYXBwcm94aW1hdGUgdGhlIHRoZW9yZXRpY2FsIG51bGwgZGlzdHJpYnV0aW9uIChkZW5zaXR5ICRmXzAoeikkKS4KCmBgYHtyIGVjaG89RkFMU0V9CnAxCmBgYAoKQXNzdW1pbmcgdGhhdCB0aGUgdGVzdCBzdGF0aXN0aWMgaGFzIGEgc3RhbmRhcmQgbm9ybWFsIG51bGwgZGlzdHJpYnV0aW9uIGlzIG5vdCByZXN0cmljdGl2ZS4gRm9yIGV4YW1wbGUsIHN1cHBvc2UgdGhhdCAkdCQtdGVzdHMgaGF2ZSBiZWVuIGFwcGxpZWQgYW5kIHRoYXQgdGhlIG51bGwgZGlzdHJpYnV0aW9uIGlzICR0X2QkLCB3aXRoICRkJCByZXByZXNlbnRpbmcgdGhlIGRlZ3JlZXMgb2YgZnJlZWRvbS4gTGV0ICRGX3t0ZH0kIGRlbm90ZSB0aGUgZGlzdHJpYnV0aW9uIGZ1bmN0aW9uIG9mICR0X2QkIGFuZCBsZXQgJFxQaGkkIGRlbm90ZSB0aGUgZGlzdHJpYnV0aW9uIGZ1bmN0aW9uIG9mIHRoZSBzdGFuZGFyZCBub3JtYWwgZGlzdHJpYnV0aW9uLiBJZiAkVCQgZGVub3RlcyB0aGUgJHQkLXRlc3Qgc3RhdGlzdGljLCB0aGVuLCB1bmRlciB0aGUgbnVsbCBoeXBvdGhlc2lzLApcWwogIFQgXHNpbSB0X2QKXF0KYW5kIGhlbmNlClxbCiAgRl97dGR9KFQpIFxzaW0gVVswLDFdClxdCmFuZApcWwogIFogPSBcUGhpXnstMX0oRl97dGR9KFQpKSBcc2ltIE4oMCwxKS4KXF0KSWYgYWxsICRtJCBudWxsIGh5cG90aGVzZXMgYXJlIHRydWUsIHRoZW4gZWFjaCBvZiB0aGUgJFpfaSQgaXMgJE4oMCwxKSQgYW5kIHRoZSBzZXQgb2YgJG0kIGNhbGN1bGF0ZWQgJHpfaSQgdGVzdCBzdGF0aXN0aWNzIG1heSBiZSBjb25zaWRlcmVkIGFzIGEgc2FtcGxlIGZyb20gJE4oMCwxKSQuIEhlbmNlLCB1bmRlciB0aGVzZSBjb25kaXRpb25zIHdlIGV4cGVjdCB0aGUgaGlzdG9ncmFtIG9mIHRoZSAkbSQgJHpfaSQncyB0byBsb29rIGxpa2UgdGhlIGRlbnNpdHkgb2YgdGhlIG51bGwgZGlzdHJpYnV0aW9uLgoKIyMgVHdvIGdyb3VwIG1vZGVsCgotIFN1cHBvc2UgdGhhdCB1bmRlciB0aGUgYWx0ZXJuYXRpdmUgaHlwb3RoZXNpcyB0aGUgdGVzdCBzdGF0aXN0aWMgaGFzIGRlbnNpdHkgZnVuY3Rpb24gJGZfMSh6KSQuCgotIFdlIHVzZSB0aGUgdGVybSAibnVsbCIgdG8gcmVmZXIgdG8gYSBjYXNlICRpJCBmb3Igd2hpY2ggJEhfezBpfSQgaXMgdHJ1ZSwgYW5kICJub24tbnVsbCIgZm9yIGEgY2FzZSAkaSQgZm9yIHdoaWNoICRIX3swaX0kIGlzIG5vdCB0cnVlLgoKCi0gQ29uc2lkZXIgdGhlICoqcHJpb3IgcHJvYmFiaWxpdGllcyoqClxbCiAgXHBpXzAgPSBcdGV4dHtQfVxsZWZ0W1x0ZXh0e251bGx9XHJpZ2h0XSBcdGV4dHsgYW5kIH0gXHBpXzE9XHRleHR7UH1cbGVmdFtcdGV4dHtub24tbnVsbH1ccmlnaHRdID0gMS1ccGlfMC4KXF0KCi0gVGhlIG1hcmdpbmFsIGRpc3RyaWJ1dGlvbiBvZiB0aGUgJG0kIHRlc3Qgc3RhdGlzdGljcyBpcyB0aGVuIGdpdmVuIGJ5IHRoZSAqKm1peHR1cmUgZGlzdHJpYnV0aW9uKioKClxbCiAgZih6KSA9IFxwaV8wIGZfMCh6KSArIFxwaV8xIGZfMSh6KQpcXQoKIyMjIEV4YW1wbGVzIG9mIG1peHR1cmUgZGlzdHJpYnV0aW9ucwoKV2UgaGF2ZSBhbHJlYWR5IGV4cGxvcmVkIG1peHR1cmUgZGlzdHJpYnV0aW9ucyBpbiBkZXRhaWwgaW4gdGhlIHBhcGVyIHJlYWRpbmcgc2Vzc2lvbiBvbiBtb2RlbCBiYXNlZCBjbHVzdGVyaW5nLgoKLSBibHVlOiAkZl8wJDogJE4oMCwxKSQsIHJlZDogJGZfMSQ6ICROKDEsMSkkCgpgYGB7cn0KY29tcG9uZW50cyA8LSB0aWJibGUoeiA9IHNlcSgtNiw2LC4wMSkpICU+JQogIG11dGF0ZSgKICAgIGYwID0gZG5vcm0oeiksCiAgICBmMSA9IGRub3JtKHosIG1lYW4gPSAxKSkKCmNvbXBvbmVudHMgJT4lCiAgZ2F0aGVyKGNvbXBvbmVudCwgZGVuc2l0eSwgLXopICU+JQogIGdncGxvdChhZXMoeixkZW5zaXR5LGNvbG9yID0gY29tcG9uZW50KSkgKwogIGdlb21fbGluZSgpICsKICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzPWMoImJsdWUiLCJyZWQiKSkKIGBgYAoKVGhlIGdyYXBocyBzaG93cyB0aGUgdHdvIGNvbXBvbmVudCBkaXN0cmlidXRpb25zIHNlcGFyYXRlbHkuCgoKLS0tCgotIGJsdWU6ICRccGlfMCBcdGltZXMgZl8wJCB3aXRoICRccGlfMD0wLjkkIGFuZCAkZl8wID0gTigwLDEpJAotIHJlZDogJFxwaV8xXHRpbWVzIGZfMSQgd2l0aCAkXHBpXzE9MS1ccGlfMD0wLjEkIGFuZCAkZl8xID0gTigxLDEpJAoKYGBge3J9CnAwIDwtIDAuOQpwMSA8LSAxLXAwCm11MSA8LSAxCnNjYWxlZENvbXBvbmVudHMgPC0gdGliYmxlKHogPSBzZXEoLTYsNiwuMDEpKSAlPiUKICBtdXRhdGUoCiAgICBwMHhmMCA9IGRub3JtKHopICogcDAsCiAgICBwMXhmMSA9IGRub3JtKHosIG1lYW4gPSBtdTEpKnAxCiAgICApCgpzY2FsZWRDb21wb25lbnRzICU+JQogIGdhdGhlcihjb21wb25lbnQsIGRlbnNpdHksIC16KSAlPiUKICBnZ3Bsb3QoYWVzKHosZGVuc2l0eSxjb2xvciA9IGNvbXBvbmVudCkpICsKICBnZW9tX2xpbmUoKSArCiAgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcz1jKCJibHVlIiwicmVkIikpICsKICBnZ3RpdGxlKCJTY2FsZWQgY29tcG9uZW50cyIpCmBgYAoKLS0tCgpNaXh0dXJlIGRpc3RyaWJ1dGlvbgoKLSBibHVlOiAkXHBpXzAgXHRpbWVzIGZfMCQgd2l0aCAkXHBpXzA9MC45JCBhbmQgJGZfMCA9IE4oMCwxKSQKLSByZWQ6ICRccGlfMVx0aW1lcyBmXzEkIHdpdGggJFxwaV8xPTEtXHBpXzA9MC4xJCBhbmQgJGZfMSA9IE4oMSwxKSQKLSBibGFjazogJGY9XHBpXzAgZl8wICsgXHBpXzEgZl8xJAoKYGBge3J9CnNjYWxlZENvbXBvbmVudHMgJT4lCiAgbXV0YXRlKGY9cDB4ZjArcDF4ZjEpICU+JQogIGdhdGhlcihjb21wb25lbnQsIGRlbnNpdHksIC16KSAlPiUKICBnZ3Bsb3QoYWVzKHosZGVuc2l0eSxjb2xvciA9IGNvbXBvbmVudCkpICsKICBnZW9tX2xpbmUoKSArCiAgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcz1jKCJibGFjayIsImJsdWUiLCJyZWQiKSkgKwogIGdndGl0bGUoIk1peHR1cmUgYW5kIHNjYWxlZCBjb21wb25lbnRzIikKYGBgCgotLS0KCk1peHR1cmUgJFxwaV8wIGZfMCh6KStccGlfMSBmXzEoeikkIHdpdGggJFxwaV8wPTAuNjUkIGFuZCAkZl8xPSBOKDIsMSkkIGFuZCAkZl8wID0gTigwLDEpJAoKYGBge3J9CmBgYHtyfQpwMCA8LSAwLjY1CnAxIDwtIDEtcDAKbXUxIDwtIDIKc2NhbGVkQ29tcG9uZW50cyA8LSB0aWJibGUoeiA9IHNlcSgtNiw2LC4wMSkpICU+JQogIG11dGF0ZSgKICAgIHAweGYwID0gZG5vcm0oeikgKiBwMCwKICAgIHAxeGYxID0gZG5vcm0oeiwgbWVhbiA9IG11MSkqcDEpCgpzY2FsZWRDb21wb25lbnRzICU+JQogIG11dGF0ZShmPXAweGYwK3AxeGYxKSAlPiUKICBnYXRoZXIoY29tcG9uZW50LCBkZW5zaXR5LCAteikgJT4lCiAgZ2dwbG90KGFlcyh6LGRlbnNpdHksY29sb3IgPSBjb21wb25lbnQpKSArCiAgZ2VvbV9saW5lKCkgKwogIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXM9YygiYmxhY2siLCJibHVlIiwicmVkIikpICsKICBnZ3RpdGxlKCJNaXh0dXJlIGFuZCBzY2FsZWQgY29tcG9uZW50cyAocDAgPSAwLjM1KSIpCmBgYAoKIyMjIHNpbXVsYXRpb25zCgpTaW11bGF0ZWQgZGF0YTogMjAwMDAgJHokLXN0YXRpc3RpY3Mgd2l0aCAkXHBpXzE9MC4xMCQgbm9uLW51bGxzIHdpdGggJGZfMT1OKDEsMSkkLgoKYGBge3J9CnAwIDwtIC45CnAxIDwtIDEtcDAKbXUxIDwtIDEKbSA8LSAyMDAwMAoKelNpbSA8LSBjKAogIHJub3JtKG0gKiBwMCksCiAgcm5vcm0obSAqIHAxLCBtZWFuPW11MSkKICApCgp6U2ltICU+JQogIGFzX3RpYmJsZSAlPiUKICBnZ3Bsb3QoYWVzKHggPSB6U2ltKSkgKwogIGdlb21faGlzdG9ncmFtKAogICAgYWVzKHk9Li5kZW5zaXR5Li4pLAogICAgY29sb3IgPSAiYmxhY2siKSArCiAgc3RhdF9mdW5jdGlvbihmdW4gPSBkbm9ybSwKICAgIGFyZ3MgPSBsaXN0KAogICAgICBtZWFuID0gMCwKICAgICAgc2Q9MSksCiAgICBjb2xvcj0iYmx1ZSIpCmBgYAoKSXQgaXMgaGFyZCB0byBzZWUgdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiB0aGUgaGlzdG9ncmFtIGFuZCB0aGUgZGVuc2l0eSBmdW5jdGlvbiBvZiB0aGUgbnVsbCBkaXN0cmlidXRpb24gKGJsdWUgY3VydmUpLCBiZWNhdXNlIHRoZSBtZWFuIG9mICRmXzEkIGlzIG5vdCBtdWNoIGxhcmdlciB0aGFuIDAgYW5kIGJlY2F1c2Ugb25seSAkXHBpXzE9MTBcJSQgbm9uLW51bGxzIGFyZSBpbmNsdWRlZCBhbmQgYmVjYXVzZSB0aGUgYWx0ZXJuYXRpdmUgaXMgbm90IGZhciBmcm9tIHRoZSBudWxsIGRpc3RyaWJ1dGlvbi4gSG93ZXZlciwgdGhpcyBpcyBub3QgYW4gdW5yZWFsaXN0aWMgc2V0dGluZy4KCk5vdGUsIHRoYXQgaW4gbW9zdCBzZXR0aW5ncyB0aGUgbm9uLW51bGwgZmVhdHVyZXMgd2lsbCBvcmlnaW5hdGUgZnJvbSBhIG1peHR1cmUgb2YgbXVsdGlwbGUgZGlzdHJpYnV0aW9ucyB3aXRoIHBvc2l0aXZlIGFuZCBuZWdhdGl2ZSBtZWFucy4KRm9ydHVuYXRlbHksIHRoZSBsb2NhbCBmZHIgbWV0aG9kIGRvZXMgbm90IHJlcXVpcmUgdXMgdG8gZXN0aW1hdGUgJGZfMSQgYXMgd2Ugd2lsbCBzZWUgZnVydGhlci4KCi0tLQoKIyMgbG9jYWwgZmRyCgpXZSBjYW4gbm93IGNhbGN1bGF0ZSB0aGUgcHJvYmFiaWxpdHkgdGhhdCBhIGNhc2UgaXMgYSBudWxsIGdpdmVuIHRoZSBvYnNlcnZlZCAkeiQsClxbCiAgXHRleHR7UH1cbGVmdFtcdGV4dHtudWxsfVxtaWQgelxyaWdodF0gPSBcZnJhY3tccGlfMCBmXzAoeil9e2Yoeil9IC4KXF0KVGhpcyBwcm9iYWJpbGl0eSBpcyByZWZlcnJlZCB0byBhcyB0aGUgKipsb2NhbCBmYWxzZSBkaXNjb3ZlcnkgcmF0ZSoqLCBhbmQgZGVub3RlZCBieSBmZHIkKHopJC4KCklmIGZvciBhbiBvYnNlcnZlZCAkeiQsIGZkciQoeikkIGlzIHN1ZmZpY2llbnRseSBzbWFsbCwgb25lIG1heSBiZWxpZXZlIHRoYXQgdGhlIGNhc2UgaXMgYSB0cnVlIGRpc2NvdmVyeSAoaS5lLiAkSF97MGl9JCBtYXkgYmUgcmVqZWN0ZWQpLgoKIyMjIExpbmsgd2l0aCBGRFIKClJlY2FsbCB0aGUgZGVmaW5pdGlvbiBvZiB0aGUgRkRSLApcYmVnaW57ZXFuYXJyYXl9Clx0ZXh0e0ZEUn0KJj0mIFx0ZXh0e0V9XGxlZnRbRlAvUlxyaWdodF0gXFwKJj0mIFx0ZXh0e0V9XGxlZnRbXHRleHR7bnVtYmVyIG9mIG51bGxzIGFtb25nIHJlamVjdGVkfSAvIFx0ZXh0e251bWJlciBvZiByZWplY3RlZH1ccmlnaHRdIFxcCiY9JiBcdGV4dHtQfVxsZWZ0W1x0ZXh0e251bGx9IFxtaWQgXHRleHR7cmVqZWN0ZWR9XHJpZ2h0XQpcZW5ke2VxbmFycmF5fQoKLS0tCgoKLSBUaGUgRkRSIGlzIHRvIGJlIGludGVycHJldGVkIGFzIGFuIG92ZXJhbGwgcmlzazogKmFtb25nIGFsbCByZWplY3RlZCBoeXBvdGhlc2VzKiAoZGlzY292ZXJpZXMpIGl0IGdpdmVzIHRoZSBleHBlY3RlZCBmcmFjdGlvbiAob3IgcHJvYmFiaWxpdHkpIG9mIGEgbnVsbCAoZmFsc2UgZGlzY292ZXJ5KS4KCi0gVGhlIGxvY2FsIGZkciwgb24gdGhlIG90aGVyIGhhbmQsIGlzIHRvIGJlIGludGVycHJldGVkIGFzIGEgcmlzayBmb3IgYSBzcGVjaWZpYyBkZWNpc2lvbjogaWYgYSBudWxsIGh5cG90aGVzaXMgaXMgcmVqZWN0ZWQgYmFzZWQgb24gYSB0ZXN0IHN0YXRpc3RpYyB2YWx1ZSBvZiAkeiQsIHRoZW4gdGhlIGxvY2FsIGZkciBnaXZlcyB0aGUgcHJvYmFiaWxpdHkgb2YgdGhhdCBzaW5nbGUgZGlzY292ZXJ5IGJlaW5nIGEgZmFsc2UgZGlzY292ZXJ5LgoKLSBTaW5jZSB0aGUgbG9jYWwgZmRyIGhhcyBhIGNsZWFyIGludGVycHJldGF0aW9uIHRoYXQgYXBwbGllcyB0byBhbiBpbmRpdmlkdWFsIGh5cG90aGVzaXMgdGVzdCwgaXQgY2FuIGJlIHVzZWQgdG8gZGVjaWRlIHdoZXRoZXIgb3Igbm90IHRvIHJlamVjdCBhIG51bGwgaHlwb3RoZXNpcy4KCi0gSW4gcGFydGljdWxhciwgcmVqZWN0IGEgbnVsbCBoeXBvdGhlc2lzICRIX3swaX0kIGlmIGZkciQoeik8XGFscGhhJCwgd2hlcmUgJFxhbHBoYSQgaXMgdGhlIG5vbWluYWwgbG9jYWwgZmRyIGxldmVsIGF0IHdoaWNoIHRoZSBtdWx0aXBsZSB0ZXN0aW5nIHByb2JsZW0gbmVlZCB0byBiZSBjb250cm9sbGVkIGF0LgoKLSBUaGUgbG9jYWwgZmRyIG1ldGhvZCBjYW4gb25seSBiZSBhcHBsaWVkIGlmICRccGlfMCQgYW5kICRmJCBjYW4gYmUgZXN0aW1hdGVkIGZyb20gdGhlIGRhdGEgKHNlZSBsYXRlcikuICBUaGUgZGVuc2l0eSAkZl8wJCBjYW4gYmUgZWl0aGVyIGtub3duIChudWxsIGRpc3RyaWJ1dGlvbiBvZiB0aGUgdGVzdCBzdGF0aXN0aWMpIG9yIGl0IGNhbiBiZSBlc3RpbWF0ZWQgZnJvbSB0aGUgb2JzZXJ2ZWQgJG0kIHRlc3Qgc3RhdGlzdGljcy4KCi0tLQoKRm9yIHRoZSBzYWtlIG9mIHNpbXBsaWNpdHksIHN1cHBvc2UgdGhhdCAkSF97MGl9JCBpcyB0ZXN0ZWQgYWdhaW5zdCBhIG9uZS1zaWRlZCBhbHRlcm5hdGl2ZSBhbmQgdGhhdCAkSF97MGl9JCBpcyByZWplY3RlZCBmb3Igc21hbGwgJHokLCBpLmUuCgpcW0hfMDogeiA9IDAgXHRleHR7IHZzIH0gSF8xOiB6IDwgMFxdCgpTdXBwb3NlIHRoYXQgYWxsICRIX3swaX0kIGFyZSByZWplY3RlZCBmb3Igd2hpY2ggdGhlIG9ic2VydmVkIHRlc3Qgc3RhdGlzdGljIGlzIGF0IG1vc3QgJHokLCB0aGVuIHdlIGNhbiB3cml0ZQoKXGJlZ2lue2VxbmFycmF5fQpcdGV4dHtGRFJ9KHopCiY9JiBcdGV4dHtQfVxsZWZ0W1x0ZXh0e251bGx9IFxtaWQgXHRleHR7cmVqZWN0ZWR9XHJpZ2h0XSBcXFxcCiY9JiBcdGV4dHtQfVxsZWZ0W1x0ZXh0e251bGx9IFxtaWQgWlxsZXEgelxyaWdodF0gXFxcXAomPSYgXHRleHR7RX1fe1p9XGxlZnRce1x0ZXh0e1B9XGxlZnRbXHRleHR7bnVsbH0gXG1pZCBaXHJpZ2h0XSBcbWlkIFpcbGVxIHpccmlnaHRcfSBcXFxcCiY9JiBcdGV4dHtFfV97Wn1cbGVmdFtcdGV4dHtmZHJ9KFopIFxtaWQgWlxsZXEgelxyaWdodF0gXFxcXAomPSYgXGZyYWN7XGludF97LVxpbmZ0eX1eeiBcdGV4dHtmZHJ9KHUpIGYodSkgZHV9e1xpbnRfey1caW5mdHl9XnogZih1KSBkdX0gXFxcXAomPSYgXGZyYWN7XHBpXzBcaW50X3stXGluZnR5fV56ICBmXzAodSkgZHV9e0Yoeil9IFxcXFwKJj0mIFxmcmFje1xwaV8wIEZfMCh6KX17Rih6KX0gLgpcZW5ke2VxbmFycmF5fQoKVGhpcyBzaG93cyB0aGF0IGZkciQoeik9XGZyYWN7XHBpXzAgZl8wKHopfXtmKHopfSQgYW5kICRcdGV4dHtGRFJ9KHopPVxmcmFje1xwaV8wIEZfMCh6KX17Rih6KX0kIGhhdmUgc2ltaWxhciBleHByZXNzaW9uLiBUaGUgZm9ybWVyIGlzIGV4cHJlc3NlZCBpbiB0ZXJtcyBvZiBkZW5zaXR5IGZ1bmN0aW9ucywgYW5kIHRoZSBsYXR0ZXIgaW4gdGVybXMgb2YgdGhlIGNvcnJlc3BvbmRpbmcgY3VtdWxhdGl2ZSBkaXN0cmlidXRpb24gZnVuY3Rpb25zLgoKRnJvbSB0aGUgZXF1YWxpdHkKXFsKICBcdGV4dHtGRFJ9KHopID0gIFxmcmFje1xpbnRfey1caW5mdHl9XnogXHRleHR7ZmRyfSh1KSBmKHUpIGR1fXtcaW50X3stXGluZnR5fV56IGYodSkgZHV9ClxdCgp3ZSBsZWFybiB0aGF0IHRoZSBwcm9iYWJpbGl0eSBmb3IgYSBmYWxzZSBkaXNjb3ZlcnkgYW1vbmcgaHlwb3RoZXNlcyByZWplY3RlZCBieSB1c2luZyB0aHJlc2hvbGQgJHokLCBlcXVhbHMgdGhlIGF2ZXJhZ2Ugb2YgdGhlIGxvY2FsIGZhbHNlIGRpc2NvdmVyeSByYXRlcyBmZHIkKHUpJCBvZiB0aGUgZGlzY292ZXJpZXMgKCR1XGxlcSB6JCBoZXJlKS4KCk5vdGUsIHRoYXQgdGhlIEJILUZEUiBhZG9wdHMKCi0gJFxwaV8wPTEkLCB3aGljaCBpcyBhIGNvbnNlcnZhdGl2ZSBlc3RpbWF0ZQotIHVzZXMgdGhlIHRoZW9yZXRpY2FsIG51bGwgZm9yICRwPUZfMCh6KSQKLSB1c2VzIHRoZSBlbXBpcmljYWwgY3VtdWxhdGl2ZSBkaXN0cmlidXRpb24gZnVuY3Rpb24KICRcYmFyIEYoeikgPSBcZnJhY3tcI1ogPCB6fXttfSQgdG8gZXN0aW1hdGUgJEYoeikkLgoKQSBzaW1pbGFyIGlkZW50aXR5IGNhbiBiZSBlYXNpbHkgc2hvd24gZm9yIHR3by1zaWRlZCB0ZXN0cy4KCiMjIyAgIEVzdGltYXRpb24gb2YgZmRyJCh6KT1cZnJhY3tccGlfMCBmXzAoeil9e2Yoeil9JAoKLSAkZih6KSQgY2FuIGJlIGVzdGltYXRlZCBieSBub25wYXJhbWV0cmljIGRlbnNpdHkgZXN0aW1hdGlvbiBtZXRob2RzICgkZih6KSQgaXMgdGhlIG1hcmdpbmFsIGRpc3RyaWJ1dGlvbiBvZiB0aGUgdGVzdCBzdGF0aXN0aWNzOyBubyBrbm93bGVkZ2UgYWJvdXQgbnVsbCAvIG5vbi1udWxsIGlzIG5lZWRlZCkKCi0gJGZfMCh6KSQgaXMga25vd24gb3IgY2FuIGJlIGVzdGltYXRlZCBmcm9tIHRoZSBkYXRhCgotICAkXHBpXzAkIGNhbiBiZSBlc3RpbWF0ZWQgb25jZSAkZih6KSQgYW5kICRmXzAoeikkIGFyZSBlc3RpbWF0ZWQgZm9yIGFsbCAkeiQuCgotLS0KCiMjIyBCcmFpbnNjYW4gZXhhbXBsZQoKYGBge3J9CmxpYnJhcnkobG9jZmRyKQpsZmRyIDwtIGxvY2ZkcihkdGkkei52YWx1ZSwgbnVsbHR5cGUgPSAwKQpgYGAKCi0gSW4gdGhlIGJyYWluc2NhbiBleGFtcGxlIHRoZSB0ZXN0IHN0YXRpc3RpY3MgYXJlIHN1cHBvc2VkIHRvIGJlICROKDAsMSkkIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSBudWxsIGh5cG90aGVzaXMuIFRlc3RzIGFyZSBwZXJmb3JtZWQgdHdvLXNpZGVkLgoKLSBUaGUgYXJndW1lbnQgYG51bGx0eXBlPTBgIHNwZWNpZmllcyB0aGF0IHRoZSBudWxsIGRpc3RyaWJ1dGlvbiAoJGZfMCQpIGlzICROKDAsMSkkLgoKLSBUaGUgZGFzaGVkIGJsdWUgbGluZSBnaXZlcyAkZl8wJCBhbmQgdGhlIHNvbGlkIGdyZWVuIGxpbmUgaXMgdGhlIG5vbnBhcmFtZXRyaWMgZXN0aW1hdGUgb2YgdGhlIG1hcmdpbmFsIGRlbnNpdHkgZnVuY3Rpb24gJGYkLiBUaGUgdHdvIGRlbnNpdGllcyBkbyBub3QgY29pbmNpZGUgYW5kIGhlbmNlIHdlIG1heSBhbnRpY2lwYXRlIHRoYXQgc29tZSBvZiB0aGUgdm94ZWxzIHNob3cgZGlmZmVyZW50aWFsIGJyYWluIGFjdGl2aXR5LgoKLSBUaGUgcHVycGxlIGJhcnMgaW5kaWNhdGUgdGhlIGVzdGltYXRlZCBudW1iZXIgb2Ygbm9uLW51bGxzIChhbW9uZyB0aGUgaHlwb3RoZXNlcy92b3hlbHMgZm9yIGEgZ2l2ZW4gJHokLXZhbHVlKS4gVGhlIHBsb3RzIHNob3dzIHRoYXQgbW9yZSBub24tbnVsbHMgYXJlIGV4cGVjdGVkIGZvciB0aGUgbmVnYXRpdmUgJHokLXZhbHVlcyB0aGFuIGZvciB0aGUgcG9zaXRpdmUgJHokLXZhbHVlcyAoc2lnbiBvZiAkeiQgY29ycmVzcG9uZHMgdG8gbW9yZSBvciBsZXNzIGJyYWluIGFjdGl2aXR5IGluIG5vcm1hbCB2ZXJzdXMgZHlzbGVjdGljIGNoaWxkcmVuKS4KCiMjIyBQcm9ibGVtcz8KCk5vdGUsIGhvd2V2ZXIsIHRoYXQKCi0gd2UgdHlwaWNhbGx5IGV4cGVjdCB0aGF0IHRoZSBtYWpvcml0eSBvZiB0aGUgdGVzdCBzdGF0aXN0aWNzIGZvbGxvdyB0aGUgbnVsbCBkaXN0cmlidXRpb24uCi0gdGhhdCB0aGUgbnVsbCBkaXN0cmlidXRpb24gaW4gdGhlIHBsb3QgaXMgcmVzY2FsZWQKLSBTbywgd2Ugd291bGQgZXhwZWN0IHRoYXQgdGhlIHR3byBkaXN0cmlidXRpb25zIHRvIG92ZXJsYXkgaW4gdGhlIG1pZGRsZSBwYXJ0LgotIEhvd2V2ZXIsIHdlIG9ic2VydmUgYSBzaGlmdC4KCkluIHByYWN0aXNlIGl0IG9mdGVuIGhhcHBlbnMgdGhhdCB0aGUgdGhlb3JldGljYWwgbnVsbCBkaXN0cmlidXRpb24gaXMgbm90IHZhbGlkLgoKVGhpcyBjYW4gaGFwcGVuIGR1ZSB0bwoKMS4gRmFpbGVkIG1hdGhlbWF0aWNhbCBhc3N1bXB0aW9uczogbnVsbCBkaXN0cmlidXRpb24gaXMgaW5jb3JyZWN0CjIuIENvcnJlbGF0aW9uIGJldHdlZW4gdGhlIHNhbXBsZXMKMy4gQ29ycmVsYXRpb24gYmV0d2VlbiB0aGUgZmVhdHVyZXMKNC4gQ29uZm91bmRpbmcgdGhhdCBpcyBub3QgY29ycmVjdGVkIGZvci4KCiMjIEFkdmFudGFnZSBvZiBoYXZpbmcgYSBtYXNzaXZlIHBhcmFsbGVsIGRhdGEgc3RydWN0dXJlCgpUaGUgbWFzc2l2ZSBwYXJhbGxlbCBkYXRhIHN0cnVjdHVyZSBlbmFibGVzIHVzCgotIHRvIHNwb3QgZGV2aWF0aW9ucyBmcm9tIHRoZSB0aGVvcmV0aWNhbCBudWxsIGRpc3RyaWJ1dGlvbi4KLSB0byBlc3RpbWF0ZSB0aGUgbnVsbCBkaXN0cmlidXRpb24gYnkgdXNpbmcgYWxsIGZlYXR1cmVzLgoKRWZyb24gcmVsYXhlcyB0aGUgbG9jYWwgZmRyIG1ldGhvZCBieSBhc3N1bWluZyB0aGF0IHRoZSBudWxsIGRpc3RyaWJ1dGlvbiBpcyBhIE5vcm1hbCBkaXN0cmlidXRpb24gYnV0IHdpdGggYSBtZWFuIGFuZCB2YXJpYW5jZSB0aGF0IGNhbiBiZSBlc3RpbWF0ZWQgZW1waXJpY2FsbHkgKGJhc2VkIG9uIGFsbCB0aGUgZmVhdHVyZXMpLgoKVGhpcyBjYW4gYmUgZG9uZSBieSBzZXR0aW5nIHRoZSBhcmd1bWVudCBgbnVsbHR5cGVgIGluIHRoZSBsb2NmZHIgZnVuY3Rpb24gZXF1YWwgdG8gYG51bGx0eXBlID0gMWAsIHdoaWNoIGlzIHRoZSBkZWZhdWx0IG9yIGJlIHNldHRpbmcgYG51bGx0eXBlID0gMmAuCgpUaGUgbG9jZmRyIG1ldGhvZCB0aGVuIHVzZXMKCjEuIGBudWxsdHlwZSA9IDFgIG1heGltdW0gbGlrZWxpaG9vZCB0byBlc3RpbWF0ZSB0aGUgbnVsbCBieSBvbmx5IGNvbnNpZGVyaW5nIHRoZSBtaWRkbGUgcGFydCBpbiB0aGUgZGlzdHJpYnV0aW9uIG9mIHRoZSB0ZXN0IHN0YXRpc3RpY3MgKE1MRSkgb3IKMi4gYG51bGx0eXBlID0gMmAgYSBnZW9tZXRyaWMgbWV0aG9kIHRoYXQgcGxhY2VzIHRoZSBiZXN0IGZpdHRpbmcgbm9ybWFsIHVuZGVyIHRoZSBwZWFrIG9mIHRoZSBlc3RpbWF0ZSBvZiBmKHopLiAoQ01FKQoKIyMjIEJyYWluc2NhbiBleGFtcGxlCgpgYGB7cn0KbGZkciA8LSBsb2NmZHIoZHRpJHoudmFsdWUpCmBgYAoKVGhlIHBsb3Qgc2hvd3MgdGhhdCB0aGUgbnVsbCBkaXN0cmlidXRpb24gaXMgc2hpZnRlZCB0byBuZWdhdGl2ZSB2YWx1ZXMgYW5kIGhhcyBhIHN0YW5kYXJkIGRldmlhdGlvbiB0aGF0IHJlbWFpbnMgY2xvc2UgdG8gMS4KCi0gVGhpcyBvZnRlbiBoYXBwZW5zIGlmIHRoZXJlIGlzIGNvcnJlbGF0aW9uIGJldHdlZW4gdGhlIGZlYXR1cmVzLgoKLSBTcGF0aWFsIGNvcnJlbGF0aW9uIGNhbiBiZSBleHBlY3RlZCBpbiB0aGUgYnJhaW4sIHNvIHZveGVscyB0aGF0IGFyZSBjbG9zZSB0byBlYWNoLW90aGVyIHR5cGljYWxseSB3aWxsIGJlIGNvcnJlbGF0ZWQuCgotIFRoZSBkYXNoZWQgYmx1ZSBsaW5lIGdpdmVzICRmXzAkIGFuZCB0aGUgc29saWQgZ3JlZW4gbGluZSBpcyB0aGUgbm9ucGFyYW1ldHJpYyBlc3RpbWF0ZSBvZiB0aGUgbWFyZ2luYWwgZGVuc2l0eSBmdW5jdGlvbiAkZiQuIFRoZSB0d28gZGVuc2l0aWVzIGRvIG5vdCBjb2luY2lkZSBhbmQgaGVuY2Ugd2UgbWF5IGFudGljaXBhdGUgdGhhdCBzb21lIG9mIHRoZSB2b3hlbHMgc2hvdyBkaWZmZXJlbnRpYWwgYnJhaW4gYWN0aXZpdHkuCgotIFRoZSBwdXJwbGUgYmFycyBpbmRpY2F0ZSB0aGUgZXN0aW1hdGVkIG51bWJlciBvZiBub24tbnVsbHMgKGFtb25nIHRoZSBoeXBvdGhlc2VzL3ZveGVscyBmb3IgYSBnaXZlbiAkeiQtdmFsdWUpLiBUaGUgcGxvdHMgc2hvd3MgdGhhdCBvbmx5IG5vbi1udWxscyBmb3IgcG9zaXRpdmUgJHokLXZhbHVlcyBhcmUgZXhwZWN0ZWQgKHNpZ24gb2YgJHokIGNvcnJlc3BvbmRzIHRvIG1vcmUgb3IgbGVzcyBicmFpbiBhY3Rpdml0eSBpbiBub3JtYWwgdmVyc3VzIGR5c2xlY3RpYyBjaGlsZHJlbikuCgotLS0KCmBgYHtyfQpsZmRyIDwtIGxvY2ZkcihkdGkkei52YWx1ZSwgcGxvdD0yKQpgYGAKCi0gVGhlIHBsb3QgYXQgdGhlIGxlZnQgaXMgdGhlIHNhbWUgYXMgb24gdGhlIHByZXZpb3VzIHBhZ2UuCgotIFRoZSBwbG90IGF0IHRoZSByaWdodCBzaG93cyB0aGUgbG9jYWwgZmRyIGFzIHRoZSBibGFjayBzb2xpZCBsaW5lLiBDbG9zZSB0byAkej0wJCB0aGUgZmRyIGlzIGFib3V0IDEgKGkuZS4gaWYgdGhvc2UgaHlwb3RoZXNlcyB3b3VsZCBiZSByZWplY3RlZCwgdGhlIHByb2JhYmlsaXR5IG9mIGEgZmFsc2UgcG9zaXRpdmUgaXMgYWJvdXQgJDEwMFwlJCkuIFdoZW4gbW92aW5nIGF3YXkgZnJvbSAkej0wJCB0byBsYXJnZXIgdmFsdWVzIHRoZSBmZHIgZHJvcHMuCgotIFRoaXMgbWVhbnMgdGhhdCB3ZSBjYW4gb25seSBkaXNjb3ZlciBjb252aW5jaW5nbHkgZGlmZmVyZW50aWFsIGJyYWluIGFjdGl2aXR5IGZvciBsYXJnZSBwb3NpdGl2ZSAkeiQuIFJlamVjdGluZyBudWxsIGh5cG90aGVzZXMgd2l0aCBsYXJnZSBuZWdhdGl2ZSAkeiQgd291bGQgc3RpbGwgYmUgcmlza3k6IGxhcmdlIGNoYW5jZSBvZiBmYWxzZSBkaXNjb3ZlcnkuCgotIFRoZSByZWFzb24gY2FuIGJlIHJlYWQgZnJvbSB0aGUgZmlyc3QgZ3JhcGg6IGZvciBuZWdhdGl2ZSAkeiQgdGhlIHJhdGlvICRmXzAoeikvZih6KSQgaXMgYWxtb3N0IDEsIHdoZXJlYXMgZm9yIGxhcmdlIHBvc2l0aXZlICR6JCB0aGUgcmF0aW8gJGZfMCh6KS9mKHopJCBiZWNvbWVzIHNtYWxsLgoKLSBOb3RlLCB0aGF0IHRoZSByZXN1bHQgaXMgYXR5cGljYWxseS4gSW4gbW9zdCBhcHBsaWNhdGlvbnMgd2UgdHlwaWNhbGx5IHBpY2stdXAgYm90aCBkb3ducmVndWxhdGVkIChuZWdhdGl2ZSB6KSBhbmQgdXByZWd1bGF0ZWQgKHBvc2l0aXZlIHopIGZlYXR1cmVzLgoKLS0tCgpgYGB7cn0KZHRpIDwtIGR0aSAlPiUKICBtdXRhdGUoCiAgICBsZmRyID0gbGZkciRmZHIsCiAgICB6ZmRyID0gKGxmZHI8MC4yKSAqIHoudmFsdWUpCgpwZmRyIDwtIGR0aSAlPiUKICBnZ3Bsb3QoCiAgICBhZXMoCiAgICAgIGNvb3JkLnksCiAgICAgIGNvb3JkLngsCiAgICAgIGNvbG9yPXpmZHIpCiAgICApICsKICBnZW9tX3BvaW50KCkgKwogIHNjYWxlX2NvbG91cl9ncmFkaWVudDIobG93ID0gImJsdWUiLG1pZD0id2hpdGUiLGhpZ2g9InJlZCIpICsKICB0cmFuc2l0aW9uX21hbnVhbChjb29yZC56KSArCiAgbGFicyh0aXRsZSA9ICJ0cmFuc2VjdGlvbiB6ID0ge2ZyYW1lfSIpICsKICB0aGVtZV9ncmV5KCkKYGBgCgpgYGB7ciBlY2hvPUZBTFNFLCBtZXNzYWdlPUZBTFNFLCBldmFsPWtuaXRyOjppc19odG1sX291dHB1dCgpfQphbmltYXRlKHBmZHIsIG5mcmFtZXMgPSAxMDMsIGVuZF9wYXVzZSA9IDMpCmBgYAoKTm90ZSwgdGhhdCB0aGUgbG9jYWwgZmRyIG1ldGhvZCBhbGxvd3MgdXMgdG8gZGV0ZWN0IGRpZmZlcmVudGlhbCBicmFpbiBhY3Rpdml0eSBpbiBhIHNwZWNpZmljIHJlZ2lvbiBpbiB0aGUgZnJvbnQgcGFydCBvZiB0aGUgYnJhaW4gZm9yIHdoaWNoIGEgbGFyZ2VyIGZyYWN0aW9uYWwgYW5pc290cm9weSBpcyBvYnNlcnZlZCBvbiBhdmVyYWdlIGZvciBjaGlsZGVyZW4gaGF2aW5nIGR5c2xleGlhLgoKV2UgY2FuIGFsc28gZXN0aW1hdGUgdGhlIEZEUiBvZiB0aGUgc2V0IHRoYXQgd2UgcmV0dXJuIGFzIHRoZSBhdmVyYWdlIGxvY2FsIGZkciBpbiB0aGlzIHNldC4KCmBgYHtyfQpkdGkgJT4lCiAgZmlsdGVyKGxmZHIgPCAwLjIpICU+JQogIHB1bGwobGZkcikgJT4lCiAgbWVhbgpgYGAKCiMjIFBvd2VyCgoKVGhlIGxvY2FsIGZhbHNlIGRpc2NvdmVyeSByYXRlIG1heSBhbHNvIGJlIHVzZWQgdG8gZ2V0ICoqcG93ZXIgZGlhZ25vc3RpY3MqKi4KCkdlbmVyYWwgaWRlYTogZm9yICR6JCdzIHN1cHBvcnRlZCBieSB0aGUgYWx0ZXJuYXRpdmUgaHlwb3RoZXNpcyAoaS5lLiBsYXJnZSAkZl8xKHopJCksIHdlIGhvcGUgdG8gc2VlIHNtYWxsIGZkciQoeikkLgoKVGhlICoqZXhwZWN0ZWQgZmRyKiogaXMgYW4gYXBwcm9wcmlhdGUgc3VtbWFyeSBtZWFzdXJlOgpcWwogIFx0ZXh0e0VmZHJ9ID0gXHRleHR7RX1fe2YxfVxsZWZ0W1x0ZXh0e2Zkcn0oWilccmlnaHRdID0gXGludF97LVxpbmZ0eX1eeytcaW5mdHl9IFx0ZXh0e2Zkcn0oeikgZl8xKHopIGR6LgpcXQoKV2l0aCBlc3RpbWF0ZXMgb2YgZmRyJCh6KSQgYW5kICRmXzEoeikkLCB0aGUgRWZkciBjYW4gYmUgY29tcHV0ZWQuCgpBIHNtYWxsIEVmZHIgaXMgYW4gaW5kaWNhdGlvbiBvZiBhIHBvd2VyZnVsIHN0dWR5LgoKYGBge3J9CmxmZHIgPC0gbG9jZmRyKGR0aSR6LnZhbHVlLCBwbG90ID0gMykKYGBgCgpXaXRoICRcYWxwaGEkIHRoZSBub21pbmFsIGxvY2FsIGZkciBsZXZlbCwgdGhlIHZlcnRpY2FsIGF4aXMgZ2l2ZXMKXFsKICBcdGV4dHtFfV97Zl8xfVxsZWZ0W1x0ZXh0e2Zkcn0oWik8XGFscGhhXHJpZ2h0XS4KXF0KCndoZXJlICRaJCBpcyB0aGUgdGVzdCBzdGF0aXN0aWMgZGlzdHJpYnV0ZWQgdW5kZXIgdGhlIGFsdGVybmF0aXZlIGh5cG90aGVzaXMgKCRmXzEkKS4KCi0gVGhpcyBwcm9iYWJpbGl0eSAkXHRleHR7UH1fe2ZfMX1cbGVmdFtcdGV4dHtmZHJ9KFopPFxhbHBoYVxyaWdodF0kIGlzIGEga2luZCBvZiBleHRlbnNpb24gb2YgdGhlIGRlZmluaXRpb24gb2YgdGhlIHBvd2VyIG9mIGEgdGVzdDogaXQgaXMgdGhlIHByb2JhYmlsaXR5IHRoYXQgYSBub24tbnVsbCBjYW4gYmUgZGV0ZWN0ZWQgd2hlbiB0aGUgbm9taW5hbCBsb2NhbCBmZHIgaXMgc2V0IGF0ICRcYWxwaGEkLgoKLSBUaGUgZ3JhcGggc2hvd3MsIGZvciBleGFtcGxlcywgdGhhdCB3aXRoICRcYWxwaGE9MC4yMCQgd2Ugb25seSBoYXZlICRcdGV4dHtQfV97Zl8xfVxsZWZ0W1x0ZXh0e2Zkcn0oWik8XGFscGhhXHJpZ2h0XSA9MC4yNCQsIGkuZS4gb25seSAkMjRcJSQgb2YgdGhlIG5vbi1udWxscyBhcmUgZXhwZWN0ZWQgdG8gYmUgZGlzY292ZXJlZC4KCi0gQXQgdGhlIGJvdHRvbSBvZiB0aGUgZ3JhcGggd2UgcmVhZCBFZmRyJD0wLjQ4NiQuIEhlbmNlLCB0aGUgbG9jYWwgZmRyIGZvciBhIHR5cGljYWwgbm9uLW51bGwgZmVhdHVyZSBpcyBleHBlY3RlZCB0byBiZSA0OC42JSB3aGljaCBpcyByYXRoZXIgbGFyZ2UuIFRoZSBzdHVkeSBpcyBub3Qgd2VsbCBwb3dlcmVkIQoKIyMgQ29tcGFyaXNvbiB3aXRoIGdlbmUgZXhwcmVzc2lvbiBzdHVkeQoKLSBISVYgZGF0YXNldDogNzY4MCB6LXZhbHVlcywgZWFjaCByZWxhdGluZyB0byBhIHR3by1zYW1wbGUgdC10ZXN0IGNvbXBhcmluZyBnZW5lIGV4cHJlc3Npb24gb2YgNCBub3JtYWwgdG8gNCBISVYgcGF0aWVudHMuCgpgYGB7cn0KZGF0YShoaXZkYXRhKQpyZXMgPC0gbG9jZmRyKGhpdmRhdGEscGxvdD0yKQpyZXMgPC0gbG9jZmRyKGhpdmRhdGEscGxvdD0zKQpgYGAKCmBgYHtyfQptZWFuKHJlcyRmZHJbcmVzJGZkcjwwLjJdKQpgYGAK</div>
+<div class="footer">
+    <hr>
+    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
+    CC BY-NC-SA 4.0</a> licence.
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("lsi.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

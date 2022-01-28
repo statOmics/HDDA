@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Lieven Clement" />
+
+
+<title>High Dimensional Data Analysis 2021-2022</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HDDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="intro.html">1. Introduction</a>
+    </li>
+    <li>
+      <a href="svd.html">2. Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="prediction.html">3. Prediction with High Dimensional Predictors</a>
+    </li>
+    <li>
+      <a href="sparseSvd.html">4. Sparse Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="lda.html">5. Linear Discriminant Analysis</a>
+    </li>
+    <li>
+      <a href="lsi.html">6. Large Scale Inference</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab1-Intro-SVD.html">Lab 1: Intro &amp; SVD</a>
+    </li>
+    <li>
+      <a href="Lab2-PCA.html">Lab 2: SVD - PCA</a>
+    </li>
+    <li>
+      <a href="Lab3-Penalized-Regression.html">Lab 3: Prediction</a>
+    </li>
+    <li>
+      <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
+    </li>
+    <li>
+      <a href="Lab5-Large-Scale-Inference.html">Lab 5: LSI</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="https://github.com/statOmics/HDDA">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">High Dimensional Data Analysis 2021-2022</h1>
+<h4 class="author">Lieven Clement</h4>
+<h4 class="date">statOmics, Ghent University (<a href="https://statomics.github.io" class="uri">https://statomics.github.io</a>)</h4>
+
+</div>
+
+
+<div id="organisation" class="section level1">
+<h1><span class="header-section-number">1</span> Organisation</h1>
+<div id="lectures" class="section level2">
+<h2><span class="header-section-number">1.1</span> Lectures</h2>
+<ul>
+<li>Theory (6-7 x 2.5 hours)</li>
+<li>PC Labs (5 x 2.5 hours)</li>
+<li>Q&amp;A session (2.5 hours)</li>
+<li>Paper reading sessions (2 x 2.5hours)</li>
+</ul>
+</div>
+<div id="instructors" class="section level2">
+<h2><span class="header-section-number">1.2</span> Instructors</h2>
+<ul>
+<li>Lectures: Lieven Clement (lieven[dot]clement[at]ugent[dot]be)</li>
+<li>Tutorials: Milan Malfait (milan[dot]malfait[at]ugent[dot]be)</li>
+</ul>
+</div>
+</div>
+<div id="evaluation" class="section level1">
+<h1><span class="header-section-number">2</span> Evaluation</h1>
+<div id="end-of-term-evaluation" class="section level2">
+<h2><span class="header-section-number">2.1</span> End-of-term evaluation</h2>
+<ul>
+<li>Exam in January: 10/20</li>
+<li>Written open book exam with open questions</li>
+</ul>
+</div>
+<div id="permanent-evaluation" class="section level2">
+<h2><span class="header-section-number">2.2</span> Permanent evaluation</h2>
+<ul>
+<li>1 Project (7.5) + 1 homeworks (2.5): 10/20</li>
+<li>Written reports</li>
+<li>Group work:
+<ul>
+<li>project 4 people,</li>
+<li>homework 2 people</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="competences" class="section level1">
+<h1><span class="header-section-number">3</span> Competences</h1>
+<div id="initial-competences" class="section level2">
+<h2><span class="header-section-number">3.1</span> Initial competences</h2>
+<ul>
+<li>A basic course in probability theory and statistics (linear models, i.e, regression analysis and analysis of variance)</li>
+<li>Good basic knowledge of matrix algebra</li>
+</ul>
+</div>
+<div id="final-competences" class="section level2">
+<h2><span class="header-section-number">3.2</span> Final competences</h2>
+<ol style="list-style-type: decimal">
+<li>The student has knowledge of methods for analysing and exploring high-dimensional data sets</li>
+<li>The student can see and quantify structures in large high dimensional/multivariate datasets, using the software R.</li>
+<li>The student can value and interpret the statistical data analyses of high-dimensional data correctly.</li>
+<li>The student can correctly report the results of the data analyses according to scientific standards</li>
+<li>The student can comprehensively read scientific papers related to the course content.</li>
+<li>The student can take responsibility and initiative in a group effort</li>
+</ol>
+<p><img src="figures/scoreMatrix.png" /></p>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiSGlnaCBEaW1lbnNpb25hbCBEYXRhIEFuYWx5c2lzIDIwMjEtMjAyMiIKYXV0aG9yOiAiTGlldmVuIENsZW1lbnQiCmRhdGU6ICJzdGF0T21pY3MsIEdoZW50IFVuaXZlcnNpdHkgKGh0dHBzOi8vc3RhdG9taWNzLmdpdGh1Yi5pbykiCgotLS0KCiMgT3JnYW5pc2F0aW9uCiMjIExlY3R1cmVzCgotIFRoZW9yeSAoNi03IHggMi41IGhvdXJzKQotIFBDIExhYnMgKDUgeCAyLjUgaG91cnMpCi0gUSZBIHNlc3Npb24gKDIuNSBob3VycykKLSBQYXBlciByZWFkaW5nIHNlc3Npb25zICgyIHggMi41aG91cnMpCgojIyBJbnN0cnVjdG9ycyAKCi0gTGVjdHVyZXM6IExpZXZlbiBDbGVtZW50IChsaWV2ZW5bZG90XWNsZW1lbnRbYXRddWdlbnRbZG90XWJlKQotIFR1dG9yaWFsczogTWlsYW4gTWFsZmFpdCAobWlsYW5bZG90XW1hbGZhaXRbYXRddWdlbnRbZG90XWJlKQoKIyBFdmFsdWF0aW9uCgojIyBFbmQtb2YtdGVybSBldmFsdWF0aW9uCgotIEV4YW0gaW4gSmFudWFyeTogMTAvMjAKLSBXcml0dGVuIG9wZW4gYm9vayBleGFtIHdpdGggb3BlbiBxdWVzdGlvbnMKCiMjIFBlcm1hbmVudCBldmFsdWF0aW9uIAoKLSAxIFByb2plY3QgKDcuNSkgKyAxIGhvbWV3b3JrcyAoMi41KTogMTAvMjAKLSBXcml0dGVuIHJlcG9ydHMKLSBHcm91cCB3b3JrOiAKICAgIC0gcHJvamVjdCA0IHBlb3BsZSwgCiAgICAtIGhvbWV3b3JrIDIgcGVvcGxlCgojIENvbXBldGVuY2VzCiMjIEluaXRpYWwgY29tcGV0ZW5jZXMKCi0gQSBiYXNpYyBjb3Vyc2UgaW4gcHJvYmFiaWxpdHkgdGhlb3J5IGFuZCBzdGF0aXN0aWNzIChsaW5lYXIgbW9kZWxzLCBpLmUsIHJlZ3Jlc3Npb24gYW5hbHlzaXMgYW5kIGFuYWx5c2lzIG9mIHZhcmlhbmNlKQotIEdvb2QgYmFzaWMga25vd2xlZGdlIG9mIG1hdHJpeCBhbGdlYnJhCgojIyBGaW5hbCBjb21wZXRlbmNlcwoKMS4gVGhlIHN0dWRlbnQgaGFzIGtub3dsZWRnZSBvZiBtZXRob2RzIGZvciBhbmFseXNpbmcgYW5kIGV4cGxvcmluZyBoaWdoLWRpbWVuc2lvbmFsIGRhdGEgc2V0cwoyLiBUaGUgc3R1ZGVudCBjYW4gc2VlIGFuZCBxdWFudGlmeSBzdHJ1Y3R1cmVzIGluIGxhcmdlIGhpZ2ggZGltZW5zaW9uYWwvbXVsdGl2YXJpYXRlIGRhdGFzZXRzLCB1c2luZyB0aGUKc29mdHdhcmUgUi4KMy4gVGhlIHN0dWRlbnQgY2FuIHZhbHVlIGFuZCBpbnRlcnByZXQgdGhlIHN0YXRpc3RpY2FsIGRhdGEgYW5hbHlzZXMgb2YgaGlnaC1kaW1lbnNpb25hbCBkYXRhIGNvcnJlY3RseS4KNC4gVGhlIHN0dWRlbnQgY2FuIGNvcnJlY3RseSByZXBvcnQgdGhlIHJlc3VsdHMgb2YgdGhlIGRhdGEgYW5hbHlzZXMgYWNjb3JkaW5nIHRvIHNjaWVudGlmaWMgc3RhbmRhcmRzCjUuIFRoZSBzdHVkZW50IGNhbiBjb21wcmVoZW5zaXZlbHkgcmVhZCBzY2llbnRpZmljIHBhcGVycyByZWxhdGVkIHRvIHRoZSBjb3Vyc2UgY29udGVudC4KNi4gVGhlIHN0dWRlbnQgY2FuIHRha2UgcmVzcG9uc2liaWxpdHkgYW5kIGluaXRpYXRpdmUgaW4gYSBncm91cCBlZmZvcnQKCiFbXSguL2ZpZ3VyZXMvc2NvcmVNYXRyaXgucG5nKQoKCg==</div>
+<div class="footer">
+    <hr>
+    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
+    CC BY-NC-SA 4.0</a> licence.
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("intro0.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

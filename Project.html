@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Adapted by Milan Malfait" />
+
+
+<title>Project assignment</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HDDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="intro.html">1. Introduction</a>
+    </li>
+    <li>
+      <a href="svd.html">2. Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="prediction.html">3. Prediction with High Dimensional Predictors</a>
+    </li>
+    <li>
+      <a href="sparseSvd.html">4. Sparse Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="lda.html">5. Linear Discriminant Analysis</a>
+    </li>
+    <li>
+      <a href="lsi.html">6. Large Scale Inference</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab1-Intro-SVD.html">Lab 1: Intro &amp; SVD</a>
+    </li>
+    <li>
+      <a href="Lab2-PCA.html">Lab 2: SVD - PCA</a>
+    </li>
+    <li>
+      <a href="Lab3-Penalized-Regression.html">Lab 3: Prediction</a>
+    </li>
+    <li>
+      <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
+    </li>
+    <li>
+      <a href="Lab5-Large-Scale-Inference.html">Lab 5: LSI</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="https://github.com/statOmics/HDDA">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Project assignment</h1>
+<h3 class="subtitle">High Dimensional Data Analysis 2021</h3>
+<h4 class="author">Adapted by Milan Malfait</h4>
+<h4 class="date">18 Nov 2021 <br/> (Last updated: 2021-11-12)</h4>
+
+</div>
+
+
+<hr />
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Kidney transplantation or renal transplantation is the organ transplant of a kidney into a patient who has an end-stage renal disease. Scientists claim that some genes are responsible for a patient’s likelihood of rejecting a kidney after transplantation.</p>
+<p>In this project, you are to investigate this claim. You will analyze data from the study by <span class="citation">Einecke et al. (2010)</span>. The original data consists of microarray measurements from 54675 genes across 282 patients. For the purpose of this project, a random subset was made of 250 patients and 10.000 from the 25% most variable genes.</p>
+<p>You can access the data through the <strong><em>HDDAData</em></strong> package, which can be installed from <a href="https://github.com/statOmics/HDDAData">GitHub</a> by running the following code in an R session:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">&quot;remotes&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    <span class="kw">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>}</span>
+<span id="cb1-4"><a href="#cb1-4"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;statOmics/HDDAData&quot;</span>)</span></code></pre></div>
+<p><strong>Note</strong> that you need to run this piece of code only once. <em>Don’t</em> include it in your R script, just run it once in an R console and you’re good to go.</p>
+<p>You can then access the data in your script as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(HDDAData)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">data</span>(<span class="st">&quot;Einecke2010Kidney&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">## Data dimensions</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="kw">dim</span>(Einecke2010Kidney)</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt; [1]   250 10001</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co">## Showing first 6 rows and 10 columns</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="kw">head</span>(Einecke2010Kidney[, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Reject_Status"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["X211352_s_at"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["X239275_at"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["X1554536_at"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["X1558452_at"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["X1554249_a_at"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["X234382_x_at"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["X1557126_a_at"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["X1554865_at"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["X224489_at"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"0","2":"2.3692560","3":"1.0549150","4":"1.24906517","5":"0.8421884","6":"0.9914628","7":"0.4619668","8":"-0.6374899","9":"1.4502116","10":"-0.08625628","_rn_":"GSM534173"},{"1":"0","2":"-1.4882009","3":"-0.6057843","4":"-2.04274530","5":"0.9472119","6":"-0.9669676","7":"1.3172260","8":"0.6513907","9":"-3.0633906","10":"-0.89828665","_rn_":"GSM534125"},{"1":"0","2":"0.5561377","3":"0.8382071","4":"-0.72872103","5":"0.3544353","6":"1.5439325","7":"-0.4722676","8":"-0.3430743","9":"-0.8369873","10":"-1.30720408","_rn_":"GSM534044"},{"1":"0","2":"0.1271639","3":"1.4809816","4":"0.19142188","5":"-1.1555505","6":"0.6013397","7":"-0.2955006","8":"1.9974828","9":"1.5790603","10":"1.35680474","_rn_":"GSM533968"},{"1":"0","2":"-0.3795643","3":"0.3971213","4":"-0.05223003","5":"1.2730340","6":"1.4170661","7":"1.2925662","8":"0.6802998","9":"-0.3611688","10":"2.38291415","_rn_":"GSM534021"},{"1":"0","2":"-0.3245208","3":"2.1372173","4":"-0.65713129","5":"-0.3552231","6":"-1.2812026","7":"-0.4121304","8":"0.6763814","9":"-0.5040343","10":"-0.59533172","_rn_":"GSM533930"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>More information about the data and its format can be found in the documentation, see <code>?Einecke2010Kidney</code>.</p>
+<p>The first column, <code>Reject_Status</code>, consists of a <strong>binary variable</strong> encoding whether the kidney transplant was accepted (<code>0</code>) or rejected (<code>1</code>) for each patient. The other columns contain the microarray expression data for the 10.000 genes. The <code>rownames</code> of the data frame contains the patient identifiers.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">## Extract gene expression data as matrix X</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>X &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Einecke2010Kidney[, <span class="dv">-1</span>])</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">dim</span>(X)</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt; [1]   250 10000</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="kw">str</span>(X)</span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#&gt;  num [1:250, 1:10000] 2.369 -1.488 0.556 0.127 -0.38 ...</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#&gt;  - attr(*, &quot;dimnames&quot;)=List of 2</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt;   ..$ : chr [1:250] &quot;GSM534173&quot; &quot;GSM534125&quot; &quot;GSM534044&quot; &quot;GSM533968&quot; ...</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt;   ..$ : chr [1:10000] &quot;X211352_s_at&quot; &quot;X239275_at&quot; &quot;X1554536_at&quot; &quot;X1558452_at&quot; ...</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">## Extract Reject_Status column as vector</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a>reject_status &lt;-<span class="st"> </span>Einecke2010Kidney<span class="op">$</span>Reject_Status</span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="kw">names</span>(reject_status) &lt;-<span class="st"> </span><span class="kw">rownames</span>(Einecke2010Kidney)</span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="kw">table</span>(reject_status) <span class="co"># number of 0&#39;s (accepts) and 1&#39;s (rejects)</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt; reject_status</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="co">#&gt;   0   1 </span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt; 183  67</span></span></code></pre></div>
+</div>
+<div id="assignment" class="section level1">
+<h1>Assignment</h1>
+<p><strong>You must work in groups of four students.</strong></p>
+<p>We are interested in the following research questions:</p>
+<ul>
+<li><p>How do the genes vary in terms of their gene expression levels? Is the variability associated with kidney rejection? (only to be answered in a data explorative / graphical manner)</p></li>
+<li><p>Which genes are differentially expressed between the two kidney rejection groups? You must control the FDR at 10%.</p></li>
+<li><p>Can the kidney rejection be predicted from the gene expression levels? What genes are most important in predicting the kidney transplant rejection? How well does the prediction model perform in terms of predicting rejection status?</p>
+<p>Note that the response variable is <em>binary</em>, so if you use regression models, you will need to use <em>logistic regression</em>, which models the response with a binomial distribution. This can generally be done in <code>R</code> by specifying <code>family = "binomial"</code> in regression functions such as <code>glm</code> and <code>glmnet</code>.</p></li>
+</ul>
+<p>Write a scientific report that answers the research questions related to this study. The report must consist of two parts:</p>
+<ul>
+<li><p>An executive summary of about half a page. This summary contains the answers to the original research questions, and should be written in a non-technical manner (it is meant for researchers without a statistical background).</p></li>
+<li><p>A technical report that explains in detail how the results were obtained. The reader should understand what you did without looking at the code!</p></li>
+</ul>
+<p>It’s recommended to prepare the report as an <strong>RMarkdown</strong> file. If you choose to use another format, then the R code should be submitted as a separate file (please properly comment your R code).</p>
+<p>The report is expected to be concise, but must evidently be accurate and sufficiently detailed to enable the reader to verify the correctness of the result (i.e. your results must be reproducible). The total length of the report (excluding graphs, R code and possibly appendices) should not be more than three pages. The report should not contain an explanation of the theory behind the statistical methods, and should also not contain the study description given above (you can assume that the reader already knows this).</p>
+<p><strong><em>Interpretation</em> of the results is key!</strong></p>
+<p>Some more specific guidelines:</p>
+<ul>
+<li><p>For the first research question, you may use one of the data exploration tools that we have seen in class. However, you are also free to search the literature for other techniques for data exploration and visualisation (your final mark will not depend on whether you searched the literature or not). You are only asked to <em>explore</em> whether the variability in gene expression levels is associated with rejection status; no need for hypothesis testing.</p></li>
+<li><p>For the second research question, you should perform hypothesis testing and correct for multiple testing so as to control the FDR at 10%. The full list with differentially expressed genes may be presented in an appendix. Only list the most important results in the body of the report.</p></li>
+<li><p>For the third research question you are asked to predict rejection status using gene expression levels. You should randomly split the data into a test (30%) and a training (70%) dataset. Make sure you use a seed (<code>set.seed()</code> function) in R for reproducibility. The following prediction models should be evaluated:</p>
+<ul>
+<li><p>Principal Component Regression (PCR)</p></li>
+<li><p>Ridge Regression</p></li>
+<li><p>Lasso regression</p></li>
+</ul></li>
+</ul>
+<p><strong>Note</strong> that the response variable (the rejection status) is <em>binary</em>, so you will have to use <strong>logistic regression</strong>!</p>
+<p>In choosing the number of PCs in PCR, and the <span class="math inline">\(\gamma\)</span> in the Ridge and Lasso models, you need to use cross validation (CV) on the training dataset. You should use the <strong>area under the receiver characteristic curve (AUC)</strong> as a performance measure. An example of how to do this for PC Regression can be found on <a href="https://ufora.ugent.be/d2l/le/content/444226/viewContent/1116536/View">UFora</a>.</p>
+<p>Once you have selected the optimal PCR, Ridge and Lasso models, you have to decide with what model you want to continue. For this final model you have to determine a good threshold <span class="math inline">\(c\)</span> for the prediction cut-off, where <span class="math inline">\(c\)</span> threshold where when a predicted probability from your final model <span class="math inline">\(p &gt; c\)</span>, we predict kidney rejection (<span class="math inline">\(y=1\)</span>) and non-rejection (<span class="math inline">\(y=0\)</span>) otherwise. <span class="math inline">\(c\)</span> should be chosen such that the <em>misclassification error</em> is minimal. This should be evaluated on the <em>test data</em>, i.e. the data not used for training the model. Also report the <em>specificity</em> and <em>sensitivity</em> of your final model and cut-off <span class="math inline">\(c\)</span>.</p>
+<p><strong>Hint</strong>: You can find an example function to calculate the misclassification errors for a range of cut-off values below. This should help you find an optimal value for <span class="math inline">\(c\)</span>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">## Inputs:</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">##   * obs: vector of test observations</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">##   * pred: vector of model predictions</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">##   * cutoff_values: vector of prediction thresholds c</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>calculate_misclass_error &lt;-<span class="st"> </span><span class="cf">function</span>(obs, pred, cutoff_values) { </span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="kw">stopifnot</span>(<span class="kw">lenth</span>(obs) <span class="op">==</span><span class="st"> </span><span class="kw">length</span>(pred))</span>
+<span id="cb4-7"><a href="#cb4-7"></a>  </span>
+<span id="cb4-8"><a href="#cb4-8"></a>  misclass_errors &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, <span class="kw">length</span>(cutoff_values))</span>
+<span id="cb4-9"><a href="#cb4-9"></a>  </span>
+<span id="cb4-10"><a href="#cb4-10"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(cutoff_values)) {</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    cutoff &lt;-<span class="st"> </span>cutoff_values[i]</span>
+<span id="cb4-12"><a href="#cb4-12"></a>    ypred &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(pred <span class="op">&gt;</span><span class="st"> </span>cutoff) <span class="co"># translates TRUE/FALSE to 1/0 </span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>  </span>
+<span id="cb4-14"><a href="#cb4-14"></a>    misclass_errors[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(ypred <span class="op">!=</span><span class="st"> </span>obs) <span class="co"># proportion of misclassifications</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a>  }</span>
+<span id="cb4-16"><a href="#cb4-16"></a>  </span>
+<span id="cb4-17"><a href="#cb4-17"></a>  <span class="kw">data.frame</span>(</span>
+<span id="cb4-18"><a href="#cb4-18"></a>    <span class="st">&quot;cutoff&quot;</span> =<span class="st"> </span>cutoff_values,</span>
+<span id="cb4-19"><a href="#cb4-19"></a>    <span class="st">&quot;misclass&quot;</span> =<span class="st"> </span>misclass_errors</span>
+<span id="cb4-20"><a href="#cb4-20"></a>  )</span>
+<span id="cb4-21"><a href="#cb4-21"></a>}</span></code></pre></div>
+</div>
+<div id="submission" class="section level1">
+<h1>Submission</h1>
+<p>It is recommended (but not mandatory) to prepare your report in <strong>RMarkdown</strong>. You can render it to either HTML (<code>output: html_document</code>) or to PDF (<code>output: pdf_document</code>). In both cases the original <code>.Rmd</code> file should be included when handing in the assignment. If you don’t use RMarkdown, you should include the <code>.R</code> file(s) containing your implementation and analysis scripts.</p>
+<p>When submitting, please use the following format:</p>
+<ul>
+<li><p>HW-Name1-Name2-Name3-Name4.[pdf|html]</p></li>
+<li><p>HW-Name1-Name2-Name3-Name4.R[md]</p></li>
+</ul>
+<p>where <code>Name</code> is your <strong>family name</strong>. It’s also recommended to mention your full name in the report itself.</p>
+<p><strong>Submissions should be done through <a href="https://ufora.ugent.be/d2l/home/444226">UFora</a></strong>.</p>
+<p><span style="color:red"><strong>The deadline for submission is 16/12/2021 at 23:59</strong></span></p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-einecke2010molecular">
+<p>Einecke, Gunilla, Jeff Reeve, Banu Sis, Michael Mengel, Luis Hidalgo, Konrad S Famulski, Arthur Matas, et al. 2010. “A Molecular Classifier for Predicting Future Graft Loss in Late Kidney Transplant Biopsies.” <em>The Journal of Clinical Investigation</em> 120 (6): 1862–72.</p>
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUHJvamVjdCBhc3NpZ25tZW50IgpzdWJ0aXRsZTogIkhpZ2ggRGltZW5zaW9uYWwgRGF0YSBBbmFseXNpcyAyMDIxIgphdXRob3I6ICJBZGFwdGVkIGJ5IE1pbGFuIE1hbGZhaXQiCmRhdGU6ICIxOCBOb3YgMjAyMSA8YnIvPiAoTGFzdCB1cGRhdGVkOiAyMDIxLTExLTEyKSIKb3V0cHV0OgogIGh0bWxfZG9jdW1lbnQ6CiAgICBudW1iZXJfc2VjdGlvbnM6IGZhbHNlCiAgcGRmX2RvY3VtZW50OgogICAgbnVtYmVyX3NlY3Rpb25zOiBmYWxzZQpyZWZlcmVuY2VzOgotIGlkOiBlaW5lY2tlMjAxMG1vbGVjdWxhcgogIHR5cGU6IGFydGljbGUtam91cm5hbAogIGF1dGhvcjoKICAtIGZhbWlseTogRWluZWNrZQogICAgZ2l2ZW46IEd1bmlsbGEKICAtIGZhbWlseTogUmVldmUKICAgIGdpdmVuOiBKZWZmCiAgLSBmYW1pbHk6IFNpcwogICAgZ2l2ZW46IEJhbnUKICAtIGZhbWlseTogTWVuZ2VsCiAgICBnaXZlbjogTWljaGFlbAogIC0gZmFtaWx5OiBIaWRhbGdvCiAgICBnaXZlbjogTHVpcwogIC0gZmFtaWx5OiBGYW11bHNraQogICAgZ2l2ZW46IEtvbnJhZCBTCiAgLSBmYW1pbHk6IE1hdGFzCiAgICBnaXZlbjogQXJ0aHVyCiAgLSBmYW1pbHk6IEthc2lza2UKICAgIGdpdmVuOiBCZXJ0CiAgLSBmYW1pbHk6IEthcGxhbgogICAgZ2l2ZW46IEJydWNlCiAgLSBmYW1pbHk6IEhhbGxvcmFuCiAgICBnaXZlbjogUGhpbGlwIEYKICAtIGxpdGVyYWw6IG90aGVycwogIGlzc3VlZDoKICAtIHllYXI6IDIwMTAKICB0aXRsZTogQSBtb2xlY3VsYXIgY2xhc3NpZmllciBmb3IgcHJlZGljdGluZyBmdXR1cmUgZ3JhZnQgbG9zcyBpbiBsYXRlIGtpZG5leSB0cmFuc3BsYW50CiAgICBiaW9wc2llcwogIGNvbnRhaW5lci10aXRsZTogVGhlIEpvdXJuYWwgb2YgY2xpbmljYWwgaW52ZXN0aWdhdGlvbgogIHB1Ymxpc2hlcjogQW0gU29jIENsaW4gSW52ZXN0aWcKICBwYWdlOiAxODYyLTE4NzIKICB2b2x1bWU6ICcxMjAnCiAgaXNzdWU6ICc2JwotLS0KCmBgYHtyIHNldHVwLCBpbmNsdWRlPUZBTFNFLCBjYWNoZT1GQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KAogIGNvbGxhcHNlID0gVFJVRSwKICBjb21tZW50ID0gIiM+IgopCmBgYAoKKioqCgojIEludHJvZHVjdGlvbgoKS2lkbmV5IHRyYW5zcGxhbnRhdGlvbiBvciByZW5hbCB0cmFuc3BsYW50YXRpb24gaXMgdGhlIG9yZ2FuIHRyYW5zcGxhbnQgb2YgYQpraWRuZXkgaW50byBhIHBhdGllbnQgd2hvIGhhcyBhbiBlbmQtc3RhZ2UgcmVuYWwgZGlzZWFzZS4gU2NpZW50aXN0cyBjbGFpbSAgdGhhdApzb21lIGdlbmVzIGFyZSByZXNwb25zaWJsZSBmb3IgYSBwYXRpZW50J3MgbGlrZWxpaG9vZCBvZiByZWplY3RpbmcgYSBraWRuZXkKYWZ0ZXIgdHJhbnNwbGFudGF0aW9uLgoKSW4gdGhpcyBwcm9qZWN0LCB5b3UgYXJlIHRvIGludmVzdGlnYXRlIHRoaXMgY2xhaW0uIFlvdSB3aWxsIGFuYWx5emUgZGF0YSBmcm9tCnRoZSBzdHVkeSBieSBAZWluZWNrZTIwMTBtb2xlY3VsYXIuIFRoZSBvcmlnaW5hbCBkYXRhIGNvbnNpc3RzIG9mIG1pY3JvYXJyYXkKbWVhc3VyZW1lbnRzIGZyb20gNTQ2NzUgZ2VuZXMgYWNyb3NzIDI4MiBwYXRpZW50cy4gRm9yIHRoZSBwdXJwb3NlIG9mIHRoaXMKcHJvamVjdCwgYSByYW5kb20gc3Vic2V0IHdhcyBtYWRlIG9mIDI1MCBwYXRpZW50cyBhbmQgMTAuMDAwIGZyb20gdGhlIDI1JSBtb3N0CnZhcmlhYmxlIGdlbmVzLgoKWW91IGNhbiBhY2Nlc3MgdGhlIGRhdGEgdGhyb3VnaCB0aGUgX18qSEREQURhdGEqX18gcGFja2FnZSwgd2hpY2ggY2FuIGJlCmluc3RhbGxlZCBmcm9tIFtHaXRIdWJdKGh0dHBzOi8vZ2l0aHViLmNvbS9zdGF0T21pY3MvSEREQURhdGEpIGJ5IHJ1bm5pbmcgdGhlCmZvbGxvd2luZyBjb2RlIGluIGFuIFIgc2Vzc2lvbjoKCmBgYHtyIGluc3RhbGxhdGlvbiwgZXZhbD1GQUxTRX0KaWYgKCFyZXF1aXJlTmFtZXNwYWNlKCJyZW1vdGVzIiwgcXVpZXRseSA9IFRSVUUpKSB7CiAgICBpbnN0YWxsLnBhY2thZ2VzKCJyZW1vdGVzIikKfQpyZW1vdGVzOjppbnN0YWxsX2dpdGh1Yigic3RhdE9taWNzL0hEREFEYXRhIikKYGBgCgoqKk5vdGUqKiB0aGF0IHlvdSBuZWVkIHRvIHJ1biB0aGlzIHBpZWNlIG9mIGNvZGUgb25seSBvbmNlLiAqRG9uJ3QqIGluY2x1ZGUgaXQgaW4geW91ciBSCnNjcmlwdCwganVzdCBydW4gaXQgb25jZSBpbiBhbiBSIGNvbnNvbGUgYW5kIHlvdSdyZSBnb29kIHRvIGdvLgoKWW91IGNhbiB0aGVuIGFjY2VzcyB0aGUgZGF0YSBpbiB5b3VyIHNjcmlwdCBhcyBmb2xsb3dzOgoKYGBge3IgZ2V0LWRhdGF9CmxpYnJhcnkoSEREQURhdGEpCmRhdGEoIkVpbmVja2UyMDEwS2lkbmV5IikKCiMjIERhdGEgZGltZW5zaW9ucwpkaW0oRWluZWNrZTIwMTBLaWRuZXkpCgojIyBTaG93aW5nIGZpcnN0IDYgcm93cyBhbmQgMTAgY29sdW1ucwpoZWFkKEVpbmVja2UyMDEwS2lkbmV5WywgMToxMF0pCmBgYAoKTW9yZSBpbmZvcm1hdGlvbiBhYm91dCB0aGUgZGF0YSBhbmQgaXRzIGZvcm1hdCBjYW4gYmUgZm91bmQgaW4gdGhlCmRvY3VtZW50YXRpb24sIHNlZSBgP0VpbmVja2UyMDEwS2lkbmV5YC4KClRoZSBmaXJzdCBjb2x1bW4sIGBSZWplY3RfU3RhdHVzYCwgY29uc2lzdHMgb2YgYSBfX2JpbmFyeSB2YXJpYWJsZV9fIGVuY29kaW5nCndoZXRoZXIgdGhlIGtpZG5leSB0cmFuc3BsYW50IHdhcyBhY2NlcHRlZCAoYDBgKSBvciByZWplY3RlZCAoYDFgKSBmb3IgZWFjaApwYXRpZW50LiBUaGUgb3RoZXIgY29sdW1ucyBjb250YWluIHRoZSBtaWNyb2FycmF5IGV4cHJlc3Npb24gZGF0YSBmb3IgdGhlIDEwLjAwMApnZW5lcy4gVGhlIGByb3duYW1lc2Agb2YgdGhlIGRhdGEgZnJhbWUgY29udGFpbnMgdGhlIHBhdGllbnQgaWRlbnRpZmllcnMuCgpgYGB7ciBleHBscm9lLWRhdGF9CiMjIEV4dHJhY3QgZ2VuZSBleHByZXNzaW9uIGRhdGEgYXMgbWF0cml4IFgKWCA8LSBhcy5tYXRyaXgoRWluZWNrZTIwMTBLaWRuZXlbLCAtMV0pCmRpbShYKQpzdHIoWCkKCiMjIEV4dHJhY3QgUmVqZWN0X1N0YXR1cyBjb2x1bW4gYXMgdmVjdG9yCnJlamVjdF9zdGF0dXMgPC0gRWluZWNrZTIwMTBLaWRuZXkkUmVqZWN0X1N0YXR1cwpuYW1lcyhyZWplY3Rfc3RhdHVzKSA8LSByb3duYW1lcyhFaW5lY2tlMjAxMEtpZG5leSkKdGFibGUocmVqZWN0X3N0YXR1cykgIyBudW1iZXIgb2YgMCdzIChhY2NlcHRzKSBhbmQgMSdzIChyZWplY3RzKQpgYGAKCiMgQXNzaWdubWVudAoKX19Zb3UgbXVzdCB3b3JrIGluIGdyb3VwcyBvZiBmb3VyIHN0dWRlbnRzLl9fCgpXZSBhcmUgaW50ZXJlc3RlZCBpbiB0aGUgZm9sbG93aW5nIHJlc2VhcmNoIHF1ZXN0aW9uczoKCi0gSG93IGRvIHRoZSBnZW5lcyB2YXJ5IGluIHRlcm1zIG9mIHRoZWlyIGdlbmUgZXhwcmVzc2lvbiBsZXZlbHM/IElzIHRoZSB2YXJpYWJpbGl0eSBhc3NvY2lhdGVkIHdpdGgga2lkbmV5IHJlamVjdGlvbj8gKG9ubHkgdG8gYmUgYW5zd2VyZWQgaW4gYSBkYXRhIGV4cGxvcmF0aXZlIC8gZ3JhcGhpY2FsIG1hbm5lcikKCi0gV2hpY2ggZ2VuZXMgYXJlIGRpZmZlcmVudGlhbGx5IGV4cHJlc3NlZCBiZXR3ZWVuIHRoZSB0d28ga2lkbmV5IHJlamVjdGlvbiBncm91cHM/IFlvdSBtdXN0IGNvbnRyb2wgdGhlIEZEUiBhdCAxMCUuIAoKLSBDYW4gdGhlIGtpZG5leSByZWplY3Rpb24gIGJlIHByZWRpY3RlZCBmcm9tIHRoZSBnZW5lIGV4cHJlc3Npb24gbGV2ZWxzPyBXaGF0IGdlbmVzICBhcmUgbW9zdCBpbXBvcnRhbnQgaW4gcHJlZGljdGluZyB0aGUga2lkbmV5IHRyYW5zcGxhbnQgcmVqZWN0aW9uPyBIb3cgd2VsbCBkb2VzIHRoZSBwcmVkaWN0aW9uIG1vZGVsIHBlcmZvcm0gaW4gdGVybXMgb2YgcHJlZGljdGluZyByZWplY3Rpb24gc3RhdHVzPwoKICBOb3RlIHRoYXQgdGhlIHJlc3BvbnNlIHZhcmlhYmxlIGlzICpiaW5hcnkqLCBzbyBpZiB5b3UgdXNlIHJlZ3Jlc3Npb24gbW9kZWxzLAogIHlvdSB3aWxsIG5lZWQgdG8gdXNlICAqbG9naXN0aWMgcmVncmVzc2lvbiosIHdoaWNoIG1vZGVscyB0aGUgcmVzcG9uc2Ugd2l0aCBhCiAgYmlub21pYWwgZGlzdHJpYnV0aW9uLiBUaGlzIGNhbiBnZW5lcmFsbHkgYmUgZG9uZSBpbiBgUmAgYnkgc3BlY2lmeWluZyBgZmFtaWx5CiAgPSAiYmlub21pYWwiYCBpbiByZWdyZXNzaW9uIGZ1bmN0aW9ucyBzdWNoIGFzIGBnbG1gIGFuZCBgZ2xtbmV0YC4KCgpXcml0ZSBhIHNjaWVudGlmaWMgcmVwb3J0IHRoYXQgYW5zd2VycyB0aGUgcmVzZWFyY2ggcXVlc3Rpb25zIHJlbGF0ZWQgdG8gdGhpcyBzdHVkeS4KVGhlIHJlcG9ydCBtdXN0IGNvbnNpc3Qgb2YgdHdvIHBhcnRzOgoKLSBBbiBleGVjdXRpdmUgc3VtbWFyeSBvZiBhYm91dCBoYWxmIGEgcGFnZS4gVGhpcyBzdW1tYXJ5IGNvbnRhaW5zIHRoZSBhbnN3ZXJzIHRvIHRoZSBvcmlnaW5hbCByZXNlYXJjaCBxdWVzdGlvbnMsIGFuZCBzaG91bGQgYmUgd3JpdHRlbiBpbiBhIG5vbi10ZWNobmljYWwgbWFubmVyIChpdCBpcyBtZWFudCBmb3IgcmVzZWFyY2hlcnMgd2l0aG91dCBhIHN0YXRpc3RpY2FsIGJhY2tncm91bmQpLgogCi0gQSB0ZWNobmljYWwgcmVwb3J0IHRoYXQgZXhwbGFpbnMgaW4gZGV0YWlsIGhvdyB0aGUgcmVzdWx0cyB3ZXJlIG9idGFpbmVkLiBUaGUKcmVhZGVyIHNob3VsZCB1bmRlcnN0YW5kIHdoYXQgeW91IGRpZCB3aXRob3V0IGxvb2tpbmcgYXQgdGhlIGNvZGUhCgpJdCdzIHJlY29tbWVuZGVkIHRvIHByZXBhcmUgdGhlIHJlcG9ydCBhcyBhbiBfX1JNYXJrZG93bl9fIGZpbGUuIElmIHlvdSBjaG9vc2UKdG8gdXNlIGFub3RoZXIgZm9ybWF0LCB0aGVuIHRoZSBSIGNvZGUgc2hvdWxkIGJlIHN1Ym1pdHRlZCBhcyBhIHNlcGFyYXRlIGZpbGUKKHBsZWFzZSBwcm9wZXJseSBjb21tZW50IHlvdXIgUiBjb2RlKS4KClRoZSByZXBvcnQgaXMgZXhwZWN0ZWQgdG8gYmUgY29uY2lzZSwgYnV0IG11c3QgZXZpZGVudGx5IGJlIGFjY3VyYXRlIGFuZApzdWZmaWNpZW50bHkgZGV0YWlsZWQgdG8gZW5hYmxlIHRoZSByZWFkZXIgdG8gdmVyaWZ5IHRoZSBjb3JyZWN0bmVzcyBvZiB0aGUKcmVzdWx0IChpLmUuIHlvdXIgcmVzdWx0cyBtdXN0IGJlIHJlcHJvZHVjaWJsZSkuIFRoZSB0b3RhbCBsZW5ndGggb2YgdGhlIHJlcG9ydAooZXhjbHVkaW5nIGdyYXBocywgUiBjb2RlIGFuZCBwb3NzaWJseSBhcHBlbmRpY2VzKSBzaG91bGQgbm90IGJlIG1vcmUgdGhhbiB0aHJlZQpwYWdlcy4gVGhlIHJlcG9ydCBzaG91bGQgbm90IGNvbnRhaW4gYW4gZXhwbGFuYXRpb24gb2YgdGhlIHRoZW9yeSBiZWhpbmQgdGhlCnN0YXRpc3RpY2FsIG1ldGhvZHMsIGFuZCBzaG91bGQgYWxzbyBub3QgY29udGFpbiB0aGUgc3R1ZHkgZGVzY3JpcHRpb24gZ2l2ZW4KYWJvdmUgKHlvdSBjYW4gYXNzdW1lIHRoYXQgdGhlIHJlYWRlciBhbHJlYWR5IGtub3dzIHRoaXMpLgoKX18qSW50ZXJwcmV0YXRpb24qIG9mIHRoZSByZXN1bHRzIGlzIGtleSFfXwoKU29tZSBtb3JlIHNwZWNpZmljIGd1aWRlbGluZXM6CgotIEZvciB0aGUgZmlyc3QgcmVzZWFyY2ggcXVlc3Rpb24sIHlvdSBtYXkgdXNlIG9uZSBvZiB0aGUgZGF0YSBleHBsb3JhdGlvbiB0b29scwp0aGF0IHdlIGhhdmUgc2VlbiBpbiBjbGFzcy4gSG93ZXZlciwgeW91IGFyZSBhbHNvIGZyZWUgdG8gc2VhcmNoIHRoZSBsaXRlcmF0dXJlCmZvciBvdGhlciB0ZWNobmlxdWVzIGZvciBkYXRhIGV4cGxvcmF0aW9uIGFuZCB2aXN1YWxpc2F0aW9uICh5b3VyIGZpbmFsIG1hcmsKd2lsbCBub3QgZGVwZW5kIG9uIHdoZXRoZXIgeW91IHNlYXJjaGVkIHRoZSBsaXRlcmF0dXJlIG9yIG5vdCkuIFlvdSBhcmUgb25seQphc2tlZCB0byAqZXhwbG9yZSogd2hldGhlciB0aGUgdmFyaWFiaWxpdHkgaW4gZ2VuZSBleHByZXNzaW9uIGxldmVscyBpcwphc3NvY2lhdGVkIHdpdGggcmVqZWN0aW9uIHN0YXR1czsgbm8gbmVlZCBmb3IgaHlwb3RoZXNpcyB0ZXN0aW5nLgogCi0gRm9yIHRoZSBzZWNvbmQgcmVzZWFyY2ggcXVlc3Rpb24sIHlvdSBzaG91bGQgcGVyZm9ybSBoeXBvdGhlc2lzIHRlc3RpbmcgYW5kCmNvcnJlY3QgZm9yIG11bHRpcGxlIHRlc3Rpbmcgc28gYXMgdG8gY29udHJvbCB0aGUgRkRSIGF0IDEwJS4gVGhlIGZ1bGwgbGlzdCB3aXRoCmRpZmZlcmVudGlhbGx5IGV4cHJlc3NlZCBnZW5lcyBtYXkgYmUgcHJlc2VudGVkIGluIGFuIGFwcGVuZGl4LiBPbmx5IGxpc3QgdGhlCm1vc3QgaW1wb3J0YW50IHJlc3VsdHMgaW4gdGhlIGJvZHkgb2YgdGhlIHJlcG9ydC4KIAotIEZvciB0aGUgdGhpcmQgcmVzZWFyY2ggcXVlc3Rpb24geW91IGFyZSBhc2tlZCB0byBwcmVkaWN0IHJlamVjdGlvbiBzdGF0dXMKdXNpbmcgZ2VuZSBleHByZXNzaW9uIGxldmVscy4gWW91IHNob3VsZCByYW5kb21seSBzcGxpdCB0aGUgZGF0YSBpbnRvIGEgdGVzdAooMzAlKSBhbmQgYSB0cmFpbmluZyAoNzAlKSBkYXRhc2V0LiBNYWtlIHN1cmUgeW91IHVzZSBhIHNlZWQgKGBzZXQuc2VlZCgpYApmdW5jdGlvbikgaW4gUiBmb3IgcmVwcm9kdWNpYmlsaXR5LiBUaGUgZm9sbG93aW5nIHByZWRpY3Rpb24gbW9kZWxzIHNob3VsZCBiZQpldmFsdWF0ZWQ6CiAgCiAgKiBQcmluY2lwYWwgQ29tcG9uZW50IFJlZ3Jlc3Npb24gKFBDUikKICAgIAogICogUmlkZ2UgUmVncmVzc2lvbgoKICAqIExhc3NvIHJlZ3Jlc3Npb24KICAKKipOb3RlKiogdGhhdCB0aGUgcmVzcG9uc2UgdmFyaWFibGUgKHRoZSByZWplY3Rpb24gc3RhdHVzKSBpcyAqYmluYXJ5Kiwgc28geW91CndpbGwgaGF2ZSB0byB1c2UgKipsb2dpc3RpYyByZWdyZXNzaW9uKiohCgpJbiBjaG9vc2luZyB0aGUgbnVtYmVyIG9mIFBDcyAgaW4gUENSLCBhbmQgdGhlICRcZ2FtbWEkIGluIHRoZSBSaWRnZSAgYW5kIExhc3NvCm1vZGVscywgeW91IG5lZWQgdG8gdXNlIGNyb3NzIHZhbGlkYXRpb24gKENWKSBvbiB0aGUgdHJhaW5pbmcgZGF0YXNldC4gWW91CnNob3VsZCB1c2UgdGhlIF9fYXJlYSB1bmRlciB0aGUgcmVjZWl2ZXIgY2hhcmFjdGVyaXN0aWMgY3VydmUgKEFVQylfXyBhcyBhCnBlcmZvcm1hbmNlIG1lYXN1cmUuIEFuIGV4YW1wbGUgb2YgaG93IHRvIGRvIHRoaXMgZm9yIFBDIFJlZ3Jlc3Npb24gY2FuIGJlIGZvdW5kCm9uIFtVRm9yYV0oaHR0cHM6Ly91Zm9yYS51Z2VudC5iZS9kMmwvbGUvY29udGVudC80NDQyMjYvdmlld0NvbnRlbnQvMTExNjUzNi9WaWV3KS4KCk9uY2UgeW91IGhhdmUgc2VsZWN0ZWQgdGhlIG9wdGltYWwgUENSLCBSaWRnZSBhbmQgTGFzc28gbW9kZWxzLCB5b3UgaGF2ZSB0bwpkZWNpZGUgd2l0aCB3aGF0IG1vZGVsIHlvdSB3YW50IHRvIGNvbnRpbnVlLiBGb3IgdGhpcyBmaW5hbCBtb2RlbCB5b3UgaGF2ZSB0bwpkZXRlcm1pbmUgYSBnb29kIHRocmVzaG9sZCAkYyQgZm9yIHRoZSBwcmVkaWN0aW9uIGN1dC1vZmYsIHdoZXJlICRjJCB0aHJlc2hvbGQKd2hlcmUgd2hlbiBhIHByZWRpY3RlZCBwcm9iYWJpbGl0eSBmcm9tIHlvdXIgZmluYWwgbW9kZWwgJHAgPiBjJCwgd2UgcHJlZGljdApraWRuZXkgcmVqZWN0aW9uICgkeT0xJCkgYW5kIG5vbi1yZWplY3Rpb24gKCR5PTAkKSBvdGhlcndpc2UuICRjJCBzaG91bGQgYmUKY2hvc2VuIHN1Y2ggdGhhdCB0aGUgKm1pc2NsYXNzaWZpY2F0aW9uIGVycm9yKiBpcyBtaW5pbWFsLiBUaGlzIHNob3VsZCBiZQpldmFsdWF0ZWQgb24gdGhlICp0ZXN0IGRhdGEqLCBpLmUuIHRoZSBkYXRhIG5vdCB1c2VkIGZvciB0cmFpbmluZyB0aGUgbW9kZWwuCkFsc28gcmVwb3J0IHRoZSAqc3BlY2lmaWNpdHkqIGFuZCAqc2Vuc2l0aXZpdHkqIG9mIHlvdXIgZmluYWwgbW9kZWwgYW5kIGN1dC1vZmYKJGMkLgoKKipIaW50Kio6IFlvdSBjYW4gZmluZCBhbiBleGFtcGxlIGZ1bmN0aW9uIHRvIGNhbGN1bGF0ZSB0aGUgbWlzY2xhc3NpZmljYXRpb24KZXJyb3JzIGZvciBhIHJhbmdlIG9mIGN1dC1vZmYgdmFsdWVzIGJlbG93LiBUaGlzIHNob3VsZCBoZWxwIHlvdSBmaW5kIGFuIG9wdGltYWwKdmFsdWUgZm9yICRjJC4KCmBgYHtyLCBldmFsPUZBTFNFfQojIyBJbnB1dHM6CiMjICAgKiBvYnM6IHZlY3RvciBvZiB0ZXN0IG9ic2VydmF0aW9ucwojIyAgICogcHJlZDogdmVjdG9yIG9mIG1vZGVsIHByZWRpY3Rpb25zCiMjICAgKiBjdXRvZmZfdmFsdWVzOiB2ZWN0b3Igb2YgcHJlZGljdGlvbiB0aHJlc2hvbGRzIGMKY2FsY3VsYXRlX21pc2NsYXNzX2Vycm9yIDwtIGZ1bmN0aW9uKG9icywgcHJlZCwgY3V0b2ZmX3ZhbHVlcykgeyAKICBzdG9waWZub3QobGVudGgob2JzKSA9PSBsZW5ndGgocHJlZCkpCiAgCiAgbWlzY2xhc3NfZXJyb3JzIDwtIHJlcChOQSwgbGVuZ3RoKGN1dG9mZl92YWx1ZXMpKQogIAogIGZvciAoaSBpbiBzZXFfYWxvbmcoY3V0b2ZmX3ZhbHVlcykpIHsKICAgIGN1dG9mZiA8LSBjdXRvZmZfdmFsdWVzW2ldCiAgICB5cHJlZCA8LSBhcy5udW1lcmljKHByZWQgPiBjdXRvZmYpICMgdHJhbnNsYXRlcyBUUlVFL0ZBTFNFIHRvIDEvMCAKICAKICAgIG1pc2NsYXNzX2Vycm9yc1tpXSA8LSBtZWFuKHlwcmVkICE9IG9icykgIyBwcm9wb3J0aW9uIG9mIG1pc2NsYXNzaWZpY2F0aW9ucwogIH0KICAKICBkYXRhLmZyYW1lKAogICAgImN1dG9mZiIgPSBjdXRvZmZfdmFsdWVzLAogICAgIm1pc2NsYXNzIiA9IG1pc2NsYXNzX2Vycm9ycwogICkKfQpgYGAKCgojIFN1Ym1pc3Npb24KCkl0IGlzIHJlY29tbWVuZGVkIChidXQgbm90IG1hbmRhdG9yeSkgdG8gcHJlcGFyZSB5b3VyIHJlcG9ydCBpbiBfX1JNYXJrZG93bl9fLgpZb3UgY2FuIHJlbmRlciBpdCB0byBlaXRoZXIgSFRNTCAoYG91dHB1dDogaHRtbF9kb2N1bWVudGApIG9yIHRvIFBERiAoYG91dHB1dDogcGRmX2RvY3VtZW50YCkuCkluIGJvdGggY2FzZXMgdGhlIG9yaWdpbmFsIGAuUm1kYCBmaWxlIHNob3VsZCBiZSBpbmNsdWRlZCB3aGVuIGhhbmRpbmcgaW4gdGhlIGFzc2lnbm1lbnQuCklmIHlvdSBkb24ndCB1c2UgUk1hcmtkb3duLCB5b3Ugc2hvdWxkIGluY2x1ZGUgdGhlIGAuUmAgZmlsZShzKSBjb250YWluaW5nIHlvdXIgaW1wbGVtZW50YXRpb24gYW5kIGFuYWx5c2lzIHNjcmlwdHMuCgpXaGVuIHN1Ym1pdHRpbmcsIHBsZWFzZSB1c2UgdGhlIGZvbGxvd2luZyBmb3JtYXQ6CgoqIEhXLU5hbWUxLU5hbWUyLU5hbWUzLU5hbWU0LltwZGZ8aHRtbF0KCiogSFctTmFtZTEtTmFtZTItTmFtZTMtTmFtZTQuUlttZF0KCndoZXJlIGBOYW1lYCBpcyB5b3VyIF9fZmFtaWx5IG5hbWVfXy4KSXQncyBhbHNvIHJlY29tbWVuZGVkIHRvIG1lbnRpb24geW91ciBmdWxsIG5hbWUgaW4gdGhlIHJlcG9ydCBpdHNlbGYuCgpfX1N1Ym1pc3Npb25zIHNob3VsZCBiZSBkb25lIHRocm91Z2ggW1VGb3JhXShodHRwczovL3Vmb3JhLnVnZW50LmJlL2QybC9ob21lLzQ0NDIyNilfXy4KCjxzcGFuIHN0eWxlPSJjb2xvcjpyZWQiPl9fVGhlIGRlYWRsaW5lIGZvciBzdWJtaXNzaW9uIGlzIDE2LzEyLzIwMjEgYXQgMjM6NTlfXzwvc3Bhbj4KCgoKIyBSZWZlcmVuY2VzIHstfQo=</div>
+<div class="footer">
+    <hr>
+    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
+    CC BY-NC-SA 4.0</a> licence.
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Project.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
