@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 options(width = 80)
 ```
 
-### [Change log](https://github.com/statOmics/HDDA21/commits/master/Lab1-Intro-SVD.Rmd) {-}
+### [Change log](https://github.com/statOmics/HDDA/commits/master/Lab1-Intro-SVD.Rmd) {-}
 
 ***
 
@@ -49,7 +49,7 @@ library(HDDAData)
 
 # Multidimensional Scaling (MDS) demonstration
 
-See [course notes](https://statomics.github.io/HDDA21/svd.html#7_SVD_and_Multi-Dimensional_Scaling_(MDS)) for background.
+See [course notes](https://statomics.github.io/HDDA/svd.html#7_SVD_and_Multi-Dimensional_Scaling_(MDS)) for background.
 
 
 * We will use `UScitiesD` data as an example

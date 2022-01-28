@@ -6,9 +6,15 @@ course_admin/
 
 # Rmd output
 *.html
+*.pdf
 *_files/
 *_cache/
 _site/
+site_libs/
+*.log
+*.tex
+
+raw-data/
 
 # Don't ignore these specific files
 !footer.html

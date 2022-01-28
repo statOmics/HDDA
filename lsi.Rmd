@@ -70,7 +70,7 @@ pZ
 
 
 __WARNING__: The animated graph will only be visible in the HTML output, not in PDF format.
-If you're reading the PDF version, check [online](https://statomics.github.io/HDDA21/lsi.html#111_Data_Exploration)
+If you're reading the PDF version, check [online](https://statomics.github.io/HDDA/lsi.html#111_Data_Exploration)
 for the animated graph.
 
 ```{r echo=FALSE, message=FALSE, eval=knitr::is_html_output()}
@@ -223,8 +223,8 @@ $\rightarrow$ Probability to have a false positive (FP) among all m simultatenou
 test $>>>  \alpha= 0.05$
 
 - Indeed for each non differential voxel we have a probability of 5% to return a FP.
-- In a typical experiment the majority of the voxel are non differential. 
-- So an upperbound of the expected FP is $m \times \alpha$ or $15443 \times 0.05=`r round(15443*0.05,0)`$. 
+- In a typical experiment the majority of the voxel are non differential.
+- So an upperbound of the expected FP is $m \times \alpha$ or $15443 \times 0.05=`r round(15443*0.05,0)`$.
 
 $\rightarrow$ Hence, we are bound to call many false positive voxels each time we run the experiment.
 
@@ -290,15 +290,15 @@ FWER$=0.05$ and $m=15443$: $\alpha=0.0000033$.
 
 We will argue that this procedure is too stringent for large $m$.
 
-### Bonferroni method 
+### Bonferroni method
 
-The Bonferroni method is another method that is widely used to control the FWER: 
+The Bonferroni method is another method that is widely used to control the FWER:
 
-- assess each test at 
+- assess each test at
 \[\alpha_\text{adj}=\frac{\alpha}{m}\]
 
 - The method does not assume independence of the test statistics.
-- Again, the method is very conservative! 
+- Again, the method is very conservative!
 
 ---
 
@@ -322,7 +322,7 @@ First we give a very general definition of an **adjusted $p$-value**.
 
  The corrected $p$-value should be reported. It accounts for the multiplicity problem and it can be compared directly to the nominal FWER level to make calls at the FWER level.
 
-- adjusted p-values for Bonferroni method: 
+- adjusted p-values for Bonferroni method:
 \[p_\text{adj}=\text{min}\left(p \times m,1\right)\]
 
 ---
@@ -331,7 +331,7 @@ First we give a very general definition of an **adjusted $p$-value**.
 
 ## Introduction
 
-In large scale inference it would be more interesting to tolerate a few false positives as long as they do not dominate the toplist 
+In large scale inference it would be more interesting to tolerate a few false positives as long as they do not dominate the toplist
 
 
 We first introduce some notation:
@@ -356,8 +356,8 @@ The table shows the results of $m$ hypothesis tests in a single experiment.
 
 ---
 
-- Note that the table is not completely observable. 
-- Indeed, we can only observe the bottom row! 
+- Note that the table is not completely observable.
+- Indeed, we can only observe the bottom row!
 - The table is introduced to better understand the concept of FWER and to introduce the concept of the false discovery rate (FDR).
 
 ---
@@ -372,18 +372,18 @@ The FWER can now be reexpressed as
  \[
    \text{FWER}=\text{P}\left[\text{reject at least one }H_{0i} \mid H_0\right] = \text{P}\left[FP>0\right] .
  \]
- 
 
-- However, we know that the FWER is very conservative in large scale inference problems. 
-- Therefore it would be more interesting to tolerate a few false positives as long as they do not dominate the toplist 
 
-The **False Discovery Proportion (FDP)** is the fraction of false positives that are returned, i.e. 
+- However, we know that the FWER is very conservative in large scale inference problems.
+- Therefore it would be more interesting to tolerate a few false positives as long as they do not dominate the toplist
+
+The **False Discovery Proportion (FDP)** is the fraction of false positives that are returned, i.e.
 
 \[
 FDP = \frac{FP}{R}
 \]
 
-- However, this quantity cannot be observed because in practice we only know the number of voxels for which we rejected $H_0$, $R$. 
+- However, this quantity cannot be observed because in practice we only know the number of voxels for which we rejected $H_0$, $R$.
 
 - But, we do not know the number of false positives, $FP$.
 
@@ -391,7 +391,7 @@ Therefore, Benjamini and Hochberg, 1995, defined The **False Discovery Rate (FDR
 \[
    \text{FDR} = \text{E}\left[\frac{FP}{R}\right] =\text{E}\left[\text{FDP}\right]
 \]
-the expected FDP, in their seminal paper Benjamini, Y. and Hochberg, Y. (1995). "Controlling the false discovery rate: a practical and powerful approach to multiple testing". Journal of the Royal Statistical Society Series B, 57 (1): 289–300. 
+the expected FDP, in their seminal paper Benjamini, Y. and Hochberg, Y. (1995). "Controlling the false discovery rate: a practical and powerful approach to multiple testing". Journal of the Royal Statistical Society Series B, 57 (1): 289–300.
 
 - An FDR of 1% means that on average we expect 1% false positive voxels in the list of voxels that are called significant.
 
@@ -401,10 +401,10 @@ the expected FDP, in their seminal paper Benjamini, Y. and Hochberg, Y. (1995). 
 
 Consider $m = 1000$ voxels
 
-- Suppose that a researcher rejects all null hypotheses for which $p < 0.01$. 
+- Suppose that a researcher rejects all null hypotheses for which $p < 0.01$.
 
-- If we use $p < 0.01$, we expect $0.01 \times m_0$ tests to return false positives. 
-- A conservative estimate of the number of false positives that we can expect can be obtained by considering that the null hypotheses are true for all features, $m_0 = m =  1000$. 
+- If we use $p < 0.01$, we expect $0.01 \times m_0$ tests to return false positives.
+- A conservative estimate of the number of false positives that we can expect can be obtained by considering that the null hypotheses are true for all features, $m_0 = m =  1000$.
 - We then would expect $0.01 \times 1000 = 10$ false positives ($FP=10$).
 
 - Suppose that the researcher found 200 voxels with $p<0.01$ ($R=200$).
@@ -419,7 +419,7 @@ Consider $m = 1000$ voxels
 
 1. Let $p_{(1)}\leq \ldots \leq p_{(m)}$ denote the ordered $p$-values.
 
-2. Find the largest integer $k$ so that 
+2. Find the largest integer $k$ so that
 $$
 \frac{p_{(k)} \times m}{k} \leq \alpha
 $$
@@ -485,11 +485,11 @@ At the 5% FDR, `r sum(dti$padj < 0.05)` voxels are returned as significantly dif
 
 - Bonferroni: $\alpha_\text{adj}=`r format(0.05/nrow(dti),digits=2)` \rightarrow$  `r sum(dti$p.value<(0.05/nrow(dti)))` voxels are significant at the Bonferroni FWER
 
-- BH-FDR: 
+- BH-FDR:
 
 1. ordered $p$-values.
 
-2. Find the largest integer $k$ so that 
+2. Find the largest integer $k$ so that
 $$
 \frac{p_{(k)} \times m}{k} \leq \alpha
 $$
@@ -504,15 +504,15 @@ Otherwise none of the null hypotheses is rejected.
 
 ```{r echo=FALSE}
 alpha <- 0.05
-res <-  dti %>% 
+res <-  dti %>%
   select("z.value","p.value","padj") %>%
   arrange(p.value)
 res$padjNonMonoForm  <- paste0(nrow(res)," x pval /",1:nrow(res))
 res$padjNonMono <- res$p.value *nrow(res) /(1:nrow(res))
 res$adjAlphaForm <- paste0(1:nrow(res)," x ",alpha,"/",nrow(res))
-res$adjAlpha <- alpha * (1:nrow(res))/nrow(res) 
-res$"pval < adjAlpha" <- res$p.value < res$adjAlpha 
-res$"padj < alpha" <- res$padj < alpha 
+res$adjAlpha <- alpha * (1:nrow(res))/nrow(res)
+res$"pval < adjAlpha" <- res$p.value < res$adjAlpha
+res$"padj < alpha" <- res$padj < alpha
 res[1:10,] %>% knitr::kable()
 res[11:20,] %>% knitr::kable()
 res[21:30,] %>% knitr::kable()
@@ -564,7 +564,7 @@ animate(pFDR, nframes = 103, end_pause = 3)
     \text{FDR}=\text{E}\left[TP/R\right]=\text{E}\left[\text{FDP}\right] \leq \frac{m_0}{m} \alpha \leq \alpha .
   \]
 
---- 
+---
 
 ### Extension
 
@@ -579,7 +579,7 @@ The inequality
 \]
 shows that BH1995 is a conservative method, i.e. it controls the FDR at the safe side, i.e. when one is prepared to control the FDR at the nominal level $\alpha$, the BH95 will guarantee that the true FDR is not larger than the nominal level (when the assumptions hold).
 
-- More interestingly is that $\frac{m_0}{m} \alpha$ is in between the true FDR and the nominal FDR. 
+- More interestingly is that $\frac{m_0}{m} \alpha$ is in between the true FDR and the nominal FDR.
 
 - Suppose that $m_0$ were known and that the BH95 method were applied at the nominal FDR level of $\alpha=m/m_0 \alpha^*$, in which $\alpha^*$ is the FDR level we want to control. Then the inequality gives
 \[
