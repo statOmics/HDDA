@@ -13,7 +13,7 @@ env:
 
 jobs:
   render:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out repo
@@ -34,6 +34,14 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install --cask xquartz
+
+      - name: Install curl Headers
+        if: runner.os == 'linux'
+        run: sudo apt-get install libcurl4-openssl-dev
+
+      - name: Install magick on Linux
+        if: runner.os == 'linux'
+        run: sudo apt-get -y install libmagick++-dev
 
       - name: Set up renv
         uses: r-lib/actions/setup-renv@v2
