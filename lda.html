@@ -776,29 +776,32 @@ div.tocify {
 <span id="cb18-12"><a href="#cb18-12"></a>  <span class="dt">stop =</span> <span class="dv">-50</span>,</span>
 <span id="cb18-13"><a href="#cb18-13"></a>  <span class="dt">maxIte =</span> <span class="dv">25</span>,</span>
 <span id="cb18-14"><a href="#cb18-14"></a>  <span class="dt">trace =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>## ite:  1  ridge cost:  99.59585  |b|_1:  5.987608 
-## ite:  2  ridge cost:  91.42624  |b|_1:  6.11124 
-## ite:  3  ridge cost:  91.76074  |b|_1:  5.528886 
-## ite:  4  ridge cost:  91.28229  |b|_1:  5.410803 
-## ite:  5  ridge cost:  89.27678  |b|_1:  5.675269 
-## ite:  6  ridge cost:  88.0419  |b|_1:  5.868254 
-## ite:  7  ridge cost:  88.14762  |b|_1:  5.83735 
-## ite:  8  ridge cost:  88.10917  |b|_1:  5.840849 
-## ite:  9  ridge cost:  87.94099  |b|_1:  5.871465 
-## ite:  10  ridge cost:  87.85968  |b|_1:  5.886552 
-## ite:  11  ridge cost:  87.81999  |b|_1:  5.893988 
-## ite:  12  ridge cost:  87.80053  |b|_1:  5.897653 
-## ite:  13  ridge cost:  87.79095  |b|_1:  5.899459 
-## ite:  14  ridge cost:  87.78624  |b|_1:  5.90035 
-## ite:  15  ridge cost:  87.78392  |b|_1:  5.900789 
-## ite:  16  ridge cost:  87.78278  |b|_1:  5.901005 
-## ite:  17  ridge cost:  87.78221  |b|_1:  5.901112 
-## ite:  18  ridge cost:  87.78193  |b|_1:  5.901164 
-## ite:  19  ridge cost:  87.7818  |b|_1:  5.90119 
-## ite:  20  ridge cost:  87.78173  |b|_1:  5.901203 
+<pre><code>## ite:  1  ridge cost:  127.6999  |b|_1:  5.914803 
+## ite:  2  ridge cost:  120.3384  |b|_1:  5.812499 
+## ite:  3  ridge cost:  106.2033  |b|_1:  6.091842 
+## ite:  4  ridge cost:  98.70947  |b|_1:  5.563708 
+## ite:  5  ridge cost:  92.16067  |b|_1:  5.694413 
+## ite:  6  ridge cost:  91.63385  |b|_1:  5.436716 
+## ite:  7  ridge cost:  90.28232  |b|_1:  5.536848 
+## ite:  8  ridge cost:  88.68136  |b|_1:  5.764321 
+## ite:  9  ridge cost:  88.44421  |b|_1:  5.786822 
+## ite:  10  ridge cost:  88.25723  |b|_1:  5.814532 
+## ite:  11  ridge cost:  88.01314  |b|_1:  5.858236 
+## ite:  12  ridge cost:  87.89469  |b|_1:  5.880033 
+## ite:  13  ridge cost:  87.83711  |b|_1:  5.890775 
+## ite:  14  ridge cost:  87.80893  |b|_1:  5.896069 
+## ite:  15  ridge cost:  87.79509  |b|_1:  5.898679 
+## ite:  16  ridge cost:  87.78828  |b|_1:  5.899965 
+## ite:  17  ridge cost:  87.78492  |b|_1:  5.900599 
+## ite:  18  ridge cost:  87.78327  |b|_1:  5.900911 
+## ite:  19  ridge cost:  87.78245  |b|_1:  5.901065 
+## ite:  20  ridge cost:  87.78205  |b|_1:  5.901141 
+## ite:  21  ridge cost:  87.78186  |b|_1:  5.901179 
+## ite:  22  ridge cost:  87.78176  |b|_1:  5.901197 
+## ite:  23  ridge cost:  87.78171  |b|_1:  5.901206 
 ## ite:  1  ridge cost:  134.7777  |b|_1:  5.379259 
 ## ite:  2  ridge cost:  134.7777  |b|_1:  5.379259 
-## final update, total ridge cost:  222.5595  |b|_1:  11.28046</code></pre>
+## final update, total ridge cost:  222.5595  |b|_1:  11.28047</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>Vsda &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow=</span><span class="kw">ncol</span>(X2), <span class="dt">ncol=</span><span class="dv">2</span>)</span>
 <span id="cb20-2"><a href="#cb20-2"></a>Vsda[breast.slda<span class="op">$</span>varIndex,] &lt;-<span class="st"> </span>breast.slda<span class="op">$</span>beta</span>
 <span id="cb20-3"><a href="#cb20-3"></a><span class="kw">colnames</span>(Vsda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Vsda))</span>
@@ -894,7 +897,7 @@ div.tocify {
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>## [1] &quot;2022-01-29 16:42:11 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2022-01-29 17:20:08 UTC&quot;</code></pre>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
 ##  version  R version 4.1.2 (2021-11-01)
