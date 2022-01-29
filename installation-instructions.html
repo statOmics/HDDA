@@ -11,7 +11,7 @@
 
 
 
-<title>software4stats</title>
+<title>installation-instructions</title>
 
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -416,22 +416,16 @@ $(document).ready(function () {
 
 <div id="software-requirements" class="section level1">
 <h1>Software requirements</h1>
-<p>Students are required to bring their own laptop with R version 4.1 or greater.</p>
+<p>Students are required to bring their own laptop with <strong>R version 4.1</strong> or greater.</p>
 <p>Please make sure that your computer’s hardware is sufficiently powered (&gt;4 GB RAM, &gt; 2 GB free disk space), that you have a working wireless card, and that you have administrator rights.</p>
 <div id="local-installation" class="section level3">
 <h3>Local installation</h3>
 <ol style="list-style-type: decimal">
-<li><p>Install R 4.1 <a href="https://cran.r-project.org">R/CRAN</a></p></li>
+<li><p>Install R version 4.1 or greater from <a href="https://cran.r-project.org">CRAN</a></p></li>
 <li><p>(Optional but recommended) Install <a href="https://www.rstudio.com/products/rstudio/download/">RStudio Desktop</a></p></li>
-<li><p>Install the <a href="https://rstudio.github.io/renv/index.html"><em>renv</em></a> package by entering the following command in an R session:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;renv&quot;</span>)</span></code></pre></div></li>
+<li><p>Install all packages used throughout the course by running the <a href="https://github.com/statOmics/HDDA/blob/master/install.R">installation script</a> in an R session:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">source</span>(<span class="st">&quot;https://github.com/statOmics/HDDA/raw/master/install.R&quot;</span>)</span></code></pre></div></li>
 <li><p>(Optional but recommended) Create a new <a href="https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects"><em>R project</em></a> for this course</p></li>
-<li><p>In an R session within the R project you just created, install the <em>renv</em> environment for this course by running</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>url &lt;-<span class="st"> &quot;https://raw.githubusercontent.com/statOmics/HDDA/master/renv.lock&quot;</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>renv<span class="op">::</span><span class="kw">restore</span>(<span class="dt">lockfile =</span> url)</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co">## Optionally, record the status of your local renv library</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>renv<span class="op">::</span><span class="kw">snapshot</span>()</span></code></pre></div></li>
 </ol>
 </div>
 </div>
