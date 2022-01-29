@@ -8,6 +8,7 @@
 ## Find all project dependencies
 deps <- renv::dependencies()
 deps <- unique(deps$Package)
+deps <- deps[!(deps %in% c("BiocManager", "renv"))] # don't include these
 
 ## Get source repositories from renv.lock file
 lock <- jsonlite::read_json("renv.lock")
@@ -21,11 +22,10 @@ gh_pkg_remotes <- vapply(gh_pkgs, function(x) {
     sprintf("%s/%s@%s", x$RemoteUsername, x$RemoteRepo, x$RemoteRef)
 }, character(1))
 
-## Write the install.R file
 to_install <- names(pkgs)
-to_install <- to_install[!(to_install %in% c("BiocManager", "renv"))]
 to_install[which(is_gh)] <- gh_pkg_remotes[names(which(is_gh))]
 
+## Write the install.R file
 out_file <- file("install.R")
 writeLines(
     paste(
