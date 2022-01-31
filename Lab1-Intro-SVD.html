@@ -532,12 +532,14 @@ div.tocify {
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
-<p>The purpose of the following exercises is mainly to get more familiar with SVD and its applications, in particular Multidimensional Scaling (MDS). It is recommended to perform the exercises in an <code>RMarkdown</code> document.</p>
+<p>The purpose of the following exercises is mainly to get more familiar with SVD and its applications, in particular Multidimensional Scaling (MDS).
+It is recommended to perform the exercises in an <code>RMarkdown</code> document.</p>
 <p>For a brief introduction to RMarkdown, see <a href="./Introduction-RMarkdown.html">Introduction to RMarkdown</a>.</p>
 <p>For an introduction to working with matrices in R, see <a href="./Introduction-Matrices-R.html">Working with Matrices in R</a>.</p>
 <div id="libraries" class="section level2 unnumbered">
 <h2>Libraries</h2>
-<p>Packages used in this document. Installation code is commented, uncomment and paste this code in an R console to install the packages.</p>
+<p>Packages used in this document.
+Installation code is commented, uncomment and paste this code in an R console to install the packages.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">## Install necessary packages with:</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="co"># install.packages(&quot;tidyverse&quot;)</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="co"># if (!requireNamespace(&quot;remotes&quot;, quietly = TRUE)) {</span></span>
@@ -560,7 +562,8 @@ div.tocify {
 </ul>
 <div id="example-distances-between-us-cities" class="section level2">
 <h2><span class="header-section-number">2.1</span> Example: Distances between US cities</h2>
-<p>As an example, we will use the <code>UScitiesD</code> data set, which is part of base R. This data gives “straight line” distances (in km) between 10 cities in the US.</p>
+<p>As an example, we will use the <code>UScitiesD</code> data set, which is part of base R.
+This data gives “straight line” distances (in km) between 10 cities in the US.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>UScitiesD</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co">#&gt;               Atlanta Chicago Denver Houston LosAngeles Miami NewYork SanFrancisco Seattle</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="co">#&gt; Chicago           587                                                                     </span></span>
@@ -575,10 +578,14 @@ div.tocify {
 <span id="cb2-12"><a href="#cb2-12"></a></span>
 <span id="cb2-13"><a href="#cb2-13"></a><span class="kw">class</span>(UScitiesD)</span>
 <span id="cb2-14"><a href="#cb2-14"></a><span class="co">#&gt; [1] &quot;dist&quot;</span></span></code></pre></div>
-<p>Note that the <code>UScitiesD</code> object is of class <code>"dist"</code>, which is a special type of object to represent that it is a <strong>distance matrix</strong> (we’ll denote this as <span class="math inline">\(\mathbf{D}_X\)</span>), i.e. the result from computing distances from an original matrix <span class="math inline">\(\mathbf{X}\)</span>. In this case, the original matrix <span class="math inline">\(\mathbf{X}\)</span> was likely a matrix with a row for every city and columns specifying its coordinates. Note though that we don’t know <span class="math inline">\(\mathbf{X}\)</span> exactly. Still, we can use the distance matrix and MDS to approximate a low-dimensional representation of <span class="math inline">\(\mathbf{X}\)</span>.</p>
+<p>Note that the <code>UScitiesD</code> object is of class <code>"dist"</code>, which is a special type of object to represent that it is a <strong>distance matrix</strong> (we’ll denote this as <span class="math inline">\(\mathbf{D}_X\)</span>), i.e. the result from computing distances from an original matrix <span class="math inline">\(\mathbf{X}\)</span>.
+In this case, the original matrix <span class="math inline">\(\mathbf{X}\)</span> was likely a matrix with a row for every city and columns specifying its coordinates.
+Note though that we don’t know <span class="math inline">\(\mathbf{X}\)</span> exactly.
+Still, we can use the distance matrix and MDS to approximate a low-dimensional representation of <span class="math inline">\(\mathbf{X}\)</span>.</p>
 <div id="exploring-the-distance-matrix" class="section level3">
 <h3><span class="header-section-number">2.1.1</span> Exploring the distance matrix</h3>
-<p>We first convert the <code>UScitiesD</code> to a matrix for easier manipulation and calculation. Note that this creates a “symmetrical” matrix, with 0s on the diagonal (distance of a city to itself).</p>
+<p>We first convert the <code>UScitiesD</code> to a matrix for easier manipulation and calculation.
+Note that this creates a “symmetrical” matrix, with 0s on the diagonal (distance of a city to itself).</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>(dist_mx &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(UScitiesD))</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt;               Atlanta Chicago Denver Houston LosAngeles Miami NewYork</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="co">#&gt; Atlanta             0     587   1212     701       1936   604     748</span></span>
@@ -613,7 +620,8 @@ div.tocify {
 <p>Q: is this matrix of full rank?</p>
 </blockquote>
 <details>
-<p><summary>Answer</summary> A: Yes, it is.</p>
+<p><summary>Answer</summary>
+A: Yes, it is.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">qr</span>(dist_mx)<span class="op">$</span>rank <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(<span class="kw">dim</span>(dist_mx))</span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </details>
@@ -691,7 +699,8 @@ div.tocify {
 <p><span class="math display">\[
 \mathbf{G}_X = -\frac{1}{2}\mathbf{H}\mathbf{D}_X\mathbf{H} = \mathbf{X}\mathbf{X}^T
 \]</span></p>
-<p>Where <span class="math inline">\(\mathbf{D}_X\)</span> is the matrix of <strong><em>squared</em> distances</strong>. So we will first have to square our <code>dist_mx</code>.</p>
+<p>Where <span class="math inline">\(\mathbf{D}_X\)</span> is the matrix of <strong><em>squared</em> distances</strong>.
+So we will first have to square our <code>dist_mx</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">## D_X = squared distance matrix</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>D_X &lt;-<span class="st"> </span>dist_mx <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
 <span id="cb9-3"><a href="#cb9-3"></a></span>
@@ -722,7 +731,8 @@ div.tocify {
 </div>
 <div id="the-svd" class="section level3">
 <h3><span class="header-section-number">2.1.3</span> The SVD</h3>
-<p>We can now compute the SVD of the Gram matrix and use it to project our original matrix <span class="math inline">\(\mathbf{X}\)</span> (which is still unknown to us!) into a lower dimensional space while preserving the Euclidean distances as well as possible. This is the essence of MDS.</p>
+<p>We can now compute the SVD of the Gram matrix and use it to project our original matrix <span class="math inline">\(\mathbf{X}\)</span> (which is still unknown to us!) into a lower dimensional space while preserving the Euclidean distances as well as possible.
+This is the essence of MDS.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">## singular value decomposition on gram matrix</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>Gx_svd &lt;-<span class="st"> </span><span class="kw">svd</span>(G_X)</span>
 <span id="cb10-3"><a href="#cb10-3"></a></span>
@@ -741,7 +751,8 @@ div.tocify {
 </div>
 <div id="truncated-svd-and-projection-into-lower-dimensional-space" class="section level3">
 <h3><span class="header-section-number">2.1.4</span> Truncated SVD and projection into lower dimensional space</h3>
-<p>The truncated SVD from the Gram matrix can be used to find projections <span class="math inline">\(Z_k\)</span> of <span class="math inline">\(\mathbf{X}\)</span> in a lower dimensional space. Here we will use <span class="math inline">\(k = 2\)</span>.</p>
+<p>The truncated SVD from the Gram matrix can be used to find projections <span class="math inline">\(Z_k\)</span> of <span class="math inline">\(\mathbf{X}\)</span> in a lower dimensional space.
+Here we will use <span class="math inline">\(k = 2\)</span>.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># k=2 approximation</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>k &lt;-<span class="st"> </span><span class="dv">2</span></span>
 <span id="cb11-3"><a href="#cb11-3"></a>Uk &lt;-<span class="st"> </span>Gx_svd<span class="op">$</span>u[, <span class="dv">1</span><span class="op">:</span>k]</span>
@@ -781,15 +792,20 @@ div.tocify {
 <span id="cb11-37"><a href="#cb11-37"></a><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;MDS plot of the UScitiesD data&quot;</span>) <span class="op">+</span></span>
 <span id="cb11-38"><a href="#cb11-38"></a><span class="st">    </span><span class="kw">theme_minimal</span>()</span></code></pre></div>
 <p><img src="Lab1-Intro-SVD_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>What can you say about the plot? Think about the real locations of these cities on a map of the US.</p>
+<p>What can you say about the plot?
+Think about the real locations of these cities on a map of the US.</p>
 <details>
-<summary>Answer</summary> <span class="math inline">\(Z_1\)</span> can be interpreted as the <em>longitude</em>, i.e. the East-West position. <span class="math inline">\(Z_2\)</span> reflects the <em>latitude</em>, or the North-South position.
+<summary>Answer</summary>
+<span class="math inline">\(Z_1\)</span> can be interpreted as the <em>longitude</em>, i.e. the East-West position.
+<span class="math inline">\(Z_2\)</span> reflects the <em>latitude</em>, or the North-South position.
 </details>
 </div>
 </div>
 <div id="the-short-way" class="section level2">
 <h2><span class="header-section-number">2.2</span> The short way</h2>
-<p>The calculations above demonstrate how MDS works and what the underlying components are. However, in a real data analysis, one would typically not go through all the hassle of calculating all the intermediate steps. Fortunately, the MDS is already implemented in base R (in the <code>stats</code> package).</p>
+<p>The calculations above demonstrate how MDS works and what the underlying components are.
+However, in a real data analysis, one would typically not go through all the hassle of calculating all the intermediate steps.
+Fortunately, the MDS is already implemented in base R (in the <code>stats</code> package).</p>
 <p>So the whole derivation we did above can be reproduced with a single line of code, using the <code>cmdscale</code> function (see <code>?cmdscale</code> for details).</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co">## Calculate MDS in 2 dimensions from distance matrix</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a>(us_mds &lt;-<span class="st"> </span><span class="kw">cmdscale</span>(UScitiesD, <span class="dt">k =</span> <span class="dv">2</span>))</span>
@@ -824,7 +840,8 @@ div.tocify {
 <h2><span class="header-section-number">3.1</span> Cheese data</h2>
 <div id="data-prep" class="section level3 unnumbered">
 <h3>Data prep</h3>
-<p>Load in the <code>cheese</code> data, which characterizes 30 cheeses on various metrics. More information can be found at <code>?cheese</code></p>
+<p>Load in the <code>cheese</code> data, which characterizes 30 cheeses on various metrics.
+More information can be found at <code>?cheese</code></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co">## Load the &#39;cheese&#39; dataset from the HDDAData package</span></span>
 <span id="cb13-2"><a href="#cb13-2"></a><span class="kw">data</span>(<span class="st">&quot;cheese&quot;</span>)</span>
 <span id="cb13-3"><a href="#cb13-3"></a>cheese</span></code></pre></div>
@@ -837,11 +854,13 @@ div.tocify {
 <p><strong>Q</strong>: what is the <em>dimensionality</em> of this data?</p>
 </blockquote>
 <details>
-<p><summary>Answer</summary> <strong>A</strong>: 4, since we have 4 features (the first column is just an identifier for the observation, so we don’t regard this as a feature).</p>
+<p><summary>Answer</summary>
+<strong>A</strong>: 4, since we have 4 features (the first column is just an identifier for the observation, so we don’t regard this as a feature).</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">ncol</span>(cheese) <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span>
 <span id="cb14-2"><a href="#cb14-2"></a><span class="co">#&gt; [1] 4</span></span></code></pre></div>
 </details>
-<p>Convert the <code>cheese</code> table to a matrix for easier calculations. We will drop the first column (as it’s not a feature) and instead use it to create <code>rownames</code>.</p>
+<p>Convert the <code>cheese</code> table to a matrix for easier calculations.
+We will drop the first column (as it’s not a feature) and instead use it to create <code>rownames</code>.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>cheese_mx &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(cheese[, <span class="dv">-1</span>])</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="kw">rownames</span>(cheese_mx) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;case&quot;</span>, cheese<span class="op">$</span>Case, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>)</span>
 <span id="cb15-3"><a href="#cb15-3"></a>cheese_mx</span>
@@ -990,7 +1009,8 @@ div.tocify {
 <p><summary>Solution</summary></p>
 <p>There are 2 ways to do this</p>
 <ul>
-<li>Using the sum definition of the SVD <span class="math inline">\(\mathbf{X} = \sum_{j=1}^r \delta_j \mathbf{u}_j\mathbf{v}_j^T\)</span></li>
+<li>Using the sum definition of the SVD
+<span class="math inline">\(\mathbf{X} = \sum_{j=1}^r \delta_j \mathbf{u}_j\mathbf{v}_j^T\)</span></li>
 </ul>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Calculating X via the sum definition of the SVD:</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a><span class="co"># ------------------------------------------------</span></span>
@@ -1059,12 +1079,14 @@ div.tocify {
 <span id="cb24-33"><a href="#cb24-33"></a><span class="co">#&gt; [29,] -11.134642  0.049222629  0.7675071 -0.07102548</span></span>
 <span id="cb24-34"><a href="#cb24-34"></a><span class="co">#&gt; [30,] -19.028198 -0.245969372 -1.0231915 -0.21558848</span></span></code></pre></div>
 <ul>
-<li>Compare the obtained results with the matrix <span class="math inline">\(\mathbf{X}\)</span> (<code>cheese_centered</code>). Just at a first glance, does it seem that <span class="math inline">\(\mathbf{\tilde{X}}\)</span> is a good approximation of <span class="math inline">\(\mathbf{X}\)</span>?</li>
+<li>Compare the obtained results with the matrix <span class="math inline">\(\mathbf{X}\)</span> (<code>cheese_centered</code>).
+Just at a first glance, does it seem that <span class="math inline">\(\mathbf{\tilde{X}}\)</span> is a good approximation of <span class="math inline">\(\mathbf{X}\)</span>?</li>
 </ul>
 </div>
 <div id="svd-and-linear-regression-perform-a-linear-regression-using-svd-to-estimate-the-effects-of-the-acetic-h2s-and-lactic-variables-on-the-taste." class="section level5 unnumbered">
 <h5>7. SVD and linear regression: perform a linear regression using SVD to estimate the effects of the <code>Acetic</code>, <code>H2S</code> and <code>Lactic</code> variables on the <code>taste</code>.</h5>
-<p>Note: we cannot use the SVD from before as this was calculated from the complete <code>cheese</code> table, also including the <code>taste</code> column, which is the response variable of interest here. Instead, we need to create a new design matrix <span class="math inline">\(\mathbf{X}\)</span> containing the predictors and a separate vector <span class="math inline">\(\mathbf{y}\)</span> containing the response.</p>
+<p>Note: we cannot use the SVD from before as this was calculated from the complete <code>cheese</code> table, also including the <code>taste</code> column, which is the response variable of interest here.
+Instead, we need to create a new design matrix <span class="math inline">\(\mathbf{X}\)</span> containing the predictors and a separate vector <span class="math inline">\(\mathbf{y}\)</span> containing the response.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>cheese_y &lt;-<span class="st"> </span>cheese<span class="op">$</span>taste</span>
 <span id="cb25-2"><a href="#cb25-2"></a>cheese_design &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="dt">Intercept =</span> <span class="dv">1</span>, cheese[<span class="kw">c</span>(<span class="st">&quot;Acetic&quot;</span>, <span class="st">&quot;H2S&quot;</span>, <span class="st">&quot;Lactic&quot;</span>)])</span></code></pre></div>
 <p>Also perform the regression with <code>lm</code> and compare the results.</p>
@@ -1096,7 +1118,9 @@ div.tocify {
 <p>In this exercise we will focus on the interpretation of the <em>biplot</em>.</p>
 <div id="data-prep-1" class="section level3 unnumbered">
 <h3>Data prep</h3>
-<p>The <code>"industries"</code> dataset contains data on the distribution of employment between 9 industrial sectors, in 26 European countries. The dataset stems from the Cold-War era; the data are expressed as percentages. Load the data and explore its contents.</p>
+<p>The <code>"industries"</code> dataset contains data on the distribution of employment between 9 industrial
+sectors, in 26 European countries. The dataset stems from the Cold-War era; the data are expressed
+as percentages. Load the data and explore its contents.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co">## Load &#39;industries&#39; data from the HDDAData package</span></span>
 <span id="cb27-2"><a href="#cb27-2"></a><span class="kw">data</span>(<span class="st">&quot;industries&quot;</span>)</span>
 <span id="cb27-3"><a href="#cb27-3"></a></span>
@@ -1359,7 +1383,7 @@ div.tocify {
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>#&gt; [1] &quot;2022-01-31 09:00:43 UTC&quot;
+<pre><code>#&gt; [1] &quot;2022-01-31 19:44:13 UTC&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.2 (2021-11-01)
@@ -1378,6 +1402,7 @@ div.tocify {
 #&gt;  P assertthat    0.2.1   2019-03-21 [?] CRAN (R 4.1.2)
 #&gt;  P backports     1.4.1   2021-12-13 [?] CRAN (R 4.1.2)
 #&gt;  P BiocManager   1.30.16 2021-06-15 [?] CRAN (R 4.1.2)
+#&gt;  P bookdown      0.24    2021-09-02 [?] CRAN (R 4.1.2)
 #&gt;  P broom         0.7.11  2022-01-03 [?] CRAN (R 4.1.2)
 #&gt;  P bslib         0.3.1   2021-10-06 [?] CRAN (R 4.1.2)
 #&gt;  P cellranger    1.1.0   2016-07-27 [?] CRAN (R 4.1.2)

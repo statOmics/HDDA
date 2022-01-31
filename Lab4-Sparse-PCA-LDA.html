@@ -550,7 +550,9 @@ div.tocify {
 </ul>
 <div id="the-dataset" class="section level2 unnumbered">
 <h2>The dataset</h2>
-<p>In this practical session, we use the dataset by <span class="citation">Alon et al. (1999)</span> on gene expression levels in 40 tumour and 22 normal colon tissue samples. They checked a total of 6500 human genes using the Affymetrix oligonucleotide array.</p>
+<p>In this practical session, we use the dataset by <span class="citation">Alon et al. (1999)</span> on gene
+expression levels in 40 tumour and 22 normal colon tissue samples. They checked
+a total of 6500 human genes using the Affymetrix oligonucleotide array.</p>
 <p>You can load the data in as follows:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">data</span>(<span class="st">&quot;Alon1999&quot;</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw">str</span>(Alon1999[, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</span>
@@ -569,13 +571,19 @@ div.tocify {
 <span id="cb2-15"><a href="#cb2-15"></a><span class="co">#&gt; </span></span>
 <span id="cb2-16"><a href="#cb2-16"></a><span class="co">#&gt;  n  t </span></span>
 <span id="cb2-17"><a href="#cb2-17"></a><span class="co">#&gt; 22 40</span></span></code></pre></div>
-<p>The dataset contains one variable named <code>Y</code> with the values <code>t</code> and <code>n</code>. This variable indicates whether the sample came from tumourous (<code>t</code>) or normal (<code>n</code>) tissue. For more information on this dataset, see <code>?Alon1999</code>.</p>
-<p>The goal of this practical is to find the best subset/combination of genes to detect tumourous tissue. As in <span class="citation">Alon et al. (1999)</span>, we use the 2000 genes with the highest minimal intensity across the samples.</p>
+<p>The dataset contains one variable named <code>Y</code> with the values <code>t</code> and <code>n</code>. This
+variable indicates whether the sample came from tumourous (<code>t</code>) or normal (<code>n</code>)
+tissue. For more information on this dataset, see <code>?Alon1999</code>.</p>
+<p>The goal of this practical is to find the best subset/combination of genes to detect tumourous tissue.
+As in <span class="citation">Alon et al. (1999)</span>, we use the 2000 genes with the highest minimal intensity
+across the samples.</p>
 </div>
 </div>
 <div id="sparse-pca" class="section level1">
 <h1><span class="header-section-number">2</span> Sparse PCA</h1>
-<p>In order to work easily with the data, first construct a scaled matrix <code>X</code> and a vector <code>Y</code> which gives the scaled predictors and the response variable:</p>
+<p>In order to work easily with the data, first construct a scaled matrix
+<code>X</code> and a vector <code>Y</code> which gives the scaled predictors and the response
+variable:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>X &lt;-<span class="st"> </span><span class="kw">scale</span>(Alon1999[, <span class="dv">-1</span>])</span>
 <span id="cb3-2"><a href="#cb3-2"></a>Y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(Alon1999[, <span class="dv">1</span>])</span></code></pre></div>
 <p>Use these objects to solve the following exercises.</p>
@@ -624,7 +632,9 @@ div.tocify {
 <span id="cb7-6"><a href="#cb7-6"></a>  <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">title =</span> <span class="st">&quot;Tissue&quot;</span></span>
 <span id="cb7-7"><a href="#cb7-7"></a>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>This plots the first two dimensions of the <code>X</code> (!) matrix with solid points (<code>pch = 19</code>), and the color red for normal tissue and blue for tumorous tissue. You can adapt this code to create the proper plot.</p>
+<p>This plots the first two dimensions of the <code>X</code> (!) matrix with solid
+points (<code>pch = 19</code>), and the color red for normal tissue and blue for
+tumorous tissue. You can adapt this code to create the proper plot.</p>
 <details>
 <p><summary>Solution</summary></p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>cols &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;n&quot;</span> =<span class="st"> &quot;red&quot;</span>, <span class="st">&quot;t&quot;</span> =<span class="st"> &quot;blue&quot;</span>)</span>
@@ -642,7 +652,8 @@ div.tocify {
 </div>
 <div id="plot-histograms-of-the-loadings-of-the-first-and-second-pcs.-which-loadings-are-the-most-important" class="section level4 unnumbered">
 <h4>4. Plot histograms of the loadings of the first and second PCs. Which loadings are the most important?</h4>
-<p>You can use the <code>hist</code> function to plot a histogram. Be sure to you use an appropriate value for the <code>breaks</code> argument.</p>
+<p>You can use the <code>hist</code> function to plot a histogram.
+Be sure to you use an appropriate value for the <code>breaks</code> argument.</p>
 <details>
 <p><summary>Solution</summary></p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
@@ -659,7 +670,8 @@ div.tocify {
 <span id="cb9-12"><a href="#cb9-12"></a>), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/pc-loadings-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>Vertical lines were added at the 95th percentile for PC1 and the 5th and 95th percentiles for PC2 to reflect where the “highest” (in absolute value) loadings are situated (no negative loadings for PC1, so only showing the 95th percentile).</p>
-<p><strong>Interpretation:</strong> remember that the PC loadings reflect the <em>contributions</em> of each feature (in this case: gene) to the PC. From these histograms it should be clear that only a minor fraction of the genes are really driving these first 2 PCs, especially for PC 2 (where the bulk of genes has loadings close to 0).</p>
+<p><strong>Interpretation:</strong> remember that the PC loadings reflect the <em>contributions</em> of each feature (in this case: gene) to the PC.
+From these histograms it should be clear that only a minor fraction of the genes are really driving these first 2 PCs, especially for PC 2 (where the bulk of genes has loadings close to 0).</p>
 </details>
 </div>
 <div id="we-know-that-the-first-pc-mathbfz_1-is-given-by" class="section level4 unnumbered">
@@ -671,18 +683,22 @@ div.tocify {
 <p><span class="math display">\[
   \mathbf{Y}=\mathbf{X}\boldsymbol{\beta}
   \]</span></p>
-<p>where <span class="math inline">\(\boldsymbol{\beta}\)</span> now represent the <span class="math inline">\(\mathbf{V_1}\)</span> loadings, and <span class="math inline">\(\mathbf{Y}\)</span> is <span class="math inline">\(\mathbf{Z_1}\)</span>.</p>
+<p>where <span class="math inline">\(\boldsymbol{\beta}\)</span> now represent the <span class="math inline">\(\mathbf{V_1}\)</span> loadings, and
+<span class="math inline">\(\mathbf{Y}\)</span> is <span class="math inline">\(\mathbf{Z_1}\)</span>.</p>
 <p>Recall that the ridge regression solution for <span class="math inline">\(\boldsymbol{\beta}\)</span> is given by</p>
 <p><span class="math display">\[
   \boldsymbol{\beta}_{\text{ridge}}
     = (\mathbf{X^TX}+\lambda\mathbf{I})^{-1}\mathbf{X}^T\mathbf Y
   \]</span></p>
-<p><strong>Question:</strong> Replace <span class="math inline">\(\mathbf{Y}\)</span> with <span class="math inline">\(\mathbf{Z_1}\)</span> and verify in <code>R</code> that</p>
+<p><strong>Question:</strong> Replace <span class="math inline">\(\mathbf{Y}\)</span> with <span class="math inline">\(\mathbf{Z_1}\)</span> and verify in
+<code>R</code> that</p>
 <p><span class="math display">\[
   \mathbf V_1 =
     \frac{\boldsymbol\beta_{\text{ridge}}}{\|\boldsymbol\beta_{\text{ridge}}\|_2}
   \]</span></p>
-<p>for any <span class="math inline">\(\lambda &gt; 0\)</span> of your choice. Remember that <span class="math inline">\(\|\boldsymbol\beta_{\text{ridge}}\|_2 = \sqrt{\sum_{j=1}^p \beta_j^2}\)</span></p>
+<p>for any <span class="math inline">\(\lambda &gt; 0\)</span> of your choice.
+Remember that
+<span class="math inline">\(\|\boldsymbol\beta_{\text{ridge}}\|_2 = \sqrt{\sum_{j=1}^p \beta_j^2}\)</span></p>
 <details>
 <p><summary>Solution</summary></p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>p &lt;-<span class="st"> </span><span class="kw">dim</span>(X)[<span class="dv">2</span>]</span>
@@ -695,7 +711,9 @@ div.tocify {
 <span id="cb10-8"><a href="#cb10-8"></a></span>
 <span id="cb10-9"><a href="#cb10-9"></a><span class="co">#||beta_ridge||_2</span></span>
 <span id="cb10-10"><a href="#cb10-10"></a>mag_beta_ridge &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">sum</span>(beta_ridge<span class="op">^</span><span class="dv">2</span>))</span></code></pre></div>
-<p>For comparison, let’s plot <span class="math inline">\(\boldsymbol\beta_{\text{ridge}} / \|\boldsymbol\beta_{\text{ridge}}\|_2\)</span> against the PC1 loadings <span class="math inline">\(\mathbf V_1\)</span>.</p>
+<p>For comparison, let’s plot
+<span class="math inline">\(\boldsymbol\beta_{\text{ridge}} / \|\boldsymbol\beta_{\text{ridge}}\|_2\)</span>
+against the PC1 loadings <span class="math inline">\(\mathbf V_1\)</span>.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
 <span id="cb11-2"><a href="#cb11-2"></a></span>
 <span id="cb11-3"><a href="#cb11-3"></a><span class="co"># Plot against the loadings</span></span>
@@ -709,7 +727,8 @@ div.tocify {
 <span id="cb12-2"><a href="#cb12-2"></a><span class="kw">max</span>(<span class="kw">abs</span>(svd_X<span class="op">$</span>v[, <span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>beta_ridge <span class="op">/</span><span class="st"> </span>mag_beta_ridge))</span>
 <span id="cb12-3"><a href="#cb12-3"></a><span class="co">#&gt; [1] 5.187517e-14</span></span></code></pre></div>
 </details>
-<p>Then you’ve proven that the loadings of the PCs can be computed from the ridge regression coefficients.</p>
+<p>Then you’ve proven that the loadings of the PCs can be computed from the
+ridge regression coefficients.</p>
 <p>We can now move on to sparse PCA, where we use penalised regression to set some of the loadings (<span class="math inline">\(\boldsymbol{\beta}\)</span>s) to zero.</p>
 </div>
 <div id="we-have-seen-elastic-net-type-penalties.-if-we-call-the-loadings-of-the-first-pc-as-boldsymbolbeta-and-denote-pc1-as-mathbfy-we-saw-that-boldsymbolbeta-can-be-derived-by-minimising-the-sse" class="section level4 unnumbered">
@@ -717,13 +736,16 @@ div.tocify {
 <p><span class="math display">\[
   \text{SSE}=\|\mathbf Y-\mathbf{X}\boldsymbol \beta\|^2_2+\lambda\|\boldsymbol \beta\|^2_2 (\text{ for any } \lambda&gt;0).
   \]</span></p>
-<p>Note that this equality holds for any positive <span class="math inline">\(\lambda\)</span>. So we can’t penalise the <span class="math inline">\(\boldsymbol\beta\)</span>s not being zero by choosing a different <span class="math inline">\(\lambda\)</span>. Remember that for ridge regression, the <span class="math inline">\(\beta\)</span>’s only become 0 for <span class="math inline">\(\lambda = \infty\)</span>. Fortunately we have other tools.</p>
+<p>Note that this equality holds for any positive <span class="math inline">\(\lambda\)</span>. So we can’t penalise the <span class="math inline">\(\boldsymbol\beta\)</span>s not being zero by choosing a different <span class="math inline">\(\lambda\)</span>.
+Remember that for ridge regression, the <span class="math inline">\(\beta\)</span>’s only become 0 for <span class="math inline">\(\lambda = \infty\)</span>.
+Fortunately we have other tools.</p>
 <p>In addition to the <span class="math inline">\(L_2\)</span> penalization, we can use the <span class="math inline">\(L_1\)</span> penalization of Lasso. This allows us to force some of the <span class="math inline">\(\boldsymbol\beta\)</span>s to become zero. The new SSE will be of the form:</p>
 <p><span class="math display">\[
   \text{SSE}=\|\mathbf Y-\mathbf{X}\boldsymbol \beta\|^2_2+\lambda_2\|\boldsymbol \beta\|^2_2 +\lambda_1\|\boldsymbol \beta\|_1.
   \]</span></p>
 <p>This is exactly the elastic net SSE, and <span class="math inline">\(\lambda_1\)</span> is the Lasso type penalty that sets loadings to zero.</p>
-<p>Now use the <code>glmnet</code> and <code>cv.glmnet</code> functions to select an appropriate number of non-zero loadings for the first and second PCs. Use <code>alpha = 0.5</code> in your elastic net models and use <code>Z1</code> and <code>Z2</code> as the response variables (you should fit 2 separate models).</p>
+<p>Now use the <code>glmnet</code> and <code>cv.glmnet</code> functions to select an appropriate number of non-zero loadings for the first and second PCs.
+Use <code>alpha = 0.5</code> in your elastic net models and use <code>Z1</code> and <code>Z2</code> as the response variables (you should fit 2 separate models).</p>
 <details>
 <p><summary>Solution</summary></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
@@ -739,7 +761,8 @@ div.tocify {
 <span id="cb13-11"><a href="#cb13-11"></a>fit_loadings2 &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(X, Z[, <span class="dv">2</span>], <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">nfolds =</span> <span class="dv">5</span>)</span>
 <span id="cb13-12"><a href="#cb13-12"></a><span class="kw">plot</span>(fit_loadings2, <span class="dt">main =</span> <span class="st">&quot;PC2&quot;</span>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/PC-cv_glmnet-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>To see how many features are important for each fit, we can make coefficient profile plots. Note that the actual <code>glmnet</code> fit objects are included in the <code>cv.glmnet</code> objects under <code>$glmnet.fit</code>.</p>
+<p>To see how many features are important for each fit, we can make coefficient profile plots.
+Note that the actual <code>glmnet</code> fit objects are included in the <code>cv.glmnet</code> objects under <code>$glmnet.fit</code>.</p>
 <p>I added vertical dashed lines at <code>lambda.min</code> and <code>lambda.1se</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
 <span id="cb14-2"><a href="#cb14-2"></a><span class="kw">plot</span>(fit_loadings1<span class="op">$</span>glmnet.fit, <span class="dt">main =</span> <span class="st">&quot;PC1&quot;</span>, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span>
@@ -768,12 +791,16 @@ div.tocify {
 <span id="cb15-16"><a href="#cb15-16"></a><span class="co">#&gt;     Lambda Index Measure    SE Nonzero</span></span>
 <span id="cb15-17"><a href="#cb15-17"></a><span class="co">#&gt; min 0.2923    91   11.70 4.123      80</span></span>
 <span id="cb15-18"><a href="#cb15-18"></a><span class="co">#&gt; 1se 1.1800    61   15.79 6.171      67</span></span></code></pre></div>
-<p><strong>Interpretation:</strong> for PC1, we see that around 90 to 100 genes are most important, based on the range of <span class="math inline">\(\lambda\)</span> (<code>lambda</code>) values between <code>lambda.min</code> and <code>lambda.1se</code>. Similarly, for PC2 we get around 65 - 80 genes. With this information, we can now choose one of the <code>lambda</code> values and construct PCs that will have non-zero loadings for only a few genes.</p>
+<p><strong>Interpretation:</strong> for PC1, we see that around 90 to 100 genes are most important, based on the range of <span class="math inline">\(\lambda\)</span> (<code>lambda</code>) values between <code>lambda.min</code> and <code>lambda.1se</code>.
+Similarly, for PC2 we get around 65 - 80 genes.
+With this information, we can now choose one of the <code>lambda</code> values and construct PCs that will have non-zero loadings for only a few genes.</p>
 </details>
 </div>
 <div id="plot-your-newly-derived-first-and-second-pcs-and-use-different-colors-for-the-tumor-and-normal-tissues.-how-well-do-these-new-pcs-separate-the-response-classes-compare-this-to-the-plot-in-exercise-3.-formulate-a-conclusion-based-on-the-two-graphs." class="section level4 unnumbered">
 <h4>7. Plot your newly derived first and second PCs and use different colors for the tumor and normal tissues. How well do these new PCs separate the response classes? Compare this to the plot in exercise 3. Formulate a conclusion based on the two graphs.</h4>
-<p>Use <code>lambda.1se</code> as your choice for <span class="math inline">\(\lambda\)</span>. You can extract the coefficients (<span class="math inline">\(\beta\)</span>’s) from the <code>cv.glmnet</code> objects using the <code>coef</code> function, set the <code>s</code> argument to the chosen <span class="math inline">\(\lambda\)</span>. This will return a <em>sparse matrix</em> by default, so you might want to use <code>as.vector</code> to convert to a more friendly format.</p>
+<p>Use <code>lambda.1se</code> as your choice for <span class="math inline">\(\lambda\)</span>.
+You can extract the coefficients (<span class="math inline">\(\beta\)</span>’s) from the <code>cv.glmnet</code> objects using the <code>coef</code> function, set the <code>s</code> argument to the chosen <span class="math inline">\(\lambda\)</span>.
+This will return a <em>sparse matrix</em> by default, so you might want to use <code>as.vector</code> to convert to a more friendly format.</p>
 <details>
 <p><summary>Solution</summary></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>sparse_loadings1 &lt;-<span class="st"> </span><span class="kw">as.vector</span>(<span class="kw">coef</span>(fit_loadings1, <span class="dt">s =</span> fit_loadings1<span class="op">$</span>lambda<span class="fl">.1</span>se))</span>
@@ -806,7 +833,12 @@ div.tocify {
 <span id="cb16-28"><a href="#cb16-28"></a>  <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="dt">pch =</span> <span class="kw">c</span>(<span class="dv">16</span>, <span class="dv">16</span>), <span class="dt">cex =</span> <span class="dv">1</span></span>
 <span id="cb16-29"><a href="#cb16-29"></a>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/sparse-PCA-plots-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p><strong>Conclusion:</strong> Only about 4.80% (96) of the genes are useful for PC1 and only about 3.35% (67) of the genes are useful for PC2 . Sparse PCA has succeeded in setting the uninformative genes/loadings to zero. In seperating normal and tumour tissues, SPCA performs vitually the same as PCA. The key point here is that SPCA uses only a minor proportion of the original features to achieve the same results, suggesting that the largest variability of the data is only driven by a minority of features.</p>
+<p><strong>Conclusion:</strong> Only about
+4.80% (96) of the genes are useful for PC1 and only about
+3.35% (67) of the genes are useful for PC2 .
+Sparse PCA has succeeded in setting the uninformative genes/loadings to zero.
+In seperating normal and tumour tissues, SPCA performs vitually the same as PCA.
+The key point here is that SPCA uses only a minor proportion of the original features to achieve the same results, suggesting that the largest variability of the data is only driven by a minority of features.</p>
 </details>
 </div>
 </div>
@@ -825,7 +857,9 @@ div.tocify {
 <p><span class="math display">\[
 \mathbf W^{-1} \mathbf B \mathbf a=\lambda \mathbf a
 \]</span></p>
-<p>In our case, where we only have two groups, only one solution exists. This is the eigenvector <span class="math inline">\(\mathbf v\)</span> and its eigenvalue. We can then write the PC-scores as</p>
+<p>In our case, where we only have two groups, only one solution exists.
+This is the eigenvector <span class="math inline">\(\mathbf v\)</span> and its eigenvalue.
+We can then write the PC-scores as</p>
 <p><span class="math display">\[
 \mathbf Z=\mathbf X \mathbf v
 \]</span></p>
@@ -924,7 +958,7 @@ div.tocify {
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>#&gt; [1] &quot;2022-01-31 09:01:02 UTC&quot;
+<pre><code>#&gt; [1] &quot;2022-01-31 19:44:32 UTC&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.2 (2021-11-01)
@@ -941,6 +975,7 @@ div.tocify {
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
 #&gt;  ! package     * version date (UTC) lib source
 #&gt;  P BiocManager   1.30.16 2021-06-15 [?] CRAN (R 4.1.2)
+#&gt;  P bookdown      0.24    2021-09-02 [?] CRAN (R 4.1.2)
 #&gt;  P bslib         0.3.1   2021-10-06 [?] CRAN (R 4.1.2)
 #&gt;  P cli           3.1.1   2022-01-20 [?] CRAN (R 4.1.2)
 #&gt;    codetools     0.2-18  2020-11-04 [2] CRAN (R 4.1.2)

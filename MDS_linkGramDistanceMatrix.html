@@ -549,9 +549,11 @@ div.tocify {
 <h1><span class="header-section-number">2</span> Centering</h1>
 <p><span class="math display">\[
   \mathbf{H} = \mathbf{I} - \frac{1}{n} \mathbf{1}\mathbf{1}^T ,
-\]</span> <span class="math display">\[
+\]</span>
+<span class="math display">\[
  \mathbf{X}_c = \mathbf{H}\mathbf{X}
-\]</span> <span class="math display">\[
+\]</span>
+<span class="math display">\[
 \mathbf{H}\mathbf{X}_c = \mathbf{X}_c
 \]</span></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>H &lt;-<span class="st"> </span><span class="kw">diag</span>(<span class="kw">nrow</span>(X)) <span class="op">-</span><span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span><span class="op">/</span><span class="kw">nrow</span>(X),<span class="dt">nrow=</span><span class="kw">nrow</span>(X),<span class="dt">ncol=</span><span class="kw">nrow</span>(X))</span>
@@ -569,7 +571,9 @@ div.tocify {
 </div>
 <div id="gram-matrix" class="section level1">
 <h1><span class="header-section-number">3</span> Gram matrix</h1>
-<p><strong>Gram matrix</strong>: <span class="math inline">\(\mathbf{G}=\mathbf{X}\mathbf{X}^T\)</span> Here we work on centered data so <span class="math inline">\(\mathbf{G}=\mathbf{X}_c\mathbf{X}_c^T\)</span></p>
+<p><strong>Gram matrix</strong>: <span class="math inline">\(\mathbf{G}=\mathbf{X}\mathbf{X}^T\)</span>
+Here we work on centered data so
+<span class="math inline">\(\mathbf{G}=\mathbf{X}_c\mathbf{X}_c^T\)</span></p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>G &lt;-<span class="st"> </span>Xc<span class="op">%*%</span><span class="kw">t</span>(Xc)</span></code></pre></div>
 </div>
 <div id="squared-distance-matrix" class="section level1">

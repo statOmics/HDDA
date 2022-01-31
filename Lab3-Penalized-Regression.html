@@ -547,10 +547,15 @@ div.tocify {
 </ul>
 <div id="the-dataset" class="section level2">
 <h2><span class="header-section-number">1.1</span> The dataset</h2>
-<p>In this practical, we will use the dataset <code>eyedata</code> provided by the <a href="https://cran.r-project.org/web/packages/NormalBetaPrime/index.html"><strong>NormalBetaPrime</strong> package</a>. This dataset contains gene expression data of 200 genes for 120 samples. The data originates from microarray experiments of mammalian eye tissue samples.</p>
+<p>In this practical, we will use the dataset <code>eyedata</code> provided by
+the <a href="https://cran.r-project.org/web/packages/NormalBetaPrime/index.html"><strong>NormalBetaPrime</strong> package</a>.
+This dataset contains gene expression data of 200
+genes for 120 samples. The data originates from microarray experiments
+of mammalian eye tissue samples.</p>
 <p>The dataset consists of two objects:</p>
 <ul>
-<li><code>genes</code>: a <span class="math inline">\(120 \times 200\)</span> matrix with the expression levels of 200 genes (columns) for 120 samples (rows)</li>
+<li><code>genes</code>: a <span class="math inline">\(120 \times 200\)</span> matrix with the expression levels of 200 genes
+(columns) for 120 samples (rows)</li>
 <li><code>trim32</code>: a vector with 120 expression levels of the TRIM32 gene.</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">data</span>(eyedata)</span>
@@ -562,23 +567,39 @@ div.tocify {
 <span id="cb2-7"><a href="#cb2-7"></a><span class="co">#&gt;   ..$ : chr [1:200] &quot;1377&quot; &quot;1748&quot; &quot;2487&quot; &quot;2679&quot; ...</span></span>
 <span id="cb2-8"><a href="#cb2-8"></a><span class="kw">str</span>(trim32)</span>
 <span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt;  num [1:120] 8.42 8.36 8.41 8.29 8.27 ...</span></span></code></pre></div>
-<p>The goal of this exercise is to predict the expression levels of TRIM32 from the expression levels of the 200 genes measured in the microarray experiment. For this, it makes sense to start by constructing centered (and possibly scaled) data. We store this in two matrices <code>X</code> and <code>Y</code>:</p>
+<p>The goal of this exercise is to predict the expression levels of
+TRIM32 from the expression levels of the 200 genes measured in the
+microarray experiment. For this, it makes sense to start by constructing
+centered (and possibly scaled) data. We store this in two matrices
+<code>X</code> and <code>Y</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>X &lt;-<span class="st"> </span><span class="kw">scale</span>(genes, <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a>Y &lt;-<span class="st"> </span><span class="kw">scale</span>(trim32, <span class="dt">center =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<p>Remember that scaling avoids that differences in levels of magnitude will give one variable (gene) more influence in the result. This has been illustrated in the <a href="./Lab2-PCA.html">second practical session</a> as well. For the <code>Y</code> vector, this is less of an issue as we’re talking about a single variable. Not scaling will make the predictions interpretable as “deviations from the mean”.</p>
+<p>Remember that scaling avoids that differences in levels of magnitude
+will give one variable (gene) more influence in the result. This has
+been illustrated in the <a href="./Lab2-PCA.html">second practical session</a> as well.
+For the <code>Y</code> vector, this is less of an issue as we’re talking about a single variable.
+Not scaling will make the predictions interpretable as “deviations from the
+mean”.</p>
 </div>
 <div id="the-curse-of-singularity" class="section level2">
 <h2><span class="header-section-number">1.2</span> The curse of singularity</h2>
-<p>We begin by assuming that the predictors and the outcome have been centered so that the intercept is 0. We are presented with the usual regression model:</p>
+<p>We begin by assuming that the predictors and the outcome have been
+centered so that the intercept is 0.
+We are presented with the usual regression model:</p>
 <p><span class="math display">\[
 Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 \text{ Or } \mathbf{Y}={\mathbf{X}}{\boldsymbol{\beta}} +{\boldsymbol{\epsilon}}
 \]</span></p>
-<p>Our goal is to get the least squares estimator of <span class="math inline">\({\boldsymbol{\beta}}\)</span>, given by</p>
+<p>Our goal is to get the least squares estimator of
+<span class="math inline">\({\boldsymbol{\beta}}\)</span>, given by</p>
 <p><span class="math display">\[
 \hat{{\boldsymbol{\beta}}}= (\mathbf{X}^T{\mathbf{X}})^{-1}{\mathbf{X}}^T{\mathbf{Y}}
 \]</span></p>
-<p>in which the <span class="math inline">\(p \times p\)</span> matrix <span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})^{-1}\)</span> is crucial! To be able to calculate the inverse of <span class="math inline">\({\mathbf{X}}^T \mathbf{X}\)</span>, it has to be of full rank <span class="math inline">\(p\)</span>, which would be 200 in this case. Let’s check this:</p>
+<p>in which the <span class="math inline">\(p \times p\)</span> matrix
+<span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})^{-1}\)</span> is crucial!
+To be able to calculate the inverse of <span class="math inline">\({\mathbf{X}}^T \mathbf{X}\)</span>,
+it has to be of full rank <span class="math inline">\(p\)</span>, which would be 200 in this case.
+Let’s check this:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">dim</span>(X) <span class="co"># 120 x 200, so p &gt; n!</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="co">#&gt; [1] 120 200</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="kw">qr</span>(X)<span class="op">$</span>rank</span>
@@ -591,15 +612,28 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb4-10"><a href="#cb4-10"></a><span class="co"># Try to invert using solve:</span></span>
 <span id="cb4-11"><a href="#cb4-11"></a><span class="kw">solve</span>(XtX)</span>
 <span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt; Error in solve.default(XtX): system is computationally singular: reciprocal condition number = 4.20888e-20</span></span></code></pre></div>
-<p>We realize we cannot compute <span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})^{-1}\)</span> because the rank of <span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})\)</span> is less than <span class="math inline">\(p\)</span> hence we can’t get <span class="math inline">\(\hat{{\boldsymbol{\beta}}}\)</span> by means of least squares! This is generally referred to as the <strong><a href="https://www.statistics.com/glossary/singularity/">singularity</a> problem</strong>.</p>
+<p>We realize we cannot compute
+<span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})^{-1}\)</span> because the rank of
+<span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})\)</span> is less than <span class="math inline">\(p\)</span> hence we can’t
+get <span class="math inline">\(\hat{{\boldsymbol{\beta}}}\)</span> by means of least squares!
+This is generally referred to as the <strong><a href="https://www.statistics.com/glossary/singularity/">singularity</a> problem</strong>.</p>
 </div>
 </div>
 <div id="principal-component-regression" class="section level1">
 <h1><span class="header-section-number">2</span> Principal component regression</h1>
-<p>A first way to deal with this singularity, is to bypass it using principal components. Since <span class="math inline">\(\min(n,p) = n = 120\)</span>, PCA will give 120 components, each being a linear combination of the <span class="math inline">\(p\)</span> = 200 variables. These 120 PCs contain all information present in the original data. We could as well use an approximation of <span class="math inline">\({\mathbf{X}}\)</span>, i.e using just a few (<span class="math inline">\(k&lt;120\)</span>) PCs. So we use PCA as a method for reducing the dimensions while retaining as much variation between the observations as possible. Once we have these PCs, we can use them as variables in a linear regression model.</p>
+<p>A first way to deal with this singularity, is to bypass it using principal components.
+Since <span class="math inline">\(\min(n,p) = n = 120\)</span>,
+PCA will give 120 components, each being a linear combination of the
+<span class="math inline">\(p\)</span> = 200 variables.
+These 120 PCs contain all information present in the original data.
+We could as well use an approximation of <span class="math inline">\({\mathbf{X}}\)</span>, i.e using just a few (<span class="math inline">\(k&lt;120\)</span>) PCs.
+So we use PCA as a method for reducing the dimensions while retaining
+as much variation between the observations as possible.
+Once we have these PCs, we can use them as variables in a linear regression model.</p>
 <div id="classic-linear-regression-on-pcs" class="section level2">
 <h2><span class="header-section-number">2.1</span> Classic linear regression on PCs</h2>
-<p>We first compute the PCA on the data with <code>prcomp</code>. We will use an arbitrary cutoff of <span class="math inline">\(k = 4\)</span> PCs to illustrate the process of performing regression on the PCs.</p>
+<p>We first compute the PCA on the data with <code>prcomp</code>.
+We will use an arbitrary cutoff of <span class="math inline">\(k = 4\)</span> PCs to illustrate the process of performing regression on the PCs.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>k &lt;-<span class="st"> </span><span class="dv">4</span> <span class="co"># Arbitrarily chosen k=4</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a>pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(X)</span>
 <span id="cb5-3"><a href="#cb5-3"></a>Vk &lt;-<span class="st"> </span>pca<span class="op">$</span>rotation[, <span class="dv">1</span><span class="op">:</span>k] <span class="co"># the loadings matrix</span></span>
@@ -629,17 +663,27 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb5-27"><a href="#cb5-27"></a><span class="co">#&gt; Residual standard error: 0.5975 on 115 degrees of freedom</span></span>
 <span id="cb5-28"><a href="#cb5-28"></a><span class="co">#&gt; Multiple R-squared:  0.655,  Adjusted R-squared:  0.643 </span></span>
 <span id="cb5-29"><a href="#cb5-29"></a><span class="co">#&gt; F-statistic: 54.58 on 4 and 115 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
-<p>As <span class="math inline">\(\mathbf{X}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> are centered, the intercept is approximately 0.</p>
-<p>The output shows that PC1 and PC4 have a <span class="math inline">\(\beta\)</span> estimate that differs significantly from 0 (at <span class="math inline">\(p &lt; 0.05\)</span>), but the results can’t be readily interpreted, since we have no immediate interpretation of the PCs.</p>
+<p>As <span class="math inline">\(\mathbf{X}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> are centered, the intercept is
+approximately 0.</p>
+<p>The output shows that PC1 and PC4 have a <span class="math inline">\(\beta\)</span> estimate that
+differs significantly from 0 (at <span class="math inline">\(p &lt; 0.05\)</span>), but the results can’t be readily
+interpreted, since we have no immediate interpretation of the PCs.</p>
 </div>
 <div id="using-the-package-pls" class="section level2">
 <h2><span class="header-section-number">2.2</span> Using the package <code>pls</code></h2>
-<p>PCR can also be performed using the <code>pcr()</code> function from the package <em><a href="https://CRAN.R-project.org/package=pls">pls</a></em> <strong>directly on the data</strong> (so without having to first perform the PCA manually). When using this function, you have to keep a few things in mind:</p>
+<p>PCR can also be performed using the <code>pcr()</code> function from the
+package <em><a href="https://CRAN.R-project.org/package=pls">pls</a></em>
+<strong>directly on the data</strong> (so without having to first perform the PCA manually).
+When using this function, you have to keep a few things in mind:</p>
 <ol style="list-style-type: decimal">
 <li>the number of components (PCs) to use is passed with the argument <code>ncomp</code></li>
-<li>the function allows you to scale (set <code>scale = TRUE</code>) and center (set <code>center = TRUE</code>) the predictors first (in the example here, <span class="math inline">\(\mathbf{X}\)</span> has already been centered and scaled).</li>
+<li>the function allows you to scale (set <code>scale = TRUE</code>) and
+center (set <code>center = TRUE</code>) the predictors first (in the example here, <span class="math inline">\(\mathbf{X}\)</span> has already been centered and scaled).</li>
 </ol>
-<p>You can use the function <code>pcr()</code> in much the same way as you would use <code>lm()</code>. The resulting fit can easily be examined using the function <code>summary()</code>, but the output looks quite different from what you would get from <code>lm</code>.</p>
+<p>You can use the function <code>pcr()</code> in much the same way as you would
+use <code>lm()</code>. The resulting fit can easily be examined using the
+function <code>summary()</code>, but the output looks quite different from
+what you would get from <code>lm</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># X is already scaled and centered, so that&#39;s not needed.</span></span>
 <span id="cb6-2"><a href="#cb6-2"></a>pcr_model2 &lt;-<span class="st"> </span><span class="kw">pcr</span>(Y <span class="op">~</span><span class="st"> </span>X, <span class="dt">ncomp =</span> <span class="dv">4</span>)</span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="kw">summary</span>(pcr_model2)</span>
@@ -651,39 +695,61 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt;    1 comps  2 comps  3 comps  4 comps</span></span>
 <span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt; X    61.22    69.55    72.33    74.66</span></span>
 <span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt; Y    62.97    63.24    63.87    65.50</span></span></code></pre></div>
-<p>First of all the output shows you the data dimensions and the fitting method used. In this case, that is PC calculation based on SVD. The <code>summary()</code> function also provides the percentage of variance explained in the predictors and in the response using different numbers of components. For example, the first PC only captures 61.22% of all the variance, or information in the predictors and it explains 62.9% of the variance in the outcome. Note that for both methods the choice of the number of principal components was arbitrary chosen to be 4.</p>
-<p>At a later stage, we will look at how to choose the number of components that has the <strong>smallest prediction error</strong>.</p>
+<p>First of all the output shows you the data dimensions and the fitting
+method used. In this case, that is PC calculation based on SVD. The
+<code>summary()</code> function also provides the percentage of variance
+explained in the predictors and in the response using different numbers
+of components. For example, the first PC only captures 61.22% of all
+the variance, or information in the predictors and it explains 62.9%
+of the variance in the outcome. Note that for both methods the choice of
+the number of principal components was arbitrary chosen to be 4.</p>
+<p>At a later stage, we will look at how to choose the number of components
+that has the <strong>smallest prediction error</strong>.</p>
 </div>
 </div>
 <div id="elnet-theory" class="section level1">
 <h1><span class="header-section-number">3</span> Ridges, Lassos and Elastic Nets</h1>
-<p>Ridge regression, lasso regression and elastic nets are all closely related techniques, based on the same idea: add a penalty term to the estimating function so <span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})\)</span> becomes full rank again and is invertible. Two different penalty terms or regularization methods can be used:</p>
+<p>Ridge regression, lasso regression and elastic nets are all closely
+related techniques, based on the same idea: add a penalty term to
+the estimating function so <span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})\)</span>
+becomes full rank again and is invertible. Two different penalty
+terms or regularization methods can be used:</p>
 <ol style="list-style-type: decimal">
-<li>L1 regularization: this regularization adds a term <span class="math inline">\({\lambda_1\|\boldsymbol{\beta}\|_{1}}\)</span> to the estimating equation. The term will add a penalty based on the <em>absolute value</em> of the magnitude of the coefficients. This is used by the <strong>lasso regression</strong></li>
+<li>L1 regularization: this regularization adds a term <span class="math inline">\({\lambda_1\|\boldsymbol{\beta}\|_{1}}\)</span> to the estimating equation.
+The term will add a penalty based on the <em>absolute value</em> of the
+magnitude of the coefficients. This is used by the <strong>lasso regression</strong></li>
 </ol>
 <p><span class="math display">\[
  \hat{\boldsymbol{\beta}}^{\text{lasso}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_1\|\boldsymbol{\beta}\|_{1}}}\displaystyle)
 \]</span></p>
 <ol start="2" style="list-style-type: decimal">
-<li>L2 regularization: this regularization adds a term <span class="math inline">\({\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}\)</span> to the estimating equation. The penalty term is based on the square of the magnitude of the coefficients. This is used by <strong>ridge regression</strong>.</li>
+<li>L2 regularization: this regularization adds a term <span class="math inline">\({\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}\)</span> to the estimating equation.
+The penalty term is based on the square of the magnitude of the
+coefficients. This is used by <strong>ridge regression</strong>.</li>
 </ol>
 <p><span class="math display">\[
  \hat{\boldsymbol{\beta}}^{\text{ridge}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
 \]</span></p>
-<p>Elastic nets combine both types of regularizations. It does so by introducing a <span class="math inline">\(\alpha\)</span> mixing parameter that essentially combines the L1 and L2 norms in a weighted average.</p>
+<p>Elastic nets combine both types of regularizations. It does so by
+introducing a <span class="math inline">\(\alpha\)</span> mixing parameter that essentially combines
+the L1 and L2 norms in a weighted average.</p>
 <p><span class="math display">\[
  \hat{\boldsymbol{\beta}}^{\text{el.net}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^{T}(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\alpha \lambda_1\|\boldsymbol{\beta}\|_{1}}+ {(1 - \alpha)\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
 \]</span></p>
 </div>
 <div id="exercise-verification-of-ridge-regression" class="section level1">
 <h1><span class="header-section-number">4</span> Exercise: Verification of ridge regression</h1>
-<p>In least square regression the minimization of the estimation function <span class="math inline">\(|{\mathbf{Y} - \mathbf{X} \boldsymbol{\beta}}\|^{2}_{2}\)</span> leads to the solution <span class="math inline">\({\boldsymbol{\hat{\beta}}=(\mathbf{X^TX})^{-1}\mathbf{X^TY}}\)</span>.</p>
-<p>For the penalized least squares criterion used by ridge regression, you minimize <span class="math inline">\(\|{\mathbf{Y}-\mathbf{X}\boldsymbol{\beta}\|^{2}_{2}}+\lambda{\boldsymbol{\|\beta\|^{2}_{2}}}\)</span> which leads to following solution:</p>
+<p>In least square regression the minimization of the estimation function
+<span class="math inline">\(|{\mathbf{Y} - \mathbf{X} \boldsymbol{\beta}}\|^{2}_{2}\)</span> leads to the solution <span class="math inline">\({\boldsymbol{\hat{\beta}}=(\mathbf{X^TX})^{-1}\mathbf{X^TY}}\)</span>.</p>
+<p>For the penalized least squares criterion used by ridge regression, you minimize
+<span class="math inline">\(\|{\mathbf{Y}-\mathbf{X}\boldsymbol{\beta}\|^{2}_{2}}+\lambda{\boldsymbol{\|\beta\|^{2}_{2}}}\)</span>
+which leads to following solution:</p>
 <p><span class="math display">\[
 {\boldsymbol{\hat{\beta}}=(\mathbf{X^TX}}+\lambda{\mathbf{I}})^{-1}{\mathbf{X^TY}}
 \]</span></p>
 <p>where <span class="math inline">\(\mathbf{I}\)</span> is the <span class="math inline">\(p \times p\)</span> identity matrix.</p>
-<p>The ridge parameter <span class="math inline">\(\lambda\)</span> <em>shrinks</em> the coefficients towards 0, with <span class="math inline">\(\lambda = 0\)</span> being equivalent to OLS (no shrinkage) and <span class="math inline">\(\lambda = +\infty\)</span> being equivalent to setting all <span class="math inline">\(\hat{\beta}\)</span>’s to 0. The optimal parameter lies somewhere in between and needs to be tuned by the user.</p>
+<p>The ridge parameter <span class="math inline">\(\lambda\)</span> <em>shrinks</em> the coefficients towards 0, with <span class="math inline">\(\lambda = 0\)</span> being equivalent to OLS (no shrinkage) and <span class="math inline">\(\lambda = +\infty\)</span> being equivalent to setting all <span class="math inline">\(\hat{\beta}\)</span>’s to 0.
+The optimal parameter lies somewhere in between and needs to be tuned by the user.</p>
 <div id="tasks" class="section level2 unnumbered">
 <h2>Tasks</h2>
 <p>Solve the following exercises using R.</p>
@@ -735,12 +801,29 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 </div>
 <div id="performing-ridge-and-lasso-regression-with-glmnet" class="section level1">
 <h1><span class="header-section-number">5</span> Performing ridge and lasso regression with <code>glmnet</code></h1>
-<p>The package <em><a href="https://CRAN.R-project.org/package=glmnet">glmnet</a></em> provides a function <code>glmnet()</code> that allows you to fit all three types of regressions. Which type is used, can be determined by specifying the <code>alpha</code> argument. For a <strong>ridge regression</strong>, you set <code>alpha</code> to 0, and for a <strong>lasso regression</strong> you set <code>alpha</code> to 1. Other <code>alpha</code> values between 0 and 1 will fit a form of elastic net. This function has slightly different syntax from the other model-fitting functions. To be able to use it, you have to pass a <code>x</code> matrix as well as a <code>y</code> vector, and you don’t use the formula syntax.</p>
-<p>The <span class="math inline">\(\lambda\)</span> parameter, which controls the “strength” of the penalty, can be passed by the argument <code>lambda</code>. The function <code>glmnet()</code> can also carry out a search for finding the best <span class="math inline">\(\lambda\)</span> value for a fit. This can be done by passing multiple values to the argument <code>lambda</code>. If not supplied, <code>glmnet</code> will generate a range of values itself, based on the data whereby the number of values can be controlled with the <code>nlambda</code> argument. This is generally the recommended way to use <code>glmnet</code>, see <code>?glmnet</code> for details.</p>
-<p>For a thorough introduction to the <strong>glmnet</strong> package and elastic net models in general, see the <a href="https://cran.r-project.org/web/packages/glmnet/vignettes/glmnet.pdf">glmnet introduction vignette</a></p>
+<p>The package <em><a href="https://CRAN.R-project.org/package=glmnet">glmnet</a></em> provides a
+function <code>glmnet()</code> that allows you to fit all three types of regressions. Which
+type is used, can be determined by specifying the <code>alpha</code> argument. For a
+<strong>ridge regression</strong>, you set <code>alpha</code> to 0, and for a <strong>lasso regression</strong> you
+set <code>alpha</code> to 1. Other <code>alpha</code> values between 0 and 1 will fit a form of
+elastic net. This function has slightly different syntax from the other
+model-fitting functions. To be able to use it, you have to pass a <code>x</code> matrix as
+well as a <code>y</code> vector, and you don’t use the formula syntax.</p>
+<p>The <span class="math inline">\(\lambda\)</span> parameter, which controls the “strength” of the penalty, can be
+passed by the argument <code>lambda</code>. The function <code>glmnet()</code> can also carry out a
+search for finding the best <span class="math inline">\(\lambda\)</span> value for a fit. This can be done by
+passing multiple values to the argument <code>lambda</code>. If not supplied, <code>glmnet</code> will
+generate a range of values itself, based on the data whereby the number of
+values can be controlled with the <code>nlambda</code> argument. This is generally the
+recommended way to use <code>glmnet</code>, see <code>?glmnet</code> for details.</p>
+<p>For a thorough introduction to the <strong>glmnet</strong> package and elastic net models in
+general, see the
+<a href="https://cran.r-project.org/web/packages/glmnet/vignettes/glmnet.pdf">glmnet introduction vignette</a></p>
 <div id="demonstration-ridge-regression" class="section level2 unnumbered">
 <h2>Demonstration: Ridge regression</h2>
-<p>Let’s perform a ridge regression in order to predict expression levels of the TRIM32 gene using the 200 gene probes data. We can start by using a <span class="math inline">\(\lambda\)</span> value of 2.</p>
+<p>Let’s perform a ridge regression in order to predict expression levels
+of the TRIM32 gene using the 200 gene probes data. We can start by
+using a <span class="math inline">\(\lambda\)</span> value of 2.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>lambda &lt;-<span class="st"> </span><span class="dv">2</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>ridge_model &lt;-<span class="st"> </span><span class="kw">glmnet</span>(X, Y, <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> lambda)</span>
 <span id="cb10-3"><a href="#cb10-3"></a></span>
@@ -748,8 +831,13 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb10-5"><a href="#cb10-5"></a><span class="kw">coef</span>(ridge_model)[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</span>
 <span id="cb10-6"><a href="#cb10-6"></a><span class="co">#&gt;  [1] -2.639083e-15 -5.818717e-03 -9.888023e-03  5.100910e-03 -2.482488e-03</span></span>
 <span id="cb10-7"><a href="#cb10-7"></a><span class="co">#&gt;  [6] -8.341285e-03 -4.528922e-03 -7.961890e-03 -5.039029e-03  6.325841e-03</span></span></code></pre></div>
-<p>The first coefficient is the intercept, and is again essentially 0. But a value of 2 for <span class="math inline">\(\lambda\)</span> might not be the best choice, so let’s see how the coefficients change with different values for <span class="math inline">\(\lambda\)</span>.</p>
-<p>We will create a <em>grid</em> of <span class="math inline">\(\lambda\)</span> values, i.e. a range of values that will be used as input for the <code>glmnet</code> function. Note that this function can take a vector of values as input for the <code>lambda</code> argument, allowing to fit multiple models with the same input data but different hyperparameters.</p>
+<p>The first coefficient is the intercept, and is again essentially 0. But
+a value of 2 for <span class="math inline">\(\lambda\)</span> might not be the best choice, so let’s see how
+the coefficients change with different values for <span class="math inline">\(\lambda\)</span>.</p>
+<p>We will create a <em>grid</em> of <span class="math inline">\(\lambda\)</span> values, i.e. a range of values that will be
+used as input for the <code>glmnet</code> function. Note that this function can take a
+vector of values as input for the <code>lambda</code> argument, allowing to fit multiple
+models with the same input data but different hyperparameters.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>grid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">1000</span>, <span class="dt">by =</span> <span class="dv">10</span>)  <span class="co"># 1 to 1000 with steps of 10</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>ridge_mod_grid &lt;-<span class="st"> </span><span class="kw">glmnet</span>(X, Y, <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> grid)</span>
 <span id="cb11-3"><a href="#cb11-3"></a></span>
@@ -761,14 +849,24 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb11-9"><a href="#cb11-9"></a>     <span class="dt">adj =</span> <span class="fl">-0.5</span>, <span class="dt">col =</span> <span class="st">&quot;firebrick&quot;</span>)</span>
 <span id="cb11-10"><a href="#cb11-10"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">log</span>(lambda), <span class="dt">col =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/ridge-regression-grid-search-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>This plot is known as a <strong>coefficient profile plot</strong>, each colored line represents a coefficient <span class="math inline">\(\hat{\beta}\)</span> from the regression model and shows how they change with increased values of <span class="math inline">\(\lambda\)</span> (on the log-scale) <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
-<p>Note that for higher values <span class="math inline">\(\lambda\)</span>, the coefficient estimates become closer to 0, showing the <em>shrinkage</em> effect of the ridge penalty.</p>
-<p>Similar to the PC regression example, we chose <span class="math inline">\(\lambda=2\)</span> and the grid rather arbitrarily. We will see subsequently, how to choose <span class="math inline">\(\lambda\)</span> that minimizes the prediction error.</p>
+<p>This plot is known as a <strong>coefficient profile plot</strong>, each colored line
+represents a coefficient <span class="math inline">\(\hat{\beta}\)</span> from the regression model and shows how
+they change with increased values of <span class="math inline">\(\lambda\)</span> (on the log-scale)
+<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
+<p>Note that for higher values <span class="math inline">\(\lambda\)</span>, the coefficient estimates become closer to 0,
+showing the <em>shrinkage</em> effect of the ridge penalty.</p>
+<p>Similar to the PC regression example, we chose <span class="math inline">\(\lambda=2\)</span> and the grid rather
+arbitrarily. We will see subsequently, how to choose <span class="math inline">\(\lambda\)</span> that minimizes the
+prediction error.</p>
 </div>
 </div>
 <div id="exercise-lasso-regression" class="section level1">
 <h1><span class="header-section-number">6</span> Exercise: Lasso regression</h1>
-<p>Lasso regression is also a form of penalized regression, but we do not have an analytic solution of <span class="math inline">\(\hat{{\boldsymbol{\beta}}}\)</span> as in least squares and ridge regression. In order to fit a lasso model, we once again use the <code>glmnet()</code> function. However, this time we use the argument <code>alpha = 1</code></p>
+<p>Lasso regression is also a form of penalized regression, but we do not have an
+analytic solution of <span class="math inline">\(\hat{{\boldsymbol{\beta}}}\)</span> as in least squares
+and ridge regression. In order to fit a lasso model, we once again use
+the <code>glmnet()</code> function. However, this time we use the argument
+<code>alpha = 1</code></p>
 <div id="tasks-1" class="section level2 unnumbered">
 <h2>Tasks</h2>
 <div id="verify-that-setting-alpha-1-indeed-corresponds-to-lasso-regression-using-the-equations-from-section-3." class="section level4 unnumbered">
@@ -776,7 +874,9 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 </div>
 <div id="perform-a-lasso-regression-with-the-glmnet-function-with-y-the-response-and-x-the-predictors." class="section level4 unnumbered">
 <h4>2. Perform a lasso regression with the <code>glmnet</code> function with <code>Y</code> the response and <code>X</code> the predictors.</h4>
-<p>You do not have to provide a custom sequence of <span class="math inline">\(\lambda\)</span> (<code>lambda</code>) values here but can instead rely on <code>glmnet</code>’s default behaviour of choosing the grid of <span class="math inline">\(\lambda\)</span> values based on the data (see <code>?glmnet</code> for more details).</p>
+<p>You do not have to provide a custom sequence of <span class="math inline">\(\lambda\)</span> (<code>lambda</code>) values here
+but can instead rely on <code>glmnet</code>’s default behaviour of choosing the grid of
+<span class="math inline">\(\lambda\)</span> values based on the data (see <code>?glmnet</code> for more details).</p>
 <details>
 <p><summary>Solution</summary></p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Note that the glmnet() function can supply lambda automatically</span></span>
@@ -790,16 +890,32 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <p><summary>Solution</summary></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">plot</span>(lasso_model, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;log(lambda)&quot;</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>Note that the number of non-zero coefficients is indicated at the top of the plot. In the case of lasso-regression the regularization is much less smooth compared to the ridge regression, with some coefficients increasing for higher <span class="math inline">\(\lambda\)</span> before sharply dropping to zero. In contrast to ridge, lasso eventually shrinks all coefficients to 0.</p>
+<p>Note that the number of non-zero coefficients is indicated at the top of the plot.
+In the case of lasso-regression the regularization is much less smooth compared
+to the ridge regression, with some coefficients increasing for higher <span class="math inline">\(\lambda\)</span>
+before sharply dropping to zero.
+In contrast to ridge, lasso eventually shrinks all coefficients to 0.</p>
 </details>
 </div>
 </div>
 </div>
 <div id="evaluation-of-prediction-models-and-tuning-hyperparameters" class="section level1">
 <h1><span class="header-section-number">7</span> Evaluation of prediction models and tuning hyperparameters</h1>
-<p>First we will split our original data in a training and test set to validate our model. The training set will be used to train the model and tune the hyperparameters, while the test set will be used to evaluate the <strong>out-of-sample</strong> performance of our final model. If we would use the same data to both fit and test the model, we would get biased results.</p>
-<p>Before we begin, we use the <code>set.seed()</code> function in order to set a seed for R’s random number generator, so that we will all obtain precisely the same results as those shown below. It is generally good practice to set a random seed when performing an analysis such as cross-validation that contains an element of randomness, so that the results obtained can be reproduced at a later time.</p>
-<p>We begin by using the <code>sample()</code> function to split the set of samples into two subsets, by selecting a random subset of 80 observations out of the original 120 observations. We refer to these observations as the <strong>training</strong> set. The rest of the observations will be used as the <strong>test</strong> set.</p>
+<p>First we will split our original data in a training and test set to validate our
+model. The training set will be used to train the model and tune the
+hyperparameters, while the test set will be used to evaluate the
+<strong>out-of-sample</strong> performance of our final model. If we would use the same data
+to both fit and test the model, we would get biased results.</p>
+<p>Before we begin, we use the <code>set.seed()</code> function in order to set a seed
+for R’s random number generator, so that we will all obtain precisely
+the same results as those shown below. It is generally good practice to
+set a random seed when performing an analysis such as cross-validation
+that contains an element of randomness, so that the results obtained can
+be reproduced at a later time.</p>
+<p>We begin by using the <code>sample()</code> function to split the set of samples into two
+subsets, by selecting a random subset of 80 observations out of the original 120
+observations. We refer to these observations as the <strong>training</strong> set. The rest
+of the observations will be used as the <strong>test</strong> set.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb14-2"><a href="#cb14-2"></a><span class="co"># Sample 80 random IDs from the rows of X (120 total)</span></span>
 <span id="cb14-3"><a href="#cb14-3"></a>trainID &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">nrow</span>(X), <span class="dv">80</span>)</span>
@@ -811,7 +927,8 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb14-9"><a href="#cb14-9"></a><span class="co"># Test data</span></span>
 <span id="cb14-10"><a href="#cb14-10"></a>testX &lt;-<span class="st"> </span>X[<span class="op">-</span>trainID, ]</span>
 <span id="cb14-11"><a href="#cb14-11"></a>testY &lt;-<span class="st"> </span>Y[<span class="op">-</span>trainID]</span></code></pre></div>
-<p>To make fitting the models a bit easier later, we will also create 2 data.frames combining the response and predictors for the training and test data.</p>
+<p>To make fitting the models a bit easier later, we will also create 2 data.frames
+combining the response and predictors for the training and test data.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>train_data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;TRIM32&quot;</span> =<span class="st"> </span>trainY, trainX)</span>
 <span id="cb15-2"><a href="#cb15-2"></a>test_data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;TRIM32&quot;</span> =<span class="st"> </span>testY, testX)</span>
 <span id="cb15-3"><a href="#cb15-3"></a></span>
@@ -830,22 +947,52 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb15-16"><a href="#cb15-16"></a><span class="co">#&gt;  $ X3732 : num  0.317 -0.517 -0.226 -1.508 0.132 ...</span></span></code></pre></div>
 <div id="model-evaluation" class="section level2">
 <h2><span class="header-section-number">7.1</span> Model evaluation</h2>
-<p>We are interested in the <strong>out-of-sample</strong> error of our models, i.e. how good our model does on unseen data. <strong>This will allow us to compare different <em>classes</em> of models</strong>. For continuous outcomes we will use the <strong>mean squared error (MSE)</strong> (or its square-root version, the RMSE).</p>
-<p>The evaluation will allow us to compare the performance of different types of models, e.g. PC regression, ridge regression and lasso regression, on our data. However, we still need to find the optimal model within each of these classes, by selecting the best hyperparameter (number of PCs for PC regression and <span class="math inline">\(\lambda\)</span> for lasso and ridge). For that we will use <a href="https://en.wikipedia.org/wiki/Cross-validation_(statistics)"><em><span class="math inline">\(k\)</span>-fold Cross Validation</em></a> on our training set.</p>
+<p>We are interested in the <strong>out-of-sample</strong> error of our models,
+i.e. how good our model does on unseen data.
+<strong>This will allow us to compare different <em>classes</em> of models</strong>.
+For continuous outcomes we will use the <strong>mean squared error (MSE)</strong>
+(or its square-root version, the RMSE).</p>
+<p>The evaluation will allow us to compare the performance of different types of
+models, e.g. PC regression, ridge regression and lasso regression, on our data.
+However, we still need to find the optimal model within each of these classes,
+by selecting the best hyperparameter (number of PCs for PC regression and <span class="math inline">\(\lambda\)</span>
+for lasso and ridge).
+For that we will use
+<a href="https://en.wikipedia.org/wiki/Cross-validation_(statistics)"><em><span class="math inline">\(k\)</span>-fold Cross Validation</em></a>
+on our training set.</p>
 </div>
 <div id="tuning-hyperparameters" class="section level2">
 <h2><span class="header-section-number">7.2</span> Tuning hyperparameters</h2>
-<p>The test set is only used to evaluate the <em>final</em> model. To achieve this final model, we need to find the optimal hyperparameters, i.e. the hyperparameters that best generalize the model to unseen data. We can estimate this by using <em>k-fold cross validation</em> (<span class="math inline">\(CV_k\)</span>) on the training data.</p>
-<p>The <span class="math inline">\(CV_k\)</span> estimates can be automatically computed for any generalized linear model (generated with <code>glm()</code> and by extension <code>glmnet()</code>) using the <code>cv.glm()</code> function from the <em><a href="https://CRAN.R-project.org/package=boot">boot</a></em> package.</p>
+<p>The test set is only used to evaluate the <em>final</em> model.
+To achieve this final model, we need to find the optimal hyperparameters,
+i.e. the hyperparameters that best generalize the model to unseen data.
+We can estimate this by using <em>k-fold cross validation</em> (<span class="math inline">\(CV_k\)</span>) on
+the training data.</p>
+<p>The <span class="math inline">\(CV_k\)</span> estimates can be automatically computed for any
+generalized linear model (generated with <code>glm()</code> and by extension <code>glmnet()</code>)
+using the <code>cv.glm()</code> function from the
+<em><a href="https://CRAN.R-project.org/package=boot">boot</a></em> package.</p>
 </div>
 </div>
 <div id="example-pc-regression-evaluation" class="section level1">
 <h1><span class="header-section-number">8</span> Example: PC regression evaluation</h1>
-<p>We start with the PC regression and look for the optimal number of PCs that minimizes the MSE using <span class="math inline">\(k\)</span>-fold Cross validation. We then use this optimal number of PCs to train the final model and evaluate it on the test data.</p>
+<p>We start with the PC regression and look for the optimal number of PCs that minimizes
+the MSE using <span class="math inline">\(k\)</span>-fold Cross validation.
+We then use this optimal number of PCs to train the final model and evaluate it
+on the test data.</p>
 <div id="k-fold-cross-validation-to-tune-number-of-components" class="section level2">
 <h2><span class="header-section-number">8.1</span> k-fold Cross Validation to tune number of components</h2>
-<p>Conveniently, the <code>pcr</code> function from the <code>pls</code> package has an implementation for k-fold Cross Validation. We simply need to set <code>validation = CV</code> and <code>segments = 20</code> to perform 20-fold Cross Validation with PC regression. If we don’t specify <code>ncomp</code>, <code>pcr</code> will select the maximum number of PCs that can be used for the CV.</p>
-<p>Note that our training data <code>trainX</code> consists of 80 observations (rows). If we perform 20-fold CV, that means we will split the data in 20 groups, so each group will consist of 4 observations. At each CV cycle, one group will be left out and the model will be trained on the remaining groups. This leaves us with 76 training observations for each CV cycle, so the maximal number of components that can be used in the linear regression is 75.</p>
+<p>Conveniently, the <code>pcr</code> function from the <code>pls</code> package has an implementation for
+k-fold Cross Validation. We simply need to set <code>validation = CV</code> and <code>segments = 20</code>
+to perform 20-fold Cross Validation with PC regression.
+If we don’t specify <code>ncomp</code>, <code>pcr</code> will select the maximum number of PCs that can
+be used for the CV.</p>
+<p>Note that our training data <code>trainX</code> consists of 80 observations (rows).
+If we perform 20-fold CV, that means we will split the data in 20 groups, so
+each group will consist of 4 observations. At each CV cycle, one group will be left
+out and the model will be trained on the remaining groups. This leaves us with
+76 training observations for each CV cycle, so the maximal number of components
+that can be used in the linear regression is 75.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">## Set seed for reproducibility, kCV is a random process!</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb16-3"><a href="#cb16-3"></a></span>
@@ -929,18 +1076,28 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb16-81"><a href="#cb16-81"></a><span class="co">#&gt;         72 comps  73 comps  74 comps  75 comps</span></span>
 <span id="cb16-82"><a href="#cb16-82"></a><span class="co">#&gt; X          99.73     99.78     99.82     99.87</span></span>
 <span id="cb16-83"><a href="#cb16-83"></a><span class="co">#&gt; TRIM32     98.75     98.77     99.04     99.22</span></span></code></pre></div>
-<p>We can plot the <em>root mean squared error of prediction</em> (RMSEP) for each number of components as follows.</p>
+<p>We can plot the <em>root mean squared error of prediction</em> (RMSEP) for each number
+of components as follows.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">plot</span>(pcr_cv, <span class="dt">plottype =</span> <span class="st">&quot;validation&quot;</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/pcr_cv-plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>The <code>pls</code> package also has a function <code>selectNcomp</code> to select the optimal number of components. Here we use the “one-sigma” method, which returns the lowest number of components for which the RMSE is within one standard error of the absolute minimum. The function also allows plotting the result by specifying <code>plot = TRUE</code>.</p>
+<p>The <code>pls</code> package also has a function <code>selectNcomp</code> to select the optimal number of components.
+Here we use the “one-sigma” method, which returns the lowest number of components
+for which the RMSE is within one standard error of the absolute minimum.
+The function also allows plotting the result by specifying <code>plot = TRUE</code>.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>optimal_ncomp &lt;-<span class="st"> </span><span class="kw">selectNcomp</span>(pcr_cv, <span class="dt">method =</span> <span class="st">&quot;onesigma&quot;</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/pcr-optimal-ncomp-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>This outcome shows us that the optimal number of components for our model is 13.</p>
+<p>This outcome shows us that the optimal number of components for our model is
+13.</p>
 </div>
 <div id="validation-on-test-data" class="section level2">
 <h2><span class="header-section-number">8.2</span> Validation on test data</h2>
-<p>We now use our optimal number of components to train the final PCR model. This model is then validated on by generating predictions for the test data and calculating the MSE.</p>
-<p>We define a custom function to calculate the MSE. Note that there is also an <code>MSEP</code> function in the <code>pls</code> package which does the prediction and MSE calculation in one go. But our own function will come in handy later for lasso and ridge regression.</p>
+<p>We now use our optimal number of components to train the final PCR model.
+This model is then validated on by generating predictions for the test data and
+calculating the MSE.</p>
+<p>We define a custom function to calculate the MSE.
+Note that there is also an <code>MSEP</code> function in the <code>pls</code> package which does the
+prediction and MSE calculation in one go.
+But our own function will come in handy later for lasso and ridge regression.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Mean Squared Error</span></span>
 <span id="cb19-2"><a href="#cb19-2"></a><span class="co">## obs: observations; pred: predictions</span></span>
 <span id="cb19-3"><a href="#cb19-3"></a>MSE &lt;-<span class="st"> </span><span class="cf">function</span>(obs, pred){</span>
@@ -950,8 +1107,10 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb20-2"><a href="#cb20-2"></a>pcr_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(final_pcr_model, <span class="dt">newdata =</span> test_data, <span class="dt">ncomp =</span> optimal_ncomp)</span>
 <span id="cb20-3"><a href="#cb20-3"></a>(pcr_mse &lt;-<span class="st"> </span><span class="kw">MSE</span>(testY, pcr_preds))</span>
 <span id="cb20-4"><a href="#cb20-4"></a><span class="co">#&gt; [1] 0.3655052</span></span></code></pre></div>
-<p>This value on its own does not tell us very much, but we can use it to compare our PCR model with other types of models later.</p>
-<p>Finally, we plot the predicted values for our response variable (the TRIM32 gene expression) against the actual observed values from our test set.</p>
+<p>This value on its own does not tell us very much, but we can use it to compare our
+PCR model with other types of models later.</p>
+<p>Finally, we plot the predicted values for our response variable (the TRIM32 gene expression)
+against the actual observed values from our test set.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">predplot</span>(final_pcr_model, <span class="dt">newdata =</span> test_data, <span class="dt">line =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/pcr-predplot-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
@@ -960,7 +1119,9 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <h1><span class="header-section-number">9</span> Exercise: evaluate and compare prediction models</h1>
 <div id="perform-a-lasso-regression-with-20-fold-cross-validation-on-the-training-data-trainx-trainy.-plot-the-results-and-select-the-optimal-lambda-parameter.-fit-a-final-model-with-the-selected-lambda-and-validate-it-on-the-test-data." class="section level4 unnumbered">
 <h4>1. Perform a lasso regression with 20-fold Cross Validation on the training data (<code>trainX</code>, <code>trainY</code>). Plot the results and select the optimal <span class="math inline">\(\lambda\)</span> parameter. Fit a final model with the selected <span class="math inline">\(\lambda\)</span> and validate it on the test data.</h4>
-<p><em>Hint</em>: use the <code>cv.glmnet()</code> function, for 20 folds CV, set <code>nfolds = 20</code> and to use the MSE metric set <code>type.measure = "mse"</code>. Go to <code>?cv.glmnet</code> for details.</p>
+<p><em>Hint</em>: use the <code>cv.glmnet()</code> function, for 20 folds CV, set <code>nfolds = 20</code> and
+to use the MSE metric set <code>type.measure = "mse"</code>.
+Go to <code>?cv.glmnet</code> for details.</p>
 <details>
 <p><summary>Solution</summary></p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
@@ -977,19 +1138,25 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb22-12"><a href="#cb22-12"></a><span class="co">#&gt; 1se 0.16668    38  0.4353 0.1646       9</span></span>
 <span id="cb22-13"><a href="#cb22-13"></a><span class="kw">plot</span>(lasso_cv)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/lasso-cv-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>Note that we can extract the fitted lasso regression object from the CV result and make the coefficient profile plot as before.</p>
+<p>Note that we can extract the fitted lasso regression object from the CV result
+and make the coefficient profile plot as before.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">plot</span>(lasso_cv<span class="op">$</span>glmnet.fit, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/lasso-cv-coefficient-profile-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>We can look for the <span class="math inline">\(\lambda\)</span> values that give the best result. Here you have two possibilities :</p>
+<p>We can look for the <span class="math inline">\(\lambda\)</span> values that give the best result.
+Here you have two possibilities :</p>
 <ol style="list-style-type: decimal">
 <li><code>lambda.min</code>: the value of <span class="math inline">\(\lambda\)</span> that gives the best result for the crossvalidation.</li>
-<li><code>lambda.1se</code>: the largest value of <span class="math inline">\(\lambda\)</span> such that the MSE is within 1 standard error of the best result from the cross validation.</li>
+<li><code>lambda.1se</code>: the largest value of <span class="math inline">\(\lambda\)</span> such that the MSE is within 1 standard error
+of the best result from the cross validation.</li>
 </ol>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>lasso_cv<span class="op">$</span>lambda.min</span>
 <span id="cb24-2"><a href="#cb24-2"></a><span class="co">#&gt; [1] 0.07558811</span></span>
 <span id="cb24-3"><a href="#cb24-3"></a>lasso_cv<span class="op">$</span>lambda<span class="fl">.1</span>se</span>
 <span id="cb24-4"><a href="#cb24-4"></a><span class="co">#&gt; [1] 0.1666817</span></span></code></pre></div>
-<p>We will (rather arbitrarily) use <code>lambda.min</code> here to fit the final model and generate predictions on the test data. Note that we don’t actually have to redo the fitting, we can just use our existing <code>lasso_cv</code> object, which already contains the fitted models for a range of <code>lambda</code> values. We can use the <code>predict</code> function and specify the <code>s</code> argument (which confusingly sets <code>lambda</code> in this case) to make predictions on the test data.</p>
+<p>We will (rather arbitrarily) use <code>lambda.min</code> here to fit the final model and generate predictions on the test data.
+Note that we don’t actually have to redo the fitting, we can just use our existing
+<code>lasso_cv</code> object, which already contains the fitted models for a range of <code>lambda</code> values.
+We can use the <code>predict</code> function and specify the <code>s</code> argument (which confusingly sets <code>lambda</code> in this case) to make predictions on the test data.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>lasso_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso_cv, <span class="dt">s =</span> lasso_cv<span class="op">$</span>lambda.min, <span class="dt">newx =</span> testX)</span>
 <span id="cb25-2"><a href="#cb25-2"></a><span class="co">## Calculate MSE</span></span>
 <span id="cb25-3"><a href="#cb25-3"></a>(lasso_mse &lt;-<span class="st"> </span><span class="kw">MSE</span>(testY, lasso_preds))</span>
@@ -1014,19 +1181,25 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <span id="cb26-12"><a href="#cb26-12"></a><span class="co">#&gt; 1se  43.25    67  0.5820 0.2131     200</span></span>
 <span id="cb26-13"><a href="#cb26-13"></a><span class="kw">plot</span>(ridge_cv)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/ridge-cv-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>Note that we can extract the fitted ridge regression object from the CV result and make the coefficient profile plot as before.</p>
+<p>Note that we can extract the fitted ridge regression object from the CV result
+and make the coefficient profile plot as before.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">plot</span>(ridge_cv<span class="op">$</span>glmnet.fit, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/ridge-cv-coefficient-profile-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>We can look for the <span class="math inline">\(\lambda\)</span> values that give the best result. Here you have two possibilities :</p>
+<p>We can look for the <span class="math inline">\(\lambda\)</span> values that give the best result.
+Here you have two possibilities :</p>
 <ol style="list-style-type: decimal">
 <li><code>lambda.min</code>: the value of <span class="math inline">\(\lambda\)</span> that gives the best result for the crossvalidation.</li>
-<li><code>lambda.1se</code>: the largest value of <span class="math inline">\(\lambda\)</span> such that the MSE is within 1 standard error of the best result from the cross validation.</li>
+<li><code>lambda.1se</code>: the largest value of <span class="math inline">\(\lambda\)</span> such that the MSE is within 1 standard error
+of the best result from the cross validation.</li>
 </ol>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>ridge_cv<span class="op">$</span>lambda.min</span>
 <span id="cb28-2"><a href="#cb28-2"></a><span class="co">#&gt; [1] 9.318855</span></span>
 <span id="cb28-3"><a href="#cb28-3"></a>ridge_cv<span class="op">$</span>lambda<span class="fl">.1</span>se</span>
 <span id="cb28-4"><a href="#cb28-4"></a><span class="co">#&gt; [1] 43.25429</span></span></code></pre></div>
-<p>We will (rather arbitrarily) use <code>lambda.min</code> here to fit the final model and generate predictions on the test data. Note that we don’t actually have to redo the fitting, we can just use our existing <code>ridge_cv</code> object, which already contains the fitted models for a range of <code>lambda</code> values. We can use the <code>predict</code> function and specify the <code>s</code> argument (which confusingly sets <code>lambda</code> in this case) to make predictions on the test data.</p>
+<p>We will (rather arbitrarily) use <code>lambda.min</code> here to fit the final model and generate predictions on the test data.
+Note that we don’t actually have to redo the fitting, we can just use our existing
+<code>ridge_cv</code> object, which already contains the fitted models for a range of <code>lambda</code> values.
+We can use the <code>predict</code> function and specify the <code>s</code> argument (which confusingly sets <code>lambda</code> in this case) to make predictions on the test data.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>ridge_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(ridge_cv, <span class="dt">s =</span> ridge_cv<span class="op">$</span>lambda.min, <span class="dt">newx =</span> testX)</span>
 <span id="cb29-2"><a href="#cb29-2"></a><span class="co">## Calculate MSE</span></span>
 <span id="cb29-3"><a href="#cb29-3"></a>(ridge_mse &lt;-<span class="st"> </span><span class="kw">MSE</span>(testY, ridge_preds))</span>
@@ -1067,7 +1240,7 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>#&gt; [1] &quot;2022-01-31 09:00:56 UTC&quot;
+<pre><code>#&gt; [1] &quot;2022-01-31 19:44:26 UTC&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.2 (2021-11-01)
@@ -1084,6 +1257,7 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
 #&gt;  ! package         * version date (UTC) lib source
 #&gt;  P BiocManager       1.30.16 2021-06-15 [?] CRAN (R 4.1.2)
+#&gt;  P bookdown          0.24    2021-09-02 [?] CRAN (R 4.1.2)
 #&gt;    boot            * 1.3-28  2021-05-03 [2] CRAN (R 4.1.2)
 #&gt;  P bslib             0.3.1   2021-10-06 [?] CRAN (R 4.1.2)
 #&gt;  P cli               3.1.1   2022-01-20 [?] CRAN (R 4.1.2)
@@ -1135,7 +1309,12 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Note: <code>log()</code> in R is the <strong>natural logarithm</strong> by default (base <span class="math inline">\(e\)</span>) and we will also use this notation in the text (like the x-axis title on the plot above). This might be different from the notation that you’re used to (<span class="math inline">\(\ln()\)</span>). To take logarithms with a different base in R you can specify the <code>base =</code> argument of <code>log</code> or use the shorthand functions <code>log10(x)</code> and <code>log2(x)</code> for base 10 and 2, respectively<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>Note: <code>log()</code> in R is the <strong>natural logarithm</strong> by default (base <span class="math inline">\(e\)</span>) and we
+will also use this notation in the text (like the x-axis title on the plot above).
+This might be different from the notation that you’re used to (<span class="math inline">\(\ln()\)</span>).
+To take logarithms with a different base in R you can specify the <code>base =</code>
+argument of <code>log</code> or use the shorthand functions <code>log10(x)</code> and <code>log2(x)</code> for
+base 10 and 2, respectively<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
