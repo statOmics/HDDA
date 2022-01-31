@@ -3,6 +3,11 @@ title: "High Dimensional Data Analysis 2021-2022"
 author: "Lieven Clement"
 date: "statOmics, Ghent University (https://statomics.github.io)"
 
+output:
+  bookdown::pdf_document2:
+    toc: true
+    number_sections: true
+    latex_engine: xelatex
 ---
 
 # Organisation

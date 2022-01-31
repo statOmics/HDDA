@@ -2,6 +2,12 @@
 title: "1. Introduction to High Dimensional Data Analysis"
 author: "Lieven Clement"
 date: "statOmics, Ghent University (https://statomics.github.io)"
+
+output:
+  bookdown::pdf_document2:
+    toc: true
+    number_sections: true
+    latex_engine: xelatex
 ---
 
 # Introduction
@@ -166,7 +172,7 @@ Other examples
 
 - Linear regression is a very important statistical tool to study the association between variables and to build prediction models.
 
-## Data
+## Toy-Data
 
 Consider the following toy-dataset with 3 observation (X,Y):
 
@@ -187,9 +193,9 @@ data
 Y=f(\mathbf{x}) +\epsilon=\beta_0+\sum\limits_{j=1}^p x_j\beta_j + \epsilon
 \]
 with i.i.d. $\epsilon\sim N(0,\sigma^2)$
-- We will often work on mean centered variables: $Y-\bar{Y}$ and $X - \bar{X}$, then the intercept is dropped from the model:
+- We will often work on mean centered variables: $Y_c = Y-\bar{Y}$ and $X_c = X - \bar{X}$, then the intercept is dropped from the model:
 \[
-Y=f(\mathbf{x}) +\epsilon=\sum\limits_{j=1}^p x_j\beta_j + \epsilon
+Y_c=f(\mathbf{x}_c) +\epsilon=\sum\limits_{j=1}^p x_{cj}\beta_j + \epsilon
 \]
 
 ### Scalar model for the toy dataset
@@ -202,9 +208,9 @@ If we write the model for each observation:
 
 $$
 \begin{array} {lcl}
-1 &=& \beta_0+\beta_1 1 + \epsilon_1 \\
-2 &=& \beta_0+\beta_1 2 + \epsilon_2 \\
-2 &=& \beta_0+\beta_1 2 + \epsilon_3 \\
+1 &=& \beta_0+\beta_1 1  + \epsilon_1 \\
+2 &=& \beta_0 + \beta_1 2 + \epsilon_2 \\
+2 &=& \beta_0+\beta_1 3+ \epsilon_3 \\
 \end{array}
 $$
 
@@ -222,7 +228,7 @@ $\mathbf{X}=\left[\begin{array}{cccc} 1&x_{11}&\ldots&x_{1p}\\
 $\boldsymbol{\beta}=\left[\begin{array}{c}\beta_0\\ \vdots\\ \beta_p\end{array}\right]$ and
 $\mathbf{\epsilon}=\left[\begin{array}{c} \epsilon_1 \\ \vdots \\ \epsilon_n\end{array}\right]$
 
-Note, that upon centering of $\mathbf{X}$ and $\mathbf{Y}$ the 1 is dropped from each $\mathbf{x}_i$ and thus the column of 1 is dropped in $\mathbf{X}$
+Note, that upon centering of $\mathbf{X}$ and $\mathbf{Y}$ the 1 is dropped from each $\mathbf{x}_i$ and thus the column of 1 is dropped in $\mathbf{X}_c$
 
 ### Matrix form for toy dataset 
 
@@ -305,11 +311,20 @@ and
  \beta_1 = E[Y_c\mid x_c+1] - E[Y_c\mid x_c] .
 \]
 
-Note, that the estimator for $\beta_1$ will be exactly same when estimated based on the models with our without centering. 
+Note, that the estimator for $\beta_1$ will be exactly same when estimated based on the models with/or without centering. 
 
-Hence, the $\beta_1$ parameter has an interpretation as the mean increase of the outcome as the regressor increases with one unit. The parameter does not say very about individual outcomes. It is the residual variance $\sigma^2$ that determines how much individual outcomes vary about the mean outcome.
+- The parameter  $\beta_1$ has an interpretation as the mean increase of the outcome as the regressor increases with one unit. 
+
+- The parameter  $\beta_1$  does not say much about individual outcomes. The residual variance $\sigma^2$ determines how much individual outcomes vary about the mean outcome.
 
 The $\beta$ parameters are used to measure association, but a $\beta \neq 0$ does not necessarily mean that the model will give good predictions.
+
+$$
+\hat Y = \mathbf{x}^T \hat \beta
+$$
+- In Chapter 3 will we will discuss the prediction problem for high dimensional data
+
+Model fit and predictions based on the toy dataset 
 
 ```{r}
 lm1 <- lm(y~x,data)
@@ -328,27 +343,38 @@ data %>%
 
 ---
 
-- In a later chapter we will discuss the problem of large scale hypothesis testing: testing many hypotheses in a single study (ten to hundred thousands of hypotheses).
 
-- A statistical test is constructed to control the type I error rate at the significance level. However, when many hypotheses are to be tested in a single study, the probability to find false associations is no longer controlled if p-values are compared to the significance level.
+- In a Chapter 6 we will discuss the problem of large scale hypothesis testing: testing many hypotheses in a single study (ten to hundred thousands of hypotheses).
 
-- We will later introduce the concept of false discovery rates to overcome the problem.
+    - A statistical test is constructed to control the type I error rate at the significance level $\alpha$ to assess the null hypothesis that there is no association between a predictor and the outcome vs the alternative hypothesis that there is an association between a predictor and the outcome. 
+    
+    $$
+    H_0: \beta_1 = 0 \text{ vs }H_1:\beta_1 \neq 0.
+    $$ 
+    
+    - However, when many hypotheses are to be tested in a single study, the probability to find false associations is no longer controlled if p-values are compared to the significance level $\alpha$.
+    
+    - We will later introduce the concept of false discovery rates to overcome the problem.
 
 ## Least Squares (LS)
 
 - Minimize the residual sum of squares
 \begin{eqnarray*}
-RSS(\boldsymbol{\beta})&=&\sum\limits_{i=1}^n e^2_i\\
+RSS(\boldsymbol{\beta})&=&\sum\limits_{i=1}^n e^2_i\\\\
 &=&\sum\limits_{i=1}^n \left(y_i-\beta_0-\sum\limits_{j=1}^p x_{ij}\beta_j\right)^2
 \end{eqnarray*}
 
 - or in matrix notation
 \begin{eqnarray*}
-RSS(\boldsymbol{\beta})&=&(\mathbf{Y}-\mathbf{X\beta})^T(\mathbf{Y}-\mathbf{X\beta})\\
-&=&\Vert \mathbf{Y}-\mathbf{X\beta}\Vert^2_2
+RSS(\boldsymbol{\beta})&=&\mathbf{e}^T\mathbf{e}\\\\
+&=& \left[\begin{array}{ccc} e_1 &\ldots& e_n \end{array}\right]\left[\begin{array}{c}e_1\\\vdots\\e_n\end{array}\right]
+&=& e_1^2 + e_2^2 + \ldots + e_n^2\\\\
+&=&(\mathbf{Y}-\mathbf{X\beta})^T(\mathbf{Y}-\mathbf{X\beta})\\\\
+&=&\Vert \mathbf{Y}-\mathbf{X\beta}\Vert^2_2\\
 \end{eqnarray*}
 with the $L_2$-norm of a $p$-dim. vector $v$ $\Vert \mathbf{v} \Vert_2=\sqrt{v_1^2+\ldots+v_p^2}$
-$\rightarrow$ $\hat{\boldsymbol{\beta}}=\text{argmin}_\beta \Vert \mathbf{Y}-\mathbf{X\beta}\Vert^2$
+$\rightarrow$ $\hat{\boldsymbol{\beta}}=\text{argmin}_\beta \Vert \mathbf{Y}-\mathbf{X\beta}\Vert^2_2$
+
 
 ---
 
@@ -369,10 +395,67 @@ $$
 E[\hat{\boldsymbol{\beta}}]=\boldsymbol{\beta}
 $$
 
+
 ---
 
 
 ### Projection
+
+#### Intermezzo: Projection of vector on X  and Y axis
+
+$$
+\mathbf{e}=\left[\begin{array}{c} e_1\\e_2\end{array}\right], \mathbf{u}_1 =  \left[\begin{array}{c} 1\\0\end{array}\right], \mathbf{u}_2 =  \left[\begin{array}{c} 0\\1\end{array}\right]
+$$
+
+
+```{r echo=FALSE}
+plotdata <- data.frame(e1=3,e2=2)
+plotdata %>% ggplot(aes(x=e1,y=e2)) +
+  geom_point() + 
+  geom_segment(aes(x = 3, y = 2, xend = 3, yend = 0),color="orange",linetype=2,size=2) +
+geom_segment(aes(x = 3, y = 2, xend = 0, yend = 2),color="orange",linetype=2,size=2) +
+ geom_segment(aes(x = 0, y = 0, xend = 3, yend = 2),
+                  arrow = arrow(length = unit(0.5, "cm")),color="red",size=2) +
+ geom_segment(aes(x = 0, y = 0, xend = 3, yend = 0),
+                  arrow = arrow(length = unit(0.5, "cm")),color="orange",size=2) +
+ geom_segment(aes(x = 0, y = 0, xend = 0, yend = 2),
+                  arrow = arrow(length = unit(0.5, "cm")),color="orange",size=2)  +
+ geom_segment(aes(x = 0, y = 0, xend = 0, yend = 1),
+                  arrow = arrow(length = unit(0.5, "cm")),size=2) +
+geom_segment(aes(x = 0, y = 0, xend = 1, yend = 0),
+                  arrow = arrow(length = unit(0.5, "cm")),size=2) +
+ geom_text(aes(x=3.05,y=2.2,label="e=(e1,e2)"),color="red",size = 7,hjust="left") + 
+ geom_text(aes(x=3.05,y=0,label="(e1,0)"),color="orange",size = 7,hjust="left",vjust="top") +
+ geom_text(aes(x=0,y=2.2,label="(0,e2)"),color="orange",size = 7,hjust="left") +
+ geom_text(aes(x=0.05,y=1.2,label="u2=(0,1)"),size = 7,hjust="left") + 
+   geom_text(aes(x=1.05,y=0.2,label="u1=(1,0)"),size = 7,hjust="left")  +
+   coord_fixed() +
+  xlim(-.5,4) +
+  ylim(-.5,2.5)
+```
+
+
+
+1. Projection of error on x-axis 
+$$ 
+\mathbf{u}_1^T \mathbf{e} = \left[\begin{array}{cc} 1&0\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right] = 1\times e_1 + 0 \times e_2 = e_1
+$$
+2. Projection of error on y-axis 
+$$ 
+\mathbf{u}_2^T \mathbf{e} = \left[\begin{array}{cc} 1&0\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right] = 0\times e_1 + 1 \times e_2 = e_2
+$$
+3. Projection of error on itself 
+
+$$
+\mathbf{e}^T \mathbf{e} =\left[\begin{array}{cc} e_1&e_2\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right]=e_1^2+e_2^2
+$$
+
+Pythagorean theorem
+ $\rightarrow \Vert e \Vert^2_2=e_1^2+e_2^2$ 
+
+---
+
+#### Interpretation of least squares as a projection
 
 Fitted values:
 
@@ -583,7 +666,25 @@ $\mathbf{U}^t\mathbf{Y}$ is the projection of Y on this new orthonormal basis
 eigenXtX <- eigen(XtX)
 XtXinvSqrt <- eigenXtX$vectors %*%diag(1/eigenXtX$values^.5)%*%t(eigenXtX$vectors)
 U <- X %*% XtXinvSqrt
+```
 
+
+- $\mathbf{U}$ orthonormal basis
+
+```{r}
+U
+t(U)%*%U
+```
+
+- $\mathbf{UU}^T$ equals projection matrix 
+
+```{r}
+U%*%t(U)
+H
+```
+
+
+```{r}
 p3 <- p1 %>%
   add_trace(
     x = c(0,U[1,1]),
@@ -675,9 +776,9 @@ p6 <- p5 %>%
     y = c(Y[2],Yhat[2]),
     z = c(Y[3],Yhat[3]),
     mode = "lines",
-    line = list(width = 5, color = "orange", dash="dash"),
+    line = list(width = 5, color = "maroon2"),
     type="scatter3d",
-    name = "Y -> U") %>%
+    name = "e") %>%
   add_trace(
     x = c(U[1,1]*(U[,1]%*%Y),Yhat[1]),
     y = c(U[2,1]*(U[,1]%*%Y),Yhat[2]),
@@ -882,12 +983,17 @@ p8 <- p7 %>%
 p8
 ```
 
-- The column space now spans the entire  $\mathbb{R}^3$!
-- With the intercept and the two predictors we can thus fit every dataset that only has 3 observations for the predictors and the response.
-- So the model can no longer be used to generalise the patterns seen in the data towards the population (new observations).
+- The column space now spans the entire  $\mathbb{R}^3$!  
+
+- With the intercept and the two predictors we can thus fit every dataset that only has 3 observations for the predictors and the response.  
+
+- So the model can no longer be used to generalise the patterns seen in the data towards the population (new observations).  
+
 - Problem of overfitting!!!
 
 - If $p >> n$ then the problem gets even worse! Then there is even no longer a unique solution to the least squares problem...
+
+- Indeed, then we have more vectors/dimensions/columns in X  than datapoints! 
 
 
 ## Variance Estimator?
@@ -895,7 +1001,7 @@ p8
 \begin{array}{ccl}
 \hat{\boldsymbol{\Sigma}}_{\hat{\boldsymbol{\beta}}}
 &=&\text{var}\left[(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y}\right]\\\\
-&=&(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\text{var}\left[\mathbf{Y}\right]\mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1}\\\\
+&=&(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\text{var}\left[\mathbf{Y}\right]\mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1} \text{(*)}\\\\
 &=&(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T(\mathbf{I}\sigma^2)\mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1}
 \\\\
 &=&(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{I}\quad\mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1}\sigma^2\\\\
@@ -904,6 +1010,8 @@ p8
 &=&(\mathbf{X}^T\mathbf{X})^{-1}\sigma^2
 \end{array}
 \]
+
+(*) Under assumption that all observations $\mathbf{Y}$ are independent and identically distributed. 
 
 The fact that $\hat{\boldsymbol{\beta}}$ is unbiased and has a variance of $(\mathbf{X}^T\mathbf{X})^{-1}\sigma^2$ will be important when assessing association!
 

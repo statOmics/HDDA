@@ -1,7 +1,7 @@
 ---
 title: "About This Website"
 output:
-    html_document:
+    bookdown::html_document2:
         code_download: false
         toc: false
         number_sections: false

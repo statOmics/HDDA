@@ -43,7 +43,7 @@ navbar:
     - text: "statOmics"
       href: http://statomics.github.io/
 output:
-  html_document:
+  bookdown::html_document2:
       code_download: true
       df_print: paged
       theme: flatly
