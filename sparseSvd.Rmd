@@ -7,6 +7,7 @@ output:
     toc: true
     number_sections: true
     latex_engine: xelatex
+always_allow_html: true
 ---
 
 ```{r echo = FALSE, warning = FALSE}

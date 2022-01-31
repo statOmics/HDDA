@@ -8,6 +8,7 @@ output:
     toc: true
     number_sections: true
     latex_engine: xelatex
+always_allow_html: true
 ---
 
 # Introduction
@@ -367,7 +368,7 @@ RSS(\boldsymbol{\beta})&=&\sum\limits_{i=1}^n e^2_i\\\\
 - or in matrix notation
 \begin{eqnarray*}
 RSS(\boldsymbol{\beta})&=&\mathbf{e}^T\mathbf{e}\\\\
-&=& \left[\begin{array}{ccc} e_1 &\ldots& e_n \end{array}\right]\left[\begin{array}{c}e_1\\\vdots\\e_n\end{array}\right]
+&=& \left[\begin{array}{ccc} e_1 &\ldots& e_n \end{array}\right]\left[\begin{array}{c}e_1\\\vdots\\e_n\end{array}\right]\\
 &=& e_1^2 + e_2^2 + \ldots + e_n^2\\\\
 &=&(\mathbf{Y}-\mathbf{X\beta})^T(\mathbf{Y}-\mathbf{X\beta})\\\\
 &=&\Vert \mathbf{Y}-\mathbf{X\beta}\Vert^2_2\\
