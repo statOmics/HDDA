@@ -776,32 +776,33 @@ div.tocify {
 <span id="cb18-12"><a href="#cb18-12"></a>  <span class="dt">stop =</span> <span class="dv">-50</span>,</span>
 <span id="cb18-13"><a href="#cb18-13"></a>  <span class="dt">maxIte =</span> <span class="dv">25</span>,</span>
 <span id="cb18-14"><a href="#cb18-14"></a>  <span class="dt">trace =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>## ite:  1  ridge cost:  127.6999  |b|_1:  5.914803 
-## ite:  2  ridge cost:  120.3384  |b|_1:  5.812499 
-## ite:  3  ridge cost:  106.2033  |b|_1:  6.091842 
-## ite:  4  ridge cost:  98.70947  |b|_1:  5.563708 
-## ite:  5  ridge cost:  92.16067  |b|_1:  5.694413 
-## ite:  6  ridge cost:  91.63385  |b|_1:  5.436716 
-## ite:  7  ridge cost:  90.28232  |b|_1:  5.536848 
-## ite:  8  ridge cost:  88.68136  |b|_1:  5.764321 
-## ite:  9  ridge cost:  88.44421  |b|_1:  5.786822 
-## ite:  10  ridge cost:  88.25723  |b|_1:  5.814532 
-## ite:  11  ridge cost:  88.01314  |b|_1:  5.858236 
-## ite:  12  ridge cost:  87.89469  |b|_1:  5.880033 
-## ite:  13  ridge cost:  87.83711  |b|_1:  5.890775 
-## ite:  14  ridge cost:  87.80893  |b|_1:  5.896069 
-## ite:  15  ridge cost:  87.79509  |b|_1:  5.898679 
-## ite:  16  ridge cost:  87.78828  |b|_1:  5.899965 
-## ite:  17  ridge cost:  87.78492  |b|_1:  5.900599 
-## ite:  18  ridge cost:  87.78327  |b|_1:  5.900911 
-## ite:  19  ridge cost:  87.78245  |b|_1:  5.901065 
-## ite:  20  ridge cost:  87.78205  |b|_1:  5.901141 
-## ite:  21  ridge cost:  87.78186  |b|_1:  5.901179 
-## ite:  22  ridge cost:  87.78176  |b|_1:  5.901197 
-## ite:  23  ridge cost:  87.78171  |b|_1:  5.901206 
-## ite:  1  ridge cost:  134.7777  |b|_1:  5.379259 
-## ite:  2  ridge cost:  134.7777  |b|_1:  5.379259 
-## final update, total ridge cost:  222.5595  |b|_1:  11.28047</code></pre>
+<pre><code>## ite:  1  ridge cost:  133.6574  |b|_1:  5.498074 
+## ite:  2  ridge cost:  131.974  |b|_1:  5.595784 
+## ite:  3  ridge cost:  131.1367  |b|_1:  5.090927 
+## ite:  4  ridge cost:  117.862  |b|_1:  5.793933 
+## ite:  5  ridge cost:  103.7448  |b|_1:  5.804762 
+## ite:  6  ridge cost:  92.73488  |b|_1:  5.947844 
+## ite:  7  ridge cost:  90.60468  |b|_1:  5.66404 
+## ite:  8  ridge cost:  89.2763  |b|_1:  5.709699 
+## ite:  9  ridge cost:  88.02658  |b|_1:  5.880645 
+## ite:  10  ridge cost:  87.78102  |b|_1:  5.908417 
+## ite:  11  ridge cost:  88.20428  |b|_1:  5.823557 
+## ite:  12  ridge cost:  87.65333  |b|_1:  5.926051 
+## ite:  13  ridge cost:  87.89005  |b|_1:  5.880872 
+## ite:  14  ridge cost:  87.82644  |b|_1:  5.892785 
+## ite:  15  ridge cost:  87.78259  |b|_1:  5.90105 
+## ite:  16  ridge cost:  87.76793  |b|_1:  5.903816 
+## ite:  17  ridge cost:  87.77489  |b|_1:  5.902497 
+## ite:  18  ridge cost:  87.77832  |b|_1:  5.901847 
+## ite:  19  ridge cost:  87.78002  |b|_1:  5.901527 
+## ite:  20  ridge cost:  87.78085  |b|_1:  5.901369 
+## ite:  21  ridge cost:  87.78126  |b|_1:  5.901291 
+## ite:  22  ridge cost:  87.78147  |b|_1:  5.901253 
+## ite:  23  ridge cost:  87.78157  |b|_1:  5.901234 
+## ite:  24  ridge cost:  87.78162  |b|_1:  5.901224 
+## ite:  1  ridge cost:  134.7777  |b|_1:  5.379261 
+## ite:  2  ridge cost:  134.7777  |b|_1:  5.379261 
+## final update, total ridge cost:  222.5593  |b|_1:  11.28049</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>Vsda &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow=</span><span class="kw">ncol</span>(X2), <span class="dt">ncol=</span><span class="dv">2</span>)</span>
 <span id="cb20-2"><a href="#cb20-2"></a>Vsda[breast.slda<span class="op">$</span>varIndex,] &lt;-<span class="st"> </span>breast.slda<span class="op">$</span>beta</span>
 <span id="cb20-3"><a href="#cb20-3"></a><span class="kw">colnames</span>(Vsda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Vsda))</span>
@@ -897,7 +898,7 @@ div.tocify {
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>## [1] &quot;2022-01-29 17:20:08 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2022-01-31 09:01:26 UTC&quot;</code></pre>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
 ##  version  R version 4.1.2 (2021-11-01)
@@ -908,7 +909,7 @@ div.tocify {
 ##  collate  C.UTF-8
 ##  ctype    C.UTF-8
 ##  tz       UTC
-##  date     2022-01-29
+##  date     2022-01-31
 ##  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
