@@ -3,10 +3,11 @@ title: "3. Prediction with High Dimensional Predictors"
 author: "Lieven Clement"
 date: "statOmics, Ghent University (https://statomics.github.io)"
 output:
-  pdf_document:
+  bookdown::pdf_document2:
     toc: true
     number_sections: true
     latex_engine: xelatex
+always_allow_html: true
 ---
 
 ```{r echo=FALSE, message= FALSE}

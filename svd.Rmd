@@ -3,7 +3,7 @@ title: "2. Singular Value Decomposition"
 author: "Lieven Clement"
 date: "statOmics, Ghent University (https://statomics.github.io)"
 output:
-  pdf_document:
+  bookdown::pdf_document2:
     toc: true
     number_sections: true
     latex_engine: xelatex
@@ -1602,7 +1602,7 @@ Note that,
 - Note that with $k<r$ there is no unique transformation to transform $\mathbf{Z}_k$ back to $\mathbf{X}$. On the previous slide we only established the transformation $\mathbf{Z}_k \mathbf{V}_k^T=\mathbf{X}_k$. Indeed, starting from $\mathbf{X}\mathbf{V}_k = \mathbf{Z}_k$, and right-multiplying with $\mathbf{V}_k^T$ does not give the backtransformation, because $\mathbf{V}_k\mathbf{V}_k^T$ is not the identity matrix.
 
 
-# Interpretation of SVD in terms of correlation matrices
+# Interpretation of SVD in terms of  variance covariance matrices {#SVDcov}
 
 For a matrix $\mathbf X$ the sample variance covariance matrix estimator is $p\times p$ matrix
 
@@ -2629,7 +2629,7 @@ lie on an ellipse with center $\boldsymbol{\mu}$.
 
 These ellipses are known as **constant density ellipses**.
 
-### iris example
+### Iris example
 
 ```{r}
 pIris +
@@ -2640,19 +2640,20 @@ pIris +
 
 ---
 
-Now plug in the SVD of $\boldsymbol{\Sigma}=\mathbf{VDV}^T$,
+Now plug in the SVD of $\boldsymbol{\Sigma}=\mathbf{V}\boldsymbol{\Delta}^2\mathbf{V}^T$, see section \@ref(SVDcov).
+
 \begin{eqnarray*}
    (\mathbf{x}-\boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x}-\boldsymbol{\mu}) &=& c^2\\
-   (\mathbf{x}-\boldsymbol{\mu})^T \mathbf{VD}^{-1}\mathbf{V}^T (\mathbf{x}-\boldsymbol{\mu}) &=& c^2
+   (\mathbf{x}-\boldsymbol{\mu})^T \mathbf{V}\boldsymbol{\Delta}^{-2}\mathbf{V}^T (\mathbf{x}-\boldsymbol{\mu}) &=& c^2
 \end{eqnarray*}
 
 Note that $\mathbf{x}-\boldsymbol{\mu}$ is the centered $\mathbf{x}$. Without loss of generality, take $\boldsymbol{\mu}=\mathbf{0}$.
 Hence,
 \begin{eqnarray*}
-   \mathbf{x}^T \mathbf{VD}^{-1}\mathbf{V}^T \mathbf{x} &=& c^2    \\
-   \left(\mathbf{x}^T\mathbf{V}\right) \mathbf{D}^{-1} \left(\mathbf{x}^T\mathbf{V}\right)^T &=& c^2 \\
-   \sum_{j=1}^p (\mathbf{x}^T\mathbf{v}_j)^2  / \delta_j &=& c^2\\
-   \sum_{j=1}^p (z_j)^2  / (c^2\delta_j) &=& 1.
+   \mathbf{x}^T \mathbf{V}\boldsymbol{\Delta}^{-2}\mathbf{V}^T \mathbf{x} &=& c^2    \\
+   \left(\mathbf{x}^T\mathbf{V}\right) \boldsymbol{\Delta}^{-2} \left(\mathbf{x}^T\mathbf{V}\right)^T &=& c^2 \\
+   \sum_{j=1}^p (\mathbf{x}^T\mathbf{v}_j)^2  / \delta_j^2 &=& c^2\\
+   \sum_{j=1}^p (z_j)^2  / (c^2\delta_j^2) &=& 1.
 \end{eqnarray*}
 The last equation is the equation of an ellipse with axes parallel to the basis of $(z_1,\ldots, z_p)$ and with half axis lengths $c\sqrt{\lambda_j}=c\delta_j$ with $\lambda_j$ the $j$th eigenvalue of $\boldsymbol{\Sigma}$.
 

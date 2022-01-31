@@ -1,7 +1,7 @@
 ---
 title: "High Dimensional Data Analysis (HDDA)"
 output:
-    html_document:
+    bookdown::html_document2:
         code_download: false
         toc: true
         number_sections: false
@@ -23,6 +23,7 @@ knitr::include_graphics("./figures/wpGraph.jpeg")
 
 Modern high throughput technologies easily generate data on thousands of variables; e.g. genomics, chemometrics, environmental monitoring, ... Conventional statistical methods are no longer suited for effectively analysing such high-dimensional data. Multivariate statistical methods may be used, but for often the dimensionality of the data set is much larger than the number of (biological) samples. Modern advances in statistical data analyses allow for the appropriate analysis of such data.  Methods for the analysis of high dimensional data rely heavily on multivariate statistical methods. Therefore a large part of the course content is devoted to multivariate methods, but with a focus on high dimensional settings and issues.  Multivariate statistical analysis covers many methods. In this course, only a few are discussed. A selection of techniques is made based on our experience that they are frequently used in industry and research institutes (e.g. principal component analysis, cluster analysis, classification methods). Central in the course are applications from different fields (analytical chemistry, ecology, biotechnology, genomics, …).
 
+  
 ## Prerequisites
 
 The prerequisites for the High Dimensional Data Analysis course are the successful completion of a basic course of statistics that covers topics on data exploration and descriptive statistics, statistical modeling, and inference: linear models, confidence intervals, t-tests, F-tests, anova, chi-squared test.
@@ -39,13 +40,17 @@ A primer to R and Data visualisation  in R can be found in:
 
 See the [installation instructions](./installation-instructions.html).
 
-## Issues
+## Organisation
+
+This course is a 5 credit ECTS course [C003549](https://studiekiezer.ugent.be/studiefiche/en/C003549/2022) in the Master of Statistical Data Analysis at Ghent University: [Organisation of ECTS Course](./organisationC003549.html)
+
+The course is also lectured in an intensive short course format, e.g. [UGAIN / IVPW Academy](https://ugainacademy.ugent.be/programma/postacademische-opleiding/2021-2022-data2122-data-analysis-2021-2022) at Ghent University. 
 
 If you encounter any problems related to the course material (e.g. package installation problems, bugs in the code, typos, ...), please consider [posting an issue on GitHub](https://github.com/statOmics/HDDA/issues).
 
-Questions related to the course contents can be asked by posting on
-[UFora](https://ufora.ugent.be/d2l/home/444226), by contacting the teachers by
-email or during the lectures or practical sessions.
+Questions related to the course contents can be asked by contacting the teachers by
+email or during the lectures or practical sessions, and for the C003549 ECTS course by posting on 
+[UFora](https://ufora.ugent.be/d2l/home/444226).
 
 ---
 
@@ -53,7 +58,6 @@ email or during the lectures or practical sessions.
 
 ### 1. Introduction
 
-  - Slides: [Lecture 1: Intro](./intro0.html)
   - [Introduction](./intro.html) [[PDF](./intro.pdf)]
   - [Introduction to RMarkdown](./Introduction-RMarkdown.html)
   - [Introduction to matrices in R](./Introduction-Matrices-R.html)

@@ -2,11 +2,12 @@
 title: "Introduction to Hierarchical Clustering"
 author: "Lieven Clement"
 output:
-  html_document:
+  bookdown::html_document2:
     df_print: paged
-  pdf_document:
+  bookdown::pdf_document2:
     toc: true
     number_sections: true
+    latex_engine: xelatex
 ---
 
 # Introduction
@@ -187,4 +188,10 @@ plot(X2 ~ X1, toy, xlim = c(1.25,2.75),ylim = c(2,3.5))
 text(toy$X1*1.05,toy$X2,label=toy$label)
 plot(toyAvg, which.plot = 2, main = "Average")
 toy[,1:2] %>% dist
+```
+
+# Model-based clustering
+
+```{r}
+library(mclust)
 ```
