@@ -1650,15 +1650,15 @@ can be solved by
 
 A unique solution exists if A is full rank.
 
-Note, that a singular value decomposition of the square matrix $\mathbf{A}=\mathbf{V}\boldsymbol{\Delta}\mathbf{V}^T$ enables the inverse to be written as
+Note, that a singular value decomposition of the square matrix $\mathbf{A}=\mathbf{U}\boldsymbol{\Delta}\mathbf{V}^T$ enables the inverse to be written as
 
 \[
-\mathbf{A}^{-1} = \mathbf{V}\boldsymbol{\Delta}^{-1}\mathbf{V}^T
+\mathbf{A}^{-1} = \mathbf{V}\boldsymbol{\Delta}^{-1}\mathbf{U}^T
 \]
 
 indeed
 \[
-\mathbf{A}^{-1} \mathbf{A} = \mathbf{V}\boldsymbol{\Delta}^{-1}\mathbf{V}^T\mathbf{V}\boldsymbol{\Delta}\mathbf{V}^T = \mathbf{I}
+\mathbf{A}^{-1} \mathbf{A} = \mathbf{V}\boldsymbol{\Delta}^{-1}\mathbf{U}^T\mathbf{U}\boldsymbol{\Delta}\mathbf{V}^T = \mathbf{I}
 \]
 
 Note, that the SVD generalizes this to systems of under (n<p, fat short matrices)
