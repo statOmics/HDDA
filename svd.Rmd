@@ -1902,7 +1902,8 @@ Zk %>%
   as.data.frame %>%
   ggplot(aes(x=Z1,y=Z2,label=rownames(Zk))) +
   geom_point(size = 3) +
-  geom_text(nudge_x = 50)
+  geom_text(nudge_x = 50) +
+  coord_fixed() 
 ```
 
 - The graph suggests that Wales and England are quite similar in terms of food consumption, and North Ireland seem to have a very different food consumption pattern.
@@ -1974,7 +1975,8 @@ diyBiplot <- ggplot() +
     data=Vk %>% as.data.frame,
     aes(x=Z1*scaleFactor, y=Z2*scaleFactor, label=rownames(Vk)),
     alpha=0.5,
-    size=3)
+    size=3) +
+   coord_fixed() 
 
 diyBiplot
 
@@ -2012,7 +2014,8 @@ ggplot() +
     geom_text(
       aes(x=Vk["Fresh_potatoes",1]*scaleFactor, y=Vk["Fresh_potatoes",2]*scaleFactor, label="Fresh_potatoes"),
       alpha=0.5,
-      size=3)
+      size=3) +
+   coord_fixed() 
 ```
 
 
