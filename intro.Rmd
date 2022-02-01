@@ -314,7 +314,7 @@ and
 
 Note, that the estimator for $\beta_1$ will be exactly same when estimated based on the models with/or without centering. 
 
-- The parameter  $\beta_1$ has an interpretation as the mean increase of the outcome as the regressor increases with one unit. 
+- The parameter  $\beta_1$ has an interpretation as the average difference in the outcome between subjects that differ with one unit for the regressor. 
 
 - The parameter  $\beta_1$  does not say much about individual outcomes. The residual variance $\sigma^2$ determines how much individual outcomes vary about the mean outcome.
 
