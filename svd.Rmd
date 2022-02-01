@@ -2156,9 +2156,11 @@ with $\mathbf{a}$ a $p$-vector of constants. Hence $y_i$ is a linear combination
 
 PCA aims at finding $\mathbf{a}$ such that the sample variance among the $n$ $y_i$'s is maximal, with
 \begin{eqnarray*}
-  \frac{1}{n-1}\sum_{i=1}^n (y_i - \bar{y})^2 =  \frac{1}{n-1}\sum_{i=1}^n y_i ^2 \\
-    &=& \frac{1}{n-1}\sum_{i=1}^n (\mathbf{x}_i^T\mathbf{a})^2 = \frac{1}{n-1} \mathbf{a}^T \left(\sum_{i=1}^n \mathbf{x}_i\mathbf{x}_i^T\right) \mathbf{a} \\
-    &=& \frac{1}{n-1} \mathbf{a}^T\mathbf{X}^T\mathbf{X}\mathbf{a} = \mathbf{a}^T\boldsymbol{\Sigma}_X\mathbf{a}
+  \frac{1}{n-1}\sum_{i=1}^n (y_i - \bar{y})^2 &=&  \frac{1}{n-1}\sum_{i=1}^n y_i ^2 \\
+    &=& \frac{1}{n-1}\sum_{i=1}^n (\mathbf{x}_i^T\mathbf{a})^2\\
+    &=& \frac{1}{n-1} \mathbf{a}^T \left(\sum_{i=1}^n \mathbf{x}_i\mathbf{x}_i^T\right) \mathbf{a} \\
+    &=& \frac{1}{n-1} \mathbf{a}^T\mathbf{X}^T\mathbf{X}\mathbf{a}\\
+    &=& \mathbf{a}^T\boldsymbol{\Sigma}_X\mathbf{a}
 \end{eqnarray*}
 in which $\boldsymbol{\Sigma}_X= \frac{1}{n-1}\mathbf{X}^T\mathbf{X}$ is the sample covariance matrix of $\mathbf{X}$.
 
@@ -2263,9 +2265,14 @@ has $r=\text{rank}(\boldsymbol{\Sigma}_X)$ solutions. The eigenvectors are ortho
   \forall i\neq j: \mathbf{e}_i^T \mathbf{e}_j = 0 \text{ and } i=j: \mathbf{e}_i^T \mathbf{e}_j = 1
 \]
 Hence (for $i\neq j$)
-\[
-  \text{cov}\left[\mathbf{x}^T\mathbf{e}_i,\mathbf{x}^T\mathbf{e}_j\right] = \mathbf{e}_i^T\text{var}[\mathbf{x}]\mathbf{e}_j = \mathbf{e}_i^T\boldsymbol{\Sigma}_X\mathbf{e}_j = \mathbf{e}_i^T\left(\lambda_j\mathbf{e}_j\right) = \lambda_j \mathbf{e}_i^T\mathbf{e}_j = 0
-\]
+\begin{eqnarray*}
+  \text{cov}\left[\mathbf{x}^T\mathbf{e}_i,\mathbf{x}^T\mathbf{e}_j\right] &=& \mathbf{e}_i^T\text{var}[\mathbf{x}]\mathbf{e}_j\\
+  &=& \mathbf{e}_i^T\boldsymbol{\Sigma}_X\mathbf{e}_j\\
+  &=& \mathbf{e}_i^T\left(\lambda_j\mathbf{e}_j\right)\\
+  &=& \lambda_j \mathbf{e}_i^T\mathbf{e}_j \\
+  &=& 0
+\end{eqnarray*}
+
 
 If $z_{j}=\mathbf{x}_i^T\mathbf{e}_j$ denotes the $j$th PC, then
 \[
@@ -2388,9 +2395,14 @@ More generally, scree plots are also informative for the SVD.
 
 
   The motivation comes from
-  \[
-    \text{Min}_{A: \text{rank}(A)=k} \Vert \mathbf{X} - \mathbf{A}\Vert_F^2 = \Vert \mathbf{X} - \mathbf{X}_k\Vert_F^2 = \sum_{j=k+1}^r\delta_{j}^2 = \sum_{j=k+1}^r\lambda_{j}.
-  \]
+
+
+  \begin{eqnarray*}
+  \text{Min}_{A: \text{rank}(A)=k} \Vert \mathbf{X} - \mathbf{A}\Vert_F^2 &=& \Vert \mathbf{X} - \mathbf{X}_k\Vert_F^2\\
+  &=& \sum_{j=k+1}^r\delta_{j}^2 \\
+  &=& \sum_{j=k+1}^r\lambda_{j}.
+\end{eqnarray*}
+
   This is known as the **approximation error** of the matrix $\mathbf{X}_k$.
 
   Hence,
