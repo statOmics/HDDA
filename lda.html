@@ -801,30 +801,25 @@ or (upon using <span class="math inline">\(\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j=
 <span id="cb18-12"><a href="#cb18-12"></a>  <span class="dt">stop =</span> <span class="dv">-50</span>,</span>
 <span id="cb18-13"><a href="#cb18-13"></a>  <span class="dt">maxIte =</span> <span class="dv">25</span>,</span>
 <span id="cb18-14"><a href="#cb18-14"></a>  <span class="dt">trace =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>## ite:  1  ridge cost:  123.7641  |b|_1:  5.380128 
-## ite:  2  ridge cost:  108.4044  |b|_1:  5.671298 
-## ite:  3  ridge cost:  93.66358  |b|_1:  6.214214 
-## ite:  4  ridge cost:  91.82587  |b|_1:  5.548605 
-## ite:  5  ridge cost:  89.55719  |b|_1:  5.693444 
-## ite:  6  ridge cost:  88.25089  |b|_1:  5.849536 
-## ite:  7  ridge cost:  87.65111  |b|_1:  5.936302 
-## ite:  8  ridge cost:  88.10916  |b|_1:  5.842224 
-## ite:  9  ridge cost:  87.55565  |b|_1:  5.944855 
-## ite:  10  ridge cost:  87.84014  |b|_1:  5.890353 
-## ite:  11  ridge cost:  87.84421  |b|_1:  5.889443 
-## ite:  12  ridge cost:  87.79181  |b|_1:  5.899309 
-## ite:  13  ridge cost:  87.76508  |b|_1:  5.904356 
-## ite:  14  ridge cost:  87.77348  |b|_1:  5.902763 
-## ite:  15  ridge cost:  87.77763  |b|_1:  5.901978 
-## ite:  16  ridge cost:  87.77967  |b|_1:  5.901591 
-## ite:  17  ridge cost:  87.78068  |b|_1:  5.901401 
-## ite:  18  ridge cost:  87.78118  |b|_1:  5.901307 
-## ite:  19  ridge cost:  87.78142  |b|_1:  5.90126 
-## ite:  20  ridge cost:  87.78155  |b|_1:  5.901237 
-## ite:  21  ridge cost:  87.78161  |b|_1:  5.901226 
-## ite:  1  ridge cost:  134.7777  |b|_1:  5.379261 
-## ite:  2  ridge cost:  134.7777  |b|_1:  5.379261 
-## final update, total ridge cost:  222.5593  |b|_1:  11.28049</code></pre>
+<pre><code>## ite:  1  ridge cost:  88.73202  |b|_1:  5.762914 
+## ite:  2  ridge cost:  88.25048  |b|_1:  5.82567 
+## ite:  3  ridge cost:  88.18077  |b|_1:  5.829822 
+## ite:  4  ridge cost:  88.05717  |b|_1:  5.850234 
+## ite:  5  ridge cost:  87.91596  |b|_1:  5.87609 
+## ite:  6  ridge cost:  87.84749  |b|_1:  5.888832 
+## ite:  7  ridge cost:  87.81402  |b|_1:  5.895111 
+## ite:  8  ridge cost:  87.79759  |b|_1:  5.898206 
+## ite:  9  ridge cost:  87.78951  |b|_1:  5.899732 
+## ite:  10  ridge cost:  87.78553  |b|_1:  5.900484 
+## ite:  11  ridge cost:  87.78357  |b|_1:  5.900855 
+## ite:  12  ridge cost:  87.7826  |b|_1:  5.901038 
+## ite:  13  ridge cost:  87.78213  |b|_1:  5.901128 
+## ite:  14  ridge cost:  87.78189  |b|_1:  5.901172 
+## ite:  15  ridge cost:  87.78178  |b|_1:  5.901194 
+## ite:  16  ridge cost:  87.78172  |b|_1:  5.901205 
+## ite:  1  ridge cost:  134.7777  |b|_1:  5.379259 
+## ite:  2  ridge cost:  134.7777  |b|_1:  5.379259 
+## final update, total ridge cost:  222.5595  |b|_1:  11.28046</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>Vsda &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow=</span><span class="kw">ncol</span>(X2), <span class="dt">ncol=</span><span class="dv">2</span>)</span>
 <span id="cb20-2"><a href="#cb20-2"></a>Vsda[breast.slda<span class="op">$</span>varIndex,] &lt;-<span class="st"> </span>breast.slda<span class="op">$</span>beta</span>
 <span id="cb20-3"><a href="#cb20-3"></a><span class="kw">colnames</span>(Vsda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Vsda))</span>
@@ -921,7 +916,7 @@ This is probably caused by numerical instability when working with large <span c
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>## [1] &quot;2022-02-01 08:46:42 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2022-02-03 16:37:04 UTC&quot;</code></pre>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
 ##  version  R version 4.1.2 (2021-11-01)
@@ -932,7 +927,7 @@ This is probably caused by numerical instability when working with large <span c
 ##  collate  C.UTF-8
 ##  ctype    C.UTF-8
 ##  tz       UTC
-##  date     2022-02-01
+##  date     2022-02-03
 ##  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
