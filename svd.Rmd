@@ -2887,6 +2887,8 @@ grid.arrange(
 
 - Olivier Thas for sharing his materials of Analysis of High Dimensional Data 2019-2020, which I used as the starting point for this chapter.
 
+- Steven Brunton & Nathan Kutz (2017). Data Driven Science & Engineering - Machine Learning, Dynamical Systems, and Control. Chapter 1: Singular Value Decomposition. [databook.pdf](http://databookuw.com/databook.pdf)
+
 # Session info {-}
 
 <details><summary>Session info</summary>
