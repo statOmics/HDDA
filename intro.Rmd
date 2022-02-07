@@ -402,6 +402,17 @@ $$
 
 ### Projection
 
+There is also another picture to regression:
+
+- Instead of plotting each observation $i= 1 \ldots n$ as a data-point in $\mathbb{R}^p$ with dimensions $1 \ldots p$ for every variable/feature that is recorded for each observation  
+
+- We can also plot $\mathbf{Y}$, $\hat{\mathbf{Y}}$ and each column of $\mathbf{X}$: $\mathbf{X}_j$ with $j=1 \ldots p$ as a vector in $\mathbb{R}^n$ with dimensions $1 \ldots n$ for every observation.  
+
+- In this representation linear regression can be interpreted as a projection of the vector $\mathbf{Y}$ onto the subspace of $\mathbb{R}^n$ that is spanned by the vectors for the predictors $\mathbf{X}_1 \ldots \mathbf{X}_p$.  
+
+- The space $\mathbf{X}_1 \ldots \mathbf{X}_p$ is also referred to as the column space of $\mathbf{X}$, the space that consists of all linear combinations of the vectors of the predictors or columns $\mathbf{X}_1 \ldots \mathbf{X}_p$.  
+
+
 #### Intermezzo: Projection of vector on X  and Y axis
 
 $$
@@ -438,21 +449,31 @@ geom_segment(aes(x = 0, y = 0, xend = 1, yend = 0),
 
 
 1. Projection of error on x-axis 
-$$ 
-\mathbf{u}_1^T \mathbf{e} = \left[\begin{array}{cc} 1&0\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right] = 1\times e_1 + 0 \times e_2 = e_1
-$$
+
+\begin{eqnarray*}
+\mathbf{u}_1^T \mathbf{e} &=& \Vert \mathbf{u}_1\Vert_2  \Vert \mathbf{e}_1\Vert_2 \cos <\mathbf{u}_1,\mathbf{e}_1>\\
+&=&\left[\begin{array}{cc} 1&0\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right]\\ &=& 1\times e_1 + 0 \times e_2 \\
+&=& e_1\\
+\end{eqnarray*}
+
 2. Projection of error on y-axis 
-$$ 
-\mathbf{u}_2^T \mathbf{e} = \left[\begin{array}{cc} 1&0\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right] = 0\times e_1 + 1 \times e_2 = e_2
-$$
+
+\begin{eqnarray*}
+\mathbf{u}_2^T \mathbf{e} &=& \left[\begin{array}{cc} 1&0\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right]\\ &=& 0\times e_1 + 1 \times e_2 \\
+&=& e_2
+\end{eqnarray*}
+
 3. Projection of error on itself 
 
-$$
-\mathbf{e}^T \mathbf{e} =\left[\begin{array}{cc} e_1&e_2\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right]=e_1^2+e_2^2
-$$
 
-Pythagorean theorem
- $\rightarrow \Vert e \Vert^2_2=e_1^2+e_2^2$ 
+\begin{eqnarray*}
+\mathbf{e}^T \mathbf{e} &=&\left[\begin{array}{cc} e_1&e_2\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right]\\
+&=&e_1^2+e_2^2\\
+&=&\Vert e \Vert^2_2
+\end{eqnarray*}
+
+
+$\rightarrow$ Pythagorean theorem
 
 ---
 
