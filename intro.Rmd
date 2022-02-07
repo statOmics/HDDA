@@ -218,7 +218,7 @@ $$
 
 ### Vector/Matrix form
 
-- $n$ observations $(\mathbf{x}_1,y_1) \ldots (\mathbf{x}_n,y_n)$ with $\mathbf{x}_1^T=[1 x_1 \ldots x_p]$
+- $n$ observations $(\mathbf{x}_1,y_1) \ldots (\mathbf{x}_n,y_n)$ with $\mathbf{x}_1^T=[\begin{array}{cccc} 1& x_1& \ldots& x_p\end{array}]$
 - Regression in matrix notation
 \[\mathbf{Y}=\mathbf{X\beta} + \mathbf{\epsilon}\]
 with $\mathbf{Y}=\left[\begin{array}{c}y_1\\ \vdots\\y_n\end{array}\right]$,
@@ -469,11 +469,8 @@ geom_segment(aes(x = 0, y = 0, xend = 1, yend = 0),
 \begin{eqnarray*}
 \mathbf{e}^T \mathbf{e} &=&\left[\begin{array}{cc} e_1&e_2\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right]\\
 &=&e_1^2+e_2^2\\
-&=&\Vert e \Vert^2_2
-\end{eqnarray*}
-
-
-$\rightarrow$ Pythagorean theorem
+&=&\Vert e \Vert^2_2 \rightarrow \text{ Pythagorean theorem}
+\end{eqnarray*} 
 
 ---
 
