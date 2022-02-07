@@ -311,14 +311,14 @@ Indeed, for the face example $n<p$ so $r=n$
 Check orthogonality?
 
 We do not do it for all vectors because it takes too long.
-First left eigen vector and second left eigenvector.
+First left singular vector and second left singular vector.
 Happens in $\mathbf{U}^T\mathbf{U}$
 ```{r}
 t(faceSvd$u[,1])%*%faceSvd$u[,1]
 t(faceSvd$u[,1])%*%faceSvd$u[,2]
 t(faceSvd$u[,2])%*%faceSvd$u[,2]
 ```
-So we see that the left eigenvectors are orthonormal.
+So we see that the left singular vectors are orthonormal.
 
 We check if it also holds for the rows i.e. $\mathbf{U}\mathbf{U}^T$
 ```{r}
@@ -333,7 +333,7 @@ t(faceSvd$v[,1])%*%faceSvd$v[,1]
 t(faceSvd$v[,1])%*%faceSvd$v[,2]
 t(faceSvd$v[,2])%*%faceSvd$v[,2]
 ```
-So we see that the right eigenvectors are orthonormal.
+So we see that the right singular vectors are orthonormal.
 
 ```{r}
 t(faceSvd$v[1,])%*%faceSvd$v[1,]
@@ -344,7 +344,7 @@ t(faceSvd$v[2,])%*%faceSvd$v[2,]
 This, however does not hold for the rows of $\mathbf{V}$.
 This is because the matrix $\mathbf{V}$ no longer is a square matrix! $r=n$ and $r<p$!
 
-#### Visualize right eigenvectors $\mathbf{V}$
+#### Visualize right singular vectors $\mathbf{V}$
 ```{r}
 grid.arrange(
  grobs=apply(
@@ -355,13 +355,13 @@ grid.arrange(
  )
 ```
 
-- Hence, the right singular vectors (in $\mathbf{V}$ of $\mathbf{X}=\mathbf{U}\boldsymbol{\Delta}\mathbf{V}$) are also faces and we can thus reconstruct the original faces by linear combinations of the eigen faces.
+- Hence, the right singular vectors (in $\mathbf{V}$ of $\mathbf{X}=\mathbf{U}\boldsymbol{\Delta}\mathbf{V}$) are also faces and we can thus reconstruct the original faces by linear combinations of the singular faces.
 
-- The first eigen faces are most important to capture overall patterns in the matrix.
+- The first singular faces are most important to capture overall patterns in the matrix.
 
 - Here it are mainly characteristics and shadows that are important for all faces.
 
-- From eigen face 5 onwards we start to see specific features.
+- From singular face 5 onwards we start to see specific features.
 
 - In this case: $n < p$, so $r = n$.
 
@@ -459,9 +459,9 @@ grid.arrange(
 \end{array}
 \]
 
-#### Reconstruction of faces via linear combination of eigen faces.
+#### Reconstruction of faces via linear combination of singular faces.
 
-In left singular vectors $u_{ij}$ we quantify the contribution of the $j^\text{th}$ eigenface in the reconstruction of face $i$ and we rescale the importance of each eigen face by its corresponding eigen value $\delta_j$.
+In left singular vectors $u_{ij}$ we quantify the contribution of the $j^\text{th}$ singular face in the reconstruction of face $i$ and we rescale the importance of each singular face by its corresponding singular value $\delta_j$.
 
 \[
 \left[\begin{array}{ccc}
@@ -520,9 +520,9 @@ In left singular vectors $u_{ij}$ we quantify the contribution of the $j^\text{t
 \end{array}
 \]
 
-If we truncate the eigen faces say at $k<r$ we can approximate faces using a limited number of eigen faces!
+If we truncate the singular faces say at $k<r$ we can approximate faces using a limited number of singular faces!
 
-```{r fig.cap='approximation with 25 (top left),  100 (top right) and 500 (bottom left) eigenfaces and original face (bottom right, or with all eigenfaces)'}
+```{r fig.cap='approximation with 25 (top left),  100 (top right) and 500 (bottom left) singular faces and original face (bottom right, or with all singular faces)'}
 approximateFace <- function(meanFace,faceSvd,k){
   reconstruct <- (meanFace + faceSvd$u[1,1:k] %*%
     diag(faceSvd$d[1:k]) %*%
@@ -623,7 +623,7 @@ plot(mondriaan,axes=FALSE)
 X <- matrix(as.data.frame(mondriaan)[,3],nrow=nrow(mondriaan),ncol=ncol(mondriaan))
 ```
 
-- This picture can be represented as a $`r nrow(mondriaan)` \times `r ncol(mondriaan)``$ matrix $\mathbf{X}$ with gray scale intensities $\in [0,1]$. ($\approx 4\times 10^6$ data entries)
+- This picture can be represented as a $`r nrow(mondriaan)` \times `r ncol(mondriaan)`$ matrix $\mathbf{X}$ with gray scale intensities $\in [0,1]$. ($\approx 4\times 10^6$ data entries)
 
 - We will here not transform the image in a vector, but will look at the performance of the SVD to compress this image. The SVD can be applied to any matrix!
 
@@ -652,7 +652,7 @@ grid.arrange(p1,p2,nrow=1)
 
 #### Data compression
 
-- We make the plot for a reconstruction with 1 singular vector. This leads to a data compression of $1-\frac{(1+`r nrow(mondriaan)`+`r ncol(mondriaan)`)}{`r nrow(mondriaan) `\times `r ncol(mondriaan)`}$ = `r 100 - round((1+nrow(mondriaan)+ncol(mondriaan))/(nrow(mondriaan)*ncol(mondriaan))*100,1)`%. We only use 1 left singular vector (`r nrow(mondriaan)`), 1 eigen value, 1 right singular vector (`r ncol(mondriaan)`).
+- We make the plot for a reconstruction with 1 singular vector. This leads to a data compression of $1-\frac{(1+`r nrow(mondriaan)`+`r ncol(mondriaan)`)}{`r nrow(mondriaan) `\times `r ncol(mondriaan)`}$ = `r 100 - round((1+nrow(mondriaan)+ncol(mondriaan))/(nrow(mondriaan)*ncol(mondriaan))*100,1)`%. We only use 1 left singular vector (`r nrow(mondriaan)`), 1 singular value, 1 right singular vector (`r ncol(mondriaan)`).
 
 
 ```{r}
@@ -825,7 +825,7 @@ plot(as.cimg(X),main=paste0("Original image"),axes=FALSE)
 
 
 
-Here we need at least 40 singular vector. This leads to a data compression of $1-\frac{40\times (1+`r nrow(mondriaan)`+`r ncol(mondriaan)`)}{`r nrow(mondriaan)` \times `r ncol(mondriaan)`}$ = `r 100 - round(40*(1+nrow(mondriaan)+ncol(mondriaan))/(nrow(mondriaan)*ncol(mondriaan))*100,1)`%. We only use 40 left singular vectors ($40 \times `r nrow(mondriaan)`$), 40 singular values, 40 right eigens vector ($40\times `r ncol(mondriaan)`$).
+Here we need at least 40 singular vector. This leads to a data compression of $1-\frac{40\times (1+`r nrow(mondriaan)`+`r ncol(mondriaan)`)}{`r nrow(mondriaan)` \times `r ncol(mondriaan)`}$ = `r 100 - round(40*(1+nrow(mondriaan)+ncol(mondriaan))/(nrow(mondriaan)*ncol(mondriaan))*100,1)`%. We only use 40 left singular vectors ($40 \times `r nrow(mondriaan)`$), 40 singular values, 40 right singular vector ($40\times `r ncol(mondriaan)`$).
 
 # Geometric interpretation
 
@@ -1627,7 +1627,7 @@ If we rewrite the expression
 &=&\mathbf{V}\boldsymbol{\Delta}^2
 \end{eqnarray}
 
-So, if the data are centered, the SVD can be used to perform a spectral decomposition of the sample covariance matrix where the right singular vectors correspond to the eigen vectors of the covariance matrix and the eigenvalues are the squared singular values!
+So, if the data are centered, the SVD can be used to perform a spectral decomposition of the sample covariance matrix where the right singular vectors correspond to the eigen vectors of the covariance matrix and the eigen values are the squared singular values!
 
 Similarly the left singular values can be used to estimate the covariance matrix of the rows of $\mathbf{X}$. So in our notation covariance between subjects.
 
@@ -2215,16 +2215,16 @@ Hence, we need the solution of
 
 This equation has $r$ solutions:
 
--  $\mathbf{b}=\mathbf{e}_j$: the $j$th eigenvector of $\boldsymbol{\Sigma}_X$
+-  $\mathbf{b}=\mathbf{e}_j$: the $j$th eigen vector of $\boldsymbol{\Sigma}_X$
 
--  $\lambda=\lambda_j$: the $j$th eigenvalue of $\boldsymbol{\Sigma}_X$.
+-  $\lambda=\lambda_j$: the $j$th eigen value of $\boldsymbol{\Sigma}_X$.
 
-The eigenvectors are orthonormal, i.e.
+The eigen vectors are orthonormal, i.e.
 $\mathbf{e}_i^T\mathbf{e}_j=1$ if $i=j$ and $\mathbf{e}_i^T\mathbf{e}_j=0$ otherwise.
 
 ---
 
-Consider the following calculations, with $\mathbf{b}=\mathbf{e}_j$, the $j$the eigenvector of $\boldsymbol{\Sigma}_X$.
+Consider the following calculations, with $\mathbf{b}=\mathbf{e}_j$, the $j$the eigen vector of $\boldsymbol{\Sigma}_X$.
 \begin{eqnarray*}
   \text{var}[y]
     &=& \mathbf{e}_j^T\boldsymbol{\Sigma}_X\mathbf{e}_j \\
@@ -2233,11 +2233,11 @@ Consider the following calculations, with $\mathbf{b}=\mathbf{e}_j$, the $j$the 
     &=& \lambda_j\mathbf{e}_j^T\mathbf{e}_j \\
     &=& \lambda_j.
 \end{eqnarray*}
-By convention the eigenvectors/eigenvalues are ordered so that
+By convention the eigen vectors/eigen values are ordered so that
 \[
   \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_r.
 \]
-Hence, the first eigenvector $\mathbf{e}_1$ gives the largest variance $\lambda_1$. Hence, this is the solution we were looking for.
+Hence, the first eigen vector $\mathbf{e}_1$ gives the largest variance $\lambda_1$. Hence, this is the solution we were looking for.
 
 ---
 
@@ -2248,7 +2248,7 @@ The observations on the first principal component (PC) are then given by
     z_{i1} = \mathbf{x}_i^T\mathbf{e}_1.
 \]
 
-In PCA terminology they are referred to as the **scores** of the first PC. The elements in the eigenvector $\mathbf{e}_i$ that make up the transformation are known as the **loadings**  of the first PC.
+In PCA terminology they are referred to as the **scores** of the first PC. The elements in the eigen vector $\mathbf{e}_i$ that make up the transformation are known as the **loadings**  of the first PC.
 
 The first PC is thus a new variable (construct) that has the largest variance among all linear transformations of the original variables.
 
@@ -2260,7 +2260,7 @@ The equation
 \[
   \boldsymbol{\Sigma}_X\mathbf{b} = \lambda\mathbf{b}
 \]
-has $r=\text{rank}(\boldsymbol{\Sigma}_X)$ solutions. The eigenvectors are orthonormal, i.e.
+has $r=\text{rank}(\boldsymbol{\Sigma}_X)$ solutions. The eigen vectors are orthonormal, i.e.
 \[
   \forall i\neq j: \mathbf{e}_i^T \mathbf{e}_j = 0 \text{ and } i=j: \mathbf{e}_i^T \mathbf{e}_j = 1
 \]
@@ -2289,7 +2289,7 @@ We say that the $j$th PC maximises the variance among all linear transformations
 
 A PCA is a transformation of the original $p$ variables to $r$ PCs such that
 
-- the first PC has largest variance, equal to first eigenvalue of $\boldsymbol{\Sigma}_X$
+- the first PC has largest variance, equal to first eigen value of $\boldsymbol{\Sigma}_X$
 
 -  the next PCs have decreasing variances (decreasing information content)
 
@@ -2352,7 +2352,7 @@ of the total variance (or information) of the original data set $\mathbf{X}$.
 
 ### UK example
 
-A scree plot is often used to look at the eigenvalues. Here it is shown for the UK consumption data.
+A scree plot is often used to look at the eigen values. Here it is shown for the UK consumption data.
 
 ```{r}
 n <- nrow(X)
@@ -2426,11 +2426,11 @@ most 20% relative approximation error
 
 ### Direction of largest variability
 
- Now that we know how the PCs are constructed, we can give an additional interpretation to the first eigenvector / right-singular vector of $\boldsymbol{\Sigma}_X$.
+ Now that we know how the PCs are constructed, we can give an additional interpretation to the first eigen vector / right-singular vector of $\boldsymbol{\Sigma}_X$.
 
-- The first eigenvector of $\boldsymbol{\Sigma}_X$ is the direction in the original $p$-dimensional space of the largest variability.
+- The first eigen vector of $\boldsymbol{\Sigma}_X$ is the direction in the original $p$-dimensional space of the largest variability.
 
-- The second eigenvector of $\boldsymbol{\Sigma}_X$ is the direction in the original $p$-dimensional space of the second largest variability, among all directions orthogonal to the first eigenvector
+- The second eigen vector of $\boldsymbol{\Sigma}_X$ is the direction in the original $p$-dimensional space of the second largest variability, among all directions orthogonal to the first eigen vector
 
 #### Iris example
 
@@ -2670,7 +2670,7 @@ Hence,
    \sum_{j=1}^p (\mathbf{x}^T\mathbf{v}_j)^2  / \delta_j^2 &=& c^2\\
    \sum_{j=1}^p (z_j)^2  / (c^2\delta_j^2) &=& 1.
 \end{eqnarray*}
-The last equation is the equation of an ellipse with axes parallel to the basis of $(z_1,\ldots, z_p)$ and with half axis lengths $c\sqrt{\lambda_j}=c\delta_j$ with $\lambda_j$ the $j$th eigenvalue of $\boldsymbol{\Sigma}$.
+The last equation is the equation of an ellipse with axes parallel to the basis of $(z_1,\ldots, z_p)$ and with half axis lengths $c\sqrt{\lambda_j}=c\delta_j$ with $\lambda_j$ the $j$th eigen value of $\boldsymbol{\Sigma}$.
 
 ---
 
@@ -2682,7 +2682,7 @@ pIris +
 ```
 
 
-This graphs shows $n=50$ data points on $p=2$ dimensions.  The two ellipses are constant density ellipses for three different values of $c$ (i.e. three different constant densities). The inner ellipse corresponds to the largest constant density and the outer to the smallest constant density. The arrows show the two eigenvectors /  singular vectors and they are scaled according to the sqrt of the eigen values and they form the axes of the constant density ellipses. It is clear that the first axis is pointing to the larger variance.
+This graphs shows $n=50$ data points on $p=2$ dimensions.  The two ellipses are constant density ellipses for three different values of $c$ (i.e. three different constant densities). The inner ellipse corresponds to the largest constant density and the outer to the smallest constant density. The arrows show the two eigen vectors /  singular vectors and they are scaled according to the sqrt of the eigen values and they form the axes of the constant density ellipses. It is clear that the first axis is pointing to the larger variance.
 
 ## Biplot
 
