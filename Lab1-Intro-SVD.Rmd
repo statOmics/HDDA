@@ -1,8 +1,8 @@
 ---
 title: "Lab 1: Introduction and Singular Value Decomposition"
 subtitle: "High Dimensional Data Analysis practicals"
-author: "Adapted by Milan Malfait"
-date: "21 Oct 2021 <br/> (Last updated: 2021-11-26)"
+author: "Milan Malfait"
+date: "7 Feb 2022 <br/> (Last updated: 2022-02-07)"
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -20,7 +20,7 @@ options(width = 80)
 
 # Introduction
 
-The purpose of the following exercises is mainly to get more familiar with SVD and its applications, in particular Multidimensional Scaling (MDS).
+The purpose of the following exercises is mainly to get more familiar with SVD and its applications.
 It is recommended to perform the exercises in an `RMarkdown` document.
 
 For a brief introduction to RMarkdown, see [Introduction to RMarkdown](./Introduction-RMarkdown.html).
@@ -44,207 +44,6 @@ Installation code is commented, uncomment and paste this code in an R console to
 library(tidyverse)
 library(HDDAData)
 ```
-
-
-
-# Multidimensional Scaling (MDS) demonstration
-
-See [course notes](https://statomics.github.io/HDDA/svd.html#7_SVD_and_Multi-Dimensional_Scaling_(MDS)) for background.
-
-
-* We will use `UScitiesD` data as an example
-* Our goal is to use the distance matrix $\mathbf D_X$  without knowledge of $\mathbf X$ to represent the rows of $\mathbf X$ in a low dimensional space, say 2D or 3D.
-* We search for $\mathbf V_k$ that orthogonally projects the rows of $\mathbf X$ ($\mathbf x^T_i$) onto a $k$-dimensional space spanned by the columns of $\mathbf V_k$. In fact we are looking for $\mathbf Z_k$, such that $\mathbf Z_k=\mathbf X \mathbf V_k$
-*  But we do not know $\mathbf X$, so how do we get $\mathbf Z_k$? We will use the $\mathbf G_X$ (gram matrix) trick, mentioned in the course notes
-
-
-## Example: Distances between US cities
-
-As an example, we will use the `UScitiesD` data set, which is part of base R.
-This data gives "straight line" distances (in km) between 10 cities in the US.
-
-```{r, R.options=list(width=100)}
-UScitiesD
-
-class(UScitiesD)
-```
-
-Note that the `UScitiesD` object is of class `"dist"`, which is a special type of object to represent that it is a __distance matrix__ (we'll denote this as $\mathbf{D}_X$), i.e. the result from computing distances from an original matrix $\mathbf{X}$.
-In this case, the original matrix $\mathbf{X}$ was likely a matrix with a row for every city and columns specifying its coordinates.
-Note though that we don't know $\mathbf{X}$ exactly.
-Still, we can use the distance matrix and MDS to approximate a low-dimensional representation of $\mathbf{X}$.
-
-
-### Exploring the distance matrix
-
-We first convert the `UScitiesD` to a matrix for easier manipulation and calculation.
-Note that this creates a "symmetrical" matrix, with 0s on the diagonal (distance of a city to itself).
-
-```{r}
-(dist_mx <- as.matrix(UScitiesD))
-```
-
-The dimensions of `dist_mx`:
-
-```{r}
-# 10 x 10 square matrix
-dim(dist_mx)
-```
-And the rank of `dist_mx`
-
-```{r}
-qr(dist_mx)$rank
-```
-
->Q: is this matrix of full rank?
-
-<details><summary>Answer</summary>
-A: Yes, it is.
-
-```{r}
-qr(dist_mx)$rank == min(dim(dist_mx))
-```
-
-</details>
-
-
-
-### $\mathbf{H}$ and $\mathbf{G}_X$ matrices
-
-Now let's create the $\mathbf  H$ matrix.
-
-$$ \mathbf{H} = \mathbf{I}_{n \times n} - \frac{1}{n} \mathbf{1}_n\mathbf{1}_n^T $$
-```{r H_matrix}
-n <- nrow(dist_mx)
-
-## 11^T
-## Alternatively: one_mat <- rep(1, n) %o% rep(1, n)
-(one_mat <- matrix(rep(1, n * n), ncol = n, nrow = n))
-
-## Calculate H, diag(n) is the nxn identity matrix
-(H <- diag(n) - (1/n) * one_mat)
-```
-
-We can use $\mathbf{H}$ to center our distance matrix:
-
-```{r dist_mx_centered}
-(dist_mx_centered <- H %*% dist_mx)
-
-## Verify colMeans are 0
-round(colMeans(dist_mx_centered), 8)
-
-## Note that using `scale(X, center = TRUE, scale = FALSE)` is much more efficient
-## to center a matrix
-## Here we use the approach with H because we need it further on
-```
-
-We will use this matrix to calculate $\mathbf{G}_X$ (Gram matrix of $\mathbf{X}$).
-
-$$
-\mathbf{G}_X = -\frac{1}{2}\mathbf{H}\mathbf{D}_X\mathbf{H} = \mathbf{X}\mathbf{X}^T
-$$
-
-Where $\mathbf{D}_X$ is the matrix of __*squared* distances__.
-So we will first have to square our `dist_mx`.
-
-```{r Gram_matrix}
-## D_X = squared distance matrix
-D_X <- dist_mx ^ 2
-
-## Gram matrix
-(G_X <- -1/2 * H %*% (D_X) %*% H)
-```
-
-
-### The SVD
-
-We can now compute the SVD of the Gram matrix and use it to project our original matrix $\mathbf{X}$ (which is still unknown to us!) into a lower dimensional space while preserving the Euclidean distances as well as possible.
-This is the essence of MDS.
-
-```{r GX matrix}
-## singular value decomposition on gram matrix
-Gx_svd <- svd(G_X)
-
-## Use `str` to explore structure of the SVD object
-str(Gx_svd)
-```
-
-Components of the `Gx_svd` object:
-
-- `Gx_svd$d`: diagonal elements of the $\mathbf{\Delta}$ matrix, to recreate the matrix, use the `diag()` function
-- `Gx_svd$u`: the matrix $\mathbf{U}$ of left singular vectors
-- `Gx_svd$v`: the matrix $\mathbf{V}$ of right singular vectors
-
-
-### Truncated SVD and projection into lower dimensional space
-
-The truncated SVD from the Gram matrix can be used to find projections $Z_k$ of $\mathbf{X}$ in a lower dimensional space.
-Here we will use $k = 2$.
-
-```{r}
-# k=2 approximation
-k <- 2
-Uk <- Gx_svd$u[, 1:k]
-delta_k <- diag(Gx_svd$d[1:k])
-Zk <- Uk %*% sqrt(delta_k)
-rownames(Zk) <- colnames(D_X)
-colnames(Zk) <- c("Z1", "Z2")
-Zk
-
-# Plotting Zk in 2-D
-
-## Using base R
-# plot(Zk, type = "n", xlab = "Z1", ylab = "Z2", xlim = c(-1500, 1500))
-# text(Zk, rownames(Zk), cex = 1.25)
-
-## Using ggplot, by first converting Zk to a tibble
-Zk %>%
-  # create tibble and change rownames to column named "city"
-  as_tibble(rownames = "city") %>%
-  ggplot(aes(Z1, Z2, label = city)) +
-    geom_point() +
-    # adding the city names as label
-    geom_text(nudge_y = 50) +
-    # setting limits of the x-axis to center the plot around 0
-    xlim(c(-1500, 1500)) +
-    ggtitle("MDS plot of the UScitiesD data") +
-    theme_minimal()
-```
-
-What can you say about the plot?
-Think about the real locations of these cities on a map of the US.
-
-<details><summary>Answer</summary>
-$Z_1$ can be interpreted as the *longitude*, i.e. the East-West position.
-$Z_2$ reflects the *latitude*, or the North-South position.
-</details>
-
-
-## The short way
-
-The calculations above demonstrate how MDS works and what the underlying components are.
-However, in a real data analysis, one would typically not go through all the hassle of calculating all the intermediate steps.
-Fortunately, the MDS is already implemented in base R (in the `stats` package).
-
-So the whole derivation we did above can be reproduced with a single line of code, using the `cmdscale` function (see `?cmdscale` for details).
-
-```{r}
-## Calculate MDS in 2 dimensions from distance matrix
-(us_mds <- cmdscale(UScitiesD, k = 2))
-colnames(us_mds) <- c("Z1", "Z2")
-
-## Plot MDS
-us_mds %>%
-  as_tibble(rownames = "city") %>%
-  ggplot(aes(Z1, Z2, label = city)) +
-  geom_point() +
-  geom_text(nudge_y = 50) +
-  xlim(c(-1500, 1500)) +
-  theme_minimal()
-```
-
-Which gives us the same result as before (which is a good check that we didn't make mistakes!).
-
 
 
 # Exercises
@@ -653,6 +452,205 @@ as_tibble(Zk, rownames = "country") %>%
 
 
 ##### 3. Can you give a meaningful interpretation to each dimension? {-}
+
+
+# Multidimensional Scaling (MDS) demonstration
+
+See [course notes](https://statomics.github.io/HDDA/svd.html#7_SVD_and_Multi-Dimensional_Scaling_(MDS)) for background.
+
+
+* We will use `UScitiesD` data as an example
+* Our goal is to use the distance matrix $\mathbf D_X$  without knowledge of $\mathbf X$ to represent the rows of $\mathbf X$ in a low dimensional space, say 2D or 3D.
+* We search for $\mathbf V_k$ that orthogonally projects the rows of $\mathbf X$ ($\mathbf x^T_i$) onto a $k$-dimensional space spanned by the columns of $\mathbf V_k$. In fact we are looking for $\mathbf Z_k$, such that $\mathbf Z_k=\mathbf X \mathbf V_k$
+*  But we do not know $\mathbf X$, so how do we get $\mathbf Z_k$? We will use the $\mathbf G_X$ (gram matrix) trick, mentioned in the course notes
+
+
+## Example: Distances between US cities
+
+As an example, we will use the `UScitiesD` data set, which is part of base R.
+This data gives "straight line" distances (in km) between 10 cities in the US.
+
+```{r, R.options=list(width=100)}
+UScitiesD
+
+class(UScitiesD)
+```
+
+Note that the `UScitiesD` object is of class `"dist"`, which is a special type of object to represent that it is a __distance matrix__ (we'll denote this as $\mathbf{D}_X$), i.e. the result from computing distances from an original matrix $\mathbf{X}$.
+In this case, the original matrix $\mathbf{X}$ was likely a matrix with a row for every city and columns specifying its coordinates.
+Note though that we don't know $\mathbf{X}$ exactly.
+Still, we can use the distance matrix and MDS to approximate a low-dimensional representation of $\mathbf{X}$.
+
+
+### Exploring the distance matrix
+
+We first convert the `UScitiesD` to a matrix for easier manipulation and calculation.
+Note that this creates a "symmetrical" matrix, with 0s on the diagonal (distance of a city to itself).
+
+```{r}
+(dist_mx <- as.matrix(UScitiesD))
+```
+
+The dimensions of `dist_mx`:
+
+```{r}
+# 10 x 10 square matrix
+dim(dist_mx)
+```
+And the rank of `dist_mx`
+
+```{r}
+qr(dist_mx)$rank
+```
+
+>Q: is this matrix of full rank?
+
+<details><summary>Answer</summary>
+A: Yes, it is.
+
+```{r}
+qr(dist_mx)$rank == min(dim(dist_mx))
+```
+
+</details>
+
+
+
+### $\mathbf{H}$ and $\mathbf{G}_X$ matrices
+
+Now let's create the $\mathbf  H$ matrix.
+
+$$ \mathbf{H} = \mathbf{I}_{n \times n} - \frac{1}{n} \mathbf{1}_n\mathbf{1}_n^T $$
+```{r H_matrix}
+n <- nrow(dist_mx)
+
+## 11^T
+## Alternatively: one_mat <- rep(1, n) %o% rep(1, n)
+(one_mat <- matrix(rep(1, n * n), ncol = n, nrow = n))
+
+## Calculate H, diag(n) is the nxn identity matrix
+(H <- diag(n) - (1/n) * one_mat)
+```
+
+We can use $\mathbf{H}$ to center our distance matrix:
+
+```{r dist_mx_centered}
+(dist_mx_centered <- H %*% dist_mx)
+
+## Verify colMeans are 0
+round(colMeans(dist_mx_centered), 8)
+
+## Note that using `scale(X, center = TRUE, scale = FALSE)` is much more efficient
+## to center a matrix
+## Here we use the approach with H because we need it further on
+```
+
+We will use this matrix to calculate $\mathbf{G}_X$ (Gram matrix of $\mathbf{X}$).
+
+$$
+\mathbf{G}_X = -\frac{1}{2}\mathbf{H}\mathbf{D}_X\mathbf{H} = \mathbf{X}\mathbf{X}^T
+$$
+
+Where $\mathbf{D}_X$ is the matrix of __*squared* distances__.
+So we will first have to square our `dist_mx`.
+
+```{r Gram_matrix}
+## D_X = squared distance matrix
+D_X <- dist_mx ^ 2
+
+## Gram matrix
+(G_X <- -1/2 * H %*% (D_X) %*% H)
+```
+
+
+### The SVD
+
+We can now compute the SVD of the Gram matrix and use it to project our original matrix $\mathbf{X}$ (which is still unknown to us!) into a lower dimensional space while preserving the Euclidean distances as well as possible.
+This is the essence of MDS.
+
+```{r GX matrix}
+## singular value decomposition on gram matrix
+Gx_svd <- svd(G_X)
+
+## Use `str` to explore structure of the SVD object
+str(Gx_svd)
+```
+
+Components of the `Gx_svd` object:
+
+- `Gx_svd$d`: diagonal elements of the $\mathbf{\Delta}$ matrix, to recreate the matrix, use the `diag()` function
+- `Gx_svd$u`: the matrix $\mathbf{U}$ of left singular vectors
+- `Gx_svd$v`: the matrix $\mathbf{V}$ of right singular vectors
+
+
+### Truncated SVD and projection into lower dimensional space
+
+The truncated SVD from the Gram matrix can be used to find projections $Z_k$ of $\mathbf{X}$ in a lower dimensional space.
+Here we will use $k = 2$.
+
+```{r}
+# k=2 approximation
+k <- 2
+Uk <- Gx_svd$u[, 1:k]
+delta_k <- diag(Gx_svd$d[1:k])
+Zk <- Uk %*% sqrt(delta_k)
+rownames(Zk) <- colnames(D_X)
+colnames(Zk) <- c("Z1", "Z2")
+Zk
+
+# Plotting Zk in 2-D
+
+## Using base R
+# plot(Zk, type = "n", xlab = "Z1", ylab = "Z2", xlim = c(-1500, 1500))
+# text(Zk, rownames(Zk), cex = 1.25)
+
+## Using ggplot, by first converting Zk to a tibble
+Zk %>%
+  # create tibble and change rownames to column named "city"
+  as_tibble(rownames = "city") %>%
+  ggplot(aes(Z1, Z2, label = city)) +
+    geom_point() +
+    # adding the city names as label
+    geom_text(nudge_y = 50) +
+    # setting limits of the x-axis to center the plot around 0
+    xlim(c(-1500, 1500)) +
+    ggtitle("MDS plot of the UScitiesD data") +
+    theme_minimal()
+```
+
+What can you say about the plot?
+Think about the real locations of these cities on a map of the US.
+
+<details><summary>Answer</summary>
+$Z_1$ can be interpreted as the *longitude*, i.e. the East-West position.
+$Z_2$ reflects the *latitude*, or the North-South position.
+</details>
+
+
+## The short way
+
+The calculations above demonstrate how MDS works and what the underlying components are.
+However, in a real data analysis, one would typically not go through all the hassle of calculating all the intermediate steps.
+Fortunately, the MDS is already implemented in base R (in the `stats` package).
+
+So the whole derivation we did above can be reproduced with a single line of code, using the `cmdscale` function (see `?cmdscale` for details).
+
+```{r}
+## Calculate MDS in 2 dimensions from distance matrix
+(us_mds <- cmdscale(UScitiesD, k = 2))
+colnames(us_mds) <- c("Z1", "Z2")
+
+## Plot MDS
+us_mds %>%
+  as_tibble(rownames = "city") %>%
+  ggplot(aes(Z1, Z2, label = city)) +
+  geom_point() +
+  geom_text(nudge_y = 50) +
+  xlim(c(-1500, 1500)) +
+  theme_minimal()
+```
+
+Which gives us the same result as before (which is a good check that we didn't make mistakes!).
 
 
 ```{r, child="_session-info.Rmd"}
