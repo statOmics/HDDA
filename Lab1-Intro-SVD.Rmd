@@ -81,17 +81,34 @@ rownames(cheese_mx) <- paste("case", cheese$Case, sep = "_")
 cheese_mx
 ```
 
-Check rank of `cheese_mx` and center the matrix.
+Check rank of `cheese_mx`.
 
 ```{r}
 qr(cheese_mx)$rank
+```
+
+We will now **center** the data matrix through the $\mathbf{H}$ matrix:
+
+$$ \mathbf{H} = \mathbf{I}_{n \times n} - \frac{1}{n} \mathbf{1}_n\mathbf{1}_n^T $$
+
+```{r H_matrix}
+n <- nrow(cheese_mx)
+
+## 11^T
+## Alternatively: one_mat <- rep(1, n) %o% rep(1, n)
+(one_mat <- matrix(rep(1, n * n), ncol = n, nrow = n))
+
+## Calculate H, diag(n) is the nxn identity matrix
+H <- diag(n) - (1/n) * one_mat
+H[1:8, 1:8] # showing subset of H
 
 # Centering the data matrix
-n <- nrow(cheese_mx)
-cheese_H <- diag(n) - 1 / n * matrix(1, ncol = n, nrow = n)
-cheese_centered <- cheese_H %*% as.matrix(cheese_mx)
-## Again we use H here because we use it for some exercises later on
-## In real-life applications using the `scale` function would be more appropriate
+cheese_centered <- H %*% as.matrix(cheese_mx)
+## Note that using `scale(X, center = TRUE, scale = FALSE)` is much more
+## efficient to center a matrix
+
+## Verify colMeans are 0
+round(colMeans(cheese_centered), 8)
 ```
 
 
