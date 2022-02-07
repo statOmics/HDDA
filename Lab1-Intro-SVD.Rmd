@@ -103,7 +103,7 @@ cheese_H <- diag(n) - (1/n) * one_mat
 cheese_H[1:8, 1:8] # showing subset of H
 
 # Centering the data matrix
-cheese_centered <- cheese_H %*% as.matrix(cheese_mx)
+cheese_centered <- cheese_H %*% cheese_mx
 ## Note that using `scale(X, center = TRUE, scale = FALSE)` is much more
 ## efficient to center a matrix
 
