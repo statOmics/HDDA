@@ -663,5 +663,8 @@ the SVD:
 -   <https://stats.stackexchange.com/a/134283/264768>
 -   <https://twitter.com/allison_horst/status/1288904459490213888?s=20>
 
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">...that looks like this. I get to see them pretend to be whale sharks, we talk a bit about how to get as many krill as possible in the fewest passes you&#39;re gonna tilt your face, then we get into PCA. <a href="https://t.co/8P0NZk7elO">pic.twitter.com/8P0NZk7elO</a></p>&mdash; Allison Horst (@allison_horst) <a href="https://twitter.com/allison_horst/status/1288904464527572992?ref_src=twsrc%5Etfw">July 30, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
 ```{r, child="_session-info.Rmd"}
 ```
