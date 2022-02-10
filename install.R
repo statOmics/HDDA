@@ -24,6 +24,7 @@ BiocManager::install(c(
    "ggforce",
    "ggmap",
    "ggplot2",
+   "ggrepel",
    "glmnet",
    "gridExtra",
    "imager",
