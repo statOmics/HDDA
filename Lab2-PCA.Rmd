@@ -2,7 +2,7 @@
 title: "Lab 2: Principal Component Analysis"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait"
-date: "28 Oct 2021 <br/> (Last updated: 2021-11-26)"
+date: "10 Feb 2022 <br/> (Last updated: 2022-02-10)"
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 ```{r libraries, warning=FALSE, message=FALSE}
 ## Install necessary packages with:
 # install.packages("tidyverse")
+# install.packages("ggrepel")
 # if (!requireNamespace("remotes", quietly = TRUE)) {
 #     install.packages("remotes")
 # }
@@ -31,6 +32,7 @@ library(tidyverse)
 theme_set(theme_light())
 
 library(ggbiplot)
+library(ggrepel)
 library(HDDAData)
 ```
 
@@ -319,11 +321,7 @@ Think about which columns you need from the original data!
 
 <details>
 
-<summary>
-
-Solution
-
-</summary>
+<summary> Solution </summary>
 
 First do the PCA, excluding the `location` and `river` columns.
 
@@ -393,11 +391,7 @@ variable) to aid with interpretation.
 
 <details>
 
-<summary>
-
-Solution
-
-</summary>
+<summary> Solution </summary>
 
 Making the biplot for the first 2 PCs.
 
@@ -426,11 +420,7 @@ heavymetals_pca$rotation[, 1:2]
 
 <details>
 
-<summary>
-
-Solution
-
-</summary>
+<summary> Solution </summary>
 
 First perform the SVD. Remember to **center and scale** the data matrix!
 
@@ -483,11 +473,7 @@ summary(industries)
 
 <details>
 
-<summary>
-
-Solution
-
-</summary>
+<summary> Solution </summary>
 
 Perform the PCA on the centered and scaled data matrix, after removing the `country` column.
 
@@ -542,20 +528,19 @@ In this case, retaining the first 5-7 PCs would be more appropriate.
 
 <details>
 
-<summary>
-
-Solution
-
-</summary>
+<summary> Solution </summary>
 
 Construct the biplot. We don't really have a grouping variable to color the points, but we can add
 labels with the country names.
 
 ```{r industries-pca-biplot}
-ggbiplot(industries_pca, labels = industries$country, labels.size = 2) +
+industries_biplot <- ggbiplot(industries_pca,
+  labels = industries$country, labels.size = 2
+) +
   ggtitle("Biplot for the industries PCA") +
   xlim(c(-3.4, 3.4)) +
   ylim(c(-2.2, 2.2))
+industries_biplot
 ```
 
 The biplot shows how the work forces of the countries are distributed among the different
@@ -570,11 +555,7 @@ sectors.
 
 <details>
 
-<summary>
-
-Solution
-
-</summary>
+<summary> Solution </summary>
 
 We can use the biplot and loadings to interpret the PCs. The biplot is given above, while the
 loadings can be accessed from the `$rotation` slot:
@@ -616,6 +597,62 @@ Keep in mind however that these 2 PCs "only" explain 38.7% and 23.7% of the tota
 respectively. So there are likely still many patterns we are missing.
 
 </details>
+
+
+#### **Extra**: the average country {.unnumbered}
+
+Where would a country with average employment across all industries lie on the biplot?
+
+<details>
+
+<summary> Solution </summary>
+
+First calculate the "average" country by computing the means of each variable
+in the `industries` data. But remember, we **centered and scaled** the data
+before calculating the PCA (through the `center = TRUE` and `scale. = TRUE`
+arguments in `prcomp`). So we have to do the same procedure with our new country.
+Of course, subtracting the averages from the average country results in all 0's.
+So we can represent our average country by a vector of 0's for each feature.
+
+```{r}
+avg_country <- rep(0, ncol(industries) - 1) # -1 for the 'country' column
+```
+
+Next, we project our new country on to the PCA space, using
+
+$$ Z = XV_{k}$$
+
+where $V$ are the PC *loadings* (or right singular vectors in SVD terms) and $k$
+are the chosen number of dimensions (2 in this case).
+
+Of course, since $X$ here consists entirely of zeros, the resulting projection
+will also be 0 everywhere, and you can see why the average country will lie in
+the center of the biplot!
+
+```{r}
+(avg_country_pc <- avg_country %*% industries_pca$rotation)
+## Reformat a bit to make it consistent with the data in the biplot
+avg_country_biplot <- data.frame(
+  xvar = avg_country_pc[, "PC1"],
+  yvar = avg_country_pc[, "PC2"],
+  labels = "AVERAGE", row.names = NULL
+)
+
+## Add the average country to the biplot
+industries_biplot +
+  geom_point(
+    data = avg_country_biplot, size = 3,
+    shape = 23, fill = "dodgerblue"
+  ) +
+  geom_label_repel(
+    data = avg_country_biplot, aes(label = labels),
+    nudge_x = 1, nudge_y = 0.5, size = 4,
+    color = "dodgerblue"
+  ) + labs(subtitle = "Average country highlighted")
+```
+
+</details>
+
 
 # Further reading
 
