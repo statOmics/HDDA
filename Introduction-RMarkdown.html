@@ -675,7 +675,7 @@ div.tocify {
 <span id="cb12-2"><a href="#cb12-2"></a><span class="co"># (mean = 0, standard deviation = 1)</span></span>
 <span id="cb12-3"><a href="#cb12-3"></a>draws &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</span>
 <span id="cb12-4"><a href="#cb12-4"></a><span class="kw">head</span>(draws)</span></code></pre></div>
-<pre><code>## [1]  0.1300307 -1.4847555 -0.1970518 -0.8068008 -1.4677295  1.2522249</code></pre>
+<pre><code>## [1]  0.2185692 -1.4089307 -0.1023784  0.7599496  1.9098834  1.0548903</code></pre>
 </div>
 <div id="getting-help-in-r" class="section level2">
 <h2><span class="header-section-number">2.5</span> Getting help in R: <code>?</code></h2>
@@ -685,7 +685,7 @@ div.tocify {
 <p>The solution is to specify the <code>mean</code> and <code>sd</code> arguments.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>draws2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">5</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="kw">head</span>(draws2)</span></code></pre></div>
-<pre><code>## [1] 4.616878 6.141762 5.908205 3.938005 3.451954 5.304706</code></pre>
+<pre><code>## [1] 2.292376 2.292979 8.648308 2.729763 5.204845 6.842599</code></pre>
 <p>Each built-in R function or functions loaded through a package has a help page. In addition, there is a wealth of information through the wonderful magic of <a href="https://www.google.com/">Google</a>. Another great place to look for answers or ask questions yourself is <a href="https://stackoverflow.com/">StackOverflow</a>.</p>
 </div>
 <div id="tidyverse" class="section level2">
@@ -892,7 +892,7 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 That way, other persons (including your future self) looking at your document can see what versions of R and loaded packages were used, which can be quite essential for reproducibility.</p>
 <p>You can also include the date with <code>Sys.time()</code> so you have a time stamp of when the report was compiled.</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">Sys.time</span>()</span></code></pre></div>
-<pre><code>## [1] &quot;2022-02-10 13:06:22 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2022-02-10 15:49:47 UTC&quot;</code></pre>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.1.2 (2021-11-01)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
