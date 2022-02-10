@@ -1855,6 +1855,8 @@ Note, that we have shown that we can rewrite $\mathbf{X}\mathbf{X}^T$ using the 
 \mathbf{X}\mathbf{X}^T = \mathbf{U}\boldsymbol{\Delta}^2\mathbf{U}^T
 \]
 
+see section \@ref(SVDcov).
+
 Because the truncated SVD of $\mathbf{X}$ minimises the Frobenius norm $\Vert \mathbf{X}-\mathbf{X}_k\Vert_F^2$, it this has an important consequence:
 
 - Let $\mathbf{D}_X$ denote the $n \times n$ matrix with the squared Euclidian distances between the $n$ data points $\mathbf{x}_i$ in the original $p$-dimensional space.
@@ -2307,11 +2309,12 @@ If we write the eigen value decomposition in matrix form:
 
 with $\boldsymbol{\Lambda}$ is a diagonal matrix with diagonal elements $[\lambda_i]_{ii}$.
 
-We recognise an expression that we have seen when discussing the link between the SVD and the sample covariance matrix
+We recognise an expression that we have seen when discussing the link between the SVD and the sample covariance matrix, see section \@ref(SVDcov).
 
 \begin{eqnarray}
 \mathbf{X}^T\mathbf{X}\mathbf{V} &=&\mathbf{V}\boldsymbol{\Delta}^2
 \end{eqnarray}
+
 
 - So, the SVD can be used to solve the spectral decomposition (eigen value eigen vector) problem and the eigen vectors coincide with the right singular vectors and the eigen values are the singular values squared!
 
@@ -2476,20 +2479,22 @@ pIris <- pIris +
     ) +
   geom_text(
     aes(
-      x = -irisSvd$v[1,1]*irisSvd$d[1]/sqrt(nIris-1)*1.2,
-      y = -irisSvd$v[2,1]*irisSvd$d[1]/sqrt(nIris-1)*1.2,
-      label="e1"
+      x = -irisSvd$v[1,1]*irisSvd$d[1]/sqrt(nIris-1),
+      y = -irisSvd$v[2,1]*irisSvd$d[1]/sqrt(nIris-1)+.1,
+      label=paste0("\u03BB","1e1")
       )
     ) +
   geom_text(
     aes(
-      x = irisSvd$v[1,2]*irisSvd$d[2]/sqrt(nIris-1)*1.2,
-      y = irisSvd$v[2,2]*irisSvd$d[2]/sqrt(nIris-1)*1.2,
-      label="e2"
+      x = irisSvd$v[1,2]*irisSvd$d[2]/sqrt(nIris-1),
+      y = irisSvd$v[2,2]*irisSvd$d[2]/sqrt(nIris-1)+.1,
+      label=paste0("\u03BB","2e2")
       )
     ) +
   xlim(-1, 1) +
-  ylim(-1,1)
+  ylim(-1,1) +
+  coord_fixed() 
+
 
 pIris
 ```
@@ -2547,7 +2552,8 @@ irisX2[,2] <- irisX2[,2]*10
 pIris2 <- irisX2 %>%
   as.data.frame %>%
   ggplot(aes(x=Sepal.Length,y=Sepal.Width)) +
-  geom_point()
+  geom_point() +   coord_fixed() 
+
 
 irisSvd2 <- svd(irisX2)
 
@@ -2574,23 +2580,23 @@ pIris2 <- pIris2 +
     aes(
       x = irisSvd2$v[1,1]*irisSvd2$d[1]/sqrt(nIris-1)*1.2,
       y = irisSvd2$v[2,1]*irisSvd2$d[1]/sqrt(nIris-1)*1.2,
-      label="e1"
+      label=paste0("\u03BB","1e1")
       )
     ) +
   geom_text(
     aes(
       x = irisSvd2$v[1,2]*irisSvd2$d[2]/sqrt(nIris-1)*1.2,
       y = irisSvd2$v[2,2]*irisSvd2$d[2]/sqrt(nIris-1)*1.2,
-      label="e2"
+      label=paste0("\u03BB","2e2")
       )
     ) +
   xlim(-10, 10) +
   ylim(-10,10)
 
-grid.arrange(pIris, pIris2)
+grid.arrange(pIris, pIris2,ncol=2)
 ```
 
-Top: original matrix -- Bottom: second column of $\mathbf{X}$ multiplied by 10 (e.g. moving from cm to mm).
+Left: original matrix -- Right: second column of $\mathbf{X}$ multiplied by 10 (e.g. moving from cm to mm).
 
 Directions of maximal variability are affected by the units of the variables.
 
@@ -2682,7 +2688,7 @@ pIris +
 ```
 
 
-This graphs shows $n=50$ data points on $p=2$ dimensions.  The two ellipses are constant density ellipses for three different values of $c$ (i.e. three different constant densities). The inner ellipse corresponds to the largest constant density and the outer to the smallest constant density. The arrows show the two eigen vectors /  singular vectors and they are scaled according to the sqrt of the eigen values and they form the axes of the constant density ellipses. It is clear that the first axis is pointing to the larger variance.
+This graphs shows $n=50$ data points on $p=2$ dimensions.  The two ellipses are constant density ellipses for three different values of $c$ (i.e. three different constant densities). The inner ellipse corresponds to the largest constant density and the outer to the smallest constant density. The arrows show the two eigen vectors /  singular vectors and they are scaled according to the square root of the eigen values and they form the axes of the constant density ellipses. It is clear that the first axis is pointing to the larger variance.
 
 ## Biplot
 
