@@ -457,6 +457,9 @@ div.tocify {
     <li>
       <a href="lsi.html">6. Large Scale Inference</a>
     </li>
+    <li>
+      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">7.1 Paper Model-based Clustering</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -801,28 +804,29 @@ or (upon using <span class="math inline">\(\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j=
 <span id="cb18-12"><a href="#cb18-12"></a>  <span class="dt">stop =</span> <span class="dv">-50</span>,</span>
 <span id="cb18-13"><a href="#cb18-13"></a>  <span class="dt">maxIte =</span> <span class="dv">25</span>,</span>
 <span id="cb18-14"><a href="#cb18-14"></a>  <span class="dt">trace =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>## ite:  1  ridge cost:  95.08526  |b|_1:  5.3197 
-## ite:  2  ridge cost:  89.94812  |b|_1:  5.731751 
-## ite:  3  ridge cost:  89.0663  |b|_1:  5.731537 
-## ite:  4  ridge cost:  87.90977  |b|_1:  5.897423 
-## ite:  5  ridge cost:  87.87683  |b|_1:  5.888787 
-## ite:  6  ridge cost:  88.25684  |b|_1:  5.813334 
-## ite:  7  ridge cost:  87.70703  |b|_1:  5.915754 
-## ite:  8  ridge cost:  87.8919  |b|_1:  5.880497 
-## ite:  9  ridge cost:  87.81655  |b|_1:  5.894648 
-## ite:  10  ridge cost:  87.77745  |b|_1:  5.90202 
-## ite:  11  ridge cost:  87.76952  |b|_1:  5.903515 
-## ite:  12  ridge cost:  87.77567  |b|_1:  5.902349 
-## ite:  13  ridge cost:  87.77871  |b|_1:  5.901774 
-## ite:  14  ridge cost:  87.78021  |b|_1:  5.901491 
-## ite:  15  ridge cost:  87.78095  |b|_1:  5.901351 
-## ite:  16  ridge cost:  87.78131  |b|_1:  5.901282 
-## ite:  17  ridge cost:  87.78149  |b|_1:  5.901248 
-## ite:  18  ridge cost:  87.78158  |b|_1:  5.901231 
-## ite:  19  ridge cost:  87.78162  |b|_1:  5.901223 
+<pre><code>## ite:  1  ridge cost:  108.2175  |b|_1:  6.069149 
+## ite:  2  ridge cost:  94.44281  |b|_1:  6.319331 
+## ite:  3  ridge cost:  92.12054  |b|_1:  5.560718 
+## ite:  4  ridge cost:  89.6133  |b|_1:  5.703952 
+## ite:  5  ridge cost:  88.37124  |b|_1:  5.833366 
+## ite:  6  ridge cost:  87.70321  |b|_1:  5.928254 
+## ite:  7  ridge cost:  88.05984  |b|_1:  5.851991 
+## ite:  8  ridge cost:  87.50474  |b|_1:  5.954694 
+## ite:  9  ridge cost:  87.8141  |b|_1:  5.895309 
+## ite:  10  ridge cost:  87.85351  |b|_1:  5.887697 
+## ite:  11  ridge cost:  87.79663  |b|_1:  5.8984 
+## ite:  12  ridge cost:  87.76711  |b|_1:  5.903974 
+## ite:  13  ridge cost:  87.77271  |b|_1:  5.902909 
+## ite:  14  ridge cost:  87.77725  |b|_1:  5.90205 
+## ite:  15  ridge cost:  87.77949  |b|_1:  5.901627 
+## ite:  16  ridge cost:  87.78059  |b|_1:  5.901418 
+## ite:  17  ridge cost:  87.78113  |b|_1:  5.901315 
+## ite:  18  ridge cost:  87.7814  |b|_1:  5.901265 
+## ite:  19  ridge cost:  87.78153  |b|_1:  5.90124 
+## ite:  20  ridge cost:  87.7816  |b|_1:  5.901227 
 ## ite:  1  ridge cost:  134.7777  |b|_1:  5.379261 
 ## ite:  2  ridge cost:  134.7777  |b|_1:  5.379261 
-## final update, total ridge cost:  222.5594  |b|_1:  11.28048</code></pre>
+## final update, total ridge cost:  222.5593  |b|_1:  11.28049</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>Vsda &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow=</span><span class="kw">ncol</span>(X2), <span class="dt">ncol=</span><span class="dv">2</span>)</span>
 <span id="cb20-2"><a href="#cb20-2"></a>Vsda[breast.slda<span class="op">$</span>varIndex,] &lt;-<span class="st"> </span>breast.slda<span class="op">$</span>beta</span>
 <span id="cb20-3"><a href="#cb20-3"></a><span class="kw">colnames</span>(Vsda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Vsda))</span>
@@ -919,7 +923,7 @@ This is probably caused by numerical instability when working with large <span c
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>## [1] &quot;2022-02-10 15:50:33 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2022-02-21 15:07:02 UTC&quot;</code></pre>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
 ##  version  R version 4.1.2 (2021-11-01)
@@ -930,7 +934,7 @@ This is probably caused by numerical instability when working with large <span c
 ##  collate  C.UTF-8
 ##  ctype    C.UTF-8
 ##  tz       UTC
-##  date     2022-02-10
+##  date     2022-02-21
 ##  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
@@ -982,7 +986,7 @@ This is probably caused by numerical instability when working with large <span c
 ##  P genefu            * 2.26.0     2021-10-26 [?] Bioconductor
 ##  P generics            0.1.1      2021-10-25 [?] CRAN (R 4.1.2)
 ##  P GenomeInfoDb        1.30.0     2021-10-26 [?] Bioconductor
-##  P GenomeInfoDbData    1.2.7      2022-01-28 [?] Bioconductor
+##  P GenomeInfoDbData    1.2.7      2022-02-21 [?] Bioconductor
 ##  P ggplot2           * 3.3.5      2021-06-25 [?] CRAN (R 4.1.2)
 ##  P globals             0.14.0     2020-11-22 [?] CRAN (R 4.1.2)
 ##  P glue                1.6.1      2022-01-22 [?] CRAN (R 4.1.2)
@@ -1021,7 +1025,7 @@ This is probably caused by numerical instability when working with large <span c
 ##  P pamr              * 1.56.1     2019-04-22 [?] CRAN (R 4.1.2)
 ##  P parallelly          1.30.0     2021-12-17 [?] CRAN (R 4.1.2)
 ##  P pillar              1.6.5      2022-01-25 [?] CRAN (R 4.1.2)
-##  P pkgconfig           2.0.3      2022-01-28 [?] Github (r-lib/pkgconfig@b81ae03)
+##  P pkgconfig           2.0.3      2022-02-21 [?] Github (r-lib/pkgconfig@b81ae03)
 ##  P png                 0.1-7      2013-12-03 [?] CRAN (R 4.1.2)
 ##  P prettyunits         1.1.1      2020-01-24 [?] CRAN (R 4.1.2)
 ##  P prodlim           * 2019.11.13 2019-11-17 [?] CRAN (R 4.1.2)
