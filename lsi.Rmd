@@ -1016,8 +1016,7 @@ where $Z$ is the test statistic distributed under the alternative hypothesis ($f
 
 ```{r}
 data(hivdata)
-res <- locfdr(hivdata,plot=2)
-res <- locfdr(hivdata,plot=3)
+res <- locfdr(hivdata,plot=4)
 ```
 
 ```{r}
