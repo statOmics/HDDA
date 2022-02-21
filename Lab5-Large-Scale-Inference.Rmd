@@ -2,7 +2,7 @@
 title: "Lab 5: Large Scale Inference"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait"
-date: "2 Dec 2021 <br/> (Last updated: 2021-12-01)"
+date: "21 Feb 2022 <br/> (Last updated: 2022-02-21)"
 references:
 - id: alon1999broad
   type: article-journal
@@ -93,7 +93,7 @@ $|z_i| > \phi_{1-\alpha_i/2}$, where $\phi_{\alpha_i/2}$ is the $\alpha_i/2$th
 quantile of the standard normal distribution.
 
 In a multiple hypothesis testing setting, we will perform $m$ tests using the
-same test statistic. If the *null* were true for all hypotheses, we woul end up
+same test statistic. If the *null* were true for all hypotheses, we would end up
 with a sample $z_1,\ldots,z_m$ from a standard normal distribution.
 
 In this setting, we can only make one type of error: wrongly rejecting the null
@@ -680,9 +680,17 @@ fdr <- p.adjust(p_vals, method = "BH")
 
 plot(
   p_vals[order(p_vals)], fdr[order(p_vals)],
-  pch = 19, cex = 0.6, xlab = "p-value", ylab = "FDR-adjusted p-value", col = 4
+  pch = 19, cex = 0.6, xlab = "p-value", ylab = "Adjusted p-value", col = 4
+)
+points(
+  p_vals[order(p_vals)], bonf_pvals[order(p_vals)],
+  pch = 19, cex = 0.6, col = 2
 )
 abline(a = 0, b = 1)
+legend("bottomright",
+  c("Benjamini-Hochberg", "Bonferroni"),
+  col = c(4, 2), pch = 19
+)
 
 sum(fdr < 0.05)
 ```
