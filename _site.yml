@@ -20,6 +20,8 @@ navbar:
         href: lda.html
       - text: "6. Large Scale Inference"
         href: lsi.html
+      - text: "7.1 Paper Model-based Clustering"
+        href: https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf
 
     - text: "Labs"
       icon: fa-laptop
