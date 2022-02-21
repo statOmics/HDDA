@@ -1,0 +1,184 @@
+---
+title: "Lab 6: Clustering"
+subtitle: "High Dimensional Data Analysis practicals"
+author: "Milan Malfait"
+date: "24 Feb 2022 <br/> (Last updated: 2022-02-21)"
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+options(width = 80)
+```
+
+### [Change log](https://github.com/statOmics/HDDA/commits/master/Lab6-Clustering.Rmd) {-}
+
+***
+
+```{r libraries, message=FALSE, warning=FALSE}
+## Install necessary packages with:
+
+# install.packages(c("mclust", "gclus", "tidyverse"))
+
+# if (!requireNamespace("remotes", quietly = TRUE)) {
+#     install.packages("remotes")
+# }
+# remotes::install_github("vqv/ggbiplot")
+
+library(mclust)
+library(gclus)  # contains the 'wine' data
+library(ggbiplot)
+library(tidyverse)
+```
+
+
+# Exercises: diabetes data
+
+Following https://svn.r-project.org/Rjournal/html/archive/2016/RJ-2016-021/RJ-2016-021.pdf.
+
+This dataset provides 13 measurements obtained from a chemical analysis of 178
+wines grown in the same region in Italy but derived from three different
+cultivars (Barolo, Grignolino, Barbera).
+
+```{r}
+data("wine", package = "gclus")
+class <- factor(wine$Class, levels = 1:3, labels = c("Barolo", "Grignolino", "Barbera"))
+table(class)
+
+X <- wine[, -1]
+summary(X)
+```
+
+
+### Tasks {-}
+
+#### 1.  {-}
+
+<details><summary>Solution</summary>
+
+```{r}
+mod <- Mclust(X)
+summary(mod)
+summary(mod$BIC)
+```
+
+```{r}
+table(class, mod$classification)
+
+## Annotate clusters
+clusters <- factor(mod$classification, levels = 1:3, labels = levels(class))
+```
+
+```{r}
+plot(mod, what = "BIC", ylim = range(mod$BIC[, -(1:2)], na.rm = TRUE),
+  legendArgs = list(x = "bottomleft")
+)
+```
+
+There is a clear indication of a three-component mixture with covariances having
+different shapes but the same volume and orientation (EVE).
+
+</details>
+
+#### 2. {-}
+
+<details><summary>Solution</summary>
+
+```{r}
+wine_pca <- prcomp(X, scale. = TRUE)
+
+## PCA plot annotated with clusters
+ggbiplot(wine_pca, groups = clusters, ellipse = TRUE) +
+    theme(aspect.ratio = 0.6)
+```
+
+</details>
+
+#### 3. {-}
+
+<details><summary>Solution</summary>
+
+```{r}
+## Calculate total variance by summing the PC variances (sdev's squared)
+tot_var <- sum(wine_pca$sdev^2)
+
+## Create data.frame of the proportion of variance explained by each PC
+wine_prop_var <- data.frame(
+  PC = 1:ncol(wine_pca$x),
+  var = wine_pca$sdev^2
+) %>%
+  ## Using `mutate` to calculate prop. var and cum. prop. var
+  mutate(
+    prop_var = var / tot_var,
+    cum_prop_var = cumsum(var / tot_var)
+  )
+
+wine_prop_var
+
+## Plot the proportion of variance explained by each PC
+p1 <- ggplot(wine_prop_var, aes(PC, prop_var)) +
+  geom_point() +
+  geom_line() +
+  geom_vline(xintercept = 6.5, col = "firebrick") +
+  scale_x_continuous(breaks = 1:ncol(wine_pca$x)) +
+  labs(y = "Proportion of variance") +
+  ggtitle("Proportion of variance explained by each PC",
+          subtitle = "wine data")
+
+## Plot the cumulative proportion of variance explained by each PC
+p2 <- ggplot(wine_prop_var, aes(PC, cum_prop_var)) +
+  geom_point() +
+  geom_line() +
+  geom_vline(xintercept = 6.5, col = "firebrick") +
+  scale_x_continuous(breaks = 1:ncol(wine_pca$x)) +
+  labs(y = "Proportion of variance") +
+  ggtitle("Cumulative proportion of variance explained by each PC",
+          subtitle = "wine data")
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+Selecting first 6 PC's, keeping 85% of the variance.
+
+```{r}
+k <- 6
+pca_X <- wine_pca$x[, 1:k]
+head(pca_X)
+```
+
+```{r}
+mod2 <- Mclust(pca_X)
+summary(mod2)
+summary(mod2$BIC)
+```
+
+```{r}
+table(class, mod2$classification)
+
+## Annotate clusters
+clusters2 <- factor(mod2$classification, labels = c(levels(class), "unknown"))
+```
+
+```{r}
+plot(mod2, what = "BIC", ylim = range(mod2$BIC[, -(1:2)], na.rm = TRUE),
+  legendArgs = list(x = "bottomleft")
+)
+```
+
+```{r, fig.width=12}
+df <- as.data.frame(pca_X)
+df$clusters <- clusters2
+
+GGally::ggscatmat(df, columns = 1:k, color = "clusters") +
+  theme(legend.position = "bottom", aspect.ratio = 0.6)
+```
+
+
+</details>
+
+
+
+```{r, child="_session-info.Rmd"}
+```
