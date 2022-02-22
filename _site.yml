@@ -39,7 +39,8 @@ navbar:
         href: Lab4-Sparse-PCA-LDA.html
       - text: "Lab 5: LSI"
         href: Lab5-Large-Scale-Inference.html
-
+      - text: "Lab 6: Clustering"
+        href: Lab6-Clustering.html
   right:
     - text: "About"
       href: about.html
