@@ -64,15 +64,14 @@ $\longrightarrow$ both **observations** (rows) and **variables** (columns) can b
 ## Example
 
 ```{r}
+library(tidyverse)
 data(diabetes,package = "mclust")
 class <- diabetes$class
 table(class)
 head(diabetes)
 ```
 ```{r}
-library(GGally)
-library(mclust)
-clPairs(diabetes[,-1], diabetes$class)
+mclust::clPairs(diabetes[,-1], diabetes$class)
 ```
 
 ```{r}
@@ -80,12 +79,11 @@ diabetesKmeans <- kmeans(diabetes[,-1], centers = 3)
 diabetesKmeans
 ```
 
-```{r}
-clPairs(diabetes[,-1], diabetes$class, main = "Real")
-clPairs(diabetes[,-1], diabetesKmeans$cluster,colors = c(2,3,4),symbols = c(0,17,16), main="K-means")
+```{r out.width="49%"}
+mclust::clPairs(diabetes[,-1], diabetes$class, main = "Real"); mclust::clPairs(diabetes[,-1], diabetesKmeans$cluster,colors = c(2,3,4),symbols = c(0,17,16), main="K-means")
 ```
 
-# Hierarchical Cluster Analysis: Agnes
+# Hierarchical Cluster Analysis
 
 ## General Algorithm
 
@@ -157,7 +155,7 @@ Hierarchical nature of the algorithm:
 - Nested sequence of clusters $\longrightarrow$ visualisation via a tree  
 
 
-- height of branches indicate the intercluster dissimilarity at which clusters are merged.
+- Height of branches indicate the intercluster dissimilarity at which clusters are merged.
 
 - Can used as instrument for deciding the number of clusters in the data
 
@@ -184,9 +182,6 @@ knitr::kable(toy)
 ```
 
 ```{r}
-library(cluster)
-library(tidyverse)
-
 toy %>%
   ggplot(aes(X1, X2, label = label)) +
   geom_point() +
@@ -198,45 +193,47 @@ toy[,1:2] %>% dist
 ## Single linkage
 
 ```{r}
-toySingle <- agnes(toy[,1:2], method = "single")
+toyDist <- toy[,1:2] %>% dist
+toySingle <- hclust(toyDist, method = "single")
 par(mfrow=c(1,2),pty="s")
 plot(X2 ~ X1, toy, xlim = c(1.25,2.75),ylim = c(2,3.5))
 text(toy$X1*1.05,toy$X2,label=toy$label)
-plot(toySingle, which.plot = 2, main = "Single")
-toy[,1:2] %>% dist
+plot(toySingle, main = "Single")
+toyDist
 ```
 
 ## Complete linkage
 
 ```{r}
-toyComplete <- agnes(toy[,1:2], method = "complete")
+toyComplete <- hclust(toyDist, method = "complete")
 par(mfrow=c(1,2),pty="s")
 plot(X2 ~ X1, toy, xlim = c(1.25,2.75),ylim = c(2,3.5))
 text(toy$X1*1.05,toy$X2,label=toy$label)
-plot(toyComplete, which.plot = 2, main = "Complete")
-toy[,1:2] %>% dist
+plot(toyComplete,  main = "Complete")
+toyDist
 ```
 
 ## Average linkage
 
 ```{r}
-toyAvg <- agnes(toy[,1:2], method = "average")
+toyAvg <- hclust(toyDist, method = "average")
 par(mfrow=c(1,2),pty="s")
 plot(X2 ~ X1, toy, xlim = c(1.25,2.75),ylim = c(2,3.5))
 text(toy$X1*1.05,toy$X2,label=toy$label)
-plot(toyAvg, which.plot = 2, main = "Average")
-toy[,1:2] %>% dist
+plot(toyAvg, main = "Average")
+toyDist
 ```
 
 ## Example 
 
 ```{r} 
-diabetesSingle <- agnes(diabetes[,-1], method = "single")
-plot(diabetesSingle, label = as.double(diabetes$class), which.plots = 2, main="single")
-diabetesComplete <- agnes(diabetes[,-1], method = "complete")
-plot(diabetesComplete, which.plots = 2,label = as.double(diabetes$class), main="complete")
-diabetesAverage <- agnes(diabetes[,-1], method = "average")
-plot(diabetesAverage, which.plots = 2, label = as.double(diabetes$class), main = "average")
+diabetesDist <- dist(diabetes[,-1])
+diabetesSingle <- hclust(diabetesDist, method = "single")
+plot(diabetesSingle, labels = as.double(diabetes$class), main="single")
+diabetesComplete <- hclust(diabetesDist, method = "complete")
+plot(diabetesComplete, labels = as.double(diabetes$class), main="complete")
+diabetesAverage <- hclust(diabetesDist, method = "average")
+plot(diabetesAverage, labels = as.double(diabetes$class), main = "average",cex=0.5)
 ```
 
 # Model-based clustering
