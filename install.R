@@ -14,7 +14,6 @@ BiocManager::install(c(
    "bookdown",
    "boot",
    "breastCancerMAINZ",
-   "cluster",
    "downloader",
    "dplyr",
    "hadley/emo@master",
