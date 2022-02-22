@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Hierarchical Clustering"
+title: "Introduction to Clustering"
 author: "Lieven Clement"
 output:
   bookdown::html_document2:
@@ -46,8 +46,44 @@ Abundance studies: the abundances of $n$ plant species are counted on $p$ plots 
 
 $\longrightarrow$ both **observations** (rows) and **variables** (columns) can be clustered
 
+# Partition Based Cluster Analysis
 
-# Hierarchical Cluster Analysis: Agnes
+- Partition based cluster methods require the number of clusters (k) to be specified prior to the start of the algorithm. 
+
+## K-means Methods
+
+- To use the k-means clustering algorithm we have to pre-define $k$, the number of clusters we want to define. 
+- The k-means algorithm is iterative. 
+- The algorithm starts by defining k cluster centers (centroids). 
+- Then the algorithm proceeds as follows 
+
+    1. First each observation is assigned to the cluster with the closest center to that observation.
+    2. Then the k centers are redefined using the observations in each cluster, i.e. the multivariate means (column means) of all observations in a cluster are used to define each new cluster center. 
+    3. We repeat these two steps until the centers converge.
+  
+## Example
+
+```{r}
+library(tidyverse)
+data(diabetes,package = "mclust")
+class <- diabetes$class
+table(class)
+head(diabetes)
+```
+```{r}
+mclust::clPairs(diabetes[,-1], diabetes$class)
+```
+
+```{r}
+diabetesKmeans <- kmeans(diabetes[,-1], centers = 3)
+diabetesKmeans
+```
+
+```{r out.width="49%"}
+mclust::clPairs(diabetes[,-1], diabetes$class, main = "Real"); mclust::clPairs(diabetes[,-1], diabetesKmeans$cluster,colors = c(2,3,4),symbols = c(0,17,16), main="K-means")
+```
+
+# Hierarchical Cluster Analysis
 
 ## General Algorithm
 
@@ -119,7 +155,7 @@ Hierarchical nature of the algorithm:
 - Nested sequence of clusters $\longrightarrow$ visualisation via a tree  
 
 
-- height of branches indicate the intercluster dissimilarity at which clusters are merged.
+- Height of branches indicate the intercluster dissimilarity at which clusters are merged.
 
 - Can used as instrument for deciding the number of clusters in the data
 
@@ -146,9 +182,6 @@ knitr::kable(toy)
 ```
 
 ```{r}
-library(cluster)
-library(tidyverse)
-
 toy %>%
   ggplot(aes(X1, X2, label = label)) +
   geom_point() +
@@ -160,38 +193,55 @@ toy[,1:2] %>% dist
 ## Single linkage
 
 ```{r}
-toySingle <- agnes(toy[,1:2], method = "single")
+toyDist <- toy[,1:2] %>% dist
+toySingle <- hclust(toyDist, method = "single")
 par(mfrow=c(1,2),pty="s")
 plot(X2 ~ X1, toy, xlim = c(1.25,2.75),ylim = c(2,3.5))
 text(toy$X1*1.05,toy$X2,label=toy$label)
-plot(toySingle, which.plot = 2, main = "Single")
-toy[,1:2] %>% dist
+plot(toySingle, main = "Single")
+toyDist
 ```
 
 ## Complete linkage
 
 ```{r}
-toyComplete <- agnes(toy[,1:2], method = "complete")
+toyComplete <- hclust(toyDist, method = "complete")
 par(mfrow=c(1,2),pty="s")
 plot(X2 ~ X1, toy, xlim = c(1.25,2.75),ylim = c(2,3.5))
 text(toy$X1*1.05,toy$X2,label=toy$label)
-plot(toyComplete, which.plot = 2, main = "Complete")
-toy[,1:2] %>% dist
+plot(toyComplete,  main = "Complete")
+toyDist
 ```
 
 ## Average linkage
 
 ```{r}
-toyAvg <- agnes(toy[,1:2], method = "average")
+toyAvg <- hclust(toyDist, method = "average")
 par(mfrow=c(1,2),pty="s")
 plot(X2 ~ X1, toy, xlim = c(1.25,2.75),ylim = c(2,3.5))
 text(toy$X1*1.05,toy$X2,label=toy$label)
-plot(toyAvg, which.plot = 2, main = "Average")
-toy[,1:2] %>% dist
+plot(toyAvg, main = "Average")
+toyDist
+```
+
+## Example 
+
+```{r} 
+diabetesDist <- dist(diabetes[,-1])
+diabetesSingle <- hclust(diabetesDist, method = "single")
+plot(diabetesSingle, labels = as.double(diabetes$class), main="single")
+diabetesComplete <- hclust(diabetesDist, method = "complete")
+plot(diabetesComplete, labels = as.double(diabetes$class), main="complete")
+diabetesAverage <- hclust(diabetesDist, method = "average")
+plot(diabetesAverage, labels = as.double(diabetes$class), main = "average",cex=0.5)
 ```
 
 # Model-based clustering
 
-```{r}
-library(mclust)
-```
+- [Paper: Fraley and Raftery (1998). How Many Clusters? Which Clustering Method? Answers Via Model-Based Cluster Analysis. The Computer Journal, (41)8:578-588.](https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf)
+
+- [EM algorithm](./em.html) [[PDF](./em.pdf)]
+
+- Example: see tutorial session
+
+
