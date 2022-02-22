@@ -458,7 +458,13 @@ div.tocify {
       <a href="lsi.html">6. Large Scale Inference</a>
     </li>
     <li>
-      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">7.1 Paper Model-based Clustering</a>
+      <a href="hclust.html">7.1. Introduction to Clustering</a>
+    </li>
+    <li>
+      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">7.2. Paper Model-based Clustering</a>
+    </li>
+    <li>
+      <a href="em.html">7.3. EM algorithm</a>
     </li>
   </ul>
 </li>
@@ -804,25 +810,26 @@ or (upon using <span class="math inline">\(\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j=
 <span id="cb18-12"><a href="#cb18-12"></a>  <span class="dt">stop =</span> <span class="dv">-50</span>,</span>
 <span id="cb18-13"><a href="#cb18-13"></a>  <span class="dt">maxIte =</span> <span class="dv">25</span>,</span>
 <span id="cb18-14"><a href="#cb18-14"></a>  <span class="dt">trace =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>## ite:  1  ridge cost:  98.19218  |b|_1:  5.784747 
-## ite:  2  ridge cost:  91.89016  |b|_1:  5.66314 
-## ite:  3  ridge cost:  89.6331  |b|_1:  5.718043 
-## ite:  4  ridge cost:  88.36931  |b|_1:  5.839262 
-## ite:  5  ridge cost:  87.74427  |b|_1:  5.921995 
-## ite:  6  ridge cost:  88.02193  |b|_1:  5.85954 
-## ite:  7  ridge cost:  87.46547  |b|_1:  5.962301 
-## ite:  8  ridge cost:  87.79401  |b|_1:  5.899137 
-## ite:  9  ridge cost:  87.86069  |b|_1:  5.886349 
-## ite:  10  ridge cost:  87.80036  |b|_1:  5.897697 
-## ite:  11  ridge cost:  87.76904  |b|_1:  5.903608 
-## ite:  12  ridge cost:  87.77212  |b|_1:  5.903023 
-## ite:  13  ridge cost:  87.77695  |b|_1:  5.902106 
-## ite:  14  ridge cost:  87.77934  |b|_1:  5.901654 
-## ite:  15  ridge cost:  87.78052  |b|_1:  5.901432 
-## ite:  16  ridge cost:  87.7811  |b|_1:  5.901322 
-## ite:  17  ridge cost:  87.78139  |b|_1:  5.901268 
-## ite:  18  ridge cost:  87.78153  |b|_1:  5.901241 
-## ite:  19  ridge cost:  87.7816  |b|_1:  5.901228 
+<pre><code>## ite:  1  ridge cost:  105.1226  |b|_1:  5.755545 
+## ite:  2  ridge cost:  93.75  |b|_1:  5.857206 
+## ite:  3  ridge cost:  90.75857  |b|_1:  5.663335 
+## ite:  4  ridge cost:  89.37793  |b|_1:  5.699481 
+## ite:  5  ridge cost:  88.08301  |b|_1:  5.872689 
+## ite:  6  ridge cost:  87.73648  |b|_1:  5.917633 
+## ite:  7  ridge cost:  88.17972  |b|_1:  5.828355 
+## ite:  8  ridge cost:  87.62818  |b|_1:  5.930884 
+## ite:  9  ridge cost:  87.87721  |b|_1:  5.88331 
+## ite:  10  ridge cost:  87.83101  |b|_1:  5.891925 
+## ite:  11  ridge cost:  87.78496  |b|_1:  5.900602 
+## ite:  12  ridge cost:  87.7672  |b|_1:  5.903955 
+## ite:  13  ridge cost:  87.77453  |b|_1:  5.902566 
+## ite:  14  ridge cost:  87.77814  |b|_1:  5.901881 
+## ite:  15  ridge cost:  87.77993  |b|_1:  5.901543 
+## ite:  16  ridge cost:  87.78081  |b|_1:  5.901377 
+## ite:  17  ridge cost:  87.78124  |b|_1:  5.901295 
+## ite:  18  ridge cost:  87.78146  |b|_1:  5.901255 
+## ite:  19  ridge cost:  87.78156  |b|_1:  5.901235 
+## ite:  20  ridge cost:  87.78161  |b|_1:  5.901225 
 ## ite:  1  ridge cost:  134.7777  |b|_1:  5.379261 
 ## ite:  2  ridge cost:  134.7777  |b|_1:  5.379261 
 ## final update, total ridge cost:  222.5593  |b|_1:  11.28049</code></pre>
@@ -922,7 +929,7 @@ This is probably caused by numerical instability when working with large <span c
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>## [1] &quot;2022-02-21 15:52:26 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2022-02-22 15:12:21 UTC&quot;</code></pre>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
 ##  version  R version 4.1.2 (2021-11-01)
@@ -933,7 +940,7 @@ This is probably caused by numerical instability when working with large <span c
 ##  collate  C.UTF-8
 ##  ctype    C.UTF-8
 ##  tz       UTC
-##  date     2022-02-21
+##  date     2022-02-22
 ##  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
