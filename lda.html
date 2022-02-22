@@ -810,29 +810,28 @@ or (upon using <span class="math inline">\(\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j=
 <span id="cb18-12"><a href="#cb18-12"></a>  <span class="dt">stop =</span> <span class="dv">-50</span>,</span>
 <span id="cb18-13"><a href="#cb18-13"></a>  <span class="dt">maxIte =</span> <span class="dv">25</span>,</span>
 <span id="cb18-14"><a href="#cb18-14"></a>  <span class="dt">trace =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>## ite:  1  ridge cost:  105.1226  |b|_1:  5.755545 
-## ite:  2  ridge cost:  93.75  |b|_1:  5.857206 
-## ite:  3  ridge cost:  90.75857  |b|_1:  5.663335 
-## ite:  4  ridge cost:  89.37793  |b|_1:  5.699481 
-## ite:  5  ridge cost:  88.08301  |b|_1:  5.872689 
-## ite:  6  ridge cost:  87.73648  |b|_1:  5.917633 
-## ite:  7  ridge cost:  88.17972  |b|_1:  5.828355 
-## ite:  8  ridge cost:  87.62818  |b|_1:  5.930884 
-## ite:  9  ridge cost:  87.87721  |b|_1:  5.88331 
-## ite:  10  ridge cost:  87.83101  |b|_1:  5.891925 
-## ite:  11  ridge cost:  87.78496  |b|_1:  5.900602 
-## ite:  12  ridge cost:  87.7672  |b|_1:  5.903955 
-## ite:  13  ridge cost:  87.77453  |b|_1:  5.902566 
-## ite:  14  ridge cost:  87.77814  |b|_1:  5.901881 
-## ite:  15  ridge cost:  87.77993  |b|_1:  5.901543 
-## ite:  16  ridge cost:  87.78081  |b|_1:  5.901377 
-## ite:  17  ridge cost:  87.78124  |b|_1:  5.901295 
-## ite:  18  ridge cost:  87.78146  |b|_1:  5.901255 
-## ite:  19  ridge cost:  87.78156  |b|_1:  5.901235 
-## ite:  20  ridge cost:  87.78161  |b|_1:  5.901225 
-## ite:  1  ridge cost:  134.7777  |b|_1:  5.379261 
-## ite:  2  ridge cost:  134.7777  |b|_1:  5.379261 
-## final update, total ridge cost:  222.5593  |b|_1:  11.28049</code></pre>
+<pre><code>## ite:  1  ridge cost:  90.70498  |b|_1:  6.218828 
+## ite:  2  ridge cost:  91.72734  |b|_1:  5.531887 
+## ite:  3  ridge cost:  91.2791  |b|_1:  5.410449 
+## ite:  4  ridge cost:  89.26614  |b|_1:  5.676785 
+## ite:  5  ridge cost:  88.04169  |b|_1:  5.868154 
+## ite:  6  ridge cost:  88.15172  |b|_1:  5.836536 
+## ite:  7  ridge cost:  88.10718  |b|_1:  5.841208 
+## ite:  8  ridge cost:  87.94003  |b|_1:  5.871642 
+## ite:  9  ridge cost:  87.85921  |b|_1:  5.88664 
+## ite:  10  ridge cost:  87.81976  |b|_1:  5.894031 
+## ite:  11  ridge cost:  87.80041  |b|_1:  5.897674 
+## ite:  12  ridge cost:  87.7909  |b|_1:  5.89947 
+## ite:  13  ridge cost:  87.78621  |b|_1:  5.900355 
+## ite:  14  ridge cost:  87.78391  |b|_1:  5.900791 
+## ite:  15  ridge cost:  87.78277  |b|_1:  5.901006 
+## ite:  16  ridge cost:  87.78221  |b|_1:  5.901112 
+## ite:  17  ridge cost:  87.78193  |b|_1:  5.901164 
+## ite:  18  ridge cost:  87.7818  |b|_1:  5.90119 
+## ite:  19  ridge cost:  87.78173  |b|_1:  5.901203 
+## ite:  1  ridge cost:  134.7777  |b|_1:  5.379259 
+## ite:  2  ridge cost:  134.7777  |b|_1:  5.379259 
+## final update, total ridge cost:  222.5595  |b|_1:  11.28046</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>Vsda &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow=</span><span class="kw">ncol</span>(X2), <span class="dt">ncol=</span><span class="dv">2</span>)</span>
 <span id="cb20-2"><a href="#cb20-2"></a>Vsda[breast.slda<span class="op">$</span>varIndex,] &lt;-<span class="st"> </span>breast.slda<span class="op">$</span>beta</span>
 <span id="cb20-3"><a href="#cb20-3"></a><span class="kw">colnames</span>(Vsda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Vsda))</span>
@@ -929,7 +928,7 @@ This is probably caused by numerical instability when working with large <span c
 <h1>Session info</h1>
 <details>
 <p><summary>Session info</summary></p>
-<pre><code>## [1] &quot;2022-02-22 15:12:21 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2022-02-22 16:25:37 UTC&quot;</code></pre>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
 ##  version  R version 4.1.2 (2021-11-01)
