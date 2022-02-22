@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Hierarchical Clustering"
+title: "Introduction to Clustering"
 author: "Lieven Clement"
 output:
   bookdown::html_document2:
@@ -46,6 +46,44 @@ Abundance studies: the abundances of $n$ plant species are counted on $p$ plots 
 
 $\longrightarrow$ both **observations** (rows) and **variables** (columns) can be clustered
 
+# Partition Based Cluster Analysis
+
+- Partition based cluster methods require the number of clusters (k) to be specified prior to the start of the algorithm. 
+
+## K-means Methods
+
+- To use the k-means clustering algorithm we have to pre-define $k$, the number of clusters we want to define. 
+- The k-means algorithm is iterative. 
+- The algorithm starts by defining k cluster centers (centroids). 
+- Then the algorithm proceeds as follows 
+
+    1. First each observation is assigned to the cluster with the closest center to that observation.
+    2. Then the k centers are redefined using the observations in each cluster, i.e. the multivariate means (column means) of all observations in a cluster are used to define each new cluster center. 
+    3. We repeat these two steps until the centers converge.
+  
+## Example
+
+```{r}
+data(diabetes,package = "mclust")
+class <- diabetes$class
+table(class)
+head(diabetes)
+```
+```{r}
+library(GGally)
+library(mclust)
+clPairs(diabetes[,-1], diabetes$class)
+```
+
+```{r}
+diabetesKmeans <- kmeans(diabetes[,-1], centers = 3)
+diabetesKmeans
+```
+
+```{r}
+clPairs(diabetes[,-1], diabetes$class, main = "Real")
+clPairs(diabetes[,-1], diabetesKmeans$cluster,colors = c(2,3,4),symbols = c(0,17,16), main="K-means")
+```
 
 # Hierarchical Cluster Analysis: Agnes
 
@@ -190,8 +228,23 @@ plot(toyAvg, which.plot = 2, main = "Average")
 toy[,1:2] %>% dist
 ```
 
+## Example 
+
+```{r} 
+diabetesSingle <- agnes(diabetes[,-1], method = "single")
+plot(diabetesSingle, label = as.double(diabetes$class), which.plots = 2, main="single")
+diabetesComplete <- agnes(diabetes[,-1], method = "complete")
+plot(diabetesComplete, which.plots = 2,label = as.double(diabetes$class), main="complete")
+diabetesAverage <- agnes(diabetes[,-1], method = "average")
+plot(diabetesAverage, which.plots = 2, label = as.double(diabetes$class), main = "average")
+```
+
 # Model-based clustering
 
-```{r}
-library(mclust)
-```
+- [Paper: Fraley and Raftery (1998). How Many Clusters? Which Clustering Method? Answers Via Model-Based Cluster Analysis. The Computer Journal, (41)8:578-588.](https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf)
+
+- [EM algorithm](./em.html) [[PDF](./em.pdf)]
+
+- Example: see tutorial session
+
+

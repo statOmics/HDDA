@@ -91,7 +91,11 @@ email or during the lectures or practical sessions, and for the C003549 ECTS cou
 
 ### 7. Clustering 
 
-[Paper: Fraley and Raftery (1998). How Many Clusters? Which Clustering Method? Answers Via Model-Based Cluster Analysis. The Computer Journal, (41)8:578-588.](https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf)
+- [Introduction to Clustering](./hclust.html) [[PDF](./hclust.pdf)]
+  
+- [Paper: Fraley and Raftery (1998). How Many Clusters? Which Clustering Method? Answers Via Model-Based Cluster Analysis. The Computer Journal, (41)8:578-588.](https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf)
+
+- [EM algorithm](./em.html) [[PDF](./em.pdf)]
 
 ---
 
