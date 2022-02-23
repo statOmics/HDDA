@@ -11,7 +11,7 @@
 
 <meta name="author" content="Milan Malfait" />
 
-<meta name="date" content="2022-02-22" />
+<meta name="date" content="2022-02-23" />
 
 <title>Introduction to RMarkdown</title>
 
@@ -493,6 +493,9 @@ div.tocify {
     <li>
       <a href="Lab5-Large-Scale-Inference.html">Lab 5: LSI</a>
     </li>
+    <li>
+      <a href="Lab6-Clustering.html">Lab 6: Clustering</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -530,7 +533,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Introduction to RMarkdown</h1>
 <h4 class="author">Milan Malfait</h4>
-<h4 class="date">February 22, 2022</h4>
+<h4 class="date">February 23, 2022</h4>
 
 </div>
 
@@ -684,7 +687,7 @@ div.tocify {
 <span id="cb12-2"><a href="#cb12-2"></a><span class="co"># (mean = 0, standard deviation = 1)</span></span>
 <span id="cb12-3"><a href="#cb12-3"></a>draws &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</span>
 <span id="cb12-4"><a href="#cb12-4"></a><span class="kw">head</span>(draws)</span></code></pre></div>
-<pre><code>## [1]  1.0360596 -0.4159969  0.1388124  0.7558985 -0.3576658 -1.3962926</code></pre>
+<pre><code>## [1] -0.09947556 -1.48145757  1.17552072  1.29122692 -1.23768186 -0.23902662</code></pre>
 </div>
 <div id="getting-help-in-r" class="section level2">
 <h2><span class="header-section-number">2.5</span> Getting help in R: <code>?</code></h2>
@@ -694,7 +697,7 @@ div.tocify {
 <p>The solution is to specify the <code>mean</code> and <code>sd</code> arguments.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>draws2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">5</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="kw">head</span>(draws2)</span></code></pre></div>
-<pre><code>## [1] 5.007027 4.959881 7.751138 5.992110 4.397168 3.004338</code></pre>
+<pre><code>## [1] 4.257412 4.024583 7.912833 5.124420 5.680271 4.929857</code></pre>
 <p>Each built-in R function or functions loaded through a package has a help page. In addition, there is a wealth of information through the wonderful magic of <a href="https://www.google.com/">Google</a>. Another great place to look for answers or ask questions yourself is <a href="https://stackoverflow.com/">StackOverflow</a>.</p>
 </div>
 <div id="tidyverse" class="section level2">
@@ -901,7 +904,7 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 That way, other persons (including your future self) looking at your document can see what versions of R and loaded packages were used, which can be quite essential for reproducibility.</p>
 <p>You can also include the date with <code>Sys.time()</code> so you have a time stamp of when the report was compiled.</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">Sys.time</span>()</span></code></pre></div>
-<pre><code>## [1] &quot;2022-02-22 16:24:50 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2022-02-23 11:10:47 UTC&quot;</code></pre>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.1.2 (2021-11-01)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
