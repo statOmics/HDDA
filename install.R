@@ -6,6 +6,7 @@ BiocManager::install(version = "3.14")
 BiocManager::install(c(
    "DAAG",
    "ExperimentHub",
+   "GGally",
    "statOmics/HDDAData@HEAD",
    "MASS",
    "NormalBetaPrime",
@@ -17,6 +18,7 @@ BiocManager::install(c(
    "downloader",
    "dplyr",
    "hadley/emo@master",
+   "gclus",
    "genefu",
    "gganimate",
    "vqv/ggbiplot@master",
