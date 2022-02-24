@@ -37,7 +37,7 @@ Single cell transcriptomics:  $n \times p$ Matrix for which
  $\longrightarrow$ both **observations** (rows) and **variables** (columns) can be clustered
 
 
-## Example 2.
+## Example 2
 
 Abundance studies: the abundances of $n$ plant species are counted on $p$ plots (habitats)
 
@@ -85,7 +85,12 @@ mclust::clPairs(diabetes[,-1], diabetes$class, main = "Real"); mclust::clPairs(d
 
 # Hierarchical Cluster Analysis
 
-## General Algorithm
+- Distinction between agglomerative and divisive methods 
+- Agglomerative start from the situation where each individual observations forms its own cluster (so it starts with n clusters). In the next steps clusters are sequentially merged, until finally there is only one cluster with n observations. 
+- Divisive methods work just the other way around.
+- The solution of an hierarchical clustering is thus a sequence of n nested cluster solutions.
+
+## General Algorithm of Agglomerative Hierarchical Clustering
 
 - In step 0 each observations is considered as a cluster (i.e. $n$ clusters).
 
