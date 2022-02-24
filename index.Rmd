@@ -97,6 +97,8 @@ email or during the lectures or practical sessions, and for the C003549 ECTS cou
 
 - [EM algorithm](./em.html) [[PDF](./em.pdf)]
 
+- [Lab 6: Clustering](./Lab6-Clustering.Rmd)
+
 ---
 
 
