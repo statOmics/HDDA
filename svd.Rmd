@@ -10,6 +10,9 @@ output:
 always_allow_html: true
 ---
 
+```{r, child="_setup.Rmd"}
+```
+
 # Introduction
 
 ## Motivation
@@ -1905,7 +1908,7 @@ Zk %>%
   ggplot(aes(x=Z1,y=Z2,label=rownames(Zk))) +
   geom_point(size = 3) +
   geom_text(nudge_x = 50) +
-  coord_fixed() 
+  coord_fixed()
 ```
 
 - The graph suggests that Wales and England are quite similar in terms of food consumption, and North Ireland seem to have a very different food consumption pattern.
@@ -1978,7 +1981,7 @@ diyBiplot <- ggplot() +
     aes(x=Z1*scaleFactor, y=Z2*scaleFactor, label=rownames(Vk)),
     alpha=0.5,
     size=3) +
-   coord_fixed() 
+   coord_fixed()
 
 diyBiplot
 
@@ -2017,7 +2020,7 @@ ggplot() +
       aes(x=Vk["Fresh_potatoes",1]*scaleFactor, y=Vk["Fresh_potatoes",2]*scaleFactor, label="Fresh_potatoes"),
       alpha=0.5,
       size=3) +
-   coord_fixed() 
+   coord_fixed()
 ```
 
 
@@ -2493,7 +2496,7 @@ pIris <- pIris +
     ) +
   xlim(-1, 1) +
   ylim(-1,1) +
-  coord_fixed() 
+  coord_fixed()
 
 
 pIris
@@ -2552,7 +2555,7 @@ irisX2[,2] <- irisX2[,2]*10
 pIris2 <- irisX2 %>%
   as.data.frame %>%
   ggplot(aes(x=Sepal.Length,y=Sepal.Width)) +
-  geom_point() +   coord_fixed() 
+  geom_point() +   coord_fixed()
 
 
 irisSvd2 <- svd(irisX2)
@@ -2895,13 +2898,5 @@ grid.arrange(
 
 - Steven Brunton & Nathan Kutz (2017). Data Driven Science & Engineering - Machine Learning, Dynamical Systems, and Control. Chapter 1: Singular Value Decomposition. [databook.pdf](http://databookuw.com/databook.pdf)
 
-# Session info {-}
-
-<details><summary>Session info</summary>
-
-```{r session_info, echo=FALSE, cache=FALSE}
-Sys.time()
-sessioninfo::session_info()
+```{r, child="_session-info.Rmd"}
 ```
-
-</details>

@@ -15,12 +15,15 @@ output:
       number_sections: true
 ---
 
+```{r, child="_setup.Rmd"}
+```
+
 # Example of model based clustering with two groups
 
 We will use a toy example to explain the EM algorithm for model based clustering.
 
 - Two groups $k=1,2$
-- Univariate observations are observed $x_i$ with $i= 1, \dots, n$  
+- Univariate observations are observed $x_i$ with $i= 1, \dots, n$
 - The data of group j follows a normal distribution $N(u_j,1)$ with a variance $\sigma^2=1$ and a mean $\mu_j$ that depends on the group $j=1,2$.
 
 
@@ -238,4 +241,7 @@ knitr::kable(data.frame(
   estimate = c(mu1, mu2, pi1) %>% round(3)
   )
   )
+```
+
+```{r, child="_session-info.Rmd"}
 ```

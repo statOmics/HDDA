@@ -9,6 +9,9 @@ output:
     latex_engine: xelatex
 ---
 
+```{r, child="_setup.Rmd"}
+```
+
 # Motivation
 
 ## Brain imaging study
@@ -1021,4 +1024,7 @@ res <- locfdr(hivdata,plot=4)
 
 ```{r}
 mean(res$fdr[res$fdr<0.2])
+```
+
+```{r, child="_session-info.Rmd"}
 ```

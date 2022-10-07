@@ -10,6 +10,9 @@ output:
 always_allow_html: true
 ---
 
+```{r, child="_setup.Rmd"}
+```
+
 ```{r echo = FALSE, warning = FALSE}
 library(tidyverse)
 library(gridExtra)
@@ -502,13 +505,5 @@ All graphs succeed quite well in separating the toxic from the non-toxic compoun
 
 - Olivier Thas for sharing his materials of Analysis of High Dimensional Data 2019-2020, which I used as the starting point for this chapter.
 
-# Session info {-}
-
-<details><summary>Session info</summary>
-
-```{r session_info, echo=FALSE, cache=FALSE}
-Sys.time()
-sessioninfo::session_info()
+```{r, child="_session-info.Rmd"}
 ```
-
-</details>

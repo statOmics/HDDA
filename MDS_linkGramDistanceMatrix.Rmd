@@ -4,6 +4,9 @@ author: "Lieven Clement"
 date: "statOmics, Ghent University (https://statomics.github.io)"
 ---
 
+```{r, child="_setup.Rmd"}
+```
+
 ```{r echo=FALSE}
 library(tidyverse)
 ```
@@ -79,4 +82,7 @@ G
 ```{r}
 N%*%H
 H%*%t(N)
+```
+
+```{r, child="_session-info.Rmd"}
 ```
