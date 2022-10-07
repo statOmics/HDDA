@@ -16,5 +16,8 @@ site_libs/
 
 raw-data/
 
+# Office stuff
+~$*
+
 # Don't ignore these specific files
 !footer.html
