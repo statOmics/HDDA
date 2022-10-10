@@ -10,6 +10,9 @@ output:
     latex_engine: xelatex
 ---
 
+```{r, child="_setup.Rmd"}
+```
+
 # Introduction
 ## Objective
 
@@ -26,7 +29,7 @@ $\longrightarrow$ need for a measure for **similarity** and **dissimilarity**?
 Single cell transcriptomics:  $n \times p$ Matrix for which
 
   - every column contains the expression levels of one of $p$ genes for $n$ cells
-  
+
   - every row contains the expression levels of $p$ genes for one cell (**sample**)
 
   - Research question: look for groups of cells that have similar gene expression patterns
@@ -48,19 +51,19 @@ $\longrightarrow$ both **observations** (rows) and **variables** (columns) can b
 
 # Partition Based Cluster Analysis
 
-- Partition based cluster methods require the number of clusters (k) to be specified prior to the start of the algorithm. 
+- Partition based cluster methods require the number of clusters (k) to be specified prior to the start of the algorithm.
 
 ## K-means Methods
 
-- To use the k-means clustering algorithm we have to pre-define $k$, the number of clusters we want to define. 
-- The k-means algorithm is iterative. 
-- The algorithm starts by defining k cluster centers (centroids). 
-- Then the algorithm proceeds as follows 
+- To use the k-means clustering algorithm we have to pre-define $k$, the number of clusters we want to define.
+- The k-means algorithm is iterative.
+- The algorithm starts by defining k cluster centers (centroids).
+- Then the algorithm proceeds as follows
 
     1. First each observation is assigned to the cluster with the closest center to that observation.
-    2. Then the k centers are redefined using the observations in each cluster, i.e. the multivariate means (column means) of all observations in a cluster are used to define each new cluster center. 
+    2. Then the k centers are redefined using the observations in each cluster, i.e. the multivariate means (column means) of all observations in a cluster are used to define each new cluster center.
     3. We repeat these two steps until the centers converge.
-  
+
 ## Example
 
 ```{r}
@@ -85,8 +88,8 @@ mclust::clPairs(diabetes[,-1], diabetes$class, main = "Real"); mclust::clPairs(d
 
 # Hierarchical Cluster Analysis
 
-- Distinction between agglomerative and divisive methods 
-- Agglomerative start from the situation where each individual observations forms its own cluster (so it starts with n clusters). In the next steps clusters are sequentially merged, until finally there is only one cluster with n observations. 
+- Distinction between agglomerative and divisive methods
+- Agglomerative start from the situation where each individual observations forms its own cluster (so it starts with n clusters). In the next steps clusters are sequentially merged, until finally there is only one cluster with n observations.
 - Divisive methods work just the other way around.
 - The solution of an hierarchical clustering is thus a sequence of n nested cluster solutions.
 
@@ -99,7 +102,7 @@ mclust::clPairs(diabetes[,-1], diabetes$class, main = "Real"); mclust::clPairs(d
    1. merge the two clusters with the smallest intercluster dissimilarity
    2. recalculate the intercluster dissimilarities
 
-In step 0 the intercluster dissimilarity coincides with the dissimilarity between the corresponding observations 
+In step 0 the intercluster dissimilarity coincides with the dissimilarity between the corresponding observations
 
 $\rightarrow$ intercluster dissimilarity?
 
@@ -157,7 +160,7 @@ knitr::include_graphics("./figures/hclustAverage.png")
 
 Hierarchical nature of the algorithm:
 
-- Nested sequence of clusters $\longrightarrow$ visualisation via a tree  
+- Nested sequence of clusters $\longrightarrow$ visualisation via a tree
 
 
 - Height of branches indicate the intercluster dissimilarity at which clusters are merged.
@@ -229,9 +232,9 @@ plot(toyAvg, main = "Average")
 toyDist
 ```
 
-## Example 
+## Example
 
-```{r} 
+```{r}
 diabetesDist <- dist(diabetes[,-1])
 diabetesSingle <- hclust(diabetesDist, method = "single")
 plot(diabetesSingle, labels = as.double(diabetes$class), main="single")
@@ -249,4 +252,5 @@ plot(diabetesAverage, labels = as.double(diabetes$class), main = "average",cex=0
 
 - Example: see tutorial session
 
-
+```{r, child="_session-info.Rmd"}
+```

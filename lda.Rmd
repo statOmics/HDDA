@@ -9,6 +9,9 @@ output:
     latex_engine: xelatex
 ---
 
+```{r, child="_setup.Rmd"}
+```
+
 ```{r}
 library(tidyverse)
 library(gridExtra)
@@ -401,13 +404,5 @@ This is probably caused by numerical instability when working with large $\mathb
 
 - Olivier Thas for sharing his materials of Analysis of High Dimensional Data 2019-2020, which I used as the starting point for this chapter.
 
-# Session info {-}
-
-<details><summary>Session info</summary>
-
-```{r session_info, echo=FALSE, cache=FALSE}
-Sys.time()
-sessioninfo::session_info()
+```{r, child="_session-info.Rmd"}
 ```
-
-</details>

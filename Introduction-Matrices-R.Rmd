@@ -338,3 +338,6 @@ __Hint__:
 ```{r}
 all(X[, 2] == 2 * X[, 1])
 ```
+
+```{r, child="_session-info.Rmd"}
+```
