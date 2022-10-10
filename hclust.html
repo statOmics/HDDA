@@ -590,67 +590,59 @@ habitats that have similar species communities</li>
 </div>
 <div id="example" class="section level2">
 <h2><span class="header-section-number">2.2</span> Example</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.3.5     ✔ purrr   0.3.4
-## ✔ tibble  3.1.6     ✔ dplyr   1.0.7
-## ✔ tidyr   1.1.4     ✔ stringr 1.4.0
-## ✔ readr   2.1.1     ✔ forcats 0.5.1</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">data</span>(diabetes,<span class="dt">package =</span> <span class="st">&quot;mclust&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2"></a>class &lt;-<span class="st"> </span>diabetes<span class="op">$</span>class</span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="kw">table</span>(class)</span></code></pre></div>
-<pre><code>## class
-## Chemical   Normal    Overt 
-##       36       76       33</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">head</span>(diabetes)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">data</span>(diabetes,<span class="dt">package =</span> <span class="st">&quot;mclust&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>class &lt;-<span class="st"> </span>diabetes<span class="op">$</span>class</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">table</span>(class)</span></code></pre></div>
+<pre><code>#&gt; class
+#&gt; Chemical   Normal    Overt 
+#&gt;       36       76       33</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">head</span>(diabetes)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["class"],"name":[1],"type":["fct"],"align":["left"]},{"label":["glucose"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["insulin"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sspg"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Normal","2":"80","3":"356","4":"124","_rn_":"1"},{"1":"Normal","2":"97","3":"289","4":"117","_rn_":"2"},{"1":"Normal","2":"105","3":"319","4":"143","_rn_":"3"},{"1":"Normal","2":"90","3":"356","4":"199","_rn_":"4"},{"1":"Normal","2":"90","3":"323","4":"240","_rn_":"5"},{"1":"Normal","2":"86","3":"381","4":"157","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>mclust<span class="op">::</span><span class="kw">clPairs</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>], diabetes<span class="op">$</span>class)</span></code></pre></div>
-<p><img src="hclust_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>diabetesKmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">centers =</span> <span class="dv">3</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a>diabetesKmeans</span></code></pre></div>
-<pre><code>## K-means clustering with 3 clusters of sizes 94, 25, 26
-## 
-## Cluster means:
-##     glucose   insulin      sspg
-## 1  93.39362  375.5213 166.17021
-## 2 105.04000  525.6000 375.96000
-## 3 241.65385 1152.8846  75.69231
-## 
-## Clustering vector:
-##   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 
-##   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1 
-##  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40 
-##   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1 
-##  41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60 
-##   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1 
-##  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80 
-##   1   1   1   1   1   1   1   1   2   1   2   1   1   1   1   1   1   1   1   1 
-##  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 
-##   1   2   1   1   1   2   2   1   2   2   2   2   2   2   2   1   2   2   2   2 
-## 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 
-##   2   2   1   1   1   2   1   2   1   1   2   1   3   3   2   3   3   3   3   3 
-## 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 
-##   3   3   3   1   3   3   3   3   3   3   2   3   3   1   1   2   2   3   3   3 
-## 141 142 143 144 145 
-##   3   3   3   3   3 
-## 
-## Within cluster sum of squares by cluster:
-## [1]  947827.2  687281.9 1738796.1
-##  (between_SS / total_SS =  80.6 %)
-## 
-## Available components:
-## 
-## [1] &quot;cluster&quot;      &quot;centers&quot;      &quot;totss&quot;        &quot;withinss&quot;     &quot;tot.withinss&quot;
-## [6] &quot;betweenss&quot;    &quot;size&quot;         &quot;iter&quot;         &quot;ifault&quot;</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>mclust<span class="op">::</span><span class="kw">clPairs</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>], diabetes<span class="op">$</span>class, <span class="dt">main =</span> <span class="st">&quot;Real&quot;</span>); mclust<span class="op">::</span><span class="kw">clPairs</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>], diabetesKmeans<span class="op">$</span>cluster,<span class="dt">colors =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),<span class="dt">symbols =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">17</span>,<span class="dv">16</span>), <span class="dt">main=</span><span class="st">&quot;K-means&quot;</span>)</span></code></pre></div>
-<p><img src="hclust_files/figure-html/unnamed-chunk-4-1.png" width="49%" /><img src="hclust_files/figure-html/unnamed-chunk-4-2.png" width="49%" /></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>mclust<span class="op">::</span><span class="kw">clPairs</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>], diabetes<span class="op">$</span>class)</span></code></pre></div>
+<p><img src="hclust_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>diabetesKmeans &lt;-<span class="st"> </span><span class="kw">kmeans</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">centers =</span> <span class="dv">3</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>diabetesKmeans</span></code></pre></div>
+<pre><code>#&gt; K-means clustering with 3 clusters of sizes 25, 26, 94
+#&gt; 
+#&gt; Cluster means:
+#&gt;     glucose   insulin      sspg
+#&gt; 1 105.04000  525.6000 375.96000
+#&gt; 2 241.65385 1152.8846  75.69231
+#&gt; 3  93.39362  375.5213 166.17021
+#&gt; 
+#&gt; Clustering vector:
+#&gt;   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 
+#&gt;   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3 
+#&gt;  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40 
+#&gt;   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3 
+#&gt;  41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60 
+#&gt;   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3   3 
+#&gt;  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80 
+#&gt;   3   3   3   3   3   3   3   3   1   3   1   3   3   3   3   3   3   3   3   3 
+#&gt;  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 
+#&gt;   3   1   3   3   3   1   1   3   1   1   1   1   1   1   1   3   1   1   1   1 
+#&gt; 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 
+#&gt;   1   1   3   3   3   1   3   1   3   3   1   3   2   2   1   2   2   2   2   2 
+#&gt; 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 
+#&gt;   2   2   2   3   2   2   2   2   2   2   1   2   2   3   3   1   1   2   2   2 
+#&gt; 141 142 143 144 145 
+#&gt;   2   2   2   2   2 
+#&gt; 
+#&gt; Within cluster sum of squares by cluster:
+#&gt; [1]  687281.9 1738796.1  947827.2
+#&gt;  (between_SS / total_SS =  80.6 %)
+#&gt; 
+#&gt; Available components:
+#&gt; 
+#&gt; [1] &quot;cluster&quot;      &quot;centers&quot;      &quot;totss&quot;        &quot;withinss&quot;     &quot;tot.withinss&quot;
+#&gt; [6] &quot;betweenss&quot;    &quot;size&quot;         &quot;iter&quot;         &quot;ifault&quot;</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>mclust<span class="op">::</span><span class="kw">clPairs</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>], diabetes<span class="op">$</span>class, <span class="dt">main =</span> <span class="st">&quot;Real&quot;</span>); mclust<span class="op">::</span><span class="kw">clPairs</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>], diabetesKmeans<span class="op">$</span>cluster,<span class="dt">colors =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),<span class="dt">symbols =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">17</span>,<span class="dv">16</span>), <span class="dt">main=</span><span class="st">&quot;K-means&quot;</span>)</span></code></pre></div>
+<p><img src="hclust_files/figure-html/unnamed-chunk-5-1.png" width="49%" /><img src="hclust_files/figure-html/unnamed-chunk-5-2.png" width="49%" /></p>
 </div>
 </div>
 <div id="hierarchical-cluster-analysis" class="section level1">
@@ -761,75 +753,75 @@ points of <span class="math inline">\(C_2\)</span>.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>toy <span class="op">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(X1, X2, <span class="dt">label =</span> label)) <span class="op">+</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">nudge_x =</span> <span class="fl">.05</span>)</span></code></pre></div>
-<p><img src="hclust_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>toy[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span>dist</span></code></pre></div>
-<pre><code>##           1         2         3         4
-## 2 0.5099020                              
-## 3 1.0111874 0.5590170                    
-## 4 0.7810250 0.5000000 0.9013878          
-## 5 1.0965856 0.7433034 0.9823441 0.3201562</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>toy <span class="op">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(X1, X2, <span class="dt">label =</span> label)) <span class="op">+</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">nudge_x =</span> <span class="fl">.05</span>)</span></code></pre></div>
+<p><img src="hclust_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>toy[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span>dist</span></code></pre></div>
+<pre><code>#&gt;           1         2         3         4
+#&gt; 2 0.5099020                              
+#&gt; 3 1.0111874 0.5590170                    
+#&gt; 4 0.7810250 0.5000000 0.9013878          
+#&gt; 5 1.0965856 0.7433034 0.9823441 0.3201562</code></pre>
 <div id="single-linkage" class="section level2">
 <h2><span class="header-section-number">4.1</span> Single linkage</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>toyDist &lt;-<span class="st"> </span>toy[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span>dist</span>
-<span id="cb15-2"><a href="#cb15-2"></a>toySingle &lt;-<span class="st"> </span><span class="kw">hclust</span>(toyDist, <span class="dt">method =</span> <span class="st">&quot;single&quot;</span>)</span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="dt">pty=</span><span class="st">&quot;s&quot;</span>)</span>
-<span id="cb15-4"><a href="#cb15-4"></a><span class="kw">plot</span>(X2 <span class="op">~</span><span class="st"> </span>X1, toy, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">1.25</span>,<span class="fl">2.75</span>),<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="fl">3.5</span>))</span>
-<span id="cb15-5"><a href="#cb15-5"></a><span class="kw">text</span>(toy<span class="op">$</span>X1<span class="op">*</span><span class="fl">1.05</span>,toy<span class="op">$</span>X2,<span class="dt">label=</span>toy<span class="op">$</span>label)</span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="kw">plot</span>(toySingle, <span class="dt">main =</span> <span class="st">&quot;Single&quot;</span>)</span></code></pre></div>
-<p><img src="hclust_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>toyDist</span></code></pre></div>
-<pre><code>##           1         2         3         4
-## 2 0.5099020                              
-## 3 1.0111874 0.5590170                    
-## 4 0.7810250 0.5000000 0.9013878          
-## 5 1.0965856 0.7433034 0.9823441 0.3201562</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>toyDist &lt;-<span class="st"> </span>toy[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span>dist</span>
+<span id="cb11-2"><a href="#cb11-2"></a>toySingle &lt;-<span class="st"> </span><span class="kw">hclust</span>(toyDist, <span class="dt">method =</span> <span class="st">&quot;single&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="dt">pty=</span><span class="st">&quot;s&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="kw">plot</span>(X2 <span class="op">~</span><span class="st"> </span>X1, toy, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">1.25</span>,<span class="fl">2.75</span>),<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="fl">3.5</span>))</span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="kw">text</span>(toy<span class="op">$</span>X1<span class="op">*</span><span class="fl">1.05</span>,toy<span class="op">$</span>X2,<span class="dt">label=</span>toy<span class="op">$</span>label)</span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="kw">plot</span>(toySingle, <span class="dt">main =</span> <span class="st">&quot;Single&quot;</span>)</span></code></pre></div>
+<p><img src="hclust_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>toyDist</span></code></pre></div>
+<pre><code>#&gt;           1         2         3         4
+#&gt; 2 0.5099020                              
+#&gt; 3 1.0111874 0.5590170                    
+#&gt; 4 0.7810250 0.5000000 0.9013878          
+#&gt; 5 1.0965856 0.7433034 0.9823441 0.3201562</code></pre>
 </div>
 <div id="complete-linkage" class="section level2">
 <h2><span class="header-section-number">4.2</span> Complete linkage</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>toyComplete &lt;-<span class="st"> </span><span class="kw">hclust</span>(toyDist, <span class="dt">method =</span> <span class="st">&quot;complete&quot;</span>)</span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="dt">pty=</span><span class="st">&quot;s&quot;</span>)</span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="kw">plot</span>(X2 <span class="op">~</span><span class="st"> </span>X1, toy, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">1.25</span>,<span class="fl">2.75</span>),<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="fl">3.5</span>))</span>
-<span id="cb18-4"><a href="#cb18-4"></a><span class="kw">text</span>(toy<span class="op">$</span>X1<span class="op">*</span><span class="fl">1.05</span>,toy<span class="op">$</span>X2,<span class="dt">label=</span>toy<span class="op">$</span>label)</span>
-<span id="cb18-5"><a href="#cb18-5"></a><span class="kw">plot</span>(toyComplete,  <span class="dt">main =</span> <span class="st">&quot;Complete&quot;</span>)</span></code></pre></div>
-<p><img src="hclust_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>toyDist</span></code></pre></div>
-<pre><code>##           1         2         3         4
-## 2 0.5099020                              
-## 3 1.0111874 0.5590170                    
-## 4 0.7810250 0.5000000 0.9013878          
-## 5 1.0965856 0.7433034 0.9823441 0.3201562</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>toyComplete &lt;-<span class="st"> </span><span class="kw">hclust</span>(toyDist, <span class="dt">method =</span> <span class="st">&quot;complete&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="dt">pty=</span><span class="st">&quot;s&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="kw">plot</span>(X2 <span class="op">~</span><span class="st"> </span>X1, toy, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">1.25</span>,<span class="fl">2.75</span>),<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="fl">3.5</span>))</span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="kw">text</span>(toy<span class="op">$</span>X1<span class="op">*</span><span class="fl">1.05</span>,toy<span class="op">$</span>X2,<span class="dt">label=</span>toy<span class="op">$</span>label)</span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="kw">plot</span>(toyComplete,  <span class="dt">main =</span> <span class="st">&quot;Complete&quot;</span>)</span></code></pre></div>
+<p><img src="hclust_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>toyDist</span></code></pre></div>
+<pre><code>#&gt;           1         2         3         4
+#&gt; 2 0.5099020                              
+#&gt; 3 1.0111874 0.5590170                    
+#&gt; 4 0.7810250 0.5000000 0.9013878          
+#&gt; 5 1.0965856 0.7433034 0.9823441 0.3201562</code></pre>
 </div>
 <div id="average-linkage" class="section level2">
 <h2><span class="header-section-number">4.3</span> Average linkage</h2>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>toyAvg &lt;-<span class="st"> </span><span class="kw">hclust</span>(toyDist, <span class="dt">method =</span> <span class="st">&quot;average&quot;</span>)</span>
-<span id="cb21-2"><a href="#cb21-2"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="dt">pty=</span><span class="st">&quot;s&quot;</span>)</span>
-<span id="cb21-3"><a href="#cb21-3"></a><span class="kw">plot</span>(X2 <span class="op">~</span><span class="st"> </span>X1, toy, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">1.25</span>,<span class="fl">2.75</span>),<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="fl">3.5</span>))</span>
-<span id="cb21-4"><a href="#cb21-4"></a><span class="kw">text</span>(toy<span class="op">$</span>X1<span class="op">*</span><span class="fl">1.05</span>,toy<span class="op">$</span>X2,<span class="dt">label=</span>toy<span class="op">$</span>label)</span>
-<span id="cb21-5"><a href="#cb21-5"></a><span class="kw">plot</span>(toyAvg, <span class="dt">main =</span> <span class="st">&quot;Average&quot;</span>)</span></code></pre></div>
-<p><img src="hclust_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>toyDist</span></code></pre></div>
-<pre><code>##           1         2         3         4
-## 2 0.5099020                              
-## 3 1.0111874 0.5590170                    
-## 4 0.7810250 0.5000000 0.9013878          
-## 5 1.0965856 0.7433034 0.9823441 0.3201562</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>toyAvg &lt;-<span class="st"> </span><span class="kw">hclust</span>(toyDist, <span class="dt">method =</span> <span class="st">&quot;average&quot;</span>)</span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="dt">pty=</span><span class="st">&quot;s&quot;</span>)</span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="kw">plot</span>(X2 <span class="op">~</span><span class="st"> </span>X1, toy, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">1.25</span>,<span class="fl">2.75</span>),<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="fl">3.5</span>))</span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="kw">text</span>(toy<span class="op">$</span>X1<span class="op">*</span><span class="fl">1.05</span>,toy<span class="op">$</span>X2,<span class="dt">label=</span>toy<span class="op">$</span>label)</span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="kw">plot</span>(toyAvg, <span class="dt">main =</span> <span class="st">&quot;Average&quot;</span>)</span></code></pre></div>
+<p><img src="hclust_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>toyDist</span></code></pre></div>
+<pre><code>#&gt;           1         2         3         4
+#&gt; 2 0.5099020                              
+#&gt; 3 1.0111874 0.5590170                    
+#&gt; 4 0.7810250 0.5000000 0.9013878          
+#&gt; 5 1.0965856 0.7433034 0.9823441 0.3201562</code></pre>
 </div>
 <div id="example-3" class="section level2">
 <h2><span class="header-section-number">4.4</span> Example</h2>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>diabetesDist &lt;-<span class="st"> </span><span class="kw">dist</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>])</span>
-<span id="cb24-2"><a href="#cb24-2"></a>diabetesSingle &lt;-<span class="st"> </span><span class="kw">hclust</span>(diabetesDist, <span class="dt">method =</span> <span class="st">&quot;single&quot;</span>)</span>
-<span id="cb24-3"><a href="#cb24-3"></a><span class="kw">plot</span>(diabetesSingle, <span class="dt">labels =</span> <span class="kw">as.double</span>(diabetes<span class="op">$</span>class), <span class="dt">main=</span><span class="st">&quot;single&quot;</span>)</span></code></pre></div>
-<p><img src="hclust_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>diabetesComplete &lt;-<span class="st"> </span><span class="kw">hclust</span>(diabetesDist, <span class="dt">method =</span> <span class="st">&quot;complete&quot;</span>)</span>
-<span id="cb25-2"><a href="#cb25-2"></a><span class="kw">plot</span>(diabetesComplete, <span class="dt">labels =</span> <span class="kw">as.double</span>(diabetes<span class="op">$</span>class), <span class="dt">main=</span><span class="st">&quot;complete&quot;</span>)</span></code></pre></div>
-<p><img src="hclust_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>diabetesAverage &lt;-<span class="st"> </span><span class="kw">hclust</span>(diabetesDist, <span class="dt">method =</span> <span class="st">&quot;average&quot;</span>)</span>
-<span id="cb26-2"><a href="#cb26-2"></a><span class="kw">plot</span>(diabetesAverage, <span class="dt">labels =</span> <span class="kw">as.double</span>(diabetes<span class="op">$</span>class), <span class="dt">main =</span> <span class="st">&quot;average&quot;</span>,<span class="dt">cex=</span><span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="hclust_files/figure-html/unnamed-chunk-13-3.png" width="672" /></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>diabetesDist &lt;-<span class="st"> </span><span class="kw">dist</span>(diabetes[,<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb20-2"><a href="#cb20-2"></a>diabetesSingle &lt;-<span class="st"> </span><span class="kw">hclust</span>(diabetesDist, <span class="dt">method =</span> <span class="st">&quot;single&quot;</span>)</span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="kw">plot</span>(diabetesSingle, <span class="dt">labels =</span> <span class="kw">as.double</span>(diabetes<span class="op">$</span>class), <span class="dt">main=</span><span class="st">&quot;single&quot;</span>)</span></code></pre></div>
+<p><img src="hclust_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>diabetesComplete &lt;-<span class="st"> </span><span class="kw">hclust</span>(diabetesDist, <span class="dt">method =</span> <span class="st">&quot;complete&quot;</span>)</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="kw">plot</span>(diabetesComplete, <span class="dt">labels =</span> <span class="kw">as.double</span>(diabetes<span class="op">$</span>class), <span class="dt">main=</span><span class="st">&quot;complete&quot;</span>)</span></code></pre></div>
+<p><img src="hclust_files/figure-html/unnamed-chunk-14-2.png" width="672" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>diabetesAverage &lt;-<span class="st"> </span><span class="kw">hclust</span>(diabetesDist, <span class="dt">method =</span> <span class="st">&quot;average&quot;</span>)</span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">plot</span>(diabetesAverage, <span class="dt">labels =</span> <span class="kw">as.double</span>(diabetes<span class="op">$</span>class), <span class="dt">main =</span> <span class="st">&quot;average&quot;</span>,<span class="dt">cex=</span><span class="fl">0.5</span>)</span></code></pre></div>
+<p><img src="hclust_files/figure-html/unnamed-chunk-14-3.png" width="672" /></p>
 </div>
 </div>
 <div id="model-based-clustering" class="section level1">
@@ -840,8 +832,106 @@ points of <span class="math inline">\(C_2\)</span>.</p>
 <li><p>Example: see tutorial session</p></li>
 </ul>
 </div>
+<div id="session-info" class="section level1 unnumbered">
+<h1>Session info</h1>
+<details>
+<p><summary>Session info</summary></p>
+<pre><code>#&gt; [1] &quot;2022-10-10 07:05:49 UTC&quot;</code></pre>
+<pre><code>#&gt; ─ Session info ───────────────────────────────────────────────────────────────
+#&gt;  setting  value
+#&gt;  version  R version 4.1.3 (2022-03-10)
+#&gt;  os       Ubuntu 20.04.5 LTS
+#&gt;  system   x86_64, linux-gnu
+#&gt;  ui       X11
+#&gt;  language (EN)
+#&gt;  collate  C.UTF-8
+#&gt;  ctype    C.UTF-8
+#&gt;  tz       UTC
+#&gt;  date     2022-10-10
+#&gt;  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
+#&gt; 
+#&gt; ─ Packages ───────────────────────────────────────────────────────────────────
+#&gt;  ! package     * version date (UTC) lib source
+#&gt;  P assertthat    0.2.1   2019-03-21 [?] CRAN (R 4.1.3)
+#&gt;  P backports     1.4.1   2021-12-13 [?] CRAN (R 4.1.3)
+#&gt;  P BiocManager   1.30.16 2021-06-15 [?] CRAN (R 4.1.3)
+#&gt;  P bookdown      0.24    2021-09-02 [?] CRAN (R 4.1.3)
+#&gt;  P broom         0.7.11  2022-01-03 [?] CRAN (R 4.1.3)
+#&gt;  P bslib         0.3.1   2021-10-06 [?] CRAN (R 4.1.3)
+#&gt;  P cellranger    1.1.0   2016-07-27 [?] CRAN (R 4.1.3)
+#&gt;  P cli           3.1.1   2022-01-20 [?] CRAN (R 4.1.3)
+#&gt;  P colorspace    2.0-2   2021-06-24 [?] CRAN (R 4.1.3)
+#&gt;  P crayon        1.4.2   2021-10-29 [?] CRAN (R 4.1.3)
+#&gt;  P DBI           1.1.2   2021-12-20 [?] CRAN (R 4.1.3)
+#&gt;  P dbplyr        2.1.1   2021-04-06 [?] CRAN (R 4.1.3)
+#&gt;  P digest        0.6.29  2021-12-01 [?] CRAN (R 4.1.3)
+#&gt;  P dplyr       * 1.0.7   2021-06-18 [?] CRAN (R 4.1.3)
+#&gt;  P ellipsis      0.3.2   2021-04-29 [?] CRAN (R 4.1.3)
+#&gt;  P evaluate      0.14    2019-05-28 [?] CRAN (R 4.1.3)
+#&gt;  P fansi         1.0.2   2022-01-14 [?] CRAN (R 4.1.3)
+#&gt;  P farver        2.1.0   2021-02-28 [?] CRAN (R 4.1.3)
+#&gt;  P fastmap       1.1.0   2021-01-25 [?] CRAN (R 4.1.3)
+#&gt;  P forcats     * 0.5.1   2021-01-27 [?] CRAN (R 4.1.3)
+#&gt;  P fs            1.5.2   2021-12-08 [?] CRAN (R 4.1.3)
+#&gt;  P generics      0.1.1   2021-10-25 [?] CRAN (R 4.1.3)
+#&gt;  P ggplot2     * 3.3.5   2021-06-25 [?] CRAN (R 4.1.3)
+#&gt;  P glue          1.6.1   2022-01-22 [?] CRAN (R 4.1.3)
+#&gt;  P gtable        0.3.0   2019-03-25 [?] CRAN (R 4.1.3)
+#&gt;  P haven         2.4.3   2021-08-04 [?] CRAN (R 4.1.3)
+#&gt;  P highr         0.9     2021-04-16 [?] CRAN (R 4.1.3)
+#&gt;  P hms           1.1.1   2021-09-26 [?] CRAN (R 4.1.3)
+#&gt;  P htmltools     0.5.2   2021-08-25 [?] CRAN (R 4.1.3)
+#&gt;  P httr          1.4.2   2020-07-20 [?] CRAN (R 4.1.3)
+#&gt;  P jquerylib     0.1.4   2021-04-26 [?] CRAN (R 4.1.3)
+#&gt;  P jsonlite      1.7.3   2022-01-17 [?] CRAN (R 4.1.3)
+#&gt;  P knitr         1.37    2021-12-16 [?] CRAN (R 4.1.3)
+#&gt;  P labeling      0.4.2   2020-10-20 [?] CRAN (R 4.1.3)
+#&gt;  P lifecycle     1.0.1   2021-09-24 [?] CRAN (R 4.1.3)
+#&gt;  P lubridate     1.8.0   2021-10-07 [?] CRAN (R 4.1.3)
+#&gt;  P magrittr      2.0.2   2022-01-26 [?] CRAN (R 4.1.3)
+#&gt;  P mclust        5.4.9   2021-12-17 [?] CRAN (R 4.1.3)
+#&gt;  P modelr        0.1.8   2020-05-19 [?] CRAN (R 4.1.3)
+#&gt;  P munsell       0.5.0   2018-06-12 [?] CRAN (R 4.1.3)
+#&gt;  P pillar        1.6.5   2022-01-25 [?] CRAN (R 4.1.3)
+#&gt;  P pkgconfig     2.0.3   2022-10-07 [?] Github (r-lib/pkgconfig@b81ae03)
+#&gt;  P purrr       * 0.3.4   2020-04-17 [?] CRAN (R 4.1.3)
+#&gt;  P R6            2.5.1   2021-08-19 [?] CRAN (R 4.1.3)
+#&gt;  P Rcpp          1.0.8   2022-01-13 [?] CRAN (R 4.1.3)
+#&gt;  P readr       * 2.1.1   2021-11-30 [?] CRAN (R 4.1.3)
+#&gt;  P readxl        1.3.1   2019-03-13 [?] CRAN (R 4.1.3)
+#&gt;  P renv          0.15.2  2022-01-24 [?] CRAN (R 4.1.3)
+#&gt;  P reprex        2.0.1   2021-08-05 [?] CRAN (R 4.1.3)
+#&gt;  P rlang         1.0.0   2022-01-26 [?] CRAN (R 4.1.3)
+#&gt;  P rmarkdown     2.11    2021-09-14 [?] CRAN (R 4.1.3)
+#&gt;  P rstudioapi    0.13    2020-11-12 [?] CRAN (R 4.1.3)
+#&gt;  P rvest         1.0.2   2021-10-16 [?] CRAN (R 4.1.3)
+#&gt;  P sass          0.4.0   2021-05-12 [?] CRAN (R 4.1.3)
+#&gt;  P scales        1.1.1   2020-05-11 [?] CRAN (R 4.1.3)
+#&gt;  P sessioninfo   1.2.2   2021-12-06 [?] CRAN (R 4.1.3)
+#&gt;  P stringi       1.7.6   2021-11-29 [?] CRAN (R 4.1.3)
+#&gt;  P stringr     * 1.4.0   2019-02-10 [?] CRAN (R 4.1.3)
+#&gt;  P tibble      * 3.1.6   2021-11-07 [?] CRAN (R 4.1.3)
+#&gt;  P tidyr       * 1.1.4   2021-09-27 [?] CRAN (R 4.1.3)
+#&gt;  P tidyselect    1.1.1   2021-04-30 [?] CRAN (R 4.1.3)
+#&gt;  P tidyverse   * 1.3.1   2021-04-15 [?] CRAN (R 4.1.3)
+#&gt;  P tzdb          0.2.0   2021-10-27 [?] CRAN (R 4.1.3)
+#&gt;  P utf8          1.2.2   2021-07-24 [?] CRAN (R 4.1.3)
+#&gt;  P vctrs         0.3.8   2021-04-29 [?] CRAN (R 4.1.3)
+#&gt;  P withr         2.4.3   2021-11-30 [?] CRAN (R 4.1.3)
+#&gt;  P xfun          0.29    2021-12-14 [?] CRAN (R 4.1.3)
+#&gt;  P xml2          1.3.3   2021-11-30 [?] CRAN (R 4.1.3)
+#&gt;  P yaml          2.2.2   2022-01-25 [?] CRAN (R 4.1.3)
+#&gt; 
+#&gt;  [1] /home/runner/work/HDDA/HDDA/renv/library/R-4.1/x86_64-pc-linux-gnu
+#&gt;  [2] /opt/R/4.1.3/lib/R/library
+#&gt; 
+#&gt;  P ── Loaded and on-disk path mismatch.
+#&gt; 
+#&gt; ──────────────────────────────────────────────────────────────────────────────</code></pre>
+</details>
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiSW50cm9kdWN0aW9uIHRvIENsdXN0ZXJpbmciCmF1dGhvcjogIkxpZXZlbiBDbGVtZW50IgpvdXRwdXQ6CiAgYm9va2Rvd246Omh0bWxfZG9jdW1lbnQyOgogICAgZGZfcHJpbnQ6IHBhZ2VkCiAgYm9va2Rvd246OnBkZl9kb2N1bWVudDI6CiAgICB0b2M6IHRydWUKICAgIG51bWJlcl9zZWN0aW9uczogdHJ1ZQogICAgbGF0ZXhfZW5naW5lOiB4ZWxhdGV4Ci0tLQoKIyBJbnRyb2R1Y3Rpb24KIyMgT2JqZWN0aXZlCgpPYmplY3RpdmU6IGdyb3VwaW5nIG9mIG9ic2VydmF0aW9ucyBpbnRvICoqY2x1c3RlcnMqKiwgc28gdGhhdAoKLSBzaW1pbGFyIG9ic2VydmF0aW9ucyBhcHBlYXIgaW4gdGhlIHNhbWUgY2x1c3RlcgotIGRpc3NpbWlsYXIgb2JzZXJ2YXRpb25zIGFwcGVhciBpbiBkaXN0aW5jdCBjbHVzdGVycwoKJFxsb25ncmlnaHRhcnJvdyQgbmVlZCBmb3IgYSBtZWFzdXJlIGZvciAqKnNpbWlsYXJpdHkqKiBhbmQgKipkaXNzaW1pbGFyaXR5Kio/CgoKIyMgRXhhbXBsZSAxCgpTaW5nbGUgY2VsbCB0cmFuc2NyaXB0b21pY3M6ICAkbiBcdGltZXMgcCQgTWF0cml4IGZvciB3aGljaAoKICAtIGV2ZXJ5IGNvbHVtbiBjb250YWlucyB0aGUgZXhwcmVzc2lvbiBsZXZlbHMgb2Ygb25lIG9mICRwJCBnZW5lcyBmb3IgJG4kIGNlbGxzCiAgCiAgLSBldmVyeSByb3cgY29udGFpbnMgdGhlIGV4cHJlc3Npb24gbGV2ZWxzIG9mICRwJCBnZW5lcyBmb3Igb25lIGNlbGwgKCoqc2FtcGxlKiopCgogIC0gUmVzZWFyY2ggcXVlc3Rpb246IGxvb2sgZm9yIGdyb3VwcyBvZiBjZWxscyB0aGF0IGhhdmUgc2ltaWxhciBnZW5lIGV4cHJlc3Npb24gcGF0dGVybnMKCiAtIE9yLCBsb29rIGZvciBncm91cHMgb2YgZ2VuZXMgdGhhdCBoYXZlIHNpbWlsYXIgZXhwcmVzc2lvbiBsZXZlbHMgYWNyb3NzIHRoZSBkaWZmZXJlbnQgY2VsbHMuIFRoaXMgY2FuCiBoZWxwIHVzIGluIHVuZGVyc3RhbmRpbmcgdGhlIHJlZ3VsYXRpb24gYW5kIGZ1bmN0aW9uYWxpdHkgb2YgdGhlIGdlbmVzLgoKICRcbG9uZ3JpZ2h0YXJyb3ckIGJvdGggKipvYnNlcnZhdGlvbnMqKiAocm93cykgYW5kICoqdmFyaWFibGVzKiogKGNvbHVtbnMpIGNhbiBiZSBjbHVzdGVyZWQKCgojIyBFeGFtcGxlIDIKCkFidW5kYW5jZSBzdHVkaWVzOiB0aGUgYWJ1bmRhbmNlcyBvZiAkbiQgcGxhbnQgc3BlY2llcyBhcmUgY291bnRlZCBvbiAkcCQgcGxvdHMgKGhhYml0YXRzKQoKICAtIGxvb2sgZm9yIGdyb3VwcyB0aGF0IGNvbnRhaW4gc3BlY2llcyB0aGF0IGxpdmUgaW4gdGhlIHNhbWUgaGFiaXRhdHMsIG9yLCBsb29rIGZvciBncm91cHMgb2YKIGhhYml0YXRzIHRoYXQgaGF2ZSBzaW1pbGFyIHNwZWNpZXMgY29tbXVuaXRpZXMKCiRcbG9uZ3JpZ2h0YXJyb3ckIGJvdGggKipvYnNlcnZhdGlvbnMqKiAocm93cykgYW5kICoqdmFyaWFibGVzKiogKGNvbHVtbnMpIGNhbiBiZSBjbHVzdGVyZWQKCiMgUGFydGl0aW9uIEJhc2VkIENsdXN0ZXIgQW5hbHlzaXMKCi0gUGFydGl0aW9uIGJhc2VkIGNsdXN0ZXIgbWV0aG9kcyByZXF1aXJlIHRoZSBudW1iZXIgb2YgY2x1c3RlcnMgKGspIHRvIGJlIHNwZWNpZmllZCBwcmlvciB0byB0aGUgc3RhcnQgb2YgdGhlIGFsZ29yaXRobS4gCgojIyBLLW1lYW5zIE1ldGhvZHMKCi0gVG8gdXNlIHRoZSBrLW1lYW5zIGNsdXN0ZXJpbmcgYWxnb3JpdGhtIHdlIGhhdmUgdG8gcHJlLWRlZmluZSAkayQsIHRoZSBudW1iZXIgb2YgY2x1c3RlcnMgd2Ugd2FudCB0byBkZWZpbmUuIAotIFRoZSBrLW1lYW5zIGFsZ29yaXRobSBpcyBpdGVyYXRpdmUuIAotIFRoZSBhbGdvcml0aG0gc3RhcnRzIGJ5IGRlZmluaW5nIGsgY2x1c3RlciBjZW50ZXJzIChjZW50cm9pZHMpLiAKLSBUaGVuIHRoZSBhbGdvcml0aG0gcHJvY2VlZHMgYXMgZm9sbG93cyAKCiAgICAxLiBGaXJzdCBlYWNoIG9ic2VydmF0aW9uIGlzIGFzc2lnbmVkIHRvIHRoZSBjbHVzdGVyIHdpdGggdGhlIGNsb3Nlc3QgY2VudGVyIHRvIHRoYXQgb2JzZXJ2YXRpb24uCiAgICAyLiBUaGVuIHRoZSBrIGNlbnRlcnMgYXJlIHJlZGVmaW5lZCB1c2luZyB0aGUgb2JzZXJ2YXRpb25zIGluIGVhY2ggY2x1c3RlciwgaS5lLiB0aGUgbXVsdGl2YXJpYXRlIG1lYW5zIChjb2x1bW4gbWVhbnMpIG9mIGFsbCBvYnNlcnZhdGlvbnMgaW4gYSBjbHVzdGVyIGFyZSB1c2VkIHRvIGRlZmluZSBlYWNoIG5ldyBjbHVzdGVyIGNlbnRlci4gCiAgICAzLiBXZSByZXBlYXQgdGhlc2UgdHdvIHN0ZXBzIHVudGlsIHRoZSBjZW50ZXJzIGNvbnZlcmdlLgogIAojIyBFeGFtcGxlCgpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmRhdGEoZGlhYmV0ZXMscGFja2FnZSA9ICJtY2x1c3QiKQpjbGFzcyA8LSBkaWFiZXRlcyRjbGFzcwp0YWJsZShjbGFzcykKaGVhZChkaWFiZXRlcykKYGBgCmBgYHtyfQptY2x1c3Q6OmNsUGFpcnMoZGlhYmV0ZXNbLC0xXSwgZGlhYmV0ZXMkY2xhc3MpCmBgYAoKYGBge3J9CmRpYWJldGVzS21lYW5zIDwtIGttZWFucyhkaWFiZXRlc1ssLTFdLCBjZW50ZXJzID0gMykKZGlhYmV0ZXNLbWVhbnMKYGBgCgpgYGB7ciBvdXQud2lkdGg9IjQ5JSJ9Cm1jbHVzdDo6Y2xQYWlycyhkaWFiZXRlc1ssLTFdLCBkaWFiZXRlcyRjbGFzcywgbWFpbiA9ICJSZWFsIik7IG1jbHVzdDo6Y2xQYWlycyhkaWFiZXRlc1ssLTFdLCBkaWFiZXRlc0ttZWFucyRjbHVzdGVyLGNvbG9ycyA9IGMoMiwzLDQpLHN5bWJvbHMgPSBjKDAsMTcsMTYpLCBtYWluPSJLLW1lYW5zIikKYGBgCgojIEhpZXJhcmNoaWNhbCBDbHVzdGVyIEFuYWx5c2lzCgotIERpc3RpbmN0aW9uIGJldHdlZW4gYWdnbG9tZXJhdGl2ZSBhbmQgZGl2aXNpdmUgbWV0aG9kcyAKLSBBZ2dsb21lcmF0aXZlIHN0YXJ0IGZyb20gdGhlIHNpdHVhdGlvbiB3aGVyZSBlYWNoIGluZGl2aWR1YWwgb2JzZXJ2YXRpb25zIGZvcm1zIGl0cyBvd24gY2x1c3RlciAoc28gaXQgc3RhcnRzIHdpdGggbiBjbHVzdGVycykuIEluIHRoZSBuZXh0IHN0ZXBzIGNsdXN0ZXJzIGFyZSBzZXF1ZW50aWFsbHkgbWVyZ2VkLCB1bnRpbCBmaW5hbGx5IHRoZXJlIGlzIG9ubHkgb25lIGNsdXN0ZXIgd2l0aCBuIG9ic2VydmF0aW9ucy4gCi0gRGl2aXNpdmUgbWV0aG9kcyB3b3JrIGp1c3QgdGhlIG90aGVyIHdheSBhcm91bmQuCi0gVGhlIHNvbHV0aW9uIG9mIGFuIGhpZXJhcmNoaWNhbCBjbHVzdGVyaW5nIGlzIHRodXMgYSBzZXF1ZW5jZSBvZiBuIG5lc3RlZCBjbHVzdGVyIHNvbHV0aW9ucy4KCiMjIEdlbmVyYWwgQWxnb3JpdGhtIG9mIEFnZ2xvbWVyYXRpdmUgSGllcmFyY2hpY2FsIENsdXN0ZXJpbmcKCi0gSW4gc3RlcCAwIGVhY2ggb2JzZXJ2YXRpb25zIGlzIGNvbnNpZGVyZWQgYXMgYSBjbHVzdGVyIChpLmUuICRuJCBjbHVzdGVycykuCgotIEV2ZXJ5IG5leHQgc3RlcCBjb25zaXN0cyBvZjoKCiAgIDEuIG1lcmdlIHRoZSB0d28gY2x1c3RlcnMgd2l0aCB0aGUgc21hbGxlc3QgaW50ZXJjbHVzdGVyIGRpc3NpbWlsYXJpdHkKICAgMi4gcmVjYWxjdWxhdGUgdGhlIGludGVyY2x1c3RlciBkaXNzaW1pbGFyaXRpZXMKCkluIHN0ZXAgMCB0aGUgaW50ZXJjbHVzdGVyIGRpc3NpbWlsYXJpdHkgY29pbmNpZGVzIHdpdGggdGhlIGRpc3NpbWlsYXJpdHkgYmV0d2VlbiB0aGUgY29ycmVzcG9uZGluZyBvYnNlcnZhdGlvbnMgCgokXHJpZ2h0YXJyb3ckIGludGVyY2x1c3RlciBkaXNzaW1pbGFyaXR5PwoKIyMgSW50ZXJjbHVzdGVyIERpc3NpbWlsYXJpdGllcwoKLSBSZXByZXNlbnQgY2x1c3RlcnMgKGUuZy4gJENfMSQgYW5kICRDXzIkKQogICBhcyBzZXRzIG9mIHBvaW50cyAkXG1hdGhiZnt4fV9pJCB3aGljaCBiZWxvbmcgdG8gdGhhdCBjbHVzdGVyCgotICRkKENfMSxDXzIpJDogaW50ZXJjbHVzdGVyIGRpc3NpbWlsYXJpdHkgYmV0d2VlbgoKV2UgY29uc2lkZXIgdGhyZWUgaW50ZXJjbHVzdGVyIGRpc3NpbWlsYXJpdGllcy4KCiMjIyBTaW5nbGUgTGlua2FnZSA9IE5lYXJlc3QgTmVpZ2hib3VyCgpcWwogIGQoQ18xLENfMikgPSBcbWluX3tcbWF0aGJme3h9XzEgXGluIENfMTsgXG1hdGhiZnt4fV8yIFxpbiBDXzJ9CiAgZChcbWF0aGJme3h9XzEsXG1hdGhiZnt4fV8yKSAsClxdCgppLmUuIHRoZSBkaXNzaW1pbGFyaXR5IGJldHdlZW4gJENfMSQgYW5kICRDXzIkIGlzIGRldGVybWluZWQgYnkgdGhlIHNtYWxsZXN0IGRpc3NpbWlsYXJpdHkgYmV0d2VlbiBhIHBvaW50IG9mICRDXzEkIGFuZCBhIHBvaW50IG9mICRDXzIkLgoKYGBge3IsIGVjaG89RkFMU0UsIG91dC53aWR0aD0nNzAlJ30Ka25pdHI6OmluY2x1ZGVfZ3JhcGhpY3MoIi4vZmlndXJlcy9oY2x1c3ROZWFyZXN0LnBuZyIpCmBgYAoKIyMjIENvbXBsZXRlIExpbmthZ2UgPSBGdXJ0aGVzdCBOZWlnaGJvdXIKICAgXFsKICAgIGQoQ18xLENfMikgPSBcbWF4X3tcbWF0aGJme3h9XzEgXGluIENfMTsgXG1hdGhiZnt4fV8yIFxpbiBDXzJ9CiAgICBkKFxtYXRoYmZ7eH1fMSxcbWF0aGJme3h9XzIpICwKICAgXF0KICAgaS5lLiB0aGUgZGlzc2ltaWxhcml0eSBiZXR3ZWVuICRDXzEkIGFuZCAkQ18yJCBpcyBkZXRlcm1pbmVkIGJ5IHRoZSBsYXJnZXN0IGRpc3NpbWlsYXJpdHkgYmV0d2VlbiBhIHBvaW50IG9mICRDXzEkIGFuZCBhCiAgIHBvaW50IG9mICRDXzIkLgoKCmBgYHtyLCBlY2hvPUZBTFNFLCBvdXQud2lkdGg9JzcwJSd9CmtuaXRyOjppbmNsdWRlX2dyYXBoaWNzKCIuL2ZpZ3VyZXMvaGNsdXN0RnVydGhlc3QucG5nIikKYGBgCgojIyMgQXZlcmFnZSBMaW5rYWdlID0gR3JvdXAgQXZlcmFnZQoKICAgXFsKICAgIGQoQ18xLENfMikgPSBcZnJhY3sxfXtcdmVydCBDXzEgXHZlcnQgXHZlcnQgQ18yIFx2ZXJ0fQogICAgXHN1bV97XG1hdGhiZnt4fV8xIFxpbiBDXzE7IFxtYXRoYmZ7eH1fMiBcaW4gQ18yfQogICAgZChcbWF0aGJme3h9XzEsXG1hdGhiZnt4fV8yKSAsCiAgIFxdCiAgIGkuZS4gdGhlIGRpc3NpbWlsYXJpdHkgYmV0d2VlbiAkQ18xJCBhbmQgJENfMiQgaXMgZGV0ZXJtaW5lZCBieSB0aGUgYXZlcmFnZSBkaXNzaW1pbGFyaXR5IGJldHdlZW4gYWxsIHBvaW50cyBvZiAkQ18xJCBhbmQgYWxsCiAgIHBvaW50cyBvZiAkQ18yJC4KCmBgYHtyLCBlY2hvPUZBTFNFLCBvdXQud2lkdGg9JzcwJSd9CmtuaXRyOjppbmNsdWRlX2dyYXBoaWNzKCIuL2ZpZ3VyZXMvaGNsdXN0QXZlcmFnZS5wbmciKQpgYGAKCgojIyBDbHVzdGVyIFRyZWUKCkhpZXJhcmNoaWNhbCBuYXR1cmUgb2YgdGhlIGFsZ29yaXRobToKCi0gTmVzdGVkIHNlcXVlbmNlIG9mIGNsdXN0ZXJzICRcbG9uZ3JpZ2h0YXJyb3ckIHZpc3VhbGlzYXRpb24gdmlhIGEgdHJlZSAgCgoKLSBIZWlnaHQgb2YgYnJhbmNoZXMgaW5kaWNhdGUgdGhlIGludGVyY2x1c3RlciBkaXNzaW1pbGFyaXR5IGF0IHdoaWNoIGNsdXN0ZXJzIGFyZSBtZXJnZWQuCgotIENhbiB1c2VkIGFzIGluc3RydW1lbnQgZm9yIGRlY2lkaW5nIHRoZSBudW1iZXIgb2YgY2x1c3RlcnMgaW4gdGhlIGRhdGEKCgojIFRveSBleGFtcGxlCgoKYGBge3IgZWNobyA9IEZBTFNFfQp0b3kgPC0gZGF0YS5mcmFtZSgKICBYMSA9IGMoMS41MCwKICAgICAgICAgMi4wMCwKICAgICAgICAgMi41MCwKICAgICAgICAgMi4wMCwKICAgICAgICAgMi4yNSksCiAgWDIgPSBjKDIuNDAsCiAgICAgICAgIDIuNTAsCiAgICAgICAgIDIuMjUsCiAgICAgICAgIDMuMDAsCiAgICAgICAgIDMuMjApLAogIGxhYmVsID0gMTo1CiAgKQoKa25pdHI6OmthYmxlKHRveSkKYGBgCgpgYGB7cn0KdG95ICU+JQogIGdncGxvdChhZXMoWDEsIFgyLCBsYWJlbCA9IGxhYmVsKSkgKwogIGdlb21fcG9pbnQoKSArCiAgZ2VvbV90ZXh0KG51ZGdlX3ggPSAuMDUpCgp0b3lbLDE6Ml0gJT4lIGRpc3QKYGBgCgojIyBTaW5nbGUgbGlua2FnZQoKYGBge3J9CnRveURpc3QgPC0gdG95WywxOjJdICU+JSBkaXN0CnRveVNpbmdsZSA8LSBoY2x1c3QodG95RGlzdCwgbWV0aG9kID0gInNpbmdsZSIpCnBhcihtZnJvdz1jKDEsMikscHR5PSJzIikKcGxvdChYMiB+IFgxLCB0b3ksIHhsaW0gPSBjKDEuMjUsMi43NSkseWxpbSA9IGMoMiwzLjUpKQp0ZXh0KHRveSRYMSoxLjA1LHRveSRYMixsYWJlbD10b3kkbGFiZWwpCnBsb3QodG95U2luZ2xlLCBtYWluID0gIlNpbmdsZSIpCnRveURpc3QKYGBgCgojIyBDb21wbGV0ZSBsaW5rYWdlCgpgYGB7cn0KdG95Q29tcGxldGUgPC0gaGNsdXN0KHRveURpc3QsIG1ldGhvZCA9ICJjb21wbGV0ZSIpCnBhcihtZnJvdz1jKDEsMikscHR5PSJzIikKcGxvdChYMiB+IFgxLCB0b3ksIHhsaW0gPSBjKDEuMjUsMi43NSkseWxpbSA9IGMoMiwzLjUpKQp0ZXh0KHRveSRYMSoxLjA1LHRveSRYMixsYWJlbD10b3kkbGFiZWwpCnBsb3QodG95Q29tcGxldGUsICBtYWluID0gIkNvbXBsZXRlIikKdG95RGlzdApgYGAKCiMjIEF2ZXJhZ2UgbGlua2FnZQoKYGBge3J9CnRveUF2ZyA8LSBoY2x1c3QodG95RGlzdCwgbWV0aG9kID0gImF2ZXJhZ2UiKQpwYXIobWZyb3c9YygxLDIpLHB0eT0icyIpCnBsb3QoWDIgfiBYMSwgdG95LCB4bGltID0gYygxLjI1LDIuNzUpLHlsaW0gPSBjKDIsMy41KSkKdGV4dCh0b3kkWDEqMS4wNSx0b3kkWDIsbGFiZWw9dG95JGxhYmVsKQpwbG90KHRveUF2ZywgbWFpbiA9ICJBdmVyYWdlIikKdG95RGlzdApgYGAKCiMjIEV4YW1wbGUgCgpgYGB7cn0gCmRpYWJldGVzRGlzdCA8LSBkaXN0KGRpYWJldGVzWywtMV0pCmRpYWJldGVzU2luZ2xlIDwtIGhjbHVzdChkaWFiZXRlc0Rpc3QsIG1ldGhvZCA9ICJzaW5nbGUiKQpwbG90KGRpYWJldGVzU2luZ2xlLCBsYWJlbHMgPSBhcy5kb3VibGUoZGlhYmV0ZXMkY2xhc3MpLCBtYWluPSJzaW5nbGUiKQpkaWFiZXRlc0NvbXBsZXRlIDwtIGhjbHVzdChkaWFiZXRlc0Rpc3QsIG1ldGhvZCA9ICJjb21wbGV0ZSIpCnBsb3QoZGlhYmV0ZXNDb21wbGV0ZSwgbGFiZWxzID0gYXMuZG91YmxlKGRpYWJldGVzJGNsYXNzKSwgbWFpbj0iY29tcGxldGUiKQpkaWFiZXRlc0F2ZXJhZ2UgPC0gaGNsdXN0KGRpYWJldGVzRGlzdCwgbWV0aG9kID0gImF2ZXJhZ2UiKQpwbG90KGRpYWJldGVzQXZlcmFnZSwgbGFiZWxzID0gYXMuZG91YmxlKGRpYWJldGVzJGNsYXNzKSwgbWFpbiA9ICJhdmVyYWdlIixjZXg9MC41KQpgYGAKCiMgTW9kZWwtYmFzZWQgY2x1c3RlcmluZwoKLSBbUGFwZXI6IEZyYWxleSBhbmQgUmFmdGVyeSAoMTk5OCkuIEhvdyBNYW55IENsdXN0ZXJzPyBXaGljaCBDbHVzdGVyaW5nIE1ldGhvZD8gQW5zd2VycyBWaWEgTW9kZWwtQmFzZWQgQ2x1c3RlciBBbmFseXNpcy4gVGhlIENvbXB1dGVyIEpvdXJuYWwsICg0MSk4OjU3OC01ODguXShodHRwczovL3NpdGVzLnN0YXQud2FzaGluZ3Rvbi5lZHUvcGVvcGxlL3JhZnRlcnkvUmVzZWFyY2gvUERGL2ZyYWxleTE5OTgucGRmKQoKLSBbRU0gYWxnb3JpdGhtXSguL2VtLmh0bWwpIFtbUERGXSguL2VtLnBkZildCgotIEV4YW1wbGU6IHNlZSB0dXRvcmlhbCBzZXNzaW9uCgoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiSW50cm9kdWN0aW9uIHRvIENsdXN0ZXJpbmciCmF1dGhvcjogIkxpZXZlbiBDbGVtZW50IgpvdXRwdXQ6CiAgYm9va2Rvd246Omh0bWxfZG9jdW1lbnQyOgogICAgZGZfcHJpbnQ6IHBhZ2VkCiAgYm9va2Rvd246OnBkZl9kb2N1bWVudDI6CiAgICB0b2M6IHRydWUKICAgIG51bWJlcl9zZWN0aW9uczogdHJ1ZQogICAgbGF0ZXhfZW5naW5lOiB4ZWxhdGV4Ci0tLQoKYGBge3IsIGNoaWxkPSJfc2V0dXAuUm1kIn0KYGBgCgojIEludHJvZHVjdGlvbgojIyBPYmplY3RpdmUKCk9iamVjdGl2ZTogZ3JvdXBpbmcgb2Ygb2JzZXJ2YXRpb25zIGludG8gKipjbHVzdGVycyoqLCBzbyB0aGF0CgotIHNpbWlsYXIgb2JzZXJ2YXRpb25zIGFwcGVhciBpbiB0aGUgc2FtZSBjbHVzdGVyCi0gZGlzc2ltaWxhciBvYnNlcnZhdGlvbnMgYXBwZWFyIGluIGRpc3RpbmN0IGNsdXN0ZXJzCgokXGxvbmdyaWdodGFycm93JCBuZWVkIGZvciBhIG1lYXN1cmUgZm9yICoqc2ltaWxhcml0eSoqIGFuZCAqKmRpc3NpbWlsYXJpdHkqKj8KCgojIyBFeGFtcGxlIDEKClNpbmdsZSBjZWxsIHRyYW5zY3JpcHRvbWljczogICRuIFx0aW1lcyBwJCBNYXRyaXggZm9yIHdoaWNoCgogIC0gZXZlcnkgY29sdW1uIGNvbnRhaW5zIHRoZSBleHByZXNzaW9uIGxldmVscyBvZiBvbmUgb2YgJHAkIGdlbmVzIGZvciAkbiQgY2VsbHMKCiAgLSBldmVyeSByb3cgY29udGFpbnMgdGhlIGV4cHJlc3Npb24gbGV2ZWxzIG9mICRwJCBnZW5lcyBmb3Igb25lIGNlbGwgKCoqc2FtcGxlKiopCgogIC0gUmVzZWFyY2ggcXVlc3Rpb246IGxvb2sgZm9yIGdyb3VwcyBvZiBjZWxscyB0aGF0IGhhdmUgc2ltaWxhciBnZW5lIGV4cHJlc3Npb24gcGF0dGVybnMKCiAtIE9yLCBsb29rIGZvciBncm91cHMgb2YgZ2VuZXMgdGhhdCBoYXZlIHNpbWlsYXIgZXhwcmVzc2lvbiBsZXZlbHMgYWNyb3NzIHRoZSBkaWZmZXJlbnQgY2VsbHMuIFRoaXMgY2FuCiBoZWxwIHVzIGluIHVuZGVyc3RhbmRpbmcgdGhlIHJlZ3VsYXRpb24gYW5kIGZ1bmN0aW9uYWxpdHkgb2YgdGhlIGdlbmVzLgoKICRcbG9uZ3JpZ2h0YXJyb3ckIGJvdGggKipvYnNlcnZhdGlvbnMqKiAocm93cykgYW5kICoqdmFyaWFibGVzKiogKGNvbHVtbnMpIGNhbiBiZSBjbHVzdGVyZWQKCgojIyBFeGFtcGxlIDIKCkFidW5kYW5jZSBzdHVkaWVzOiB0aGUgYWJ1bmRhbmNlcyBvZiAkbiQgcGxhbnQgc3BlY2llcyBhcmUgY291bnRlZCBvbiAkcCQgcGxvdHMgKGhhYml0YXRzKQoKICAtIGxvb2sgZm9yIGdyb3VwcyB0aGF0IGNvbnRhaW4gc3BlY2llcyB0aGF0IGxpdmUgaW4gdGhlIHNhbWUgaGFiaXRhdHMsIG9yLCBsb29rIGZvciBncm91cHMgb2YKIGhhYml0YXRzIHRoYXQgaGF2ZSBzaW1pbGFyIHNwZWNpZXMgY29tbXVuaXRpZXMKCiRcbG9uZ3JpZ2h0YXJyb3ckIGJvdGggKipvYnNlcnZhdGlvbnMqKiAocm93cykgYW5kICoqdmFyaWFibGVzKiogKGNvbHVtbnMpIGNhbiBiZSBjbHVzdGVyZWQKCiMgUGFydGl0aW9uIEJhc2VkIENsdXN0ZXIgQW5hbHlzaXMKCi0gUGFydGl0aW9uIGJhc2VkIGNsdXN0ZXIgbWV0aG9kcyByZXF1aXJlIHRoZSBudW1iZXIgb2YgY2x1c3RlcnMgKGspIHRvIGJlIHNwZWNpZmllZCBwcmlvciB0byB0aGUgc3RhcnQgb2YgdGhlIGFsZ29yaXRobS4KCiMjIEstbWVhbnMgTWV0aG9kcwoKLSBUbyB1c2UgdGhlIGstbWVhbnMgY2x1c3RlcmluZyBhbGdvcml0aG0gd2UgaGF2ZSB0byBwcmUtZGVmaW5lICRrJCwgdGhlIG51bWJlciBvZiBjbHVzdGVycyB3ZSB3YW50IHRvIGRlZmluZS4KLSBUaGUgay1tZWFucyBhbGdvcml0aG0gaXMgaXRlcmF0aXZlLgotIFRoZSBhbGdvcml0aG0gc3RhcnRzIGJ5IGRlZmluaW5nIGsgY2x1c3RlciBjZW50ZXJzIChjZW50cm9pZHMpLgotIFRoZW4gdGhlIGFsZ29yaXRobSBwcm9jZWVkcyBhcyBmb2xsb3dzCgogICAgMS4gRmlyc3QgZWFjaCBvYnNlcnZhdGlvbiBpcyBhc3NpZ25lZCB0byB0aGUgY2x1c3RlciB3aXRoIHRoZSBjbG9zZXN0IGNlbnRlciB0byB0aGF0IG9ic2VydmF0aW9uLgogICAgMi4gVGhlbiB0aGUgayBjZW50ZXJzIGFyZSByZWRlZmluZWQgdXNpbmcgdGhlIG9ic2VydmF0aW9ucyBpbiBlYWNoIGNsdXN0ZXIsIGkuZS4gdGhlIG11bHRpdmFyaWF0ZSBtZWFucyAoY29sdW1uIG1lYW5zKSBvZiBhbGwgb2JzZXJ2YXRpb25zIGluIGEgY2x1c3RlciBhcmUgdXNlZCB0byBkZWZpbmUgZWFjaCBuZXcgY2x1c3RlciBjZW50ZXIuCiAgICAzLiBXZSByZXBlYXQgdGhlc2UgdHdvIHN0ZXBzIHVudGlsIHRoZSBjZW50ZXJzIGNvbnZlcmdlLgoKIyMgRXhhbXBsZQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpkYXRhKGRpYWJldGVzLHBhY2thZ2UgPSAibWNsdXN0IikKY2xhc3MgPC0gZGlhYmV0ZXMkY2xhc3MKdGFibGUoY2xhc3MpCmhlYWQoZGlhYmV0ZXMpCmBgYApgYGB7cn0KbWNsdXN0OjpjbFBhaXJzKGRpYWJldGVzWywtMV0sIGRpYWJldGVzJGNsYXNzKQpgYGAKCmBgYHtyfQpkaWFiZXRlc0ttZWFucyA8LSBrbWVhbnMoZGlhYmV0ZXNbLC0xXSwgY2VudGVycyA9IDMpCmRpYWJldGVzS21lYW5zCmBgYAoKYGBge3Igb3V0LndpZHRoPSI0OSUifQptY2x1c3Q6OmNsUGFpcnMoZGlhYmV0ZXNbLC0xXSwgZGlhYmV0ZXMkY2xhc3MsIG1haW4gPSAiUmVhbCIpOyBtY2x1c3Q6OmNsUGFpcnMoZGlhYmV0ZXNbLC0xXSwgZGlhYmV0ZXNLbWVhbnMkY2x1c3Rlcixjb2xvcnMgPSBjKDIsMyw0KSxzeW1ib2xzID0gYygwLDE3LDE2KSwgbWFpbj0iSy1tZWFucyIpCmBgYAoKIyBIaWVyYXJjaGljYWwgQ2x1c3RlciBBbmFseXNpcwoKLSBEaXN0aW5jdGlvbiBiZXR3ZWVuIGFnZ2xvbWVyYXRpdmUgYW5kIGRpdmlzaXZlIG1ldGhvZHMKLSBBZ2dsb21lcmF0aXZlIHN0YXJ0IGZyb20gdGhlIHNpdHVhdGlvbiB3aGVyZSBlYWNoIGluZGl2aWR1YWwgb2JzZXJ2YXRpb25zIGZvcm1zIGl0cyBvd24gY2x1c3RlciAoc28gaXQgc3RhcnRzIHdpdGggbiBjbHVzdGVycykuIEluIHRoZSBuZXh0IHN0ZXBzIGNsdXN0ZXJzIGFyZSBzZXF1ZW50aWFsbHkgbWVyZ2VkLCB1bnRpbCBmaW5hbGx5IHRoZXJlIGlzIG9ubHkgb25lIGNsdXN0ZXIgd2l0aCBuIG9ic2VydmF0aW9ucy4KLSBEaXZpc2l2ZSBtZXRob2RzIHdvcmsganVzdCB0aGUgb3RoZXIgd2F5IGFyb3VuZC4KLSBUaGUgc29sdXRpb24gb2YgYW4gaGllcmFyY2hpY2FsIGNsdXN0ZXJpbmcgaXMgdGh1cyBhIHNlcXVlbmNlIG9mIG4gbmVzdGVkIGNsdXN0ZXIgc29sdXRpb25zLgoKIyMgR2VuZXJhbCBBbGdvcml0aG0gb2YgQWdnbG9tZXJhdGl2ZSBIaWVyYXJjaGljYWwgQ2x1c3RlcmluZwoKLSBJbiBzdGVwIDAgZWFjaCBvYnNlcnZhdGlvbnMgaXMgY29uc2lkZXJlZCBhcyBhIGNsdXN0ZXIgKGkuZS4gJG4kIGNsdXN0ZXJzKS4KCi0gRXZlcnkgbmV4dCBzdGVwIGNvbnNpc3RzIG9mOgoKICAgMS4gbWVyZ2UgdGhlIHR3byBjbHVzdGVycyB3aXRoIHRoZSBzbWFsbGVzdCBpbnRlcmNsdXN0ZXIgZGlzc2ltaWxhcml0eQogICAyLiByZWNhbGN1bGF0ZSB0aGUgaW50ZXJjbHVzdGVyIGRpc3NpbWlsYXJpdGllcwoKSW4gc3RlcCAwIHRoZSBpbnRlcmNsdXN0ZXIgZGlzc2ltaWxhcml0eSBjb2luY2lkZXMgd2l0aCB0aGUgZGlzc2ltaWxhcml0eSBiZXR3ZWVuIHRoZSBjb3JyZXNwb25kaW5nIG9ic2VydmF0aW9ucwoKJFxyaWdodGFycm93JCBpbnRlcmNsdXN0ZXIgZGlzc2ltaWxhcml0eT8KCiMjIEludGVyY2x1c3RlciBEaXNzaW1pbGFyaXRpZXMKCi0gUmVwcmVzZW50IGNsdXN0ZXJzIChlLmcuICRDXzEkIGFuZCAkQ18yJCkKICAgYXMgc2V0cyBvZiBwb2ludHMgJFxtYXRoYmZ7eH1faSQgd2hpY2ggYmVsb25nIHRvIHRoYXQgY2x1c3RlcgoKLSAkZChDXzEsQ18yKSQ6IGludGVyY2x1c3RlciBkaXNzaW1pbGFyaXR5IGJldHdlZW4KCldlIGNvbnNpZGVyIHRocmVlIGludGVyY2x1c3RlciBkaXNzaW1pbGFyaXRpZXMuCgojIyMgU2luZ2xlIExpbmthZ2UgPSBOZWFyZXN0IE5laWdoYm91cgoKXFsKICBkKENfMSxDXzIpID0gXG1pbl97XG1hdGhiZnt4fV8xIFxpbiBDXzE7IFxtYXRoYmZ7eH1fMiBcaW4gQ18yfQogIGQoXG1hdGhiZnt4fV8xLFxtYXRoYmZ7eH1fMikgLApcXQoKaS5lLiB0aGUgZGlzc2ltaWxhcml0eSBiZXR3ZWVuICRDXzEkIGFuZCAkQ18yJCBpcyBkZXRlcm1pbmVkIGJ5IHRoZSBzbWFsbGVzdCBkaXNzaW1pbGFyaXR5IGJldHdlZW4gYSBwb2ludCBvZiAkQ18xJCBhbmQgYSBwb2ludCBvZiAkQ18yJC4KCmBgYHtyLCBlY2hvPUZBTFNFLCBvdXQud2lkdGg9JzcwJSd9CmtuaXRyOjppbmNsdWRlX2dyYXBoaWNzKCIuL2ZpZ3VyZXMvaGNsdXN0TmVhcmVzdC5wbmciKQpgYGAKCiMjIyBDb21wbGV0ZSBMaW5rYWdlID0gRnVydGhlc3QgTmVpZ2hib3VyCiAgIFxbCiAgICBkKENfMSxDXzIpID0gXG1heF97XG1hdGhiZnt4fV8xIFxpbiBDXzE7IFxtYXRoYmZ7eH1fMiBcaW4gQ18yfQogICAgZChcbWF0aGJme3h9XzEsXG1hdGhiZnt4fV8yKSAsCiAgIFxdCiAgIGkuZS4gdGhlIGRpc3NpbWlsYXJpdHkgYmV0d2VlbiAkQ18xJCBhbmQgJENfMiQgaXMgZGV0ZXJtaW5lZCBieSB0aGUgbGFyZ2VzdCBkaXNzaW1pbGFyaXR5IGJldHdlZW4gYSBwb2ludCBvZiAkQ18xJCBhbmQgYQogICBwb2ludCBvZiAkQ18yJC4KCgpgYGB7ciwgZWNobz1GQUxTRSwgb3V0LndpZHRoPSc3MCUnfQprbml0cjo6aW5jbHVkZV9ncmFwaGljcygiLi9maWd1cmVzL2hjbHVzdEZ1cnRoZXN0LnBuZyIpCmBgYAoKIyMjIEF2ZXJhZ2UgTGlua2FnZSA9IEdyb3VwIEF2ZXJhZ2UKCiAgIFxbCiAgICBkKENfMSxDXzIpID0gXGZyYWN7MX17XHZlcnQgQ18xIFx2ZXJ0IFx2ZXJ0IENfMiBcdmVydH0KICAgIFxzdW1fe1xtYXRoYmZ7eH1fMSBcaW4gQ18xOyBcbWF0aGJme3h9XzIgXGluIENfMn0KICAgIGQoXG1hdGhiZnt4fV8xLFxtYXRoYmZ7eH1fMikgLAogICBcXQogICBpLmUuIHRoZSBkaXNzaW1pbGFyaXR5IGJldHdlZW4gJENfMSQgYW5kICRDXzIkIGlzIGRldGVybWluZWQgYnkgdGhlIGF2ZXJhZ2UgZGlzc2ltaWxhcml0eSBiZXR3ZWVuIGFsbCBwb2ludHMgb2YgJENfMSQgYW5kIGFsbAogICBwb2ludHMgb2YgJENfMiQuCgpgYGB7ciwgZWNobz1GQUxTRSwgb3V0LndpZHRoPSc3MCUnfQprbml0cjo6aW5jbHVkZV9ncmFwaGljcygiLi9maWd1cmVzL2hjbHVzdEF2ZXJhZ2UucG5nIikKYGBgCgoKIyMgQ2x1c3RlciBUcmVlCgpIaWVyYXJjaGljYWwgbmF0dXJlIG9mIHRoZSBhbGdvcml0aG06CgotIE5lc3RlZCBzZXF1ZW5jZSBvZiBjbHVzdGVycyAkXGxvbmdyaWdodGFycm93JCB2aXN1YWxpc2F0aW9uIHZpYSBhIHRyZWUKCgotIEhlaWdodCBvZiBicmFuY2hlcyBpbmRpY2F0ZSB0aGUgaW50ZXJjbHVzdGVyIGRpc3NpbWlsYXJpdHkgYXQgd2hpY2ggY2x1c3RlcnMgYXJlIG1lcmdlZC4KCi0gQ2FuIHVzZWQgYXMgaW5zdHJ1bWVudCBmb3IgZGVjaWRpbmcgdGhlIG51bWJlciBvZiBjbHVzdGVycyBpbiB0aGUgZGF0YQoKCiMgVG95IGV4YW1wbGUKCgpgYGB7ciBlY2hvID0gRkFMU0V9CnRveSA8LSBkYXRhLmZyYW1lKAogIFgxID0gYygxLjUwLAogICAgICAgICAyLjAwLAogICAgICAgICAyLjUwLAogICAgICAgICAyLjAwLAogICAgICAgICAyLjI1KSwKICBYMiA9IGMoMi40MCwKICAgICAgICAgMi41MCwKICAgICAgICAgMi4yNSwKICAgICAgICAgMy4wMCwKICAgICAgICAgMy4yMCksCiAgbGFiZWwgPSAxOjUKICApCgprbml0cjo6a2FibGUodG95KQpgYGAKCmBgYHtyfQp0b3kgJT4lCiAgZ2dwbG90KGFlcyhYMSwgWDIsIGxhYmVsID0gbGFiZWwpKSArCiAgZ2VvbV9wb2ludCgpICsKICBnZW9tX3RleHQobnVkZ2VfeCA9IC4wNSkKCnRveVssMToyXSAlPiUgZGlzdApgYGAKCiMjIFNpbmdsZSBsaW5rYWdlCgpgYGB7cn0KdG95RGlzdCA8LSB0b3lbLDE6Ml0gJT4lIGRpc3QKdG95U2luZ2xlIDwtIGhjbHVzdCh0b3lEaXN0LCBtZXRob2QgPSAic2luZ2xlIikKcGFyKG1mcm93PWMoMSwyKSxwdHk9InMiKQpwbG90KFgyIH4gWDEsIHRveSwgeGxpbSA9IGMoMS4yNSwyLjc1KSx5bGltID0gYygyLDMuNSkpCnRleHQodG95JFgxKjEuMDUsdG95JFgyLGxhYmVsPXRveSRsYWJlbCkKcGxvdCh0b3lTaW5nbGUsIG1haW4gPSAiU2luZ2xlIikKdG95RGlzdApgYGAKCiMjIENvbXBsZXRlIGxpbmthZ2UKCmBgYHtyfQp0b3lDb21wbGV0ZSA8LSBoY2x1c3QodG95RGlzdCwgbWV0aG9kID0gImNvbXBsZXRlIikKcGFyKG1mcm93PWMoMSwyKSxwdHk9InMiKQpwbG90KFgyIH4gWDEsIHRveSwgeGxpbSA9IGMoMS4yNSwyLjc1KSx5bGltID0gYygyLDMuNSkpCnRleHQodG95JFgxKjEuMDUsdG95JFgyLGxhYmVsPXRveSRsYWJlbCkKcGxvdCh0b3lDb21wbGV0ZSwgIG1haW4gPSAiQ29tcGxldGUiKQp0b3lEaXN0CmBgYAoKIyMgQXZlcmFnZSBsaW5rYWdlCgpgYGB7cn0KdG95QXZnIDwtIGhjbHVzdCh0b3lEaXN0LCBtZXRob2QgPSAiYXZlcmFnZSIpCnBhcihtZnJvdz1jKDEsMikscHR5PSJzIikKcGxvdChYMiB+IFgxLCB0b3ksIHhsaW0gPSBjKDEuMjUsMi43NSkseWxpbSA9IGMoMiwzLjUpKQp0ZXh0KHRveSRYMSoxLjA1LHRveSRYMixsYWJlbD10b3kkbGFiZWwpCnBsb3QodG95QXZnLCBtYWluID0gIkF2ZXJhZ2UiKQp0b3lEaXN0CmBgYAoKIyMgRXhhbXBsZQoKYGBge3J9CmRpYWJldGVzRGlzdCA8LSBkaXN0KGRpYWJldGVzWywtMV0pCmRpYWJldGVzU2luZ2xlIDwtIGhjbHVzdChkaWFiZXRlc0Rpc3QsIG1ldGhvZCA9ICJzaW5nbGUiKQpwbG90KGRpYWJldGVzU2luZ2xlLCBsYWJlbHMgPSBhcy5kb3VibGUoZGlhYmV0ZXMkY2xhc3MpLCBtYWluPSJzaW5nbGUiKQpkaWFiZXRlc0NvbXBsZXRlIDwtIGhjbHVzdChkaWFiZXRlc0Rpc3QsIG1ldGhvZCA9ICJjb21wbGV0ZSIpCnBsb3QoZGlhYmV0ZXNDb21wbGV0ZSwgbGFiZWxzID0gYXMuZG91YmxlKGRpYWJldGVzJGNsYXNzKSwgbWFpbj0iY29tcGxldGUiKQpkaWFiZXRlc0F2ZXJhZ2UgPC0gaGNsdXN0KGRpYWJldGVzRGlzdCwgbWV0aG9kID0gImF2ZXJhZ2UiKQpwbG90KGRpYWJldGVzQXZlcmFnZSwgbGFiZWxzID0gYXMuZG91YmxlKGRpYWJldGVzJGNsYXNzKSwgbWFpbiA9ICJhdmVyYWdlIixjZXg9MC41KQpgYGAKCiMgTW9kZWwtYmFzZWQgY2x1c3RlcmluZwoKLSBbUGFwZXI6IEZyYWxleSBhbmQgUmFmdGVyeSAoMTk5OCkuIEhvdyBNYW55IENsdXN0ZXJzPyBXaGljaCBDbHVzdGVyaW5nIE1ldGhvZD8gQW5zd2VycyBWaWEgTW9kZWwtQmFzZWQgQ2x1c3RlciBBbmFseXNpcy4gVGhlIENvbXB1dGVyIEpvdXJuYWwsICg0MSk4OjU3OC01ODguXShodHRwczovL3NpdGVzLnN0YXQud2FzaGluZ3Rvbi5lZHUvcGVvcGxlL3JhZnRlcnkvUmVzZWFyY2gvUERGL2ZyYWxleTE5OTgucGRmKQoKLSBbRU0gYWxnb3JpdGhtXSguL2VtLmh0bWwpIFtbUERGXSguL2VtLnBkZildCgotIEV4YW1wbGU6IHNlZSB0dXRvcmlhbCBzZXNzaW9uCgpgYGB7ciwgY2hpbGQ9Il9zZXNzaW9uLWluZm8uUm1kIn0KYGBgCg==</div>
 <div class="footer">
     <hr>
     This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">

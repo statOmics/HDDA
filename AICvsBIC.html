@@ -557,94 +557,94 @@ Y = V1 + 2* V2 + 4*V3 +\epsilon
 <h2><span class="header-section-number">2.1</span> Backward modelselection with AIC</h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>lm0 &lt;-<span class="st"> </span><span class="kw">lm</span>(y<span class="op">~</span>.,<span class="dt">data=</span>x)</span>
 <span id="cb3-2"><a href="#cb3-2"></a>lmAIC &lt;-<span class="st"> </span><span class="kw">step</span>(lm0)</span></code></pre></div>
-<pre><code>## Start:  AIC=10.31
-## y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
-## 
-##        Df Sum of Sq     RSS     AIC
-## - V7    1      0.31   89.28   8.657
-## - V4    1      0.37   89.33   8.722
-## - V9    1      0.66   89.63   9.053
-## - V10   1      1.15   90.12   9.599
-## - V6    1      1.20   90.17   9.652
-## &lt;none&gt;                88.97  10.311
-## - V5    1      5.07   94.04  13.855
-## - V8    1      5.66   94.63  14.476
-## - V1    1    127.33  216.30  97.150
-## - V2    1    320.34  409.30 160.929
-## - V3    1   1518.09 1607.06 297.699
-## 
-## Step:  AIC=8.66
-## y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
-## 
-##        Df Sum of Sq     RSS     AIC
-## - V4    1      0.56   89.83   7.278
-## - V9    1      0.63   89.91   7.359
-## - V10   1      1.05   90.32   7.824
-## - V6    1      1.15   90.43   7.942
-## &lt;none&gt;                89.28   8.657
-## - V5    1      5.01   94.28  12.113
-## - V8    1      5.59   94.87  12.731
-## - V1    1    127.24  216.52  95.251
-## - V2    1    325.09  414.37 160.158
-## - V3    1   1572.65 1661.92 299.056
-## 
-## Step:  AIC=7.28
-## y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
-## 
-##        Df Sum of Sq     RSS     AIC
-## - V9    1      0.64   90.47   5.984
-## - V10   1      1.13   90.96   6.527
-## - V6    1      1.18   91.01   6.583
-## &lt;none&gt;                89.83   7.278
-## - V5    1      4.58   94.41  10.249
-## - V8    1      5.25   95.08  10.956
-## - V1    1    127.10  216.93  93.441
-## - V2    1    327.62  417.46 158.901
-## - V3    1   1584.28 1674.11 297.787
-## 
-## Step:  AIC=5.98
-## y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
-## 
-##        Df Sum of Sq     RSS     AIC
-## - V10   1      1.49   91.96   5.620
-## - V6    1      1.52   91.99   5.654
-## &lt;none&gt;                90.47   5.984
-## - V5    1      4.44   94.91   8.776
-## - V8    1      5.83   96.30  10.228
-## - V1    1    130.29  220.76  93.190
-## - V2    1    327.02  417.49 156.909
-## - V3    1   1588.71 1679.18 296.089
-## 
-## Step:  AIC=5.62
-## y ~ V1 + V2 + V3 + V5 + V6 + V8
-## 
-##        Df Sum of Sq     RSS     AIC
-## - V6    1      1.33   93.29   5.058
-## &lt;none&gt;                91.96   5.620
-## - V5    1      4.59   96.55   8.491
-## - V8    1      4.88   96.84   8.788
-## - V1    1    128.80  220.76  91.190
-## - V2    1    336.71  428.67 157.553
-## - V3    1   1587.72 1679.68 294.119
-## 
-## Step:  AIC=5.06
-## y ~ V1 + V2 + V3 + V5 + V8
-## 
-##        Df Sum of Sq     RSS     AIC
-## &lt;none&gt;                93.29   5.058
-## - V8    1      3.94   97.23   7.193
-## - V5    1      4.11   97.41   7.371
-## - V1    1    127.53  220.83  89.221
-## - V2    1    348.90  442.19 158.658
-## - V3    1   1608.86 1702.16 293.448</code></pre>
+<pre><code>#&gt; Start:  AIC=10.31
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V7    1      0.31   89.28   8.657
+#&gt; - V4    1      0.37   89.33   8.722
+#&gt; - V9    1      0.66   89.63   9.053
+#&gt; - V10   1      1.15   90.12   9.599
+#&gt; - V6    1      1.20   90.17   9.652
+#&gt; &lt;none&gt;                88.97  10.311
+#&gt; - V5    1      5.07   94.04  13.855
+#&gt; - V8    1      5.66   94.63  14.476
+#&gt; - V1    1    127.33  216.30  97.150
+#&gt; - V2    1    320.34  409.30 160.929
+#&gt; - V3    1   1518.09 1607.06 297.699
+#&gt; 
+#&gt; Step:  AIC=8.66
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V4    1      0.56   89.83   7.278
+#&gt; - V9    1      0.63   89.91   7.359
+#&gt; - V10   1      1.05   90.32   7.824
+#&gt; - V6    1      1.15   90.43   7.942
+#&gt; &lt;none&gt;                89.28   8.657
+#&gt; - V5    1      5.01   94.28  12.113
+#&gt; - V8    1      5.59   94.87  12.731
+#&gt; - V1    1    127.24  216.52  95.251
+#&gt; - V2    1    325.09  414.37 160.158
+#&gt; - V3    1   1572.65 1661.92 299.056
+#&gt; 
+#&gt; Step:  AIC=7.28
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V9    1      0.64   90.47   5.984
+#&gt; - V10   1      1.13   90.96   6.527
+#&gt; - V6    1      1.18   91.01   6.583
+#&gt; &lt;none&gt;                89.83   7.278
+#&gt; - V5    1      4.58   94.41  10.249
+#&gt; - V8    1      5.25   95.08  10.956
+#&gt; - V1    1    127.10  216.93  93.441
+#&gt; - V2    1    327.62  417.46 158.901
+#&gt; - V3    1   1584.28 1674.11 297.787
+#&gt; 
+#&gt; Step:  AIC=5.98
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V10   1      1.49   91.96   5.620
+#&gt; - V6    1      1.52   91.99   5.654
+#&gt; &lt;none&gt;                90.47   5.984
+#&gt; - V5    1      4.44   94.91   8.776
+#&gt; - V8    1      5.83   96.30  10.228
+#&gt; - V1    1    130.29  220.76  93.190
+#&gt; - V2    1    327.02  417.49 156.909
+#&gt; - V3    1   1588.71 1679.18 296.089
+#&gt; 
+#&gt; Step:  AIC=5.62
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V6    1      1.33   93.29   5.058
+#&gt; &lt;none&gt;                91.96   5.620
+#&gt; - V5    1      4.59   96.55   8.491
+#&gt; - V8    1      4.88   96.84   8.788
+#&gt; - V1    1    128.80  220.76  91.190
+#&gt; - V2    1    336.71  428.67 157.553
+#&gt; - V3    1   1587.72 1679.68 294.119
+#&gt; 
+#&gt; Step:  AIC=5.06
+#&gt; y ~ V1 + V2 + V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; &lt;none&gt;                93.29   5.058
+#&gt; - V8    1      3.94   97.23   7.193
+#&gt; - V5    1      4.11   97.41   7.371
+#&gt; - V1    1    127.53  220.83  89.221
+#&gt; - V2    1    348.90  442.19 158.658
+#&gt; - V3    1   1608.86 1702.16 293.448</code></pre>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>lmAIC</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = y ~ V1 + V2 + V3 + V5 + V8, data = x)
-## 
-## Coefficients:
-## (Intercept)           V1           V2           V3           V5           V8  
-##      9.9709       0.9868       1.9685       3.8627      -0.2056       0.2121</code></pre>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = y ~ V1 + V2 + V3 + V5 + V8, data = x)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)           V1           V2           V3           V5           V8  
+#&gt;      9.9709       0.9868       1.9685       3.8627      -0.2056       0.2121</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>realPredAIC &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">names</span>(lmAIC<span class="op">$</span>coefficients) <span class="op">%in%</span><span class="st"> </span>pred)</span>
 <span id="cb7-2"><a href="#cb7-2"></a>falsePredAIC &lt;-<span class="st"> </span><span class="kw">length</span>(lmAIC<span class="op">$</span>coefficients) <span class="op">-</span><span class="st"> </span>realPredAIC <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span></code></pre></div>
 <p>The AIC criterion selects the model with the lowest AIC.</p>
@@ -654,113 +654,113 @@ Y = V1 + 2* V2 + 4*V3 +\epsilon
 <h2><span class="header-section-number">2.2</span> Backward modelselection with BIC.</h2>
 <p>We can do this in the step function by specifying k. By default k=2. If we define <code>k=log(n)</code> than we use the BIC.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>lmBIC &lt;-<span class="st"> </span><span class="kw">step</span>(lm0, <span class="dt">k=</span><span class="kw">log</span>(<span class="kw">nrow</span>(x)))</span></code></pre></div>
-<pre><code>## Start:  AIC=38.97
-## y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
-## 
-##        Df Sum of Sq     RSS    AIC
-## - V7    1      0.31   89.28  34.71
-## - V4    1      0.37   89.33  34.77
-## - V9    1      0.66   89.63  35.10
-## - V10   1      1.15   90.12  35.65
-## - V6    1      1.20   90.17  35.70
-## &lt;none&gt;                88.97  38.97
-## - V5    1      5.07   94.04  39.91
-## - V8    1      5.66   94.63  40.53
-## - V1    1    127.33  216.30 123.20
-## - V2    1    320.34  409.30 186.98
-## - V3    1   1518.09 1607.06 323.75
-## 
-## Step:  AIC=34.71
-## y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
-## 
-##        Df Sum of Sq     RSS    AIC
-## - V4    1      0.56   89.83  30.72
-## - V9    1      0.63   89.91  30.81
-## - V10   1      1.05   90.32  31.27
-## - V6    1      1.15   90.43  31.39
-## &lt;none&gt;                89.28  34.71
-## - V5    1      5.01   94.28  35.56
-## - V8    1      5.59   94.87  36.18
-## - V1    1    127.24  216.52 118.70
-## - V2    1    325.09  414.37 183.60
-## - V3    1   1572.65 1661.92 322.50
-## 
-## Step:  AIC=30.72
-## y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
-## 
-##        Df Sum of Sq     RSS    AIC
-## - V9    1      0.64   90.47  26.83
-## - V10   1      1.13   90.96  27.37
-## - V6    1      1.18   91.01  27.42
-## &lt;none&gt;                89.83  30.72
-## - V5    1      4.58   94.41  31.09
-## - V8    1      5.25   95.08  31.80
-## - V1    1    127.10  216.93 114.28
-## - V2    1    327.62  417.46 179.74
-## - V3    1   1584.28 1674.11 318.63
-## 
-## Step:  AIC=26.83
-## y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
-## 
-##        Df Sum of Sq     RSS     AIC
-## - V10   1      1.49   91.96  23.856
-## - V6    1      1.52   91.99  23.891
-## &lt;none&gt;                90.47  26.825
-## - V5    1      4.44   94.91  27.013
-## - V8    1      5.83   96.30  28.465
-## - V1    1    130.29  220.76 111.426
-## - V2    1    327.02  417.49 175.145
-## - V3    1   1588.71 1679.18 314.325
-## 
-## Step:  AIC=23.86
-## y ~ V1 + V2 + V3 + V5 + V6 + V8
-## 
-##        Df Sum of Sq     RSS     AIC
-## - V6    1      1.33   93.29  20.689
-## &lt;none&gt;                91.96  23.856
-## - V5    1      4.59   96.55  24.122
-## - V8    1      4.88   96.84  24.419
-## - V1    1    128.80  220.76 106.821
-## - V2    1    336.71  428.67 173.184
-## - V3    1   1587.72 1679.68 309.750
-## 
-## Step:  AIC=20.69
-## y ~ V1 + V2 + V3 + V5 + V8
-## 
-##        Df Sum of Sq     RSS     AIC
-## - V8    1      3.94   97.23  20.219
-## - V5    1      4.11   97.41  20.397
-## &lt;none&gt;                93.29  20.689
-## - V1    1    127.53  220.83 102.247
-## - V2    1    348.90  442.19 171.683
-## - V3    1   1608.86 1702.16 306.474
-## 
-## Step:  AIC=20.22
-## y ~ V1 + V2 + V3 + V5
-## 
-##        Df Sum of Sq     RSS     AIC
-## - V5    1      3.54  100.77  19.187
-## &lt;none&gt;                97.23  20.219
-## - V1    1    124.15  221.38  97.891
-## - V2    1    389.45  486.68 176.664
-## - V3    1   1620.25 1717.48 302.765
-## 
-## Step:  AIC=19.19
-## y ~ V1 + V2 + V3
-## 
-##        Df Sum of Sq     RSS     AIC
-## &lt;none&gt;               100.77  19.187
-## - V1    1    123.13  223.90  94.419
-## - V2    1    393.16  493.93 173.539
-## - V3    1   1618.02 1718.79 298.236</code></pre>
+<pre><code>#&gt; Start:  AIC=38.97
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V7    1      0.31   89.28  34.71
+#&gt; - V4    1      0.37   89.33  34.77
+#&gt; - V9    1      0.66   89.63  35.10
+#&gt; - V10   1      1.15   90.12  35.65
+#&gt; - V6    1      1.20   90.17  35.70
+#&gt; &lt;none&gt;                88.97  38.97
+#&gt; - V5    1      5.07   94.04  39.91
+#&gt; - V8    1      5.66   94.63  40.53
+#&gt; - V1    1    127.33  216.30 123.20
+#&gt; - V2    1    320.34  409.30 186.98
+#&gt; - V3    1   1518.09 1607.06 323.75
+#&gt; 
+#&gt; Step:  AIC=34.71
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V4    1      0.56   89.83  30.72
+#&gt; - V9    1      0.63   89.91  30.81
+#&gt; - V10   1      1.05   90.32  31.27
+#&gt; - V6    1      1.15   90.43  31.39
+#&gt; &lt;none&gt;                89.28  34.71
+#&gt; - V5    1      5.01   94.28  35.56
+#&gt; - V8    1      5.59   94.87  36.18
+#&gt; - V1    1    127.24  216.52 118.70
+#&gt; - V2    1    325.09  414.37 183.60
+#&gt; - V3    1   1572.65 1661.92 322.50
+#&gt; 
+#&gt; Step:  AIC=30.72
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V9    1      0.64   90.47  26.83
+#&gt; - V10   1      1.13   90.96  27.37
+#&gt; - V6    1      1.18   91.01  27.42
+#&gt; &lt;none&gt;                89.83  30.72
+#&gt; - V5    1      4.58   94.41  31.09
+#&gt; - V8    1      5.25   95.08  31.80
+#&gt; - V1    1    127.10  216.93 114.28
+#&gt; - V2    1    327.62  417.46 179.74
+#&gt; - V3    1   1584.28 1674.11 318.63
+#&gt; 
+#&gt; Step:  AIC=26.83
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V10   1      1.49   91.96  23.856
+#&gt; - V6    1      1.52   91.99  23.891
+#&gt; &lt;none&gt;                90.47  26.825
+#&gt; - V5    1      4.44   94.91  27.013
+#&gt; - V8    1      5.83   96.30  28.465
+#&gt; - V1    1    130.29  220.76 111.426
+#&gt; - V2    1    327.02  417.49 175.145
+#&gt; - V3    1   1588.71 1679.18 314.325
+#&gt; 
+#&gt; Step:  AIC=23.86
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V6    1      1.33   93.29  20.689
+#&gt; &lt;none&gt;                91.96  23.856
+#&gt; - V5    1      4.59   96.55  24.122
+#&gt; - V8    1      4.88   96.84  24.419
+#&gt; - V1    1    128.80  220.76 106.821
+#&gt; - V2    1    336.71  428.67 173.184
+#&gt; - V3    1   1587.72 1679.68 309.750
+#&gt; 
+#&gt; Step:  AIC=20.69
+#&gt; y ~ V1 + V2 + V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V8    1      3.94   97.23  20.219
+#&gt; - V5    1      4.11   97.41  20.397
+#&gt; &lt;none&gt;                93.29  20.689
+#&gt; - V1    1    127.53  220.83 102.247
+#&gt; - V2    1    348.90  442.19 171.683
+#&gt; - V3    1   1608.86 1702.16 306.474
+#&gt; 
+#&gt; Step:  AIC=20.22
+#&gt; y ~ V1 + V2 + V3 + V5
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V5    1      3.54  100.77  19.187
+#&gt; &lt;none&gt;                97.23  20.219
+#&gt; - V1    1    124.15  221.38  97.891
+#&gt; - V2    1    389.45  486.68 176.664
+#&gt; - V3    1   1620.25 1717.48 302.765
+#&gt; 
+#&gt; Step:  AIC=19.19
+#&gt; y ~ V1 + V2 + V3
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; &lt;none&gt;               100.77  19.187
+#&gt; - V1    1    123.13  223.90  94.419
+#&gt; - V2    1    393.16  493.93 173.539
+#&gt; - V3    1   1618.02 1718.79 298.236</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>lmBIC</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = y ~ V1 + V2 + V3, data = x)
-## 
-## Coefficients:
-## (Intercept)           V1           V2           V3  
-##     10.0389       0.9633       2.0267       3.8315</code></pre>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = y ~ V1 + V2 + V3, data = x)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)           V1           V2           V3  
+#&gt;     10.0389       0.9633       2.0267       3.8315</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>realPredBIC &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">names</span>(lmBIC<span class="op">$</span>coefficients) <span class="op">%in%</span><span class="st"> </span>pred)</span>
 <span id="cb12-2"><a href="#cb12-2"></a>falsePredBIC &lt;-<span class="st"> </span><span class="kw">length</span>(lmBIC<span class="op">$</span>coefficients) <span class="op">-</span><span class="st"> </span>realPredBIC <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span></code></pre></div>
 <p>The BIC criterion selects the model with the lowest BIC.</p>
@@ -778,104 +778,104 @@ Y = V1 + 2* V2 + 4*V3 +\epsilon
 <h2><span class="header-section-number">3.1</span> Backward modelselection with AIC</h2>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>lm0 &lt;-<span class="st"> </span><span class="kw">lm</span>(y<span class="op">~</span>.,<span class="dt">data=</span>x)</span>
 <span id="cb14-2"><a href="#cb14-2"></a>lmAIC10 &lt;-<span class="st"> </span><span class="kw">step</span>(lm0)</span></code></pre></div>
-<pre><code>## Start:  AIC=470.83
-## y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
-## 
-##        Df Sum of Sq    RSS    AIC
-## - V7    1     30.79 8927.6 469.17
-## - V4    1     36.64 8933.5 469.24
-## - V9    1     66.24 8963.1 469.57
-## - V10   1    115.29 9012.1 470.12
-## - V6    1    120.08 9016.9 470.17
-## - V1    1    127.61 9024.5 470.25
-## - V2    1    144.13 9041.0 470.44
-## &lt;none&gt;              8896.8 470.83
-## - V5    1    507.13 9404.0 474.37
-## - V8    1    565.69 9462.5 474.99
-## - V3    1    834.14 9731.0 477.79
-## 
-## Step:  AIC=469.17
-## y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
-## 
-##        Df Sum of Sq    RSS    AIC
-## - V4    1     55.60 8983.2 467.79
-## - V9    1     62.93 8990.6 467.88
-## - V10   1    104.79 9032.4 468.34
-## - V6    1    115.47 9043.1 468.46
-## - V1    1    126.64 9054.3 468.58
-## - V2    1    158.35 9086.0 468.93
-## &lt;none&gt;              8927.6 469.17
-## - V5    1    500.69 9428.3 472.63
-## - V8    1    559.12 9486.8 473.25
-## - V3    1    803.42 9731.1 475.79
-## 
-## Step:  AIC=467.79
-## y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
-## 
-##        Df Sum of Sq    RSS    AIC
-## - V9    1     63.68 9046.9 466.50
-## - V10   1    112.93 9096.2 467.04
-## - V6    1    118.00 9101.2 467.10
-## - V1    1    125.12 9108.4 467.18
-## - V2    1    169.56 9152.8 467.66
-## &lt;none&gt;              8983.2 467.79
-## - V5    1    457.91 9441.1 470.77
-## - V8    1    524.92 9508.2 471.47
-## - V3    1    836.85 9820.1 474.70
-## 
-## Step:  AIC=466.5
-## y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
-## 
-##        Df Sum of Sq    RSS    AIC
-## - V1    1    145.47 9192.4 466.10
-## - V10   1    149.20 9196.1 466.14
-## - V6    1    152.40 9199.3 466.17
-## - V2    1    162.80 9209.7 466.28
-## &lt;none&gt;              9046.9 466.50
-## - V5    1    444.13 9491.0 469.29
-## - V8    1    582.94 9629.9 470.75
-## - V3    1    854.90 9901.8 473.53
-## 
-## Step:  AIC=466.1
-## y ~ V2 + V3 + V5 + V6 + V8 + V10
-## 
-##        Df Sum of Sq     RSS    AIC
-## - V10   1    120.54  9312.9 465.40
-## - V6    1    128.99  9321.4 465.49
-## - V2    1    161.82  9354.2 465.84
-## &lt;none&gt;               9192.4 466.10
-## - V5    1    424.91  9617.3 468.61
-## - V8    1    512.28  9704.7 469.52
-## - V3    1    812.18 10004.6 472.56
-## 
-## Step:  AIC=465.4
-## y ~ V2 + V3 + V5 + V6 + V8
-## 
-##        Df Sum of Sq     RSS    AIC
-## - V6    1    115.07  9428.0 464.63
-## &lt;none&gt;               9312.9 465.40
-## - V2    1    198.94  9511.9 465.51
-## - V8    1    436.36  9749.3 467.98
-## - V5    1    440.21  9753.1 468.02
-## - V3    1    787.70 10100.6 471.52
-## 
-## Step:  AIC=464.63
-## y ~ V2 + V3 + V5 + V8
-## 
-##        Df Sum of Sq     RSS    AIC
-## &lt;none&gt;               9428.0 464.63
-## - V2    1    247.31  9675.3 465.22
-## - V8    1    355.83  9783.8 466.33
-## - V5    1    397.89  9825.9 466.76
-## - V3    1    718.83 10146.8 469.97</code></pre>
+<pre><code>#&gt; Start:  AIC=470.83
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V7    1     30.79 8927.6 469.17
+#&gt; - V4    1     36.64 8933.5 469.24
+#&gt; - V9    1     66.24 8963.1 469.57
+#&gt; - V10   1    115.29 9012.1 470.12
+#&gt; - V6    1    120.08 9016.9 470.17
+#&gt; - V1    1    127.61 9024.5 470.25
+#&gt; - V2    1    144.13 9041.0 470.44
+#&gt; &lt;none&gt;              8896.8 470.83
+#&gt; - V5    1    507.13 9404.0 474.37
+#&gt; - V8    1    565.69 9462.5 474.99
+#&gt; - V3    1    834.14 9731.0 477.79
+#&gt; 
+#&gt; Step:  AIC=469.17
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V4    1     55.60 8983.2 467.79
+#&gt; - V9    1     62.93 8990.6 467.88
+#&gt; - V10   1    104.79 9032.4 468.34
+#&gt; - V6    1    115.47 9043.1 468.46
+#&gt; - V1    1    126.64 9054.3 468.58
+#&gt; - V2    1    158.35 9086.0 468.93
+#&gt; &lt;none&gt;              8927.6 469.17
+#&gt; - V5    1    500.69 9428.3 472.63
+#&gt; - V8    1    559.12 9486.8 473.25
+#&gt; - V3    1    803.42 9731.1 475.79
+#&gt; 
+#&gt; Step:  AIC=467.79
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V9    1     63.68 9046.9 466.50
+#&gt; - V10   1    112.93 9096.2 467.04
+#&gt; - V6    1    118.00 9101.2 467.10
+#&gt; - V1    1    125.12 9108.4 467.18
+#&gt; - V2    1    169.56 9152.8 467.66
+#&gt; &lt;none&gt;              8983.2 467.79
+#&gt; - V5    1    457.91 9441.1 470.77
+#&gt; - V8    1    524.92 9508.2 471.47
+#&gt; - V3    1    836.85 9820.1 474.70
+#&gt; 
+#&gt; Step:  AIC=466.5
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V1    1    145.47 9192.4 466.10
+#&gt; - V10   1    149.20 9196.1 466.14
+#&gt; - V6    1    152.40 9199.3 466.17
+#&gt; - V2    1    162.80 9209.7 466.28
+#&gt; &lt;none&gt;              9046.9 466.50
+#&gt; - V5    1    444.13 9491.0 469.29
+#&gt; - V8    1    582.94 9629.9 470.75
+#&gt; - V3    1    854.90 9901.8 473.53
+#&gt; 
+#&gt; Step:  AIC=466.1
+#&gt; y ~ V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V10   1    120.54  9312.9 465.40
+#&gt; - V6    1    128.99  9321.4 465.49
+#&gt; - V2    1    161.82  9354.2 465.84
+#&gt; &lt;none&gt;               9192.4 466.10
+#&gt; - V5    1    424.91  9617.3 468.61
+#&gt; - V8    1    512.28  9704.7 469.52
+#&gt; - V3    1    812.18 10004.6 472.56
+#&gt; 
+#&gt; Step:  AIC=465.4
+#&gt; y ~ V2 + V3 + V5 + V6 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V6    1    115.07  9428.0 464.63
+#&gt; &lt;none&gt;               9312.9 465.40
+#&gt; - V2    1    198.94  9511.9 465.51
+#&gt; - V8    1    436.36  9749.3 467.98
+#&gt; - V5    1    440.21  9753.1 468.02
+#&gt; - V3    1    787.70 10100.6 471.52
+#&gt; 
+#&gt; Step:  AIC=464.63
+#&gt; y ~ V2 + V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; &lt;none&gt;               9428.0 464.63
+#&gt; - V2    1    247.31  9675.3 465.22
+#&gt; - V8    1    355.83  9783.8 466.33
+#&gt; - V5    1    397.89  9825.9 466.76
+#&gt; - V3    1    718.83 10146.8 469.97</code></pre>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>lmAIC10</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = y ~ V2 + V3 + V5 + V8, data = x)
-## 
-## Coefficients:
-## (Intercept)           V2           V3           V5           V8  
-##       9.715        1.657        2.579       -2.022        2.004</code></pre>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = y ~ V2 + V3 + V5 + V8, data = x)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)           V2           V3           V5           V8  
+#&gt;       9.715        1.657        2.579       -2.022        2.004</code></pre>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>realPredAIC10 &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">names</span>(lmAIC10<span class="op">$</span>coefficients) <span class="op">%in%</span><span class="st"> </span>pred)</span>
 <span id="cb18-2"><a href="#cb18-2"></a>falsePredAIC10 &lt;-<span class="st"> </span><span class="kw">length</span>(lmAIC10<span class="op">$</span>coefficients) <span class="op">-</span><span class="st"> </span>realPredAIC10 <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span></code></pre></div>
 <p>The AIC criterion selects the model with the lowest AIC.</p>
@@ -885,121 +885,121 @@ Y = V1 + 2* V2 + 4*V3 +\epsilon
 <h2><span class="header-section-number">3.2</span> Backward modelselection with BIC.</h2>
 <p>We can do this in the step function by specifying k. By default k=2. If we define <code>k=log(n)</code> than we use the BIC.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>lmBIC10 &lt;-<span class="st"> </span><span class="kw">step</span>(lm0, <span class="dt">k=</span><span class="kw">log</span>(<span class="kw">nrow</span>(x)))</span></code></pre></div>
-<pre><code>## Start:  AIC=499.49
-## y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
-## 
-##        Df Sum of Sq    RSS    AIC
-## - V7    1     30.79 8927.6 495.23
-## - V4    1     36.64 8933.5 495.29
-## - V9    1     66.24 8963.1 495.62
-## - V10   1    115.29 9012.1 496.17
-## - V6    1    120.08 9016.9 496.22
-## - V1    1    127.61 9024.5 496.30
-## - V2    1    144.13 9041.0 496.49
-## &lt;none&gt;              8896.8 499.49
-## - V5    1    507.13 9404.0 500.42
-## - V8    1    565.69 9462.5 501.04
-## - V3    1    834.14 9731.0 503.84
-## 
-## Step:  AIC=495.23
-## y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
-## 
-##        Df Sum of Sq    RSS    AIC
-## - V4    1     55.60 8983.2 491.24
-## - V9    1     62.93 8990.6 491.32
-## - V10   1    104.79 9032.4 491.79
-## - V6    1    115.47 9043.1 491.91
-## - V1    1    126.64 9054.3 492.03
-## - V2    1    158.35 9086.0 492.38
-## &lt;none&gt;              8927.6 495.23
-## - V5    1    500.69 9428.3 496.08
-## - V8    1    559.12 9486.8 496.69
-## - V3    1    803.42 9731.1 499.24
-## 
-## Step:  AIC=491.24
-## y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
-## 
-##        Df Sum of Sq    RSS    AIC
-## - V9    1     63.68 9046.9 487.34
-## - V10   1    112.93 9096.2 487.89
-## - V6    1    118.00 9101.2 487.94
-## - V1    1    125.12 9108.4 488.02
-## - V2    1    169.56 9152.8 488.51
-## &lt;none&gt;              8983.2 491.24
-## - V5    1    457.91 9441.1 491.61
-## - V8    1    524.92 9508.2 492.31
-## - V3    1    836.85 9820.1 495.54
-## 
-## Step:  AIC=487.34
-## y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
-## 
-##        Df Sum of Sq    RSS    AIC
-## - V1    1    145.47 9192.4 484.33
-## - V10   1    149.20 9196.1 484.37
-## - V6    1    152.40 9199.3 484.41
-## - V2    1    162.80 9209.7 484.52
-## &lt;none&gt;              9046.9 487.34
-## - V5    1    444.13 9491.0 487.53
-## - V8    1    582.94 9629.9 488.98
-## - V3    1    854.90 9901.8 491.77
-## 
-## Step:  AIC=484.33
-## y ~ V2 + V3 + V5 + V6 + V8 + V10
-## 
-##        Df Sum of Sq     RSS    AIC
-## - V10   1    120.54  9312.9 481.03
-## - V6    1    128.99  9321.4 481.12
-## - V2    1    161.82  9354.2 481.47
-## - V5    1    424.91  9617.3 484.25
-## &lt;none&gt;               9192.4 484.33
-## - V8    1    512.28  9704.7 485.15
-## - V3    1    812.18 10004.6 488.19
-## 
-## Step:  AIC=481.03
-## y ~ V2 + V3 + V5 + V6 + V8
-## 
-##        Df Sum of Sq     RSS    AIC
-## - V6    1    115.07  9428.0 477.65
-## - V2    1    198.94  9511.9 478.54
-## - V8    1    436.36  9749.3 481.00
-## &lt;none&gt;               9312.9 481.03
-## - V5    1    440.21  9753.1 481.04
-## - V3    1    787.70 10100.6 484.54
-## 
-## Step:  AIC=477.65
-## y ~ V2 + V3 + V5 + V8
-## 
-##        Df Sum of Sq     RSS    AIC
-## - V2    1    247.31  9675.3 475.64
-## - V8    1    355.83  9783.8 476.75
-## - V5    1    397.89  9825.9 477.18
-## &lt;none&gt;               9428.0 477.65
-## - V3    1    718.83 10146.8 480.40
-## 
-## Step:  AIC=475.64
-## y ~ V3 + V5 + V8
-## 
-##        Df Sum of Sq     RSS    AIC
-## - V5    1    437.44 10112.7 475.45
-## &lt;none&gt;               9675.3 475.64
-## - V8    1    548.90 10224.2 476.55
-## - V3    1    723.85 10399.1 478.25
-## 
-## Step:  AIC=475.45
-## y ~ V3 + V8
-## 
-##        Df Sum of Sq   RSS    AIC
-## &lt;none&gt;              10113 475.45
-## - V8    1    492.56 10605 475.60
-## - V3    1    693.98 10807 477.49</code></pre>
+<pre><code>#&gt; Start:  AIC=499.49
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V7    1     30.79 8927.6 495.23
+#&gt; - V4    1     36.64 8933.5 495.29
+#&gt; - V9    1     66.24 8963.1 495.62
+#&gt; - V10   1    115.29 9012.1 496.17
+#&gt; - V6    1    120.08 9016.9 496.22
+#&gt; - V1    1    127.61 9024.5 496.30
+#&gt; - V2    1    144.13 9041.0 496.49
+#&gt; &lt;none&gt;              8896.8 499.49
+#&gt; - V5    1    507.13 9404.0 500.42
+#&gt; - V8    1    565.69 9462.5 501.04
+#&gt; - V3    1    834.14 9731.0 503.84
+#&gt; 
+#&gt; Step:  AIC=495.23
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V4    1     55.60 8983.2 491.24
+#&gt; - V9    1     62.93 8990.6 491.32
+#&gt; - V10   1    104.79 9032.4 491.79
+#&gt; - V6    1    115.47 9043.1 491.91
+#&gt; - V1    1    126.64 9054.3 492.03
+#&gt; - V2    1    158.35 9086.0 492.38
+#&gt; &lt;none&gt;              8927.6 495.23
+#&gt; - V5    1    500.69 9428.3 496.08
+#&gt; - V8    1    559.12 9486.8 496.69
+#&gt; - V3    1    803.42 9731.1 499.24
+#&gt; 
+#&gt; Step:  AIC=491.24
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V9    1     63.68 9046.9 487.34
+#&gt; - V10   1    112.93 9096.2 487.89
+#&gt; - V6    1    118.00 9101.2 487.94
+#&gt; - V1    1    125.12 9108.4 488.02
+#&gt; - V2    1    169.56 9152.8 488.51
+#&gt; &lt;none&gt;              8983.2 491.24
+#&gt; - V5    1    457.91 9441.1 491.61
+#&gt; - V8    1    524.92 9508.2 492.31
+#&gt; - V3    1    836.85 9820.1 495.54
+#&gt; 
+#&gt; Step:  AIC=487.34
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V1    1    145.47 9192.4 484.33
+#&gt; - V10   1    149.20 9196.1 484.37
+#&gt; - V6    1    152.40 9199.3 484.41
+#&gt; - V2    1    162.80 9209.7 484.52
+#&gt; &lt;none&gt;              9046.9 487.34
+#&gt; - V5    1    444.13 9491.0 487.53
+#&gt; - V8    1    582.94 9629.9 488.98
+#&gt; - V3    1    854.90 9901.8 491.77
+#&gt; 
+#&gt; Step:  AIC=484.33
+#&gt; y ~ V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V10   1    120.54  9312.9 481.03
+#&gt; - V6    1    128.99  9321.4 481.12
+#&gt; - V2    1    161.82  9354.2 481.47
+#&gt; - V5    1    424.91  9617.3 484.25
+#&gt; &lt;none&gt;               9192.4 484.33
+#&gt; - V8    1    512.28  9704.7 485.15
+#&gt; - V3    1    812.18 10004.6 488.19
+#&gt; 
+#&gt; Step:  AIC=481.03
+#&gt; y ~ V2 + V3 + V5 + V6 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V6    1    115.07  9428.0 477.65
+#&gt; - V2    1    198.94  9511.9 478.54
+#&gt; - V8    1    436.36  9749.3 481.00
+#&gt; &lt;none&gt;               9312.9 481.03
+#&gt; - V5    1    440.21  9753.1 481.04
+#&gt; - V3    1    787.70 10100.6 484.54
+#&gt; 
+#&gt; Step:  AIC=477.65
+#&gt; y ~ V2 + V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V2    1    247.31  9675.3 475.64
+#&gt; - V8    1    355.83  9783.8 476.75
+#&gt; - V5    1    397.89  9825.9 477.18
+#&gt; &lt;none&gt;               9428.0 477.65
+#&gt; - V3    1    718.83 10146.8 480.40
+#&gt; 
+#&gt; Step:  AIC=475.64
+#&gt; y ~ V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V5    1    437.44 10112.7 475.45
+#&gt; &lt;none&gt;               9675.3 475.64
+#&gt; - V8    1    548.90 10224.2 476.55
+#&gt; - V3    1    723.85 10399.1 478.25
+#&gt; 
+#&gt; Step:  AIC=475.45
+#&gt; y ~ V3 + V8
+#&gt; 
+#&gt;        Df Sum of Sq   RSS    AIC
+#&gt; &lt;none&gt;              10113 475.45
+#&gt; - V8    1    492.56 10605 475.60
+#&gt; - V3    1    693.98 10807 477.49</code></pre>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>lmBIC10</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = y ~ V3 + V8, data = x)
-## 
-## Coefficients:
-## (Intercept)           V3           V8  
-##      10.020        2.533        2.281</code></pre>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = y ~ V3 + V8, data = x)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)           V3           V8  
+#&gt;      10.020        2.533        2.281</code></pre>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>realPredBIC10 &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">names</span>(lmBIC10<span class="op">$</span>coefficients) <span class="op">%in%</span><span class="st"> </span>pred)</span>
 <span id="cb23-2"><a href="#cb23-2"></a>falsePredBIC10 &lt;-<span class="st"> </span><span class="kw">length</span>(lmBIC10<span class="op">$</span>coefficients) <span class="op">-</span><span class="st"> </span>realPredBIC10 <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span></code></pre></div>
 <p>The BIC criterion selects the model with the lowest BIC.</p>
@@ -1007,8 +1007,59 @@ Y = V1 + 2* V2 + 4*V3 +\epsilon
 <p>Note, that AIC and BIC are a good estimate of the insample error, however, when building prediction models we are interested in using the model for predictor patterns that are not observed in the training set. So it is better to build a model based on an estimate of the outsample error.</p>
 </div>
 </div>
+<div id="session-info" class="section level1 unnumbered">
+<h1>Session info</h1>
+<details>
+<p><summary>Session info</summary></p>
+<pre><code>#&gt; [1] &quot;2022-10-10 07:05:16 UTC&quot;</code></pre>
+<pre><code>#&gt; ─ Session info ───────────────────────────────────────────────────────────────
+#&gt;  setting  value
+#&gt;  version  R version 4.1.3 (2022-03-10)
+#&gt;  os       Ubuntu 20.04.5 LTS
+#&gt;  system   x86_64, linux-gnu
+#&gt;  ui       X11
+#&gt;  language (EN)
+#&gt;  collate  C.UTF-8
+#&gt;  ctype    C.UTF-8
+#&gt;  tz       UTC
+#&gt;  date     2022-10-10
+#&gt;  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
+#&gt; 
+#&gt; ─ Packages ───────────────────────────────────────────────────────────────────
+#&gt;  ! package     * version date (UTC) lib source
+#&gt;  P BiocManager   1.30.16 2021-06-15 [?] CRAN (R 4.1.3)
+#&gt;  P bookdown      0.24    2021-09-02 [?] CRAN (R 4.1.3)
+#&gt;  P bslib         0.3.1   2021-10-06 [?] CRAN (R 4.1.3)
+#&gt;  P cli           3.1.1   2022-01-20 [?] CRAN (R 4.1.3)
+#&gt;  P digest        0.6.29  2021-12-01 [?] CRAN (R 4.1.3)
+#&gt;  P evaluate      0.14    2019-05-28 [?] CRAN (R 4.1.3)
+#&gt;  P fastmap       1.1.0   2021-01-25 [?] CRAN (R 4.1.3)
+#&gt;  P htmltools     0.5.2   2021-08-25 [?] CRAN (R 4.1.3)
+#&gt;  P jquerylib     0.1.4   2021-04-26 [?] CRAN (R 4.1.3)
+#&gt;  P jsonlite      1.7.3   2022-01-17 [?] CRAN (R 4.1.3)
+#&gt;  P knitr         1.37    2021-12-16 [?] CRAN (R 4.1.3)
+#&gt;  P magrittr      2.0.2   2022-01-26 [?] CRAN (R 4.1.3)
+#&gt;  P R6            2.5.1   2021-08-19 [?] CRAN (R 4.1.3)
+#&gt;  P renv          0.15.2  2022-01-24 [?] CRAN (R 4.1.3)
+#&gt;  P rlang         1.0.0   2022-01-26 [?] CRAN (R 4.1.3)
+#&gt;  P rmarkdown     2.11    2021-09-14 [?] CRAN (R 4.1.3)
+#&gt;  P sass          0.4.0   2021-05-12 [?] CRAN (R 4.1.3)
+#&gt;  P sessioninfo   1.2.2   2021-12-06 [?] CRAN (R 4.1.3)
+#&gt;  P stringi       1.7.6   2021-11-29 [?] CRAN (R 4.1.3)
+#&gt;  P stringr       1.4.0   2019-02-10 [?] CRAN (R 4.1.3)
+#&gt;  P xfun          0.29    2021-12-14 [?] CRAN (R 4.1.3)
+#&gt;  P yaml          2.2.2   2022-01-25 [?] CRAN (R 4.1.3)
+#&gt; 
+#&gt;  [1] /home/runner/work/HDDA/HDDA/renv/library/R-4.1/x86_64-pc-linux-gnu
+#&gt;  [2] /opt/R/4.1.3/lib/R/library
+#&gt; 
+#&gt;  P ── Loaded and on-disk path mismatch.
+#&gt; 
+#&gt; ──────────────────────────────────────────────────────────────────────────────</code></pre>
+</details>
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiQUlDIHZzIEJJQyIKYXV0aG9yOiAiTGlldmVuIENsZW1lbnQiCmRhdGU6ICJzdGF0T21pY3MsIEdoZW50IFVuaXZlcnNpdHkgKGh0dHBzOi8vc3RhdG9taWNzLmdpdGh1Yi5pbykiCm91dHB1dDoKICAgIGh0bWxfZG9jdW1lbnQ6CiAgICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgICAgdGhlbWU6IGNvc21vCiAgICAgIHRvYzogdHJ1ZQogICAgICB0b2NfZmxvYXQ6IHRydWUKICAgICAgaGlnaGxpZ2h0OiB0YW5nbwogICAgICBudW1iZXJfc2VjdGlvbnM6IHRydWUKICAgIHBkZl9kb2N1bWVudDoKICAgICAgdG9jOiB0cnVlCiAgICAgIG51bWJlcl9zZWN0aW9uczogdHJ1ZQogICAgICBsYXRleF9lbmdpbmU6IHhlbGF0ZXgKLS0tCgoKIyBXaGVuIGxhcmdlIGRhdGFzZXRzIGFyZSB1c2VkLCB0aGUgQklDIHdpbGwgZmF2b3VyIHNtYWxsZXIgbW9kZWxzIHRoYW4gdGhlIEFJQy4KCkJvdGggdGhlIEJJQyBhbmQgdGhlIEFJQyBjcml0ZXJpb24gYXJlIGEgdHJhZGUtb2ZmIGJldHdlZW4gZml0ICgtMiBsb2cgTCkgYW5kIG1vZGVsIGNvbXBsZXhpdHkgKDJwIGZvciB0aGUgQUlDIGFuZCBwIGxvZyhuKSBmb3IgQklDKS4KCi0gV2hlbiB3ZSB1c2UgdGhlIEJJQyBmb3IgbW9kZWwgc2VsZWN0aW9uIHdlIHdpbGwgc2VsZWN0IHRoZSBtb2RlbCB3aXRoIHRoZSBsb3dlc3QgQklDLgotIFdoZW4gd2UgdXNlIHRoZSBBSUMgZm9yIG1vZGVsIHNlbGVjdGlvbiB3ZSB3aWxsIHNlbGVjdCB0aGUgbW9kZWwgd2l0aCB0aGUgbG93ZXN0IEFJQy4gCgpIb3dldmVyLCB0aGUgdHJhZGUtb2ZmIGJldHdlZW4gZml0IGFuZCBtb2RlbCBjb21wbGV4aXR5IGlzIGRpZmZlcmVudCBmb3IgdGhlIEFJQyBhbmQgdGhlIEJJQy4gCgotIFRoZXkgdXNlIHRoZSBzYW1lIG1lYXN1cmUgZm9yIHRoZSBmaXQgLTIgbG9nIEwuIAotIEluY3JlYXNpbmcgdGhlIG1vZGVsIGNvbXBsZXhpdHkgd2lsbCByZXN1bHQgaW4gYSBiZXR0ZXIgZml0IGFuZCB0aHVzIGEgIGRlY3JlYXNlIG9mIC0yIGxvZyBMLiAKLSBIb3dldmVyLCBib3RoIGNyaXRlcmlhIGFsc28gcGVuYWxpc2UgZm9yIG1vZGVsIGNvbXBsZXhpdHk6IDJwIHZzIHAgbG9nKG4pLiAKCkluIG9yZGVyIHRvIGZhdm91ciBhIG1vcmUgY29tcGxleCBtb2RlbCwgCgotIHRoZSBkZWNyZWFzZSBvZiAtMiBsb2cgTCBoYXMgdG8gYmUgbGFyZ2VyIHRoYW4gdGhlIGluY3JlYXNlIGluIDJwIGZvciB0aGUgQUlDIGNyaXRlcmlvbiwgCi0gd2hpbGUgdGhlIGRlY3JlYXNlIG9mIC0yIGxvZyBMIGhhcyB0byBiZSBsYXJnZXIgdGhhbiB0aGUgaW5jcmVhc2UgaW4gcCBsb2cobikgZm9yIHRoZSBCSUMgY3JpdGVyaW9uLgoKQmVjYXVzZSBsb2cobikgPiAyIGFzIHNvb24gYXMgbiA+PSA4LCAgdGhlIEJJQyBjcml0ZXJpb24gd2lsbCBwZW5hbGlzZSBtb3JlIGZvciB0aGUgaW5jcmVhc2UgaW4gbW9kZWwgY29tcGxleGl0eSBhbmQgaXQgd2lsbCB0aGVyZWZvcmUgZmF2b3VyIHNtYWxsZXIgbW9kZWxzIHRoYW4gdGhlIEFJQyBjcml0ZXJpb24sIHdoaWNoIHB1bmlzaGVzIGxlc3MgZm9yIHRoZSBpbmNyZWFzZSBpbiBtb2RlbCBjb21wbGV4aXR5LiAgCgoKIyBJbGx1c3RyYXRpb24gCgpgYGB7cn0Kc2V0LnNlZWQoMikKeCA8LSBhcy5kYXRhLmZyYW1lKG1hdHJpeChybm9ybSgxMDAwKSxuY29sPTEwKSkKcHJlZCA8LSBwYXN0ZTAoIlYiLDE6MykKYGBgCgptb2RlbCAKCiQkClkgPSBWMSArIDIqIFYyICsgNCpWMyArXGVwc2lsb24KJCQKCgpgYGB7cn0Kc2V0LnNlZWQoMTkzMjUpCnkgPC0gMTAgKyB4WywxXSArIDIqIHhbLDJdICsgNCp4WywzXSArIHJub3JtKDEwMCkKYGBgCgojIyBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEFJQwoKYGBge3J9CmxtMCA8LSBsbSh5fi4sZGF0YT14KQpsbUFJQyA8LSBzdGVwKGxtMCkKbG1BSUMKcmVhbFByZWRBSUMgPC0gc3VtKG5hbWVzKGxtQUlDJGNvZWZmaWNpZW50cykgJWluJSBwcmVkKQpmYWxzZVByZWRBSUMgPC0gbGVuZ3RoKGxtQUlDJGNvZWZmaWNpZW50cykgLSByZWFsUHJlZEFJQyAtIDEKYGBgCgpUaGUgQUlDIGNyaXRlcmlvbiBzZWxlY3RzIHRoZSBtb2RlbCB3aXRoIHRoZSBsb3dlc3QgQUlDLiAKClRoaXMgbW9kZWwgY29ycmVjdGx5IHNlbGVjdHMgYHIgcmVhbFByZWRBSUNgIG91dCBvZiBgciBsZW5ndGgocHJlZClgIHJlYWwgcHJlZGljdG9ycy4gCkhvd2V2ZXIsIGl0IGFsc28gc2VsZWN0cyBgciBmYWxzZVByZWRBSUNgIHByZWRpY3RvcnMgdGhhdCBhcmUgbm90IGFzc29jaWF0ZWQgd2l0aCB0aGUgcmVzcG9uc2UhCgoKIyMgIEJhY2t3YXJkIG1vZGVsc2VsZWN0aW9uIHdpdGggQklDLgoKV2UgY2FuIGRvIHRoaXMgaW4gdGhlIHN0ZXAgZnVuY3Rpb24gYnkgc3BlY2lmeWluZyBrLiBCeSBkZWZhdWx0IGs9Mi4gSWYgd2UgZGVmaW5lIGBrPWxvZyhuKWAgdGhhbiB3ZSB1c2UgdGhlIEJJQy4KYGBge3J9CmxtQklDIDwtIHN0ZXAobG0wLCBrPWxvZyhucm93KHgpKSkKbG1CSUMKcmVhbFByZWRCSUMgPC0gc3VtKG5hbWVzKGxtQklDJGNvZWZmaWNpZW50cykgJWluJSBwcmVkKQpmYWxzZVByZWRCSUMgPC0gbGVuZ3RoKGxtQklDJGNvZWZmaWNpZW50cykgLSByZWFsUHJlZEJJQyAtIDEKYGBgCgpUaGUgQklDIGNyaXRlcmlvbiBzZWxlY3RzIHRoZSBtb2RlbCB3aXRoIHRoZSBsb3dlc3QgQklDLiAKClRoaXMgbW9kZWwgY29ycmVjdGx5IHNlbGVjdHMgYHIgcmVhbFByZWRCSUNgIG91dCBvZiBgciBsZW5ndGgocHJlZClgIHJlYWwgcHJlZGljdG9ycy4gCkhvd2V2ZXIsIGl0IHNlbGVjdHMgYHIgZmFsc2VQcmVkQklDYCBwcmVkaWN0b3JzIHRoYXQgYXJlIG5vdCBhc3NvY2lhdGVkIHdpdGggdGhlIHJlc3BvbnNlIQoKCiMgV2hhdCBoYXBwZW5zIHdoZW4gdGhlIHZhcmlhbmNlIGluY3JlYXNlPyAKCklmIHRoZSBub2lzZSBpbmNyZWFzZXMgaXQgd2lsbCBiZSBoYXJkZXIgdG8gc2VsZWN0IHRoZSBjb3JyZWN0IG1vZGVsIGFuZCB3ZSBzdGlsbCBjYW4gZXhwZWN0IHRoZSBBSUMgdG8gcmVzdWx0IGluIG1vcmUgY29tcGxleCBtb2RlbHMgdGhhbiB0aGUgQklDLiAgIAoKV2Ugd2lsbCB1c2UgdGhlIHNhbWUgc2VlZCBzbyB0aGF0IHRoZSBkaWZmZXJlbmNlIGluIHRoZSByZXNwb25zZSBpcyBub3QgaW5kdWNlZCBieSB0aGUgcmFuZG9tIGdlbmVyYXRvciBidXQgb25seSBieSB0aGUgZGlmZmVyZW5jZSBpbiB2YXJpYW5jZS4gCgoKYGBge3J9CnNldC5zZWVkKDE5MzI1KQp5IDwtIDEwICsgeFssMV0gKyAyKiB4WywyXSArIDQqeFssM10gKyBybm9ybSgxMDAsc2Q9MTApCmxtMCA8LSBsbSh5fi4sIGRhdGE9eCkKYGBgCgojIyBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEFJQwoKYGBge3J9CmxtMCA8LSBsbSh5fi4sZGF0YT14KQpsbUFJQzEwIDwtIHN0ZXAobG0wKQpsbUFJQzEwCnJlYWxQcmVkQUlDMTAgPC0gc3VtKG5hbWVzKGxtQUlDMTAkY29lZmZpY2llbnRzKSAlaW4lIHByZWQpCmZhbHNlUHJlZEFJQzEwIDwtIGxlbmd0aChsbUFJQzEwJGNvZWZmaWNpZW50cykgLSByZWFsUHJlZEFJQzEwIC0gMQpgYGAKClRoZSBBSUMgY3JpdGVyaW9uIHNlbGVjdHMgdGhlIG1vZGVsIHdpdGggdGhlIGxvd2VzdCBBSUMuIAoKVGhpcyBtb2RlbCBjb3JyZWN0bHkgc2VsZWN0cyBgciByZWFsUHJlZEFJQzEwYCBvdXQgb2YgYHIgbGVuZ3RoKHByZWQpYCByZWFsIHByZWRpY3RvcnMuIApIb3dldmVyLCBpdCBhbHNvIHNlbGVjdHMgYHIgZmFsc2VQcmVkQUlDMTBgIHByZWRpY3RvcnMgdGhhdCBhcmUgbm90IGFzc29jaWF0ZWQgd2l0aCB0aGUgcmVzcG9uc2UhCgoKIyMgIEJhY2t3YXJkIG1vZGVsc2VsZWN0aW9uIHdpdGggQklDLgoKV2UgY2FuIGRvIHRoaXMgaW4gdGhlIHN0ZXAgZnVuY3Rpb24gYnkgc3BlY2lmeWluZyBrLiBCeSBkZWZhdWx0IGs9Mi4gSWYgd2UgZGVmaW5lIGBrPWxvZyhuKWAgdGhhbiB3ZSB1c2UgdGhlIEJJQy4KCmBgYHtyfQpsbUJJQzEwIDwtIHN0ZXAobG0wLCBrPWxvZyhucm93KHgpKSkKbG1CSUMxMApyZWFsUHJlZEJJQzEwIDwtIHN1bShuYW1lcyhsbUJJQzEwJGNvZWZmaWNpZW50cykgJWluJSBwcmVkKQpmYWxzZVByZWRCSUMxMCA8LSBsZW5ndGgobG1CSUMxMCRjb2VmZmljaWVudHMpIC0gcmVhbFByZWRCSUMxMCAtIDEKYGBgCgpUaGUgQklDIGNyaXRlcmlvbiBzZWxlY3RzIHRoZSBtb2RlbCB3aXRoIHRoZSBsb3dlc3QgQklDLiAKClRoaXMgbW9kZWwgY29ycmVjdGx5IHNlbGVjdHMgYHIgcmVhbFByZWRCSUMxMGAgb3V0IG9mIGByIGxlbmd0aChwcmVkKWAgcmVhbCBwcmVkaWN0b3JzLiAKSG93ZXZlciwgaXQgc2VsZWN0cyBgciBmYWxzZVByZWRCSUMxMGAgcHJlZGljdG9yIHRoYXQgaXMgbm90IGFzc29jaWF0ZWQgd2l0aCB0aGUgcmVzcG9uc2UhCgoKTm90ZSwgdGhhdCBBSUMgYW5kIEJJQyBhcmUgYSBnb29kIGVzdGltYXRlIG9mIHRoZSBpbnNhbXBsZSBlcnJvciwgaG93ZXZlciwgd2hlbiBidWlsZGluZyBwcmVkaWN0aW9uIG1vZGVscyB3ZSBhcmUgaW50ZXJlc3RlZCBpbiB1c2luZyB0aGUgbW9kZWwgZm9yIHByZWRpY3RvciBwYXR0ZXJucyB0aGF0IGFyZSBub3Qgb2JzZXJ2ZWQgaW4gdGhlIHRyYWluaW5nIHNldC4gU28gaXQgaXMgYmV0dGVyIHRvIGJ1aWxkIGEgbW9kZWwgYmFzZWQgb24gYW4gZXN0aW1hdGUgb2YgdGhlIG91dHNhbXBsZSBlcnJvci4gCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiQUlDIHZzIEJJQyIKYXV0aG9yOiAiTGlldmVuIENsZW1lbnQiCmRhdGU6ICJzdGF0T21pY3MsIEdoZW50IFVuaXZlcnNpdHkgKGh0dHBzOi8vc3RhdG9taWNzLmdpdGh1Yi5pbykiCm91dHB1dDoKICAgIGh0bWxfZG9jdW1lbnQ6CiAgICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgICAgdGhlbWU6IGNvc21vCiAgICAgIHRvYzogdHJ1ZQogICAgICB0b2NfZmxvYXQ6IHRydWUKICAgICAgaGlnaGxpZ2h0OiB0YW5nbwogICAgICBudW1iZXJfc2VjdGlvbnM6IHRydWUKICAgIHBkZl9kb2N1bWVudDoKICAgICAgdG9jOiB0cnVlCiAgICAgIG51bWJlcl9zZWN0aW9uczogdHJ1ZQogICAgICBsYXRleF9lbmdpbmU6IHhlbGF0ZXgKLS0tCgpgYGB7ciwgY2hpbGQ9Il9zZXR1cC5SbWQifQpgYGAKCgojIFdoZW4gbGFyZ2UgZGF0YXNldHMgYXJlIHVzZWQsIHRoZSBCSUMgd2lsbCBmYXZvdXIgc21hbGxlciBtb2RlbHMgdGhhbiB0aGUgQUlDLgoKQm90aCB0aGUgQklDIGFuZCB0aGUgQUlDIGNyaXRlcmlvbiBhcmUgYSB0cmFkZS1vZmYgYmV0d2VlbiBmaXQgKC0yIGxvZyBMKSBhbmQgbW9kZWwgY29tcGxleGl0eSAoMnAgZm9yIHRoZSBBSUMgYW5kIHAgbG9nKG4pIGZvciBCSUMpLgoKLSBXaGVuIHdlIHVzZSB0aGUgQklDIGZvciBtb2RlbCBzZWxlY3Rpb24gd2Ugd2lsbCBzZWxlY3QgdGhlIG1vZGVsIHdpdGggdGhlIGxvd2VzdCBCSUMuCi0gV2hlbiB3ZSB1c2UgdGhlIEFJQyBmb3IgbW9kZWwgc2VsZWN0aW9uIHdlIHdpbGwgc2VsZWN0IHRoZSBtb2RlbCB3aXRoIHRoZSBsb3dlc3QgQUlDLgoKSG93ZXZlciwgdGhlIHRyYWRlLW9mZiBiZXR3ZWVuIGZpdCBhbmQgbW9kZWwgY29tcGxleGl0eSBpcyBkaWZmZXJlbnQgZm9yIHRoZSBBSUMgYW5kIHRoZSBCSUMuCgotIFRoZXkgdXNlIHRoZSBzYW1lIG1lYXN1cmUgZm9yIHRoZSBmaXQgLTIgbG9nIEwuCi0gSW5jcmVhc2luZyB0aGUgbW9kZWwgY29tcGxleGl0eSB3aWxsIHJlc3VsdCBpbiBhIGJldHRlciBmaXQgYW5kIHRodXMgYSAgZGVjcmVhc2Ugb2YgLTIgbG9nIEwuCi0gSG93ZXZlciwgYm90aCBjcml0ZXJpYSBhbHNvIHBlbmFsaXNlIGZvciBtb2RlbCBjb21wbGV4aXR5OiAycCB2cyBwIGxvZyhuKS4KCkluIG9yZGVyIHRvIGZhdm91ciBhIG1vcmUgY29tcGxleCBtb2RlbCwKCi0gdGhlIGRlY3JlYXNlIG9mIC0yIGxvZyBMIGhhcyB0byBiZSBsYXJnZXIgdGhhbiB0aGUgaW5jcmVhc2UgaW4gMnAgZm9yIHRoZSBBSUMgY3JpdGVyaW9uLAotIHdoaWxlIHRoZSBkZWNyZWFzZSBvZiAtMiBsb2cgTCBoYXMgdG8gYmUgbGFyZ2VyIHRoYW4gdGhlIGluY3JlYXNlIGluIHAgbG9nKG4pIGZvciB0aGUgQklDIGNyaXRlcmlvbi4KCkJlY2F1c2UgbG9nKG4pID4gMiBhcyBzb29uIGFzIG4gPj0gOCwgIHRoZSBCSUMgY3JpdGVyaW9uIHdpbGwgcGVuYWxpc2UgbW9yZSBmb3IgdGhlIGluY3JlYXNlIGluIG1vZGVsIGNvbXBsZXhpdHkgYW5kIGl0IHdpbGwgdGhlcmVmb3JlIGZhdm91ciBzbWFsbGVyIG1vZGVscyB0aGFuIHRoZSBBSUMgY3JpdGVyaW9uLCB3aGljaCBwdW5pc2hlcyBsZXNzIGZvciB0aGUgaW5jcmVhc2UgaW4gbW9kZWwgY29tcGxleGl0eS4KCgojIElsbHVzdHJhdGlvbgoKYGBge3J9CnNldC5zZWVkKDIpCnggPC0gYXMuZGF0YS5mcmFtZShtYXRyaXgocm5vcm0oMTAwMCksbmNvbD0xMCkpCnByZWQgPC0gcGFzdGUwKCJWIiwxOjMpCmBgYAoKbW9kZWwKCiQkClkgPSBWMSArIDIqIFYyICsgNCpWMyArXGVwc2lsb24KJCQKCgpgYGB7cn0Kc2V0LnNlZWQoMTkzMjUpCnkgPC0gMTAgKyB4WywxXSArIDIqIHhbLDJdICsgNCp4WywzXSArIHJub3JtKDEwMCkKYGBgCgojIyBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEFJQwoKYGBge3J9CmxtMCA8LSBsbSh5fi4sZGF0YT14KQpsbUFJQyA8LSBzdGVwKGxtMCkKbG1BSUMKcmVhbFByZWRBSUMgPC0gc3VtKG5hbWVzKGxtQUlDJGNvZWZmaWNpZW50cykgJWluJSBwcmVkKQpmYWxzZVByZWRBSUMgPC0gbGVuZ3RoKGxtQUlDJGNvZWZmaWNpZW50cykgLSByZWFsUHJlZEFJQyAtIDEKYGBgCgpUaGUgQUlDIGNyaXRlcmlvbiBzZWxlY3RzIHRoZSBtb2RlbCB3aXRoIHRoZSBsb3dlc3QgQUlDLgoKVGhpcyBtb2RlbCBjb3JyZWN0bHkgc2VsZWN0cyBgciByZWFsUHJlZEFJQ2Agb3V0IG9mIGByIGxlbmd0aChwcmVkKWAgcmVhbCBwcmVkaWN0b3JzLgpIb3dldmVyLCBpdCBhbHNvIHNlbGVjdHMgYHIgZmFsc2VQcmVkQUlDYCBwcmVkaWN0b3JzIHRoYXQgYXJlIG5vdCBhc3NvY2lhdGVkIHdpdGggdGhlIHJlc3BvbnNlIQoKCiMjICBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEJJQy4KCldlIGNhbiBkbyB0aGlzIGluIHRoZSBzdGVwIGZ1bmN0aW9uIGJ5IHNwZWNpZnlpbmcgay4gQnkgZGVmYXVsdCBrPTIuIElmIHdlIGRlZmluZSBgaz1sb2cobilgIHRoYW4gd2UgdXNlIHRoZSBCSUMuCmBgYHtyfQpsbUJJQyA8LSBzdGVwKGxtMCwgaz1sb2cobnJvdyh4KSkpCmxtQklDCnJlYWxQcmVkQklDIDwtIHN1bShuYW1lcyhsbUJJQyRjb2VmZmljaWVudHMpICVpbiUgcHJlZCkKZmFsc2VQcmVkQklDIDwtIGxlbmd0aChsbUJJQyRjb2VmZmljaWVudHMpIC0gcmVhbFByZWRCSUMgLSAxCmBgYAoKVGhlIEJJQyBjcml0ZXJpb24gc2VsZWN0cyB0aGUgbW9kZWwgd2l0aCB0aGUgbG93ZXN0IEJJQy4KClRoaXMgbW9kZWwgY29ycmVjdGx5IHNlbGVjdHMgYHIgcmVhbFByZWRCSUNgIG91dCBvZiBgciBsZW5ndGgocHJlZClgIHJlYWwgcHJlZGljdG9ycy4KSG93ZXZlciwgaXQgc2VsZWN0cyBgciBmYWxzZVByZWRCSUNgIHByZWRpY3RvcnMgdGhhdCBhcmUgbm90IGFzc29jaWF0ZWQgd2l0aCB0aGUgcmVzcG9uc2UhCgoKIyBXaGF0IGhhcHBlbnMgd2hlbiB0aGUgdmFyaWFuY2UgaW5jcmVhc2U/CgpJZiB0aGUgbm9pc2UgaW5jcmVhc2VzIGl0IHdpbGwgYmUgaGFyZGVyIHRvIHNlbGVjdCB0aGUgY29ycmVjdCBtb2RlbCBhbmQgd2Ugc3RpbGwgY2FuIGV4cGVjdCB0aGUgQUlDIHRvIHJlc3VsdCBpbiBtb3JlIGNvbXBsZXggbW9kZWxzIHRoYW4gdGhlIEJJQy4KCldlIHdpbGwgdXNlIHRoZSBzYW1lIHNlZWQgc28gdGhhdCB0aGUgZGlmZmVyZW5jZSBpbiB0aGUgcmVzcG9uc2UgaXMgbm90IGluZHVjZWQgYnkgdGhlIHJhbmRvbSBnZW5lcmF0b3IgYnV0IG9ubHkgYnkgdGhlIGRpZmZlcmVuY2UgaW4gdmFyaWFuY2UuCgoKYGBge3J9CnNldC5zZWVkKDE5MzI1KQp5IDwtIDEwICsgeFssMV0gKyAyKiB4WywyXSArIDQqeFssM10gKyBybm9ybSgxMDAsc2Q9MTApCmxtMCA8LSBsbSh5fi4sIGRhdGE9eCkKYGBgCgojIyBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEFJQwoKYGBge3J9CmxtMCA8LSBsbSh5fi4sZGF0YT14KQpsbUFJQzEwIDwtIHN0ZXAobG0wKQpsbUFJQzEwCnJlYWxQcmVkQUlDMTAgPC0gc3VtKG5hbWVzKGxtQUlDMTAkY29lZmZpY2llbnRzKSAlaW4lIHByZWQpCmZhbHNlUHJlZEFJQzEwIDwtIGxlbmd0aChsbUFJQzEwJGNvZWZmaWNpZW50cykgLSByZWFsUHJlZEFJQzEwIC0gMQpgYGAKClRoZSBBSUMgY3JpdGVyaW9uIHNlbGVjdHMgdGhlIG1vZGVsIHdpdGggdGhlIGxvd2VzdCBBSUMuCgpUaGlzIG1vZGVsIGNvcnJlY3RseSBzZWxlY3RzIGByIHJlYWxQcmVkQUlDMTBgIG91dCBvZiBgciBsZW5ndGgocHJlZClgIHJlYWwgcHJlZGljdG9ycy4KSG93ZXZlciwgaXQgYWxzbyBzZWxlY3RzIGByIGZhbHNlUHJlZEFJQzEwYCBwcmVkaWN0b3JzIHRoYXQgYXJlIG5vdCBhc3NvY2lhdGVkIHdpdGggdGhlIHJlc3BvbnNlIQoKCiMjICBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEJJQy4KCldlIGNhbiBkbyB0aGlzIGluIHRoZSBzdGVwIGZ1bmN0aW9uIGJ5IHNwZWNpZnlpbmcgay4gQnkgZGVmYXVsdCBrPTIuIElmIHdlIGRlZmluZSBgaz1sb2cobilgIHRoYW4gd2UgdXNlIHRoZSBCSUMuCgpgYGB7cn0KbG1CSUMxMCA8LSBzdGVwKGxtMCwgaz1sb2cobnJvdyh4KSkpCmxtQklDMTAKcmVhbFByZWRCSUMxMCA8LSBzdW0obmFtZXMobG1CSUMxMCRjb2VmZmljaWVudHMpICVpbiUgcHJlZCkKZmFsc2VQcmVkQklDMTAgPC0gbGVuZ3RoKGxtQklDMTAkY29lZmZpY2llbnRzKSAtIHJlYWxQcmVkQklDMTAgLSAxCmBgYAoKVGhlIEJJQyBjcml0ZXJpb24gc2VsZWN0cyB0aGUgbW9kZWwgd2l0aCB0aGUgbG93ZXN0IEJJQy4KClRoaXMgbW9kZWwgY29ycmVjdGx5IHNlbGVjdHMgYHIgcmVhbFByZWRCSUMxMGAgb3V0IG9mIGByIGxlbmd0aChwcmVkKWAgcmVhbCBwcmVkaWN0b3JzLgpIb3dldmVyLCBpdCBzZWxlY3RzIGByIGZhbHNlUHJlZEJJQzEwYCBwcmVkaWN0b3IgdGhhdCBpcyBub3QgYXNzb2NpYXRlZCB3aXRoIHRoZSByZXNwb25zZSEKCgpOb3RlLCB0aGF0IEFJQyBhbmQgQklDIGFyZSBhIGdvb2QgZXN0aW1hdGUgb2YgdGhlIGluc2FtcGxlIGVycm9yLCBob3dldmVyLCB3aGVuIGJ1aWxkaW5nIHByZWRpY3Rpb24gbW9kZWxzIHdlIGFyZSBpbnRlcmVzdGVkIGluIHVzaW5nIHRoZSBtb2RlbCBmb3IgcHJlZGljdG9yIHBhdHRlcm5zIHRoYXQgYXJlIG5vdCBvYnNlcnZlZCBpbiB0aGUgdHJhaW5pbmcgc2V0LiBTbyBpdCBpcyBiZXR0ZXIgdG8gYnVpbGQgYSBtb2RlbCBiYXNlZCBvbiBhbiBlc3RpbWF0ZSBvZiB0aGUgb3V0c2FtcGxlIGVycm9yLgoKYGBge3IsIGNoaWxkPSJfc2Vzc2lvbi1pbmZvLlJtZCJ9CmBgYAo=</div>
 
 
 </div>
