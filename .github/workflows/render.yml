@@ -3,6 +3,7 @@ name: Render and Deploy
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 ## If you need to clear the cache, update the number inside cache-version as
 ## discussed at https://github.com/r-lib/actions/issues/86.
