@@ -14,6 +14,7 @@
 
 <title>Lab 3: Penalized regression techniques for high-dimensional data</title>
 
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -35,7 +36,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -60,19 +60,19 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -92,7 +92,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {  background-color: #f8f8f8; }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -541,14 +541,14 @@ div.tocify {
 <div id="change-log" class="section level3 unnumbered">
 <h3><a href="https://github.com/statOmics/HDDA/commits/master/Lab3-Penalized-Regression.Rmd">Change log</a></h3>
 <hr />
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">## install packages with:</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="co">## install.packages(c(&quot;glmnet&quot;, &quot;pls&quot;, &quot;NormalBetaPrime&quot;, &quot;boot&quot;))</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(NormalBetaPrime)</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(glmnet)</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">library</span>(pls)</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="kw">library</span>(boot)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## install packages with:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## install.packages(c(&quot;glmnet&quot;, &quot;pls&quot;, &quot;NormalBetaPrime&quot;, &quot;boot&quot;))</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(NormalBetaPrime)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pls)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span></code></pre></div>
 </div>
-<div id="introduction" class="section level1">
+<div id="introduction" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p><strong>In this lab session we will look at the following topics</strong></p>
 <ul>
@@ -557,7 +557,7 @@ div.tocify {
 <li>Use <code>glmnet()</code> to carry out ridge regression, lasso and elastic net</li>
 <li>Evaluation of these prediction models</li>
 </ul>
-<div id="the-dataset" class="section level2">
+<div id="the-dataset" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> The dataset</h2>
 <p>In this practical, we will use the dataset <code>eyedata</code> provided by
 the <a href="https://cran.r-project.org/web/packages/NormalBetaPrime/index.html"><strong>NormalBetaPrime</strong> package</a>.
@@ -570,22 +570,22 @@ of mammalian eye tissue samples.</p>
 (columns) for 120 samples (rows)</li>
 <li><code>trim32</code>: a vector with 120 expression levels of the TRIM32 gene.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">data</span>(eyedata)</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="co">## Look at objects that were just loaded</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">str</span>(genes)</span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt;  num [1:120, 1:200] 3.68 3.58 3.85 4.13 3.88 ...</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt;  - attr(*, &quot;dimnames&quot;)=List of 2</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt;   ..$ : chr [1:120] &quot;V2&quot; &quot;V3&quot; &quot;V4&quot; &quot;V5&quot; ...</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co">#&gt;   ..$ : chr [1:200] &quot;1377&quot; &quot;1748&quot; &quot;2487&quot; &quot;2679&quot; ...</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="kw">str</span>(trim32)</span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt;  num [1:120] 8.42 8.36 8.41 8.29 8.27 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(eyedata)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Look at objects that were just loaded</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(genes)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  num [1:120, 1:200] 3.68 3.58 3.85 4.13 3.88 ...</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  - attr(*, &quot;dimnames&quot;)=List of 2</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ : chr [1:120] &quot;V2&quot; &quot;V3&quot; &quot;V4&quot; &quot;V5&quot; ...</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ : chr [1:200] &quot;1377&quot; &quot;1748&quot; &quot;2487&quot; &quot;2679&quot; ...</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(trim32)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  num [1:120] 8.42 8.36 8.41 8.29 8.27 ...</span></span></code></pre></div>
 <p>The goal of this exercise is to predict the expression levels of
 TRIM32 from the expression levels of the 200 genes measured in the
 microarray experiment. For this, it makes sense to start by constructing
 centered (and possibly scaled) data. We store this in two matrices
 <code>X</code> and <code>Y</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>X &lt;-<span class="st"> </span><span class="kw">scale</span>(genes, <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a>Y &lt;-<span class="st"> </span><span class="kw">scale</span>(trim32, <span class="dt">center =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">scale</span>(genes, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">scale</span>(trim32, <span class="at">center =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>Remember that scaling avoids that differences in levels of magnitude
 will give one variable (gene) more influence in the result. This has
 been illustrated in the <a href="./Lab2-PCA.html">second practical session</a> as well.
@@ -593,7 +593,7 @@ For the <code>Y</code> vector, this is less of an issue as we’re talking about
 Not scaling will make the predictions interpretable as “deviations from the
 mean”.</p>
 </div>
-<div id="the-curse-of-singularity" class="section level2">
+<div id="the-curse-of-singularity" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> The curse of singularity</h2>
 <p>We begin by assuming that the predictors and the outcome have been
 centered so that the intercept is 0.
@@ -612,18 +612,18 @@ Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
 To be able to calculate the inverse of <span class="math inline">\({\mathbf{X}}^T \mathbf{X}\)</span>,
 it has to be of full rank <span class="math inline">\(p\)</span>, which would be 200 in this case.
 Let’s check this:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">dim</span>(X) <span class="co"># 120 x 200, so p &gt; n!</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="co">#&gt; [1] 120 200</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">qr</span>(X)<span class="op">$</span>rank</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; [1] 119</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a></span>
-<span id="cb4-6"><a href="#cb4-6"></a>XtX &lt;-<span class="st"> </span><span class="kw">crossprod</span>(X) <span class="co"># calculates t(X) %*% X more efficiently</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="kw">qr</span>(XtX)<span class="op">$</span>rank</span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt; [1] 119</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="co"># Try to invert using solve:</span></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="kw">solve</span>(XtX)</span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt; Error in solve.default(XtX): system is computationally singular: reciprocal condition number = 4.20888e-20</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(X) <span class="co"># 120 x 200, so p &gt; n!</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 120 200</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qr</span>(X)<span class="sc">$</span>rank</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 119</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>XtX <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(X) <span class="co"># calculates t(X) %*% X more efficiently</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">qr</span>(XtX)<span class="sc">$</span>rank</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 119</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Try to invert using solve:</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">solve</span>(XtX)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in solve.default(XtX): system is computationally singular: reciprocal condition number = 4.20888e-20</span></span></code></pre></div>
 <p>We realize we cannot compute
 <span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})^{-1}\)</span> because the rank of
 <span class="math inline">\(({\mathbf{X}}^T{\mathbf{X}})\)</span> is less than <span class="math inline">\(p\)</span> hence we can’t
@@ -631,7 +631,7 @@ get <span class="math inline">\(\hat{{\boldsymbol{\beta}}}\)</span> by means of 
 This is generally referred to as the <strong><a href="https://www.statistics.com/glossary/singularity/">singularity</a> problem</strong>.</p>
 </div>
 </div>
-<div id="principal-component-regression" class="section level1">
+<div id="principal-component-regression" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Principal component regression</h1>
 <p>A first way to deal with this singularity, is to bypass it using principal components.
 Since <span class="math inline">\(\min(n,p) = n = 120\)</span>,
@@ -642,46 +642,46 @@ We could as well use an approximation of <span class="math inline">\({\mathbf{X}
 So we use PCA as a method for reducing the dimensions while retaining
 as much variation between the observations as possible.
 Once we have these PCs, we can use them as variables in a linear regression model.</p>
-<div id="classic-linear-regression-on-pcs" class="section level2">
+<div id="classic-linear-regression-on-pcs" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Classic linear regression on PCs</h2>
 <p>We first compute the PCA on the data with <code>prcomp</code>.
 We will use an arbitrary cutoff of <span class="math inline">\(k = 4\)</span> PCs to illustrate the process of performing regression on the PCs.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>k &lt;-<span class="st"> </span><span class="dv">4</span> <span class="co"># Arbitrarily chosen k=4</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(X)</span>
-<span id="cb5-3"><a href="#cb5-3"></a>Vk &lt;-<span class="st"> </span>pca<span class="op">$</span>rotation[, <span class="dv">1</span><span class="op">:</span>k] <span class="co"># the loadings matrix</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a>Zk &lt;-<span class="st"> </span>pca<span class="op">$</span>x[, <span class="dv">1</span><span class="op">:</span>k] <span class="co"># the scores matrix</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co"># Use the scores in classic linear regression</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a>pcr_model1 &lt;-<span class="st"> </span><span class="kw">lm</span>(Y <span class="op">~</span><span class="st"> </span>Zk)</span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="kw">summary</span>(pcr_model1)</span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt; </span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt; lm(formula = Y ~ Zk)</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt; </span></span>
-<span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt; Residuals:</span></span>
-<span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
-<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt; -1.72388 -0.34723  0.02811  0.27817  2.03271 </span></span>
-<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; </span></span>
-<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt;               Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span id="cb5-19"><a href="#cb5-19"></a><span class="co">#&gt; (Intercept) -2.636e-15  5.454e-02   0.000   1.0000    </span></span>
-<span id="cb5-20"><a href="#cb5-20"></a><span class="co">#&gt; ZkPC1       -7.172e-02  4.950e-03 -14.488   &lt;2e-16 ***</span></span>
-<span id="cb5-21"><a href="#cb5-21"></a><span class="co">#&gt; ZkPC2        1.273e-02  1.342e-02   0.949   0.3447    </span></span>
-<span id="cb5-22"><a href="#cb5-22"></a><span class="co">#&gt; ZkPC3        3.371e-02  2.326e-02   1.449   0.1500    </span></span>
-<span id="cb5-23"><a href="#cb5-23"></a><span class="co">#&gt; ZkPC4        5.908e-02  2.535e-02   2.330   0.0215 *  </span></span>
-<span id="cb5-24"><a href="#cb5-24"></a><span class="co">#&gt; ---</span></span>
-<span id="cb5-25"><a href="#cb5-25"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb5-26"><a href="#cb5-26"></a><span class="co">#&gt; </span></span>
-<span id="cb5-27"><a href="#cb5-27"></a><span class="co">#&gt; Residual standard error: 0.5975 on 115 degrees of freedom</span></span>
-<span id="cb5-28"><a href="#cb5-28"></a><span class="co">#&gt; Multiple R-squared:  0.655,  Adjusted R-squared:  0.643 </span></span>
-<span id="cb5-29"><a href="#cb5-29"></a><span class="co">#&gt; F-statistic: 54.58 on 4 and 115 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="co"># Arbitrarily chosen k=4</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(X)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>Vk <span class="ot">&lt;-</span> pca<span class="sc">$</span>rotation[, <span class="dv">1</span><span class="sc">:</span>k] <span class="co"># the loadings matrix</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>Zk <span class="ot">&lt;-</span> pca<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span>k] <span class="co"># the scores matrix</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the scores in classic linear regression</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>pcr_model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> Zk)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pcr_model1)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Y ~ Zk)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -1.72388 -0.34723  0.02811  0.27817  2.03271 </span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -2.636e-15  5.454e-02   0.000   1.0000    </span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ZkPC1       -7.172e-02  4.950e-03 -14.488   &lt;2e-16 ***</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ZkPC2        1.273e-02  1.342e-02   0.949   0.3447    </span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ZkPC3        3.371e-02  2.326e-02   1.449   0.1500    </span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ZkPC4        5.908e-02  2.535e-02   2.330   0.0215 *  </span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.5975 on 115 degrees of freedom</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.655,  Adjusted R-squared:  0.643 </span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 54.58 on 4 and 115 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 <p>As <span class="math inline">\(\mathbf{X}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> are centered, the intercept is
 approximately 0.</p>
 <p>The output shows that PC1 and PC4 have a <span class="math inline">\(\beta\)</span> estimate that
 differs significantly from 0 (at <span class="math inline">\(p &lt; 0.05\)</span>), but the results can’t be readily
 interpreted, since we have no immediate interpretation of the PCs.</p>
 </div>
-<div id="using-the-package-pls" class="section level2">
+<div id="using-the-package-pls" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Using the package <code>pls</code></h2>
 <p>PCR can also be performed using the <code>pcr()</code> function from the
 package <em><a href="https://CRAN.R-project.org/package=pls">pls</a></em>
@@ -696,17 +696,17 @@ center (set <code>center = TRUE</code>) the predictors first (in the example her
 use <code>lm()</code>. The resulting fit can easily be examined using the
 function <code>summary()</code>, but the output looks quite different from
 what you would get from <code>lm</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># X is already scaled and centered, so that&#39;s not needed.</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>pcr_model2 &lt;-<span class="st"> </span><span class="kw">pcr</span>(Y <span class="op">~</span><span class="st"> </span>X, <span class="dt">ncomp =</span> <span class="dv">4</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="kw">summary</span>(pcr_model2)</span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co">#&gt; Data:    X dimension: 120 200 </span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co">#&gt;  Y dimension: 120 1</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="co">#&gt; Fit method: svdpc</span></span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt; Number of components considered: 4</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt; TRAINING: % variance explained</span></span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt;    1 comps  2 comps  3 comps  4 comps</span></span>
-<span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt; X    61.22    69.55    72.33    74.66</span></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt; Y    62.97    63.24    63.87    65.50</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># X is already scaled and centered, so that&#39;s not needed.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pcr_model2 <span class="ot">&lt;-</span> <span class="fu">pcr</span>(Y <span class="sc">~</span> X, <span class="at">ncomp =</span> <span class="dv">4</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pcr_model2)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Data:    X dimension: 120 200 </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Y dimension: 120 1</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Fit method: svdpc</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of components considered: 4</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRAINING: % variance explained</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    1 comps  2 comps  3 comps  4 comps</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X    61.22    69.55    72.33    74.66</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Y    62.97    63.24    63.87    65.50</span></span></code></pre></div>
 <p>First of all the output shows you the data dimensions and the fitting
 method used. In this case, that is PC calculation based on SVD. The
 <code>summary()</code> function also provides the percentage of variance
@@ -719,7 +719,7 @@ the number of principal components was arbitrary chosen to be 4.</p>
 that has the <strong>smallest prediction error</strong>.</p>
 </div>
 </div>
-<div id="elnet-theory" class="section level1">
+<div id="elnet-theory" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Ridges, Lassos and Elastic Nets</h1>
 <p>Ridge regression, lasso regression and elastic nets are all closely
 related techniques, based on the same idea: add a penalty term to
@@ -732,7 +732,7 @@ The term will add a penalty based on the <em>absolute value</em> of the
 magnitude of the coefficients. This is used by the <strong>lasso regression</strong></li>
 </ol>
 <p><span class="math display">\[
- \hat{\boldsymbol{\beta}}^{\text{lasso}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_1\|\boldsymbol{\beta}\|_{1}}}\displaystyle)
+\hat{\boldsymbol{\beta}}^{\text{lasso}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_1\|\boldsymbol{\beta}\|_{1}}}\displaystyle)
 \]</span></p>
 <ol start="2" style="list-style-type: decimal">
 <li>L2 regularization: this regularization adds a term <span class="math inline">\({\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}\)</span> to the estimating equation.
@@ -740,16 +740,16 @@ The penalty term is based on the square of the magnitude of the
 coefficients. This is used by <strong>ridge regression</strong>.</li>
 </ol>
 <p><span class="math display">\[
- \hat{\boldsymbol{\beta}}^{\text{ridge}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
+\hat{\boldsymbol{\beta}}^{\text{ridge}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
 \]</span></p>
 <p>Elastic nets combine both types of regularizations. It does so by
 introducing a <span class="math inline">\(\alpha\)</span> mixing parameter that essentially combines
 the L1 and L2 norms in a weighted average.</p>
 <p><span class="math display">\[
- \hat{\boldsymbol{\beta}}^{\text{el.net}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^{T}(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\alpha \lambda_1\|\boldsymbol{\beta}\|_{1}}+ {(1 - \alpha)\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
+\hat{\boldsymbol{\beta}}^{\text{el.net}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^{T}(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\alpha \lambda_1\|\boldsymbol{\beta}\|_{1}}+ {(1 - \alpha)\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
 \]</span></p>
 </div>
-<div id="exercise-verification-of-ridge-regression" class="section level1">
+<div id="exercise-verification-of-ridge-regression" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Exercise: Verification of ridge regression</h1>
 <p>In least square regression the minimization of the estimation function
 <span class="math inline">\(|{\mathbf{Y} - \mathbf{X} \boldsymbol{\beta}}\|^{2}_{2}\)</span> leads to the solution <span class="math inline">\({\boldsymbol{\hat{\beta}}=(\mathbf{X^TX})^{-1}\mathbf{X^TY}}\)</span>.</p>
@@ -768,50 +768,56 @@ The optimal parameter lies somewhere in between and needs to be tuned by the use
 <div id="verify-that-mathbfxtxlambdamathbfi-has-rank-200-for-any-lambda0-of-your-choice." class="section level4 unnumbered">
 <h4>1. Verify that <span class="math inline">\({\mathbf{(X^TX}}+\lambda{\mathbf{I}})\)</span> has rank <span class="math inline">\(200\)</span>, for any <span class="math inline">\(\lambda&gt;0\)</span> of your choice.</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>XtX &lt;-<span class="st"> </span><span class="kw">crossprod</span>(X)</span>
-<span id="cb7-2"><a href="#cb7-2"></a>p &lt;-<span class="st"> </span><span class="kw">ncol</span>(X)</span>
-<span id="cb7-3"><a href="#cb7-3"></a>lambda &lt;-<span class="st"> </span><span class="dv">2</span> <span class="co"># My choice</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a></span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># Compute penalized matrix</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a>XtX_lambdaI &lt;-<span class="st"> </span>XtX <span class="op">+</span><span class="st"> </span>(lambda <span class="op">*</span><span class="st"> </span><span class="kw">diag</span>(p))</span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="kw">dim</span>(XtX_lambdaI)</span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt; [1] 200 200</span></span>
-<span id="cb7-9"><a href="#cb7-9"></a><span class="kw">qr</span>(XtX_lambdaI)<span class="op">$</span>rank <span class="op">==</span><span class="st"> </span><span class="dv">200</span> <span class="co"># indeed</span></span>
-<span id="cb7-10"><a href="#cb7-10"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>XtX <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(X)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="co"># My choice</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute penalized matrix</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>XtX_lambdaI <span class="ot">&lt;-</span> XtX <span class="sc">+</span> (lambda <span class="sc">*</span> <span class="fu">diag</span>(p))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(XtX_lambdaI)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 200 200</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">qr</span>(XtX_lambdaI)<span class="sc">$</span>rank <span class="sc">==</span> <span class="dv">200</span> <span class="co"># indeed</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </details>
 </div>
 <div id="check-that-the-inverse-of-mathbfxtxlambdamathbfi-can-be-computed." class="section level4 unnumbered">
 <h4>2. Check that the inverse of <span class="math inline">\({\mathbf{(X^TX}}+\lambda{\mathbf{I}})\)</span> can be computed.</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Yes, it can be computed (no error)</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>XtX_lambdaI_inv &lt;-<span class="st"> </span><span class="kw">solve</span>(XtX_lambdaI)</span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">str</span>(XtX_lambdaI_inv)</span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="co">#&gt;  num [1:200, 1:200] 0.25408 -0.02756 0.00453 -0.02961 0.00722 ...</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt;  - attr(*, &quot;dimnames&quot;)=List of 2</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="co">#&gt;   ..$ : chr [1:200] &quot;1377&quot; &quot;1748&quot; &quot;2487&quot; &quot;2679&quot; ...</span></span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt;   ..$ : chr [1:200] &quot;1377&quot; &quot;1748&quot; &quot;2487&quot; &quot;2679&quot; ...</span></span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Yes, it can be computed (no error)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>XtX_lambdaI_inv <span class="ot">&lt;-</span> <span class="fu">solve</span>(XtX_lambdaI)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(XtX_lambdaI_inv)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  num [1:200, 1:200] 0.25408 -0.02756 0.00453 -0.02961 0.00722 ...</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  - attr(*, &quot;dimnames&quot;)=List of 2</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ : chr [1:200] &quot;1377&quot; &quot;1748&quot; &quot;2487&quot; &quot;2679&quot; ...</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ : chr [1:200] &quot;1377&quot; &quot;1748&quot; &quot;2487&quot; &quot;2679&quot; ...</span></span></code></pre></div>
 </details>
 </div>
 <div id="finally-compute-boldsymbolhatbetamathbfxtxlambdamathbfi-1mathbfxty." class="section level4 unnumbered">
 <h4>3. Finally, compute <span class="math inline">\({\boldsymbol{\hat{\beta}}=(\mathbf{X^TX}}+\lambda{\mathbf{I}})^{-1}{\mathbf{X^TY}}\)</span>.</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">## Calculate ridge beta estimates</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="co">## Use `drop` to drop dimensions and create vector</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a>ridge_betas &lt;-<span class="st"> </span><span class="kw">drop</span>(XtX_lambdaI_inv <span class="op">%*%</span><span class="st"> </span><span class="kw">t</span>(X) <span class="op">%*%</span><span class="st"> </span>Y)</span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="kw">length</span>(ridge_betas) <span class="co"># one for every gene</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="co">#&gt; [1] 200</span></span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="kw">summary</span>(ridge_betas)</span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="co">#&gt; -0.235089 -0.045535 -0.008577 -0.000279  0.054195  0.215292</span></span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate ridge beta estimates</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Use `drop` to drop dimensions and create vector</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>ridge_betas <span class="ot">&lt;-</span> <span class="fu">drop</span>(XtX_lambdaI_inv <span class="sc">%*%</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> Y)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(ridge_betas) <span class="co"># one for every gene</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 200</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ridge_betas)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.235089 -0.045535 -0.008577 -0.000279  0.054195  0.215292</span></span></code></pre></div>
 <p>We have now manually calculated the ridge regression estimates.</p>
 </details>
 </div>
 </div>
 </div>
-<div id="performing-ridge-and-lasso-regression-with-glmnet" class="section level1">
+<div id="performing-ridge-and-lasso-regression-with-glmnet" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Performing ridge and lasso regression with <code>glmnet</code></h1>
 <p>The package <em><a href="https://CRAN.R-project.org/package=glmnet">glmnet</a></em> provides a
 function <code>glmnet()</code> that allows you to fit all three types of regressions. Which
@@ -836,13 +842,13 @@ general, see the
 <p>Let’s perform a ridge regression in order to predict expression levels
 of the TRIM32 gene using the 200 gene probes data. We can start by
 using a <span class="math inline">\(\lambda\)</span> value of 2.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>lambda &lt;-<span class="st"> </span><span class="dv">2</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a>ridge_model &lt;-<span class="st"> </span><span class="kw">glmnet</span>(X, Y, <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> lambda)</span>
-<span id="cb10-3"><a href="#cb10-3"></a></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="co"># have a look at the first 10 coefficients</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="kw">coef</span>(ridge_model)[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co">#&gt;  [1] -2.639083e-15 -5.818717e-03 -9.888023e-03  5.100910e-03 -2.482488e-03</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="co">#&gt;  [6] -8.341285e-03 -4.528922e-03 -7.961890e-03 -5.039029e-03  6.325841e-03</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ridge_model <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(X, Y, <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> lambda)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look at the first 10 coefficients</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(ridge_model)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] -2.639083e-15 -5.818717e-03 -9.888023e-03  5.100910e-03 -2.482488e-03</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [6] -8.341285e-03 -4.528922e-03 -7.961890e-03 -5.039029e-03  6.325841e-03</span></span></code></pre></div>
 <p>The first coefficient is the intercept, and is again essentially 0. But
 a value of 2 for <span class="math inline">\(\lambda\)</span> might not be the best choice, so let’s see how
 the coefficients change with different values for <span class="math inline">\(\lambda\)</span>.</p>
@@ -850,16 +856,16 @@ the coefficients change with different values for <span class="math inline">\(\l
 used as input for the <code>glmnet</code> function. Note that this function can take a
 vector of values as input for the <code>lambda</code> argument, allowing to fit multiple
 models with the same input data but different hyperparameters.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>grid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">1000</span>, <span class="dt">by =</span> <span class="dv">10</span>)  <span class="co"># 1 to 1000 with steps of 10</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>ridge_mod_grid &lt;-<span class="st"> </span><span class="kw">glmnet</span>(X, Y, <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> grid)</span>
-<span id="cb11-3"><a href="#cb11-3"></a></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="co"># Plot the coefficients against the (natural) LOG lambda sequence!</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a><span class="co"># see ?plot.glmnet</span></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="kw">plot</span>(ridge_mod_grid, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;log(lambda)&quot;</span>)</span>
-<span id="cb11-7"><a href="#cb11-7"></a><span class="co"># add a vertical line at lambda = 2</span></span>
-<span id="cb11-8"><a href="#cb11-8"></a><span class="kw">text</span>(<span class="kw">log</span>(lambda), <span class="fl">-0.05</span>, <span class="dt">labels =</span> <span class="kw">expression</span>(lambda <span class="op">==</span><span class="st"> </span><span class="dv">2</span>),</span>
-<span id="cb11-9"><a href="#cb11-9"></a>     <span class="dt">adj =</span> <span class="fl">-0.5</span>, <span class="dt">col =</span> <span class="st">&quot;firebrick&quot;</span>)</span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">log</span>(lambda), <span class="dt">col =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">1000</span>, <span class="at">by =</span> <span class="dv">10</span>)  <span class="co"># 1 to 1000 with steps of 10</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ridge_mod_grid <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(X, Y, <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> grid)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the coefficients against the (natural) LOG lambda sequence!</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># see ?plot.glmnet</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ridge_mod_grid, <span class="at">xvar =</span> <span class="st">&quot;lambda&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;log(lambda)&quot;</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># add a vertical line at lambda = 2</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">log</span>(lambda), <span class="sc">-</span><span class="fl">0.05</span>, <span class="at">labels =</span> <span class="fu">expression</span>(lambda <span class="sc">==</span> <span class="dv">2</span>),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">adj =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">col =</span> <span class="st">&quot;firebrick&quot;</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">log</span>(lambda), <span class="at">col =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/ridge-regression-grid-search-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>This plot is known as a <strong>coefficient profile plot</strong>, each colored line
 represents a coefficient <span class="math inline">\(\hat{\beta}\)</span> from the regression model and shows how
@@ -872,7 +878,7 @@ arbitrarily. We will see subsequently, how to choose <span class="math inline">\
 prediction error.</p>
 </div>
 </div>
-<div id="exercise-lasso-regression" class="section level1">
+<div id="exercise-lasso-regression" class="section level1" number="6">
 <h1><span class="header-section-number">6</span> Exercise: Lasso regression</h1>
 <p>Lasso regression is also a form of penalized regression, but we do not have an
 analytic solution of <span class="math inline">\(\hat{{\boldsymbol{\beta}}}\)</span> as in least squares
@@ -890,17 +896,21 @@ the <code>glmnet()</code> function. However, this time we use the argument
 but can instead rely on <code>glmnet</code>’s default behaviour of choosing the grid of
 <span class="math inline">\(\lambda\)</span> values based on the data (see <code>?glmnet</code> for more details).</p>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Note that the glmnet() function can supply lambda automatically</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="co"># By default it uses a sequence of 100 lambda values</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a>lasso_model &lt;-<span class="st"> </span><span class="kw">glmnet</span>(X, Y, <span class="dt">alpha =</span> <span class="dv">1</span>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that the glmnet() function can supply lambda automatically</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># By default it uses a sequence of 100 lambda values</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>lasso_model <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(X, Y, <span class="at">alpha =</span> <span class="dv">1</span>)</span></code></pre></div>
 </details>
 </div>
 <div id="make-the-coefficient-profile-plot-and-interpret." class="section level4 unnumbered">
 <h4>3. Make the coefficient profile plot and interpret.</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">plot</span>(lasso_model, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;log(lambda)&quot;</span>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lasso_model, <span class="at">xvar =</span> <span class="st">&quot;lambda&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;log(lambda)&quot;</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>Note that the number of non-zero coefficients is indicated at the top of the plot.
 In the case of lasso-regression the regularization is much less smooth compared
@@ -911,7 +921,7 @@ In contrast to ridge, lasso eventually shrinks all coefficients to 0.</p>
 </div>
 </div>
 </div>
-<div id="evaluation-of-prediction-models-and-tuning-hyperparameters" class="section level1">
+<div id="evaluation-of-prediction-models-and-tuning-hyperparameters" class="section level1" number="7">
 <h1><span class="header-section-number">7</span> Evaluation of prediction models and tuning hyperparameters</h1>
 <p>First we will split our original data in a training and test set to validate our
 model. The training set will be used to train the model and tune the
@@ -928,36 +938,36 @@ be reproduced at a later time.</p>
 subsets, by selecting a random subset of 80 observations out of the original 120
 observations. We refer to these observations as the <strong>training</strong> set. The rest
 of the observations will be used as the <strong>test</strong> set.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="co"># Sample 80 random IDs from the rows of X (120 total)</span></span>
-<span id="cb14-3"><a href="#cb14-3"></a>trainID &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">nrow</span>(X), <span class="dv">80</span>)</span>
-<span id="cb14-4"><a href="#cb14-4"></a></span>
-<span id="cb14-5"><a href="#cb14-5"></a><span class="co"># Training data</span></span>
-<span id="cb14-6"><a href="#cb14-6"></a>trainX &lt;-<span class="st"> </span>X[trainID, ]</span>
-<span id="cb14-7"><a href="#cb14-7"></a>trainY &lt;-<span class="st"> </span>Y[trainID]</span>
-<span id="cb14-8"><a href="#cb14-8"></a></span>
-<span id="cb14-9"><a href="#cb14-9"></a><span class="co"># Test data</span></span>
-<span id="cb14-10"><a href="#cb14-10"></a>testX &lt;-<span class="st"> </span>X[<span class="op">-</span>trainID, ]</span>
-<span id="cb14-11"><a href="#cb14-11"></a>testY &lt;-<span class="st"> </span>Y[<span class="op">-</span>trainID]</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample 80 random IDs from the rows of X (120 total)</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>trainID <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(X), <span class="dv">80</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Training data</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>trainX <span class="ot">&lt;-</span> X[trainID, ]</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>trainY <span class="ot">&lt;-</span> Y[trainID]</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Test data</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>testX <span class="ot">&lt;-</span> X[<span class="sc">-</span>trainID, ]</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>testY <span class="ot">&lt;-</span> Y[<span class="sc">-</span>trainID]</span></code></pre></div>
 <p>To make fitting the models a bit easier later, we will also create 2 data.frames
 combining the response and predictors for the training and test data.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>train_data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;TRIM32&quot;</span> =<span class="st"> </span>trainY, trainX)</span>
-<span id="cb15-2"><a href="#cb15-2"></a>test_data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;TRIM32&quot;</span> =<span class="st"> </span>testY, testX)</span>
-<span id="cb15-3"><a href="#cb15-3"></a></span>
-<span id="cb15-4"><a href="#cb15-4"></a><span class="co">## Glancing at the data structure: for the first 10 columns only</span></span>
-<span id="cb15-5"><a href="#cb15-5"></a><span class="kw">str</span>(train_data[, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="co">#&gt; &#39;data.frame&#39;:    80 obs. of  10 variables:</span></span>
-<span id="cb15-7"><a href="#cb15-7"></a><span class="co">#&gt;  $ TRIM32: num  0.564 0.231 0.215 -0.239 -0.226 ...</span></span>
-<span id="cb15-8"><a href="#cb15-8"></a><span class="co">#&gt;  $ X1377 : num  -0.1498 -0.254 -0.7058 0.1164 -0.0195 ...</span></span>
-<span id="cb15-9"><a href="#cb15-9"></a><span class="co">#&gt;  $ X1748 : num  -0.3063 -0.4263 -0.4714 -0.5319 -0.0733 ...</span></span>
-<span id="cb15-10"><a href="#cb15-10"></a><span class="co">#&gt;  $ X2487 : num  -0.3588 0.3651 0.0306 0.6907 -1.0774 ...</span></span>
-<span id="cb15-11"><a href="#cb15-11"></a><span class="co">#&gt;  $ X2679 : num  0.2111 -0.0638 -0.0614 -0.129 -0.5161 ...</span></span>
-<span id="cb15-12"><a href="#cb15-12"></a><span class="co">#&gt;  $ X2789 : num  -0.0347 0.8042 -0.0639 0.4437 -0.0162 ...</span></span>
-<span id="cb15-13"><a href="#cb15-13"></a><span class="co">#&gt;  $ X2875 : num  -0.469 -0.535 -0.656 0.134 0.138 ...</span></span>
-<span id="cb15-14"><a href="#cb15-14"></a><span class="co">#&gt;  $ X3244 : num  0.603 -0.639 0.813 -1.101 0.122 ...</span></span>
-<span id="cb15-15"><a href="#cb15-15"></a><span class="co">#&gt;  $ X3375 : num  0.2031 -0.00797 -0.22859 0.45933 -0.11757 ...</span></span>
-<span id="cb15-16"><a href="#cb15-16"></a><span class="co">#&gt;  $ X3732 : num  0.317 -0.517 -0.226 -1.508 0.132 ...</span></span></code></pre></div>
-<div id="model-evaluation" class="section level2">
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;TRIM32&quot;</span> <span class="ot">=</span> trainY, trainX)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;TRIM32&quot;</span> <span class="ot">=</span> testY, testX)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Glancing at the data structure: for the first 10 columns only</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(train_data[, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    80 obs. of  10 variables:</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ TRIM32: num  0.564 0.231 0.215 -0.239 -0.226 ...</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X1377 : num  -0.1498 -0.254 -0.7058 0.1164 -0.0195 ...</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X1748 : num  -0.3063 -0.4263 -0.4714 -0.5319 -0.0733 ...</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X2487 : num  -0.3588 0.3651 0.0306 0.6907 -1.0774 ...</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X2679 : num  0.2111 -0.0638 -0.0614 -0.129 -0.5161 ...</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X2789 : num  -0.0347 0.8042 -0.0639 0.4437 -0.0162 ...</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X2875 : num  -0.469 -0.535 -0.656 0.134 0.138 ...</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X3244 : num  0.603 -0.639 0.813 -1.101 0.122 ...</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X3375 : num  0.2031 -0.00797 -0.22859 0.45933 -0.11757 ...</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X3732 : num  0.317 -0.517 -0.226 -1.508 0.132 ...</span></span></code></pre></div>
+<div id="model-evaluation" class="section level2" number="7.1">
 <h2><span class="header-section-number">7.1</span> Model evaluation</h2>
 <p>We are interested in the <strong>out-of-sample</strong> error of our models,
 i.e. how good our model does on unseen data.
@@ -973,7 +983,7 @@ For that we will use
 <a href="https://en.wikipedia.org/wiki/Cross-validation_(statistics)"><em><span class="math inline">\(k\)</span>-fold Cross Validation</em></a>
 on our training set.</p>
 </div>
-<div id="tuning-hyperparameters" class="section level2">
+<div id="tuning-hyperparameters" class="section level2" number="7.2">
 <h2><span class="header-section-number">7.2</span> Tuning hyperparameters</h2>
 <p>The test set is only used to evaluate the <em>final</em> model.
 To achieve this final model, we need to find the optimal hyperparameters,
@@ -986,13 +996,13 @@ using the <code>cv.glm()</code> function from the
 <em><a href="https://CRAN.R-project.org/package=boot">boot</a></em> package.</p>
 </div>
 </div>
-<div id="example-pc-regression-evaluation" class="section level1">
+<div id="example-pc-regression-evaluation" class="section level1" number="8">
 <h1><span class="header-section-number">8</span> Example: PC regression evaluation</h1>
 <p>We start with the PC regression and look for the optimal number of PCs that minimizes
 the MSE using <span class="math inline">\(k\)</span>-fold Cross validation.
 We then use this optimal number of PCs to train the final model and evaluate it
 on the test data.</p>
-<div id="k-fold-cross-validation-to-tune-number-of-components" class="section level2">
+<div id="k-fold-cross-validation-to-tune-number-of-components" class="section level2" number="8.1">
 <h2><span class="header-section-number">8.1</span> k-fold Cross Validation to tune number of components</h2>
 <p>Conveniently, the <code>pcr</code> function from the <code>pls</code> package has an implementation for
 k-fold Cross Validation. We simply need to set <code>validation = CV</code> and <code>segments = 20</code>
@@ -1005,103 +1015,103 @@ each group will consist of 4 observations. At each CV cycle, one group will be l
 out and the model will be trained on the remaining groups. This leaves us with
 76 training observations for each CV cycle, so the maximal number of components
 that can be used in the linear regression is 75.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">## Set seed for reproducibility, kCV is a random process!</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a>K &lt;-<span class="st"> </span><span class="dv">20</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="co">## The &#39;Y ~ .&#39; notation means: fit Y by every other variable in the data</span></span>
-<span id="cb16-7"><a href="#cb16-7"></a>pcr_cv &lt;-<span class="st"> </span><span class="kw">pcr</span>(TRIM32 <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> train_data, <span class="dt">validation =</span> <span class="st">&quot;CV&quot;</span>, <span class="dt">segments =</span> K)</span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="kw">summary</span>(pcr_cv)</span>
-<span id="cb16-9"><a href="#cb16-9"></a><span class="co">#&gt; Data:    X dimension: 80 200 </span></span>
-<span id="cb16-10"><a href="#cb16-10"></a><span class="co">#&gt;  Y dimension: 80 1</span></span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="co">#&gt; Fit method: svdpc</span></span>
-<span id="cb16-12"><a href="#cb16-12"></a><span class="co">#&gt; Number of components considered: 75</span></span>
-<span id="cb16-13"><a href="#cb16-13"></a><span class="co">#&gt; </span></span>
-<span id="cb16-14"><a href="#cb16-14"></a><span class="co">#&gt; VALIDATION: RMSEP</span></span>
-<span id="cb16-15"><a href="#cb16-15"></a><span class="co">#&gt; Cross-validated using 20 random segments.</span></span>
-<span id="cb16-16"><a href="#cb16-16"></a><span class="co">#&gt;        (Intercept)  1 comps  2 comps  3 comps  4 comps  5 comps  6 comps</span></span>
-<span id="cb16-17"><a href="#cb16-17"></a><span class="co">#&gt; CV           1.112   0.7013   0.7305   0.7402   0.6939   0.6872   0.6811</span></span>
-<span id="cb16-18"><a href="#cb16-18"></a><span class="co">#&gt; adjCV        1.112   0.6987   0.7269   0.7375   0.6905   0.6810   0.6759</span></span>
-<span id="cb16-19"><a href="#cb16-19"></a><span class="co">#&gt;        7 comps  8 comps  9 comps  10 comps  11 comps  12 comps  13 comps</span></span>
-<span id="cb16-20"><a href="#cb16-20"></a><span class="co">#&gt; CV      0.6552   0.6812   0.6377    0.6418    0.6153    0.6126    0.6045</span></span>
-<span id="cb16-21"><a href="#cb16-21"></a><span class="co">#&gt; adjCV   0.6526   0.6772   0.6294    0.6347    0.6080    0.6050    0.5976</span></span>
-<span id="cb16-22"><a href="#cb16-22"></a><span class="co">#&gt;        14 comps  15 comps  16 comps  17 comps  18 comps  19 comps  20 comps</span></span>
-<span id="cb16-23"><a href="#cb16-23"></a><span class="co">#&gt; CV       0.6112    0.5882    0.5834    0.5784    0.5744    0.5752    0.5763</span></span>
-<span id="cb16-24"><a href="#cb16-24"></a><span class="co">#&gt; adjCV    0.6068    0.5788    0.5751    0.5702    0.5669    0.5681    0.5693</span></span>
-<span id="cb16-25"><a href="#cb16-25"></a><span class="co">#&gt;        21 comps  22 comps  23 comps  24 comps  25 comps  26 comps  27 comps</span></span>
-<span id="cb16-26"><a href="#cb16-26"></a><span class="co">#&gt; CV       0.5696    0.5654    0.5624    0.5711    0.5676    0.5691    0.5598</span></span>
-<span id="cb16-27"><a href="#cb16-27"></a><span class="co">#&gt; adjCV    0.5643    0.5608    0.5596    0.5735    0.5586    0.5619    0.5527</span></span>
-<span id="cb16-28"><a href="#cb16-28"></a><span class="co">#&gt;        28 comps  29 comps  30 comps  31 comps  32 comps  33 comps  34 comps</span></span>
-<span id="cb16-29"><a href="#cb16-29"></a><span class="co">#&gt; CV       0.5547    0.5441     0.542    0.5444    0.5416    0.5464    0.5497</span></span>
-<span id="cb16-30"><a href="#cb16-30"></a><span class="co">#&gt; adjCV    0.5491    0.5400     0.539    0.5399    0.5374    0.5426    0.5438</span></span>
-<span id="cb16-31"><a href="#cb16-31"></a><span class="co">#&gt;        35 comps  36 comps  37 comps  38 comps  39 comps  40 comps  41 comps</span></span>
-<span id="cb16-32"><a href="#cb16-32"></a><span class="co">#&gt; CV       0.5496    0.5582    0.5618    0.5892    0.5849    0.5929    0.6047</span></span>
-<span id="cb16-33"><a href="#cb16-33"></a><span class="co">#&gt; adjCV    0.5437    0.5533    0.5561    0.5844    0.5816    0.5882    0.5997</span></span>
-<span id="cb16-34"><a href="#cb16-34"></a><span class="co">#&gt;        42 comps  43 comps  44 comps  45 comps  46 comps  47 comps  48 comps</span></span>
-<span id="cb16-35"><a href="#cb16-35"></a><span class="co">#&gt; CV       0.6127    0.6098    0.6230    0.6204    0.6197    0.6299    0.6337</span></span>
-<span id="cb16-36"><a href="#cb16-36"></a><span class="co">#&gt; adjCV    0.6079    0.6086    0.6214    0.6109    0.6119    0.6211    0.6264</span></span>
-<span id="cb16-37"><a href="#cb16-37"></a><span class="co">#&gt;        49 comps  50 comps  51 comps  52 comps  53 comps  54 comps  55 comps</span></span>
-<span id="cb16-38"><a href="#cb16-38"></a><span class="co">#&gt; CV       0.6410    0.6326    0.6375    0.6595    0.6586    0.6599    0.6453</span></span>
-<span id="cb16-39"><a href="#cb16-39"></a><span class="co">#&gt; adjCV    0.6325    0.6250    0.6322    0.6544    0.6559    0.6548    0.6369</span></span>
-<span id="cb16-40"><a href="#cb16-40"></a><span class="co">#&gt;        56 comps  57 comps  58 comps  59 comps  60 comps  61 comps  62 comps</span></span>
-<span id="cb16-41"><a href="#cb16-41"></a><span class="co">#&gt; CV       0.6442    0.6380    0.6456    0.6389    0.6733    0.6544    0.6544</span></span>
-<span id="cb16-42"><a href="#cb16-42"></a><span class="co">#&gt; adjCV    0.6355    0.6264    0.6361    0.6327    0.6712    0.6555    0.6425</span></span>
-<span id="cb16-43"><a href="#cb16-43"></a><span class="co">#&gt;        63 comps  64 comps  65 comps  66 comps  67 comps  68 comps  69 comps</span></span>
-<span id="cb16-44"><a href="#cb16-44"></a><span class="co">#&gt; CV       0.6566    0.6638    0.6770    0.6657    0.6615    0.6697    0.6545</span></span>
-<span id="cb16-45"><a href="#cb16-45"></a><span class="co">#&gt; adjCV    0.6462    0.6549    0.6685    0.6586    0.6535    0.6634    0.6456</span></span>
-<span id="cb16-46"><a href="#cb16-46"></a><span class="co">#&gt;        70 comps  71 comps  72 comps  73 comps  74 comps  75 comps</span></span>
-<span id="cb16-47"><a href="#cb16-47"></a><span class="co">#&gt; CV       0.6435    0.6402    0.6229    0.6313     0.632    0.6192</span></span>
-<span id="cb16-48"><a href="#cb16-48"></a><span class="co">#&gt; adjCV    0.6361    0.6292    0.6134    0.6241     0.624    0.6113</span></span>
-<span id="cb16-49"><a href="#cb16-49"></a><span class="co">#&gt; </span></span>
-<span id="cb16-50"><a href="#cb16-50"></a><span class="co">#&gt; TRAINING: % variance explained</span></span>
-<span id="cb16-51"><a href="#cb16-51"></a><span class="co">#&gt;         1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps  8 comps</span></span>
-<span id="cb16-52"><a href="#cb16-52"></a><span class="co">#&gt; X         64.80    72.80    75.38    77.61    79.16    80.58    81.86    82.97</span></span>
-<span id="cb16-53"><a href="#cb16-53"></a><span class="co">#&gt; TRIM32    68.18    68.55    68.58    72.27    76.46    77.04    77.85    79.04</span></span>
-<span id="cb16-54"><a href="#cb16-54"></a><span class="co">#&gt;         9 comps  10 comps  11 comps  12 comps  13 comps  14 comps  15 comps</span></span>
-<span id="cb16-55"><a href="#cb16-55"></a><span class="co">#&gt; X         83.86     84.66     85.44     86.12     86.77     87.37     87.93</span></span>
-<span id="cb16-56"><a href="#cb16-56"></a><span class="co">#&gt; TRIM32    83.13     83.27     84.03     84.48     84.78     84.96     86.27</span></span>
-<span id="cb16-57"><a href="#cb16-57"></a><span class="co">#&gt;         16 comps  17 comps  18 comps  19 comps  20 comps  21 comps  22 comps</span></span>
-<span id="cb16-58"><a href="#cb16-58"></a><span class="co">#&gt; X          88.45     88.95     89.43     89.90     90.33     90.75     91.14</span></span>
-<span id="cb16-59"><a href="#cb16-59"></a><span class="co">#&gt; TRIM32     86.27     86.38     86.42     86.43     86.45     86.45     86.56</span></span>
-<span id="cb16-60"><a href="#cb16-60"></a><span class="co">#&gt;         23 comps  24 comps  25 comps  26 comps  27 comps  28 comps  29 comps</span></span>
-<span id="cb16-61"><a href="#cb16-61"></a><span class="co">#&gt; X          91.51     91.87     92.22     92.57     92.89     93.20     93.50</span></span>
-<span id="cb16-62"><a href="#cb16-62"></a><span class="co">#&gt; TRIM32     86.63     86.66     88.26     88.26     88.42     88.45     88.51</span></span>
-<span id="cb16-63"><a href="#cb16-63"></a><span class="co">#&gt;         30 comps  31 comps  32 comps  33 comps  34 comps  35 comps  36 comps</span></span>
-<span id="cb16-64"><a href="#cb16-64"></a><span class="co">#&gt; X          93.78     94.05     94.31     94.57     94.82     95.05     95.28</span></span>
-<span id="cb16-65"><a href="#cb16-65"></a><span class="co">#&gt; TRIM32     88.60     88.89     89.14     89.22     89.49     89.57     89.59</span></span>
-<span id="cb16-66"><a href="#cb16-66"></a><span class="co">#&gt;         37 comps  38 comps  39 comps  40 comps  41 comps  42 comps  43 comps</span></span>
-<span id="cb16-67"><a href="#cb16-67"></a><span class="co">#&gt; X          95.50     95.72     95.92     96.13     96.33     96.51     96.69</span></span>
-<span id="cb16-68"><a href="#cb16-68"></a><span class="co">#&gt; TRIM32     89.83     89.84     89.92     90.20     90.37     90.52     90.60</span></span>
-<span id="cb16-69"><a href="#cb16-69"></a><span class="co">#&gt;         44 comps  45 comps  46 comps  47 comps  48 comps  49 comps  50 comps</span></span>
-<span id="cb16-70"><a href="#cb16-70"></a><span class="co">#&gt; X          96.86     97.03     97.19     97.34     97.49     97.63     97.77</span></span>
-<span id="cb16-71"><a href="#cb16-71"></a><span class="co">#&gt; TRIM32     90.90     91.92     91.93     92.07     92.09     92.29     92.47</span></span>
-<span id="cb16-72"><a href="#cb16-72"></a><span class="co">#&gt;         51 comps  52 comps  53 comps  54 comps  55 comps  56 comps  57 comps</span></span>
-<span id="cb16-73"><a href="#cb16-73"></a><span class="co">#&gt; X          97.90     98.03     98.15     98.27     98.38     98.49     98.59</span></span>
-<span id="cb16-74"><a href="#cb16-74"></a><span class="co">#&gt; TRIM32     92.47     92.53     92.57     93.42     94.03     94.31     94.77</span></span>
-<span id="cb16-75"><a href="#cb16-75"></a><span class="co">#&gt;         58 comps  59 comps  60 comps  61 comps  62 comps  63 comps  64 comps</span></span>
-<span id="cb16-76"><a href="#cb16-76"></a><span class="co">#&gt; X          98.70     98.80     98.89     98.98     99.06     99.15     99.23</span></span>
-<span id="cb16-77"><a href="#cb16-77"></a><span class="co">#&gt; TRIM32     94.82     94.85     94.86     94.89     96.55     96.69     96.72</span></span>
-<span id="cb16-78"><a href="#cb16-78"></a><span class="co">#&gt;         65 comps  66 comps  67 comps  68 comps  69 comps  70 comps  71 comps</span></span>
-<span id="cb16-79"><a href="#cb16-79"></a><span class="co">#&gt; X          99.30     99.38     99.45     99.51     99.57     99.63     99.68</span></span>
-<span id="cb16-80"><a href="#cb16-80"></a><span class="co">#&gt; TRIM32     96.76     96.99     97.40     97.47     97.98     98.00     98.60</span></span>
-<span id="cb16-81"><a href="#cb16-81"></a><span class="co">#&gt;         72 comps  73 comps  74 comps  75 comps</span></span>
-<span id="cb16-82"><a href="#cb16-82"></a><span class="co">#&gt; X          99.73     99.78     99.82     99.87</span></span>
-<span id="cb16-83"><a href="#cb16-83"></a><span class="co">#&gt; TRIM32     98.75     98.77     99.04     99.22</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Set seed for reproducibility, kCV is a random process!</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="do">## The &#39;Y ~ .&#39; notation means: fit Y by every other variable in the data</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>pcr_cv <span class="ot">&lt;-</span> <span class="fu">pcr</span>(TRIM32 <span class="sc">~</span> ., <span class="at">data =</span> train_data, <span class="at">validation =</span> <span class="st">&quot;CV&quot;</span>, <span class="at">segments =</span> K)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pcr_cv)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Data:    X dimension: 80 200 </span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Y dimension: 80 1</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Fit method: svdpc</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of components considered: 75</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; VALIDATION: RMSEP</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Cross-validated using 20 random segments.</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        (Intercept)  1 comps  2 comps  3 comps  4 comps  5 comps  6 comps</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV           1.112   0.7013   0.7305   0.7402   0.6939   0.6872   0.6811</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV        1.112   0.6987   0.7269   0.7375   0.6905   0.6810   0.6759</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        7 comps  8 comps  9 comps  10 comps  11 comps  12 comps  13 comps</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV      0.6552   0.6812   0.6377    0.6418    0.6153    0.6126    0.6045</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV   0.6526   0.6772   0.6294    0.6347    0.6080    0.6050    0.5976</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        14 comps  15 comps  16 comps  17 comps  18 comps  19 comps  20 comps</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV       0.6112    0.5882    0.5834    0.5784    0.5744    0.5752    0.5763</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV    0.6068    0.5788    0.5751    0.5702    0.5669    0.5681    0.5693</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        21 comps  22 comps  23 comps  24 comps  25 comps  26 comps  27 comps</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV       0.5696    0.5654    0.5624    0.5711    0.5676    0.5691    0.5598</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV    0.5643    0.5608    0.5596    0.5735    0.5586    0.5619    0.5527</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        28 comps  29 comps  30 comps  31 comps  32 comps  33 comps  34 comps</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV       0.5547    0.5441     0.542    0.5444    0.5416    0.5464    0.5497</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV    0.5491    0.5400     0.539    0.5399    0.5374    0.5426    0.5438</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        35 comps  36 comps  37 comps  38 comps  39 comps  40 comps  41 comps</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV       0.5496    0.5582    0.5618    0.5892    0.5849    0.5929    0.6047</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV    0.5437    0.5533    0.5561    0.5844    0.5816    0.5882    0.5997</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        42 comps  43 comps  44 comps  45 comps  46 comps  47 comps  48 comps</span></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV       0.6127    0.6098    0.6230    0.6204    0.6197    0.6299    0.6337</span></span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV    0.6079    0.6086    0.6214    0.6109    0.6119    0.6211    0.6264</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        49 comps  50 comps  51 comps  52 comps  53 comps  54 comps  55 comps</span></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV       0.6410    0.6326    0.6375    0.6595    0.6586    0.6599    0.6453</span></span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV    0.6325    0.6250    0.6322    0.6544    0.6559    0.6548    0.6369</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        56 comps  57 comps  58 comps  59 comps  60 comps  61 comps  62 comps</span></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV       0.6442    0.6380    0.6456    0.6389    0.6733    0.6544    0.6544</span></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV    0.6355    0.6264    0.6361    0.6327    0.6712    0.6555    0.6425</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        63 comps  64 comps  65 comps  66 comps  67 comps  68 comps  69 comps</span></span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV       0.6566    0.6638    0.6770    0.6657    0.6615    0.6697    0.6545</span></span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV    0.6462    0.6549    0.6685    0.6586    0.6535    0.6634    0.6456</span></span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        70 comps  71 comps  72 comps  73 comps  74 comps  75 comps</span></span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CV       0.6435    0.6402    0.6229    0.6313     0.632    0.6192</span></span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjCV    0.6361    0.6292    0.6134    0.6241     0.624    0.6113</span></span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRAINING: % variance explained</span></span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps  8 comps</span></span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X         64.80    72.80    75.38    77.61    79.16    80.58    81.86    82.97</span></span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32    68.18    68.55    68.58    72.27    76.46    77.04    77.85    79.04</span></span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         9 comps  10 comps  11 comps  12 comps  13 comps  14 comps  15 comps</span></span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X         83.86     84.66     85.44     86.12     86.77     87.37     87.93</span></span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32    83.13     83.27     84.03     84.48     84.78     84.96     86.27</span></span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         16 comps  17 comps  18 comps  19 comps  20 comps  21 comps  22 comps</span></span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X          88.45     88.95     89.43     89.90     90.33     90.75     91.14</span></span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32     86.27     86.38     86.42     86.43     86.45     86.45     86.56</span></span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         23 comps  24 comps  25 comps  26 comps  27 comps  28 comps  29 comps</span></span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X          91.51     91.87     92.22     92.57     92.89     93.20     93.50</span></span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32     86.63     86.66     88.26     88.26     88.42     88.45     88.51</span></span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         30 comps  31 comps  32 comps  33 comps  34 comps  35 comps  36 comps</span></span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X          93.78     94.05     94.31     94.57     94.82     95.05     95.28</span></span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32     88.60     88.89     89.14     89.22     89.49     89.57     89.59</span></span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         37 comps  38 comps  39 comps  40 comps  41 comps  42 comps  43 comps</span></span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X          95.50     95.72     95.92     96.13     96.33     96.51     96.69</span></span>
+<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32     89.83     89.84     89.92     90.20     90.37     90.52     90.60</span></span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         44 comps  45 comps  46 comps  47 comps  48 comps  49 comps  50 comps</span></span>
+<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X          96.86     97.03     97.19     97.34     97.49     97.63     97.77</span></span>
+<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32     90.90     91.92     91.93     92.07     92.09     92.29     92.47</span></span>
+<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         51 comps  52 comps  53 comps  54 comps  55 comps  56 comps  57 comps</span></span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X          97.90     98.03     98.15     98.27     98.38     98.49     98.59</span></span>
+<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32     92.47     92.53     92.57     93.42     94.03     94.31     94.77</span></span>
+<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         58 comps  59 comps  60 comps  61 comps  62 comps  63 comps  64 comps</span></span>
+<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X          98.70     98.80     98.89     98.98     99.06     99.15     99.23</span></span>
+<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32     94.82     94.85     94.86     94.89     96.55     96.69     96.72</span></span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         65 comps  66 comps  67 comps  68 comps  69 comps  70 comps  71 comps</span></span>
+<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X          99.30     99.38     99.45     99.51     99.57     99.63     99.68</span></span>
+<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32     96.76     96.99     97.40     97.47     97.98     98.00     98.60</span></span>
+<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         72 comps  73 comps  74 comps  75 comps</span></span>
+<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X          99.73     99.78     99.82     99.87</span></span>
+<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRIM32     98.75     98.77     99.04     99.22</span></span></code></pre></div>
 <p>We can plot the <em>root mean squared error of prediction</em> (RMSEP) for each number
 of components as follows.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">plot</span>(pcr_cv, <span class="dt">plottype =</span> <span class="st">&quot;validation&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pcr_cv, <span class="at">plottype =</span> <span class="st">&quot;validation&quot;</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/pcr_cv-plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>The <code>pls</code> package also has a function <code>selectNcomp</code> to select the optimal number of components.
 Here we use the “one-sigma” method, which returns the lowest number of components
 for which the RMSE is within one standard error of the absolute minimum.
 The function also allows plotting the result by specifying <code>plot = TRUE</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>optimal_ncomp &lt;-<span class="st"> </span><span class="kw">selectNcomp</span>(pcr_cv, <span class="dt">method =</span> <span class="st">&quot;onesigma&quot;</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>optimal_ncomp <span class="ot">&lt;-</span> <span class="fu">selectNcomp</span>(pcr_cv, <span class="at">method =</span> <span class="st">&quot;onesigma&quot;</span>, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/pcr-optimal-ncomp-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>This outcome shows us that the optimal number of components for our model is
 13.</p>
 </div>
-<div id="validation-on-test-data" class="section level2">
+<div id="validation-on-test-data" class="section level2" number="8.2">
 <h2><span class="header-section-number">8.2</span> Validation on test data</h2>
 <p>We now use our optimal number of components to train the final PCR model.
 This model is then validated on by generating predictions for the test data and
@@ -1110,24 +1120,24 @@ calculating the MSE.</p>
 Note that there is also an <code>MSEP</code> function in the <code>pls</code> package which does the
 prediction and MSE calculation in one go.
 But our own function will come in handy later for lasso and ridge regression.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Mean Squared Error</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a><span class="co">## obs: observations; pred: predictions</span></span>
-<span id="cb19-3"><a href="#cb19-3"></a>MSE &lt;-<span class="st"> </span><span class="cf">function</span>(obs, pred){</span>
-<span id="cb19-4"><a href="#cb19-4"></a>  <span class="kw">mean</span>((<span class="kw">drop</span>(obs) <span class="op">-</span><span class="st"> </span><span class="kw">drop</span>(pred))<span class="op">^</span><span class="dv">2</span>)</span>
-<span id="cb19-5"><a href="#cb19-5"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>final_pcr_model &lt;-<span class="st"> </span><span class="kw">pcr</span>(TRIM32 <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> train_data, <span class="dt">ncomp =</span> optimal_ncomp)</span>
-<span id="cb20-2"><a href="#cb20-2"></a>pcr_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(final_pcr_model, <span class="dt">newdata =</span> test_data, <span class="dt">ncomp =</span> optimal_ncomp)</span>
-<span id="cb20-3"><a href="#cb20-3"></a>(pcr_mse &lt;-<span class="st"> </span><span class="kw">MSE</span>(testY, pcr_preds))</span>
-<span id="cb20-4"><a href="#cb20-4"></a><span class="co">#&gt; [1] 0.3655052</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean Squared Error</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">## obs: observations; pred: predictions</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>MSE <span class="ot">&lt;-</span> <span class="cf">function</span>(obs, pred){</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>((<span class="fu">drop</span>(obs) <span class="sc">-</span> <span class="fu">drop</span>(pred))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>final_pcr_model <span class="ot">&lt;-</span> <span class="fu">pcr</span>(TRIM32 <span class="sc">~</span> ., <span class="at">data =</span> train_data, <span class="at">ncomp =</span> optimal_ncomp)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>pcr_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(final_pcr_model, <span class="at">newdata =</span> test_data, <span class="at">ncomp =</span> optimal_ncomp)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>(pcr_mse <span class="ot">&lt;-</span> <span class="fu">MSE</span>(testY, pcr_preds))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.3655052</span></span></code></pre></div>
 <p>This value on its own does not tell us very much, but we can use it to compare our
 PCR model with other types of models later.</p>
 <p>Finally, we plot the predicted values for our response variable (the TRIM32 gene expression)
 against the actual observed values from our test set.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">predplot</span>(final_pcr_model, <span class="dt">newdata =</span> test_data, <span class="dt">line =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predplot</span>(final_pcr_model, <span class="at">newdata =</span> test_data, <span class="at">line =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/pcr-predplot-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-<div id="exercise-evaluate-and-compare-prediction-models" class="section level1">
+<div id="exercise-evaluate-and-compare-prediction-models" class="section level1" number="9">
 <h1><span class="header-section-number">9</span> Exercise: evaluate and compare prediction models</h1>
 <div id="perform-a-lasso-regression-with-20-fold-cross-validation-on-the-training-data-trainx-trainy.-plot-the-results-and-select-the-optimal-lambda-parameter.-fit-a-final-model-with-the-selected-lambda-and-validate-it-on-the-test-data." class="section level4 unnumbered">
 <h4>1. Perform a lasso regression with 20-fold Cross Validation on the training data (<code>trainX</code>, <code>trainY</code>). Plot the results and select the optimal <span class="math inline">\(\lambda\)</span> parameter. Fit a final model with the selected <span class="math inline">\(\lambda\)</span> and validate it on the test data.</h4>
@@ -1135,24 +1145,26 @@ against the actual observed values from our test set.</p>
 to use the MSE metric set <code>type.measure = "mse"</code>.
 Go to <code>?cv.glmnet</code> for details.</p>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb22-2"><a href="#cb22-2"></a>lasso_cv &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(trainX, trainY, <span class="dt">alpha =</span> <span class="dv">1</span>,</span>
-<span id="cb22-3"><a href="#cb22-3"></a>                      <span class="dt">nfolds =</span> K, <span class="dt">type.measure =</span> <span class="st">&quot;mse&quot;</span>)</span>
-<span id="cb22-4"><a href="#cb22-4"></a>lasso_cv</span>
-<span id="cb22-5"><a href="#cb22-5"></a><span class="co">#&gt; </span></span>
-<span id="cb22-6"><a href="#cb22-6"></a><span class="co">#&gt; Call:  cv.glmnet(x = trainX, y = trainY, type.measure = &quot;mse&quot;, nfolds = K,      alpha = 1) </span></span>
-<span id="cb22-7"><a href="#cb22-7"></a><span class="co">#&gt; </span></span>
-<span id="cb22-8"><a href="#cb22-8"></a><span class="co">#&gt; Measure: Mean-Squared Error </span></span>
-<span id="cb22-9"><a href="#cb22-9"></a><span class="co">#&gt; </span></span>
-<span id="cb22-10"><a href="#cb22-10"></a><span class="co">#&gt;      Lambda Index Measure     SE Nonzero</span></span>
-<span id="cb22-11"><a href="#cb22-11"></a><span class="co">#&gt; min 0.07559    55  0.3639 0.0750      16</span></span>
-<span id="cb22-12"><a href="#cb22-12"></a><span class="co">#&gt; 1se 0.16668    38  0.4353 0.1646       9</span></span>
-<span id="cb22-13"><a href="#cb22-13"></a><span class="kw">plot</span>(lasso_cv)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>lasso_cv <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(trainX, trainY, <span class="at">alpha =</span> <span class="dv">1</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nfolds =</span> K, <span class="at">type.measure =</span> <span class="st">&quot;mse&quot;</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>lasso_cv</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:  cv.glmnet(x = trainX, y = trainY, type.measure = &quot;mse&quot;, nfolds = K,      alpha = 1) </span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Measure: Mean-Squared Error </span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Lambda Index Measure     SE Nonzero</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; min 0.07559    55  0.3639 0.0750      16</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1se 0.16668    38  0.4353 0.1646       9</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lasso_cv)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/lasso-cv-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>Note that we can extract the fitted lasso regression object from the CV result
 and make the coefficient profile plot as before.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">plot</span>(lasso_cv<span class="op">$</span>glmnet.fit, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lasso_cv<span class="sc">$</span>glmnet.fit, <span class="at">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/lasso-cv-coefficient-profile-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>We can look for the <span class="math inline">\(\lambda\)</span> values that give the best result.
 Here you have two possibilities :</p>
@@ -1161,41 +1173,43 @@ Here you have two possibilities :</p>
 <li><code>lambda.1se</code>: the largest value of <span class="math inline">\(\lambda\)</span> such that the MSE is within 1 standard error
 of the best result from the cross validation.</li>
 </ol>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>lasso_cv<span class="op">$</span>lambda.min</span>
-<span id="cb24-2"><a href="#cb24-2"></a><span class="co">#&gt; [1] 0.07558811</span></span>
-<span id="cb24-3"><a href="#cb24-3"></a>lasso_cv<span class="op">$</span>lambda<span class="fl">.1</span>se</span>
-<span id="cb24-4"><a href="#cb24-4"></a><span class="co">#&gt; [1] 0.1666817</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>lasso_cv<span class="sc">$</span>lambda.min</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.07558811</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>lasso_cv<span class="sc">$</span>lambda<span class="fl">.1</span>se</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.1666817</span></span></code></pre></div>
 <p>We will (rather arbitrarily) use <code>lambda.min</code> here to fit the final model and generate predictions on the test data.
 Note that we don’t actually have to redo the fitting, we can just use our existing
 <code>lasso_cv</code> object, which already contains the fitted models for a range of <code>lambda</code> values.
 We can use the <code>predict</code> function and specify the <code>s</code> argument (which confusingly sets <code>lambda</code> in this case) to make predictions on the test data.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>lasso_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso_cv, <span class="dt">s =</span> lasso_cv<span class="op">$</span>lambda.min, <span class="dt">newx =</span> testX)</span>
-<span id="cb25-2"><a href="#cb25-2"></a><span class="co">## Calculate MSE</span></span>
-<span id="cb25-3"><a href="#cb25-3"></a>(lasso_mse &lt;-<span class="st"> </span><span class="kw">MSE</span>(testY, lasso_preds))</span>
-<span id="cb25-4"><a href="#cb25-4"></a><span class="co">#&gt; [1] 0.3754368</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>lasso_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(lasso_cv, <span class="at">s =</span> lasso_cv<span class="sc">$</span>lambda.min, <span class="at">newx =</span> testX)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate MSE</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>(lasso_mse <span class="ot">&lt;-</span> <span class="fu">MSE</span>(testY, lasso_preds))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.3754368</span></span></code></pre></div>
 </details>
 </div>
 <div id="do-the-same-for-ridge-regression." class="section level4 unnumbered">
 <h4>2. Do the same for ridge regression.</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb26-2"><a href="#cb26-2"></a>ridge_cv &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(trainX, trainY, <span class="dt">alpha =</span> <span class="dv">0</span>,</span>
-<span id="cb26-3"><a href="#cb26-3"></a>                      <span class="dt">nfolds =</span> K, <span class="dt">type.measure =</span> <span class="st">&quot;mse&quot;</span>)</span>
-<span id="cb26-4"><a href="#cb26-4"></a>ridge_cv</span>
-<span id="cb26-5"><a href="#cb26-5"></a><span class="co">#&gt; </span></span>
-<span id="cb26-6"><a href="#cb26-6"></a><span class="co">#&gt; Call:  cv.glmnet(x = trainX, y = trainY, type.measure = &quot;mse&quot;, nfolds = K,      alpha = 0) </span></span>
-<span id="cb26-7"><a href="#cb26-7"></a><span class="co">#&gt; </span></span>
-<span id="cb26-8"><a href="#cb26-8"></a><span class="co">#&gt; Measure: Mean-Squared Error </span></span>
-<span id="cb26-9"><a href="#cb26-9"></a><span class="co">#&gt; </span></span>
-<span id="cb26-10"><a href="#cb26-10"></a><span class="co">#&gt;     Lambda Index Measure     SE Nonzero</span></span>
-<span id="cb26-11"><a href="#cb26-11"></a><span class="co">#&gt; min   9.32   100  0.4648 0.1182     200</span></span>
-<span id="cb26-12"><a href="#cb26-12"></a><span class="co">#&gt; 1se  43.25    67  0.5820 0.2131     200</span></span>
-<span id="cb26-13"><a href="#cb26-13"></a><span class="kw">plot</span>(ridge_cv)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>ridge_cv <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(trainX, trainY, <span class="at">alpha =</span> <span class="dv">0</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nfolds =</span> K, <span class="at">type.measure =</span> <span class="st">&quot;mse&quot;</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>ridge_cv</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:  cv.glmnet(x = trainX, y = trainY, type.measure = &quot;mse&quot;, nfolds = K,      alpha = 0) </span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Measure: Mean-Squared Error </span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Lambda Index Measure     SE Nonzero</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; min   9.32   100  0.4648 0.1182     200</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1se  43.25    67  0.5820 0.2131     200</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ridge_cv)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/ridge-cv-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>Note that we can extract the fitted ridge regression object from the CV result
 and make the coefficient profile plot as before.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">plot</span>(ridge_cv<span class="op">$</span>glmnet.fit, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ridge_cv<span class="sc">$</span>glmnet.fit, <span class="at">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span></code></pre></div>
 <p><img src="Lab3-Penalized-Regression_files/figure-html/ridge-cv-coefficient-profile-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>We can look for the <span class="math inline">\(\lambda\)</span> values that give the best result.
 Here you have two possibilities :</p>
@@ -1204,24 +1218,26 @@ Here you have two possibilities :</p>
 <li><code>lambda.1se</code>: the largest value of <span class="math inline">\(\lambda\)</span> such that the MSE is within 1 standard error
 of the best result from the cross validation.</li>
 </ol>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>ridge_cv<span class="op">$</span>lambda.min</span>
-<span id="cb28-2"><a href="#cb28-2"></a><span class="co">#&gt; [1] 9.318855</span></span>
-<span id="cb28-3"><a href="#cb28-3"></a>ridge_cv<span class="op">$</span>lambda<span class="fl">.1</span>se</span>
-<span id="cb28-4"><a href="#cb28-4"></a><span class="co">#&gt; [1] 43.25429</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ridge_cv<span class="sc">$</span>lambda.min</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9.318855</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>ridge_cv<span class="sc">$</span>lambda<span class="fl">.1</span>se</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 43.25429</span></span></code></pre></div>
 <p>We will (rather arbitrarily) use <code>lambda.min</code> here to fit the final model and generate predictions on the test data.
 Note that we don’t actually have to redo the fitting, we can just use our existing
 <code>ridge_cv</code> object, which already contains the fitted models for a range of <code>lambda</code> values.
 We can use the <code>predict</code> function and specify the <code>s</code> argument (which confusingly sets <code>lambda</code> in this case) to make predictions on the test data.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>ridge_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(ridge_cv, <span class="dt">s =</span> ridge_cv<span class="op">$</span>lambda.min, <span class="dt">newx =</span> testX)</span>
-<span id="cb29-2"><a href="#cb29-2"></a><span class="co">## Calculate MSE</span></span>
-<span id="cb29-3"><a href="#cb29-3"></a>(ridge_mse &lt;-<span class="st"> </span><span class="kw">MSE</span>(testY, ridge_preds))</span>
-<span id="cb29-4"><a href="#cb29-4"></a><span class="co">#&gt; [1] 0.3066121</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ridge_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(ridge_cv, <span class="at">s =</span> ridge_cv<span class="sc">$</span>lambda.min, <span class="at">newx =</span> testX)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate MSE</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>(ridge_mse <span class="ot">&lt;-</span> <span class="fu">MSE</span>(testY, ridge_preds))</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.3066121</span></span></code></pre></div>
 </details>
 </div>
 <div id="which-of-the-models-considered-pcr-lasso-ridge-performs-best." class="section level4 unnumbered">
 <h4>3. Which of the models considered (PCR, lasso, ridge) performs best?.</h4>
 <details>
-<p><summary>Solution</summary></p>
+<summary>
+Solution
+</summary>
 <p>Based on the MSE, the ridge model performs best on the test data.</p>
 <table>
 <thead>
@@ -1251,8 +1267,10 @@ We can use the <code>predict</code> function and specify the <code>s</code> argu
 <div id="session-info" class="section level1 unnumbered">
 <h1>Session info</h1>
 <details>
-<p><summary>Session info</summary></p>
-<pre><code>#&gt; [1] &quot;2022-10-10 09:42:36 UTC&quot;
+<summary>
+Session info
+</summary>
+<pre><code>#&gt; [1] &quot;2022-10-27 14:46:52 UTC&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.3 (2022-03-10)
@@ -1263,8 +1281,8 @@ We can use the <code>predict</code> function and specify the <code>s</code> argu
 #&gt;  collate  C.UTF-8
 #&gt;  ctype    C.UTF-8
 #&gt;  tz       UTC
-#&gt;  date     2022-10-10
-#&gt;  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
+#&gt;  date     2022-10-27
+#&gt;  pandoc   2.19.2 @ /usr/bin/ (via rmarkdown)
 #&gt; 
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
 #&gt;  ! package         * version date (UTC) lib source
@@ -1318,7 +1336,7 @@ We can use the <code>predict</code> function and specify the <code>s</code> argu
 #&gt; ──────────────────────────────────────────────────────────────────────────────</code></pre>
 </details>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr />
 <ol>
 <li id="fn1"><p>Note: <code>log()</code> in R is the <strong>natural logarithm</strong> by default (base <span class="math inline">\(e\)</span>) and we

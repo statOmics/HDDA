@@ -14,6 +14,7 @@
 
 <title>Lab 5: Large Scale Inference</title>
 
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -35,7 +36,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -60,19 +60,19 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -92,7 +92,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {  background-color: #f8f8f8; }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -162,6 +162,28 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 }
 </style>
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
@@ -541,15 +563,15 @@ div.tocify {
 <div id="change-log" class="section level3 unnumbered">
 <h3><a href="https://github.com/statOmics/HDDA/commits/master/Lab5-Large-Scale-Inference.Rmd">Change log</a></h3>
 <hr />
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">## install packages with:</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># if (!requireNamespace(&quot;remotes&quot;, quietly = TRUE)) {</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="co">#     install.packages(&quot;remotes&quot;)</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># }</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># remotes::install_github(&quot;statOmics/HDDAData&quot;)</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="kw">library</span>(HDDAData)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## install packages with:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># if (!requireNamespace(&quot;remotes&quot;, quietly = TRUE)) {</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     install.packages(&quot;remotes&quot;)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github(&quot;statOmics/HDDAData&quot;)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HDDAData)</span></code></pre></div>
 </div>
-<div id="introduction" class="section level1">
+<div id="introduction" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p><strong>In this lab session we will look at the following topics</strong></p>
 <ul>
@@ -557,7 +579,7 @@ div.tocify {
 <li>FDR</li>
 <li>Multiple testing problem in a real dataset</li>
 </ul>
-<div id="testing-hypotheses" class="section level2">
+<div id="testing-hypotheses" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Testing many hypotheses</h2>
 <p>To demonstrate the ideas we will be working with, we will simulate artificial data.
 Note that since we are doing simulations, we can control everything and also know
@@ -630,29 +652,29 @@ hypothesis is true.</p>
 <p>For simplicity we assume the variance to be known and equal to 1 for both groups.
 We simulate 10 observations for each group and calculate the denominator for the
 Z-scores since it’s the same for each test.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">## Set parameters for the simulation</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>N &lt;-<span class="st"> </span><span class="dv">10</span> <span class="co"># samples per group</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>m0 &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># number of hypothesis tests</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a>mu_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># true mean group 1</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>mu_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># true mean group 2</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a>sigma &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># known variance</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a>denom &lt;-<span class="st"> </span>sigma <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span> <span class="op">/</span><span class="st"> </span>N) <span class="co"># denominator for Z-scores</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="kw">set.seed</span>(<span class="dv">123</span>) <span class="co"># seed for reproducibility</span></span>
-<span id="cb2-10"><a href="#cb2-10"></a>null_z_scores &lt;-<span class="st"> </span><span class="kw">replicate</span>(m0, {</span>
-<span id="cb2-11"><a href="#cb2-11"></a>  group1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N, <span class="dt">mean =</span> mu_<span class="dv">1</span>, <span class="dt">sd =</span> <span class="kw">sqrt</span>(sigma))</span>
-<span id="cb2-12"><a href="#cb2-12"></a>  group2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N, <span class="dt">mean =</span> mu_<span class="dv">2</span>, <span class="dt">sd =</span> <span class="kw">sqrt</span>(sigma))</span>
-<span id="cb2-13"><a href="#cb2-13"></a></span>
-<span id="cb2-14"><a href="#cb2-14"></a>  <span class="co">## Calculate Z-score</span></span>
-<span id="cb2-15"><a href="#cb2-15"></a>  (<span class="kw">mean</span>(group2) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(group1)) <span class="op">/</span><span class="st"> </span>denom</span>
-<span id="cb2-16"><a href="#cb2-16"></a>})</span>
-<span id="cb2-17"><a href="#cb2-17"></a></span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="co">## Visualize Z-scores</span></span>
-<span id="cb2-19"><a href="#cb2-19"></a><span class="kw">hist</span>(null_z_scores, <span class="dt">breaks =</span> <span class="dv">50</span>, <span class="dt">freq =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb2-20"><a href="#cb2-20"></a><span class="co">## Overlay theoretical standard normal</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="kw">lines</span>(x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dt">length.out =</span> <span class="dv">100</span>), <span class="kw">dnorm</span>(x), <span class="dt">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>)</span>
-<span id="cb2-22"><a href="#cb2-22"></a><span class="co">## Draw vertical lines at 2.5 and 97.5th percentiles</span></span>
-<span id="cb2-23"><a href="#cb2-23"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">qnorm</span>(<span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)), <span class="dt">col =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Set parameters for the simulation</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># samples per group</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>m0 <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># number of hypothesis tests</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mu_1 <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="co"># true mean group 1</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mu_2 <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="co"># true mean group 2</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># known variance</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>denom <span class="ot">&lt;-</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">/</span> N) <span class="co"># denominator for Z-scores</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># seed for reproducibility</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>null_z_scores <span class="ot">&lt;-</span> <span class="fu">replicate</span>(m0, {</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  group1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="at">mean =</span> mu_1, <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma))</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  group2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="at">mean =</span> mu_2, <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Calculate Z-score</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">mean</span>(group2) <span class="sc">-</span> <span class="fu">mean</span>(group1)) <span class="sc">/</span> denom</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Visualize Z-scores</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(null_z_scores, <span class="at">breaks =</span> <span class="dv">50</span>, <span class="at">freq =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Overlay theoretical standard normal</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">100</span>), <span class="fu">dnorm</span>(x), <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Draw vertical lines at 2.5 and 97.5th percentiles</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)), <span class="at">col =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p><img src="Lab5-Large-Scale-Inference_files/figure-html/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>We see that the Z-scores are nicely distributed as a standard normal.
 The vertical dashed lines indicate the 2.5th and 97.5th percentiles of the standard
@@ -666,21 +688,21 @@ the value of the standard normal CDF (i.e. <code>pnorm(x)</code> = <span class=
 a two-tailed test, we take the absolute values of the Z-scores and set the <code>lower.tail</code>
 argument in <code>pnorm</code> to <code>FALSE</code> (by default it’s <code>TRUE</code>), so that we get
 <code>pnorm(abs(x), lower.tail = FALSE)</code> = <span class="math inline">\(P(Z &gt; |x|)\)</span> and multiply this value by 2.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>null_pvals &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(null_z_scores), <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a></span>
-<span id="cb3-3"><a href="#cb3-3"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span> <span class="co"># significance cutoff</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a></span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="kw">hist</span>(null_pvals, <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>))</span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="kw">abline</span>(<span class="dt">v =</span> alpha, <span class="dt">col =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>null_pvals <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="fu">abs</span>(null_z_scores), <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="co"># significance cutoff</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(null_pvals, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> alpha, <span class="at">col =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p><img src="Lab5-Large-Scale-Inference_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2"></a>called &lt;-<span class="st"> </span>(null_pvals <span class="op">&lt;</span><span class="st"> </span>alpha)</span>
-<span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co">## V = number of false positives, in this case: all significant tests</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>(V &lt;-<span class="st"> </span><span class="kw">sum</span>(called))</span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; [1] 48</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="kw">mean</span>(called) <span class="co"># V / m0</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt; [1] 0.048</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>called <span class="ot">&lt;-</span> (null_pvals <span class="sc">&lt;</span> alpha)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## V = number of false positives, in this case: all significant tests</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>(V <span class="ot">&lt;-</span> <span class="fu">sum</span>(called))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 48</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(called) <span class="co"># V / m0</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.048</span></span></code></pre></div>
 <p>So we get 48 significant tests (false positives) out of a total of 1000, which is,
 unsurprisingly, approximately equal to our significance cutoff <span class="math inline">\(\alpha\)</span>.
 Note also that the p-values are uniformly distibuted under the null hypothesis.</p>
@@ -693,7 +715,7 @@ we don’t know the truth! If we did, we wouldn’t have to carry out any hypoth
 tests in the first place). However, by using simulated data, we do know the truth
 and so we can explore these quantities.</p>
 </div>
-<div id="the-family-wise-error-rate" class="section level2">
+<div id="the-family-wise-error-rate" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> The family-wise error rate</h2>
 <p>If we carry out many tests, we’re almost guaranteed to get type I errors, just by
 chance. Therefore the type I error rate is no longer a relevant metric.
@@ -751,37 +773,39 @@ a certain length with <code>vec &lt;- logical(length = x)</code></p>
 <div id="solutions" class="section level3 unnumbered">
 <h3>Solutions</h3>
 <details>
-<p><summary>Solution</summary></p>
+<summary>
+Solution
+</summary>
 <p>I combined the exercises above into one code block, to avoid repeated code.
 Essentially, I wrapped the simulation in a <code>for</code> loop that goes over the different
 values of <code>m0</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">## Repeat 1000 times for m0 = 5, 50 and 1000, directly simulate test statistic</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="co">## record minimal p-value and check if smaller than alpha</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb5-4"><a href="#cb5-4"></a>B &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># number of simulations</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a>m0_vec &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">1000</span>)</span>
-<span id="cb5-6"><a href="#cb5-6"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="co">## Initialize empty vector to store FWER results</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a>fwer &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length =</span> <span class="kw">length</span>(m0_vec))</span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="kw">names</span>(fwer) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;m0 =&quot;</span>, m0_vec)</span>
-<span id="cb5-10"><a href="#cb5-10"></a></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="co">## Loop over m0 values and simulate test statistics</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(m0_vec)) {</span>
-<span id="cb5-13"><a href="#cb5-13"></a>  <span class="co">## Simulate B times, each time recording V &gt; 0</span></span>
-<span id="cb5-14"><a href="#cb5-14"></a>  at_least_one_signif &lt;-<span class="st"> </span><span class="kw">replicate</span>(B, {</span>
-<span id="cb5-15"><a href="#cb5-15"></a>    null_stats &lt;-<span class="st"> </span><span class="kw">rnorm</span>(m0_vec[i], <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>) <span class="co"># z-score distribution</span></span>
-<span id="cb5-16"><a href="#cb5-16"></a>    tests &lt;-<span class="st"> </span><span class="kw">abs</span>(null_stats) <span class="op">&gt;</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb5-17"><a href="#cb5-17"></a>    <span class="kw">sum</span>(tests) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span></span>
-<span id="cb5-18"><a href="#cb5-18"></a>  })</span>
-<span id="cb5-19"><a href="#cb5-19"></a>  fwer[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(at_least_one_signif) <span class="co"># proportion of V &gt;= 1</span></span>
-<span id="cb5-20"><a href="#cb5-20"></a>}</span>
-<span id="cb5-21"><a href="#cb5-21"></a>fwer</span>
-<span id="cb5-22"><a href="#cb5-22"></a><span class="co">#&gt;    m0 = 5   m0 = 50 m0 = 1000 </span></span>
-<span id="cb5-23"><a href="#cb5-23"></a><span class="co">#&gt;     0.269     0.931     1.000</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Repeat 1000 times for m0 = 5, 50 and 1000, directly simulate test statistic</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## record minimal p-value and check if smaller than alpha</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># number of simulations</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>m0_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">1000</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Initialize empty vector to store FWER results</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>fwer <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="at">length =</span> <span class="fu">length</span>(m0_vec))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fwer) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;m0 =&quot;</span>, m0_vec)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Loop over m0 values and simulate test statistics</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(m0_vec)) {</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Simulate B times, each time recording V &gt; 0</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  at_least_one_signif <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, {</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    null_stats <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(m0_vec[i], <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>) <span class="co"># z-score distribution</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    tests <span class="ot">&lt;-</span> <span class="fu">abs</span>(null_stats) <span class="sc">&gt;</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(tests) <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  fwer[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(at_least_one_signif) <span class="co"># proportion of V &gt;= 1</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>fwer</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    m0 = 5   m0 = 50 m0 = 1000 </span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0.269     0.931     1.000</span></span></code></pre></div>
 </details>
 </div>
 </div>
-<div id="controlling-the-fwer" class="section level1">
+<div id="controlling-the-fwer" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Controlling the FWER</h1>
 <p>We saw in the previous exercises that when conducting a large number of hypothesis
 tests the FWER becomes unacceptably large. So what can we do to lower it?
@@ -805,30 +829,32 @@ the equation above for <span class="math inline">\(\alpha\)</span> and get, for 
 and <code>m0 = 5</code>, <code>alpha = 0.00102</code> and <code>m0 = 50</code>, and finally <code>alpha = 0.000051292</code>
 and <code>m0 = 1000</code> all result in an FWER of approximately 0.05.</p>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## Repeat 1000 times for m0 = 5, 50 and 1000, directly simulate test statistic</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="co">## record minimal p-value and check if smaller than alpha</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb6-4"><a href="#cb6-4"></a>B &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># number of simulations</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a>m0_vec &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">1000</span>)</span>
-<span id="cb6-6"><a href="#cb6-6"></a>alpha_vec &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.0102</span>, <span class="fl">0.00102</span>, <span class="fl">0.000051292</span>)</span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co">## Initialize empty vector to store FWER results</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a>fwer &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length =</span> <span class="kw">length</span>(m0_vec))</span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="kw">names</span>(fwer) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;m0 =&quot;</span>, m0_vec)</span>
-<span id="cb6-10"><a href="#cb6-10"></a></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="co">## Loop over m0 values and simulate test statistics</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(m0_vec)) {</span>
-<span id="cb6-13"><a href="#cb6-13"></a>  <span class="co">## Simulate B times, each time recording V &gt; 0</span></span>
-<span id="cb6-14"><a href="#cb6-14"></a>  at_least_one_signif &lt;-<span class="st"> </span><span class="kw">replicate</span>(B, {</span>
-<span id="cb6-15"><a href="#cb6-15"></a>    null_stats &lt;-<span class="st"> </span><span class="kw">rnorm</span>(m0_vec[i], <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>) <span class="co"># z-score distribution</span></span>
-<span id="cb6-16"><a href="#cb6-16"></a>    tests &lt;-<span class="st"> </span><span class="kw">abs</span>(null_stats) <span class="op">&gt;</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha_vec[i] <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb6-17"><a href="#cb6-17"></a>    <span class="kw">sum</span>(tests) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a>  })</span>
-<span id="cb6-19"><a href="#cb6-19"></a>  fwer[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(at_least_one_signif) <span class="co"># proportion of V &gt;= 1</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a>}</span>
-<span id="cb6-21"><a href="#cb6-21"></a>fwer</span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt;    m0 = 5   m0 = 50 m0 = 1000 </span></span>
-<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt;     0.057     0.045     0.057</span></span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Repeat 1000 times for m0 = 5, 50 and 1000, directly simulate test statistic</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## record minimal p-value and check if smaller than alpha</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># number of simulations</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>m0_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">1000</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>alpha_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.0102</span>, <span class="fl">0.00102</span>, <span class="fl">0.000051292</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Initialize empty vector to store FWER results</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>fwer <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="at">length =</span> <span class="fu">length</span>(m0_vec))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fwer) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;m0 =&quot;</span>, m0_vec)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Loop over m0 values and simulate test statistics</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(m0_vec)) {</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Simulate B times, each time recording V &gt; 0</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  at_least_one_signif <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, {</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    null_stats <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(m0_vec[i], <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>) <span class="co"># z-score distribution</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    tests <span class="ot">&lt;-</span> <span class="fu">abs</span>(null_stats) <span class="sc">&gt;</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha_vec[i] <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(tests) <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  fwer[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(at_least_one_signif) <span class="co"># proportion of V &gt;= 1</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>fwer</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    m0 = 5   m0 = 50 m0 = 1000 </span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0.057     0.045     0.057</span></span></code></pre></div>
 </details>
 <p>The procedure described above is also known as Sidak’s procedure.
 Another widely used technique to control the FWER is the Bonferroni correction.
@@ -836,7 +862,7 @@ Note, however that in general, controlling the FWER at levels such as 0.05 is ve
 conservative, i.e. if there were ture alternative cases we might miss them.</p>
 </div>
 </div>
-<div id="the-false-discovery-rate-fdr" class="section level1">
+<div id="the-false-discovery-rate-fdr" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> The False Discovery Rate (FDR)</h1>
 <p>Now let’s consider a situation where we have both true null and true alternative
 cases. In this situation we are prone to two types of errors: false positives
@@ -888,36 +914,36 @@ where the null is true and the other 10% for which the alternative is true.
 We assume the <em>effect size</em> (difference between the 2 groups) to be equal to 3
 under the alternative, so that we can sample the test statistics from a normal
 distribution with mean 3.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>m &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># total number of hypotheses</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>p0 &lt;-<span class="st"> </span><span class="fl">0.9</span> <span class="co"># 90% of cases are true null</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a>m0 &lt;-<span class="st"> </span><span class="kw">round</span>(p0 <span class="op">*</span><span class="st"> </span>m) <span class="co"># round to avoid floating point problems</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a>m1 &lt;-<span class="st"> </span><span class="kw">round</span>((<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p0) <span class="op">*</span><span class="st"> </span>m)</span>
-<span id="cb7-5"><a href="#cb7-5"></a></span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb7-7"><a href="#cb7-7"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
-<span id="cb7-8"><a href="#cb7-8"></a>null_stats &lt;-<span class="st"> </span><span class="kw">rnorm</span>(m0)</span>
-<span id="cb7-9"><a href="#cb7-9"></a>alt_stats &lt;-<span class="st"> </span><span class="kw">rnorm</span>(m1, <span class="dt">mean =</span> <span class="dv">3</span>)</span>
-<span id="cb7-10"><a href="#cb7-10"></a>null_tests &lt;-<span class="st"> </span><span class="kw">abs</span>(null_stats) <span class="op">&gt;</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb7-11"><a href="#cb7-11"></a>alt_tests &lt;-<span class="st"> </span><span class="kw">abs</span>(alt_stats) <span class="op">&gt;</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb7-12"><a href="#cb7-12"></a></span>
-<span id="cb7-13"><a href="#cb7-13"></a>(U &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="op">!</span>null_tests)) <span class="co"># true negatives</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a><span class="co">#&gt; [1] 842</span></span>
-<span id="cb7-15"><a href="#cb7-15"></a>(V &lt;-<span class="st"> </span><span class="kw">sum</span>(null_tests)) <span class="co"># false positives</span></span>
-<span id="cb7-16"><a href="#cb7-16"></a><span class="co">#&gt; [1] 58</span></span>
-<span id="cb7-17"><a href="#cb7-17"></a>(S &lt;-<span class="st"> </span><span class="kw">sum</span>(alt_tests)) <span class="co"># true positives</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a><span class="co">#&gt; [1] 87</span></span>
-<span id="cb7-19"><a href="#cb7-19"></a>(T &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="op">!</span>alt_tests)) <span class="co"># false negatives</span></span>
-<span id="cb7-20"><a href="#cb7-20"></a><span class="co">#&gt; [1] 13</span></span>
-<span id="cb7-21"><a href="#cb7-21"></a></span>
-<span id="cb7-22"><a href="#cb7-22"></a>R &lt;-<span class="st"> </span>V <span class="op">+</span><span class="st"> </span>S <span class="co"># total number of positives</span></span>
-<span id="cb7-23"><a href="#cb7-23"></a></span>
-<span id="cb7-24"><a href="#cb7-24"></a>(FDP &lt;-<span class="st"> </span>V <span class="op">/</span><span class="st"> </span>R)</span>
-<span id="cb7-25"><a href="#cb7-25"></a><span class="co">#&gt; [1] 0.4</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># total number of hypotheses</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fl">0.9</span> <span class="co"># 90% of cases are true null</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>m0 <span class="ot">&lt;-</span> <span class="fu">round</span>(p0 <span class="sc">*</span> m) <span class="co"># round to avoid floating point problems</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">round</span>((<span class="dv">1</span> <span class="sc">-</span> p0) <span class="sc">*</span> m)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>null_stats <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(m0)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>alt_stats <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(m1, <span class="at">mean =</span> <span class="dv">3</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>null_tests <span class="ot">&lt;-</span> <span class="fu">abs</span>(null_stats) <span class="sc">&gt;</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>alt_tests <span class="ot">&lt;-</span> <span class="fu">abs</span>(alt_stats) <span class="sc">&gt;</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>(U <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span>null_tests)) <span class="co"># true negatives</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 842</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>(V <span class="ot">&lt;-</span> <span class="fu">sum</span>(null_tests)) <span class="co"># false positives</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 58</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>(S <span class="ot">&lt;-</span> <span class="fu">sum</span>(alt_tests)) <span class="co"># true positives</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 87</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>(T <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span>alt_tests)) <span class="co"># false negatives</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 13</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> V <span class="sc">+</span> S <span class="co"># total number of positives</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>(FDP <span class="ot">&lt;-</span> V <span class="sc">/</span> R)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.4</span></span></code></pre></div>
 <p>We see that 40% of the positive cases are actually false positives.
 To get an idea of the FDR, the expected FDP, we will repeat this procedure a
 number of times in the following exercises.</p>
 </div>
-<div id="exercises-fdr-simulations" class="section level1">
+<div id="exercises-fdr-simulations" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Exercises: FDR simulations</h1>
 <div id="tasks-1" class="section level3 unnumbered">
 <h3>Tasks</h3>
@@ -937,28 +963,30 @@ number of times in the following exercises.</p>
 <div id="solutions-1" class="section level3 unnumbered">
 <h3>Solutions</h3>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a>B &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># number of simulations</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a>m0 &lt;-<span class="st"> </span><span class="dv">90</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a>m1 &lt;-<span class="st"> </span><span class="dv">10</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a></span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="co">## Simulate B times, each time recording V &gt; 0</span></span>
-<span id="cb8-8"><a href="#cb8-8"></a>FDP &lt;-<span class="st"> </span><span class="kw">replicate</span>(B, {</span>
-<span id="cb8-9"><a href="#cb8-9"></a>  null_stats &lt;-<span class="st"> </span><span class="kw">rnorm</span>(m0, <span class="dt">mean =</span> <span class="dv">0</span>)</span>
-<span id="cb8-10"><a href="#cb8-10"></a>  alt_stats &lt;-<span class="st"> </span><span class="kw">rnorm</span>(m1, <span class="dt">mean =</span> <span class="dv">3</span>)</span>
-<span id="cb8-11"><a href="#cb8-11"></a>  null_tests &lt;-<span class="st"> </span><span class="kw">abs</span>(null_stats) <span class="op">&gt;</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb8-12"><a href="#cb8-12"></a>  alt_tests &lt;-<span class="st"> </span><span class="kw">abs</span>(alt_stats) <span class="op">&gt;</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb8-13"><a href="#cb8-13"></a>  V &lt;-<span class="st"> </span><span class="kw">sum</span>(null_tests) <span class="co"># false positives</span></span>
-<span id="cb8-14"><a href="#cb8-14"></a>  S &lt;-<span class="st"> </span><span class="kw">sum</span>(alt_tests) <span class="co"># true positives</span></span>
-<span id="cb8-15"><a href="#cb8-15"></a>  R &lt;-<span class="st"> </span>V <span class="op">+</span><span class="st"> </span>S</span>
-<span id="cb8-16"><a href="#cb8-16"></a>  <span class="co">## Return V / R</span></span>
-<span id="cb8-17"><a href="#cb8-17"></a>  V <span class="op">/</span><span class="st"> </span>R</span>
-<span id="cb8-18"><a href="#cb8-18"></a>})</span>
-<span id="cb8-19"><a href="#cb8-19"></a></span>
-<span id="cb8-20"><a href="#cb8-20"></a>(FDR &lt;-<span class="st"> </span><span class="kw">mean</span>(FDP))</span>
-<span id="cb8-21"><a href="#cb8-21"></a><span class="co">#&gt; [1] 0.3426611</span></span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># number of simulations</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>m0 <span class="ot">&lt;-</span> <span class="dv">90</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Simulate B times, each time recording V &gt; 0</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>FDP <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, {</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  null_stats <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(m0, <span class="at">mean =</span> <span class="dv">0</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  alt_stats <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(m1, <span class="at">mean =</span> <span class="dv">3</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  null_tests <span class="ot">&lt;-</span> <span class="fu">abs</span>(null_stats) <span class="sc">&gt;</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  alt_tests <span class="ot">&lt;-</span> <span class="fu">abs</span>(alt_stats) <span class="sc">&gt;</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  V <span class="ot">&lt;-</span> <span class="fu">sum</span>(null_tests) <span class="co"># false positives</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">&lt;-</span> <span class="fu">sum</span>(alt_tests) <span class="co"># true positives</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> V <span class="sc">+</span> S</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Return V / R</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  V <span class="sc">/</span> R</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>(FDR <span class="ot">&lt;-</span> <span class="fu">mean</span>(FDP))</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.3426611</span></span></code></pre></div>
 <p>The FDR tells us the expected proportion of positive tests that will be false
 positives.</p>
 </details>
@@ -976,7 +1004,7 @@ vector of p-values and the desired method (for Benjamini-Hochberg, use
 <code>method = "BH"</code>).</p>
 </div>
 </div>
-<div id="exercises-real-data-alon-et-al.-1999" class="section level1">
+<div id="exercises-real-data-alon-et-al.-1999" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Exercises: real data (Alon <em>et al.</em> (1999))</h1>
 <p>We will take another look at the dataset by <span class="citation">Alon et al. (1999)</span> on gene expression
 levels in 40 tumour and 22 normal colon tissue samples.
@@ -990,23 +1018,23 @@ testing problem.</p>
 <div id="load-the-data" class="section level4 unnumbered">
 <h4>1. Load the data</h4>
 <p>Just run the code given below.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">data</span>(<span class="st">&quot;Alon1999&quot;</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">str</span>(Alon1999[, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]) <span class="co"># first 10 columns</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="co">#&gt; &#39;data.frame&#39;:    62 obs. of  10 variables:</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="co">#&gt;  $ Y : chr  &quot;t&quot; &quot;n&quot; &quot;t&quot; &quot;n&quot; ...</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="co">#&gt;  $ X1: num  8589 9164 3826 6246 3230 ...</span></span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="co">#&gt;  $ X2: num  5468 6720 6970 7824 3694 ...</span></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="co">#&gt;  $ X3: num  4263 4883 5370 5956 3401 ...</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="co">#&gt;  $ X4: num  4065 3718 4706 3976 3464 ...</span></span>
-<span id="cb9-9"><a href="#cb9-9"></a><span class="co">#&gt;  $ X5: num  1998 2015 1167 2003 2181 ...</span></span>
-<span id="cb9-10"><a href="#cb9-10"></a><span class="co">#&gt;  $ X6: num  5282 5570 1572 2131 2923 ...</span></span>
-<span id="cb9-11"><a href="#cb9-11"></a><span class="co">#&gt;  $ X7: num  2170 3849 1325 1531 2069 ...</span></span>
-<span id="cb9-12"><a href="#cb9-12"></a><span class="co">#&gt;  $ X8: num  2773 2793 1472 1715 2949 ...</span></span>
-<span id="cb9-13"><a href="#cb9-13"></a><span class="co">#&gt;  $ X9: num  7526 7018 3297 3870 3303 ...</span></span>
-<span id="cb9-14"><a href="#cb9-14"></a><span class="kw">table</span>(Alon1999<span class="op">$</span>Y)  <span class="co"># contingency table of tissue types</span></span>
-<span id="cb9-15"><a href="#cb9-15"></a><span class="co">#&gt; </span></span>
-<span id="cb9-16"><a href="#cb9-16"></a><span class="co">#&gt;  n  t </span></span>
-<span id="cb9-17"><a href="#cb9-17"></a><span class="co">#&gt; 22 40</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;Alon1999&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Alon1999[, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]) <span class="co"># first 10 columns</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    62 obs. of  10 variables:</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ Y : chr  &quot;t&quot; &quot;n&quot; &quot;t&quot; &quot;n&quot; ...</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X1: num  8589 9164 3826 6246 3230 ...</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X2: num  5468 6720 6970 7824 3694 ...</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X3: num  4263 4883 5370 5956 3401 ...</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X4: num  4065 3718 4706 3976 3464 ...</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X5: num  1998 2015 1167 2003 2181 ...</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X6: num  5282 5570 1572 2131 2923 ...</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X7: num  2170 3849 1325 1531 2069 ...</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X8: num  2773 2793 1472 1715 2949 ...</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X9: num  7526 7018 3297 3870 3303 ...</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(Alon1999<span class="sc">$</span>Y)  <span class="co"># contingency table of tissue types</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  n  t </span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 22 40</span></span></code></pre></div>
 <p>As a reminder, the data consists of gene expression levels in 40 tumor and 22
 normal colon tissue samples. The expression on 6500 human genes were measured
 using the Affymetrix oligonucleotide array.
@@ -1028,7 +1056,9 @@ column the p-values and 1 for the degrees of freedom). You can find these values
 in the <code>t.test()</code> result under the <code>$p.value</code>, <code>$statistic</code> and <code>$parameter</code>
 slots.</p>
 <details>
-<p><summary>Solution</summary></p>
+<summary>
+Solution
+</summary>
 <p>In the solution below, I used the <code>apply</code> function to loop over the genes, essentially
 this is similar to a <code>for</code> loop but is a bit more succinct to write and takes
 care of pre-allocating memory instead of having te set up empty matrices first
@@ -1040,55 +1070,59 @@ The results are either a vector if each function call returns a single value or
 a matrix if a vector is returned at each call. Note that <code>apply</code> will return the
 resulting matrix with the calculated values in the rows. As it makes more sense
 to have these in columns, the matrix is transposed.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">## Split gene data and grouping variable and convert to matrix</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a>gene_data &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Alon1999[, <span class="dv">-1</span>])</span>
-<span id="cb10-3"><a href="#cb10-3"></a>group &lt;-<span class="st"> </span>Alon1999<span class="op">$</span>Y</span>
-<span id="cb10-4"><a href="#cb10-4"></a></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co">## Use `apply` to loop over columns of gene data and perform t-tests, extracting</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co">## p-values, test stastistics, and degrees of freedom</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a>ttest_results &lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">apply</span>(gene_data, <span class="dv">2</span>, <span class="cf">function</span>(x) {</span>
-<span id="cb10-8"><a href="#cb10-8"></a>  t_test &lt;-<span class="st"> </span><span class="kw">t.test</span>(x <span class="op">~</span><span class="st"> </span>group)</span>
-<span id="cb10-9"><a href="#cb10-9"></a>  p_val &lt;-<span class="st"> </span>t_test<span class="op">$</span>p.value</span>
-<span id="cb10-10"><a href="#cb10-10"></a>  stat &lt;-<span class="st"> </span>t_test<span class="op">$</span>statistic</span>
-<span id="cb10-11"><a href="#cb10-11"></a>  df &lt;-<span class="st"> </span>t_test<span class="op">$</span>parameter</span>
-<span id="cb10-12"><a href="#cb10-12"></a>  <span class="co">## Return values in named vector</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a>  <span class="kw">c</span>(stat, <span class="st">&quot;p_val&quot;</span> =<span class="st"> </span>p_val, df)</span>
-<span id="cb10-14"><a href="#cb10-14"></a>}))</span>
-<span id="cb10-15"><a href="#cb10-15"></a></span>
-<span id="cb10-16"><a href="#cb10-16"></a><span class="co">## Take a look at results</span></span>
-<span id="cb10-17"><a href="#cb10-17"></a><span class="kw">head</span>(ttest_results)</span>
-<span id="cb10-18"><a href="#cb10-18"></a><span class="co">#&gt;             t      p_val       df</span></span>
-<span id="cb10-19"><a href="#cb10-19"></a><span class="co">#&gt; X1 -1.6728613 0.10068961 49.30072</span></span>
-<span id="cb10-20"><a href="#cb10-20"></a><span class="co">#&gt; X2 -1.4319967 0.15787615 54.30090</span></span>
-<span id="cb10-21"><a href="#cb10-21"></a><span class="co">#&gt; X3 -2.1292624 0.03758201 56.77667</span></span>
-<span id="cb10-22"><a href="#cb10-22"></a><span class="co">#&gt; X4 -0.9455604 0.34869002 52.67760</span></span>
-<span id="cb10-23"><a href="#cb10-23"></a><span class="co">#&gt; X5 -1.7852252 0.07953894 57.07236</span></span>
-<span id="cb10-24"><a href="#cb10-24"></a><span class="co">#&gt; X6 -1.4214810 0.16143092 49.62772</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Split gene data and grouping variable and convert to matrix</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>gene_data <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(Alon1999[, <span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>group <span class="ot">&lt;-</span> Alon1999<span class="sc">$</span>Y</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Use `apply` to loop over columns of gene data and perform t-tests, extracting</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="do">## p-values, test stastistics, and degrees of freedom</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>ttest_results <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(gene_data, <span class="dv">2</span>, <span class="cf">function</span>(x) {</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  t_test <span class="ot">&lt;-</span> <span class="fu">t.test</span>(x <span class="sc">~</span> group)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  p_val <span class="ot">&lt;-</span> t_test<span class="sc">$</span>p.value</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  stat <span class="ot">&lt;-</span> t_test<span class="sc">$</span>statistic</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> t_test<span class="sc">$</span>parameter</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Return values in named vector</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(stat, <span class="st">&quot;p_val&quot;</span> <span class="ot">=</span> p_val, df)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Take a look at results</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ttest_results)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             t      p_val       df</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X1 -1.6728613 0.10068961 49.30072</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X2 -1.4319967 0.15787615 54.30090</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X3 -2.1292624 0.03758201 56.77667</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X4 -0.9455604 0.34869002 52.67760</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X5 -1.7852252 0.07953894 57.07236</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; X6 -1.4214810 0.16143092 49.62772</span></span></code></pre></div>
 </details>
 </div>
 <div id="plot-a-histogram-of-the-p-values-and-interpret" class="section level4 unnumbered">
 <h4>3. Plot a histogram of the p-values and interpret</h4>
 <details>
-<p><summary>Solution</summary></p>
+<summary>
+Solution
+</summary>
 <p>Setting <code>breaks</code> from 0 to 1 with a width of 0.05 makes sense for p-values because
 the first bar will then represent the number of p-values smaller than 0.05 (which
 we often use as cutoff).</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>p_vals &lt;-<span class="st"> </span>ttest_results[, <span class="st">&quot;p_val&quot;</span>]</span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">hist</span>(</span>
-<span id="cb11-3"><a href="#cb11-3"></a>  p_vals,</span>
-<span id="cb11-4"><a href="#cb11-4"></a>  <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;p-value&quot;</span>,</span>
-<span id="cb11-5"><a href="#cb11-5"></a>  <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">500</span>)</span>
-<span id="cb11-6"><a href="#cb11-6"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p_vals <span class="ot">&lt;-</span> ttest_results[, <span class="st">&quot;p_val&quot;</span>]</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  p_vals,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>), <span class="at">main =</span> <span class="st">&quot;&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;p-value&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Lab5-Large-Scale-Inference_files/figure-html/p_val-hist-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </details>
 </div>
 <div id="how-many-discoveries-significant-genes-do-you-find-when-using-alpha-0.05" class="section level4 unnumbered">
 <h4>4. How many discoveries / significant genes do you find when using <span class="math inline">\(\alpha = 0.05\)</span>?</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">sum</span>(p_vals <span class="op">&lt;</span><span class="st"> </span>alpha)</span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="co">#&gt; [1] 478</span></span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(p_vals <span class="sc">&lt;</span> alpha)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 478</span></span></code></pre></div>
 </details>
 </div>
 <div id="correct-for-the-multiplicity-problem-by-controlling-the-fwer-at-5" class="section level4 unnumbered">
@@ -1098,16 +1132,18 @@ we often use as cutoff).</p>
 <li><p>How many discoveries are left over when using the FWER-adjusted <span class="math inline">\(\alpha\)</span>?</p></li>
 </ul>
 <details>
-<p><summary>Solution</summary></p>
+<summary>
+Solution
+</summary>
 <p>Remember that <span class="math inline">\(\alpha\)</span> can be calculated for a given FWER as</p>
 <p><span class="math display">\[ \alpha = 1 - (1 - \text{FWER})^{1/m} \]</span></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>m &lt;-<span class="st"> </span><span class="kw">nrow</span>(ttest_results) <span class="co"># number of tests performed</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a>fwer &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a>adj_alpha &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>fwer)<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span>m)</span>
-<span id="cb13-4"><a href="#cb13-4"></a></span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="co">## Number of significant discoveries at FWER 5%</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a><span class="kw">sum</span>(p_vals <span class="op">&lt;</span><span class="st"> </span>adj_alpha)</span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="co">#&gt; [1] 11</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">nrow</span>(ttest_results) <span class="co"># number of tests performed</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>fwer <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>adj_alpha <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">-</span> fwer)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>m)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of significant discoveries at FWER 5%</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(p_vals <span class="sc">&lt;</span> adj_alpha)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 11</span></span></code></pre></div>
 <p>Note that you can also use the <em>Bonferroni</em> correction to get a similar result.
 This is also implemented in the <code>p.adjust</code> function by using <code>method = "bonferroni"</code>.
 Essentially, the Bonferroni correction sets a new <span class="math inline">\(\alpha_m = \alpha / m\)</span> by
@@ -1116,19 +1152,19 @@ slightly different than the procedure given above (which is known as Sidak’s
 procedure but is less commonly used). The <code>p.adjust</code> function returns adjusted
 p-values, since modifying the cut-off <span class="math inline">\(\alpha\)</span> by dividing with <span class="math inline">\(m\)</span> is the same
 as multiplying the p-values with <span class="math inline">\(m\)</span> and then using the original cut-off.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>bonf_pvals &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(p_vals, <span class="dt">method =</span> <span class="st">&quot;bonferroni&quot;</span>)</span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">sum</span>(bonf_pvals <span class="op">&lt;</span><span class="st"> </span>alpha)</span>
-<span id="cb14-3"><a href="#cb14-3"></a><span class="co">#&gt; [1] 11</span></span>
-<span id="cb14-4"><a href="#cb14-4"></a></span>
-<span id="cb14-5"><a href="#cb14-5"></a><span class="co">## Note that bonferroni correction is simply multiplying the original p-values</span></span>
-<span id="cb14-6"><a href="#cb14-6"></a><span class="co">## with m (and cutting off any values bigger than 1)</span></span>
-<span id="cb14-7"><a href="#cb14-7"></a>idx &lt;-<span class="st"> </span><span class="kw">which</span>(bonf_pvals <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>)</span>
-<span id="cb14-8"><a href="#cb14-8"></a><span class="kw">head</span>(bonf_pvals[idx])</span>
-<span id="cb14-9"><a href="#cb14-9"></a><span class="co">#&gt;        X15        X26        X31        X43        X47        X62 </span></span>
-<span id="cb14-10"><a href="#cb14-10"></a><span class="co">#&gt; 0.77687260 0.08333083 0.22133271 0.03115825 0.11433842 0.07860578</span></span>
-<span id="cb14-11"><a href="#cb14-11"></a><span class="kw">head</span>(p_vals[idx] <span class="op">*</span><span class="st"> </span>m)</span>
-<span id="cb14-12"><a href="#cb14-12"></a><span class="co">#&gt;        X15        X26        X31        X43        X47        X62 </span></span>
-<span id="cb14-13"><a href="#cb14-13"></a><span class="co">#&gt; 0.77687260 0.08333083 0.22133271 0.03115825 0.11433842 0.07860578</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>bonf_pvals <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_vals, <span class="at">method =</span> <span class="st">&quot;bonferroni&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(bonf_pvals <span class="sc">&lt;</span> alpha)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 11</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Note that bonferroni correction is simply multiplying the original p-values</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## with m (and cutting off any values bigger than 1)</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">which</span>(bonf_pvals <span class="sc">&lt;</span> <span class="dv">1</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bonf_pvals[idx])</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        X15        X26        X31        X43        X47        X62 </span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.77687260 0.08333083 0.22133271 0.03115825 0.11433842 0.07860578</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(p_vals[idx] <span class="sc">*</span> m)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        X15        X26        X31        X43        X47        X62 </span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.77687260 0.08333083 0.22133271 0.03115825 0.11433842 0.07860578</span></span></code></pre></div>
 </details>
 </div>
 <div id="use-the-fdr-method-to-adjust-the-original-p-values" class="section level4 unnumbered">
@@ -1139,26 +1175,28 @@ as multiplying the p-values with <span class="math inline">\(m\)</span> and then
 <li><p>How many discoveries are left when controlling the FDR at 5%?</p></li>
 </ul>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>fdr &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(p_vals, <span class="dt">method =</span> <span class="st">&quot;BH&quot;</span>)</span>
-<span id="cb15-2"><a href="#cb15-2"></a></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="kw">plot</span>(</span>
-<span id="cb15-4"><a href="#cb15-4"></a>  p_vals[<span class="kw">order</span>(p_vals)], fdr[<span class="kw">order</span>(p_vals)],</span>
-<span id="cb15-5"><a href="#cb15-5"></a>  <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">cex =</span> <span class="fl">0.6</span>, <span class="dt">xlab =</span> <span class="st">&quot;p-value&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Adjusted p-value&quot;</span>, <span class="dt">col =</span> <span class="dv">4</span></span>
-<span id="cb15-6"><a href="#cb15-6"></a>)</span>
-<span id="cb15-7"><a href="#cb15-7"></a><span class="kw">points</span>(</span>
-<span id="cb15-8"><a href="#cb15-8"></a>  p_vals[<span class="kw">order</span>(p_vals)], bonf_pvals[<span class="kw">order</span>(p_vals)],</span>
-<span id="cb15-9"><a href="#cb15-9"></a>  <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">cex =</span> <span class="fl">0.6</span>, <span class="dt">col =</span> <span class="dv">2</span></span>
-<span id="cb15-10"><a href="#cb15-10"></a>)</span>
-<span id="cb15-11"><a href="#cb15-11"></a><span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>)</span>
-<span id="cb15-12"><a href="#cb15-12"></a><span class="kw">legend</span>(<span class="st">&quot;bottomright&quot;</span>,</span>
-<span id="cb15-13"><a href="#cb15-13"></a>  <span class="kw">c</span>(<span class="st">&quot;Benjamini-Hochberg&quot;</span>, <span class="st">&quot;Bonferroni&quot;</span>),</span>
-<span id="cb15-14"><a href="#cb15-14"></a>  <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>), <span class="dt">pch =</span> <span class="dv">19</span></span>
-<span id="cb15-15"><a href="#cb15-15"></a>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fdr <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_vals, <span class="at">method =</span> <span class="st">&quot;BH&quot;</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  p_vals[<span class="fu">order</span>(p_vals)], fdr[<span class="fu">order</span>(p_vals)],</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.6</span>, <span class="at">xlab =</span> <span class="st">&quot;p-value&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Adjusted p-value&quot;</span>, <span class="at">col =</span> <span class="dv">4</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  p_vals[<span class="fu">order</span>(p_vals)], bonf_pvals[<span class="fu">order</span>(p_vals)],</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.6</span>, <span class="at">col =</span> <span class="dv">2</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">1</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomright&quot;</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;Benjamini-Hochberg&quot;</span>, <span class="st">&quot;Bonferroni&quot;</span>),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">2</span>), <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Lab5-Large-Scale-Inference_files/figure-html/fdr-adjust-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">sum</span>(fdr <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>)</span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="co">#&gt; [1] 190</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 190</span></span></code></pre></div>
 </details>
 </div>
 <div id="compare-the-fwer-and-fdr-corrections.-which-one-is-more-conservative" class="section level4 unnumbered">
@@ -1175,8 +1213,10 @@ as multiplying the p-values with <span class="math inline">\(m\)</span> and then
 <div id="session-info" class="section level1 unnumbered">
 <h1>Session info</h1>
 <details>
-<p><summary>Session info</summary></p>
-<pre><code>#&gt; [1] &quot;2022-10-10 09:42:47 UTC&quot;
+<summary>
+Session info
+</summary>
+<pre><code>#&gt; [1] &quot;2022-10-27 14:47:13 UTC&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.3 (2022-03-10)
@@ -1187,8 +1227,8 @@ as multiplying the p-values with <span class="math inline">\(m\)</span> and then
 #&gt;  collate  C.UTF-8
 #&gt;  ctype    C.UTF-8
 #&gt;  tz       UTC
-#&gt;  date     2022-10-10
-#&gt;  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
+#&gt;  date     2022-10-27
+#&gt;  pandoc   2.19.2 @ /usr/bin/ (via rmarkdown)
 #&gt; 
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
 #&gt;  ! package     * version date (UTC) lib source
@@ -1199,7 +1239,7 @@ as multiplying the p-values with <span class="math inline">\(m\)</span> and then
 #&gt;  P digest        0.6.29  2021-12-01 [?] CRAN (R 4.1.3)
 #&gt;  P evaluate      0.14    2019-05-28 [?] CRAN (R 4.1.3)
 #&gt;  P fastmap       1.1.0   2021-01-25 [?] CRAN (R 4.1.3)
-#&gt;  P HDDAData    * 1.0.0   2022-10-07 [?] Github (statOmics/HDDAData@f175e96)
+#&gt;  P HDDAData    * 1.0.0   2022-10-27 [?] Github (statOmics/HDDAData@f175e96)
 #&gt;  P highr         0.9     2021-04-16 [?] CRAN (R 4.1.3)
 #&gt;  P htmltools     0.5.2   2021-08-25 [?] CRAN (R 4.1.3)
 #&gt;  P jquerylib     0.1.4   2021-04-26 [?] CRAN (R 4.1.3)
@@ -1227,9 +1267,9 @@ as multiplying the p-values with <span class="math inline">\(m\)</span> and then
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
-<div id="refs" class="references">
-<div id="ref-alon1999broad">
-<p>Alon, Uri, Naama Barkai, Daniel A Notterman, Kurt Gish, Suzanne Ybarra, Daniel Mack, and Arnold J Levine. 1999. “Broad Patterns of Gene Expression Revealed by Clustering Analysis of Tumor and Normal Colon Tissues Probed by Oligonucleotide Arrays.” <em>Proceedings of the National Academy of Sciences</em> 96 (12): 6745–50.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-alon1999broad" class="csl-entry">
+Alon, Uri, Naama Barkai, Daniel A Notterman, Kurt Gish, Suzanne Ybarra, Daniel Mack, and Arnold J Levine. 1999. <span>“Broad Patterns of Gene Expression Revealed by Clustering Analysis of Tumor and Normal Colon Tissues Probed by Oligonucleotide Arrays.”</span> <em>Proceedings of the National Academy of Sciences</em> 96 (12): 6745–50.
 </div>
 </div>
 </div>

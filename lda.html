@@ -14,6 +14,7 @@
 
 <title>Linear Discriminant Analysis (LDA)</title>
 
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -35,7 +36,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -60,19 +60,19 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -92,7 +92,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {  background-color: #f8f8f8; }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -537,58 +537,58 @@ div.tocify {
 </div>
 
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(gridExtra)</span></code></pre></div>
-<div id="breast-cancer-example" class="section level1">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span></code></pre></div>
+<div id="breast-cancer-example" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Breast cancer example</h1>
 <ul>
 <li><p>Schmidt <em>et al.</em>, 2008, Cancer Research, <strong>68</strong>, 5405-5413</p></li>
 <li><p>Gene expression patterns in n=200 breast tumors were investigated (p=22283 genes)</p></li>
 <li><p>After surgery the tumors were graded by a pathologist (stage 1,2,3)</p></li>
 </ul>
-<div id="data" class="section level2">
+<div id="data" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Data</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#BiocManager::install(&quot;genefu&quot;)</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="co">#BiocManager::install(&quot;breastCancerMAINZ&quot;)</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="kw">library</span>(genefu)</span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="kw">library</span>(breastCancerMAINZ)</span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="kw">data</span>(mainz)</span>
-<span id="cb2-7"><a href="#cb2-7"></a></span>
-<span id="cb2-8"><a href="#cb2-8"></a>X &lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">exprs</span>(mainz)) <span class="co"># gene expressions</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a>n &lt;-<span class="st"> </span><span class="kw">nrow</span>(X)</span>
-<span id="cb2-10"><a href="#cb2-10"></a>H &lt;-<span class="st"> </span><span class="kw">diag</span>(n)<span class="op">-</span><span class="dv">1</span><span class="op">/</span>n<span class="op">*</span><span class="kw">matrix</span>(<span class="dv">1</span>,<span class="dt">ncol=</span>n,<span class="dt">nrow=</span>n)</span>
-<span id="cb2-11"><a href="#cb2-11"></a>X &lt;-<span class="st"> </span>H<span class="op">%*%</span>X</span>
-<span id="cb2-12"><a href="#cb2-12"></a>Y &lt;-<span class="st"> </span><span class="kw">pData</span>(mainz)<span class="op">$</span>grade</span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="kw">table</span>(Y)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#BiocManager::install(&quot;genefu&quot;)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#BiocManager::install(&quot;breastCancerMAINZ&quot;)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(genefu)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(breastCancerMAINZ)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(mainz)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">exprs</span>(mainz)) <span class="co"># gene expressions</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="fu">diag</span>(n)<span class="sc">-</span><span class="dv">1</span><span class="sc">/</span>n<span class="sc">*</span><span class="fu">matrix</span>(<span class="dv">1</span>,<span class="at">ncol=</span>n,<span class="at">nrow=</span>n)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> H<span class="sc">%*%</span>X</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">pData</span>(mainz)<span class="sc">$</span>grade</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(Y)</span></code></pre></div>
 <pre><code>#&gt; Y
 #&gt;   1   2   3 
 #&gt;  29 136  35</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>svdX &lt;-<span class="st"> </span><span class="kw">svd</span>(X)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>k &lt;-<span class="st"> </span><span class="dv">2</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>Zk &lt;-<span class="st"> </span>svdX<span class="op">$</span>u[,<span class="dv">1</span><span class="op">:</span>k] <span class="op">%*%</span><span class="st"> </span><span class="kw">diag</span>(svdX<span class="op">$</span>d[<span class="dv">1</span><span class="op">:</span>k])</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="kw">colnames</span>(Zk) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="op">:</span>k)</span>
-<span id="cb4-5"><a href="#cb4-5"></a></span>
-<span id="cb4-6"><a href="#cb4-6"></a>Zk <span class="op">%&gt;%</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="st">  </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">grade =</span> Y <span class="op">%&gt;%</span><span class="st"> </span>as.factor) <span class="op">%&gt;%</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> Z1, <span class="dt">y =</span> Z2, <span class="dt">color =</span> grade)) <span class="op">+</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>svdX <span class="ot">&lt;-</span> <span class="fu">svd</span>(X)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Zk <span class="ot">&lt;-</span> svdX<span class="sc">$</span>u[,<span class="dv">1</span><span class="sc">:</span>k] <span class="sc">%*%</span> <span class="fu">diag</span>(svdX<span class="sc">$</span>d[<span class="dv">1</span><span class="sc">:</span>k])</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Zk) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="sc">:</span>k)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>Zk <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grade =</span> Y <span class="sc">%&gt;%</span> as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> Z1, <span class="at">y =</span> Z2, <span class="at">color =</span> grade)) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p><img src="lda_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 </div>
 </div>
-<div id="linear-discriminant-analysis" class="section level1">
+<div id="linear-discriminant-analysis" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Linear discriminant analysis</h1>
 <p>Fisher’s construction of LDA is simple: it allows for classification in a dimension-reduced subspace of <span class="math inline">\(\mathbb{R}^p\)</span>.</p>
 <p>First we assume that <span class="math inline">\(Y\)</span> can only take two values (0/1).</p>
 <p>Fisher aimed for a direction, say <span class="math inline">\(\mathbf{a}\)</span>, in the <span class="math inline">\(p\)</span>-dimensional predictor space such that the orthogonal projections of the predictors, <span class="math inline">\(\mathbf{x}^t\mathbf{a}\)</span>, show maximal ratio between the between and within sums of squares:
 <span class="math display">\[
   \mathbf{v} = \text{ArgMax}_a \frac{\mathbf{a}^t\mathbf{B}\mathbf{a}}{\mathbf{a}^t\mathbf{W}\mathbf{a}} \text{ subject to } {\mathbf{a}^t\mathbf{W}\mathbf{a}}=1,
- \]</span>
+\]</span>
 where <span class="math inline">\(\mathbf{W}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> are the within and between covariance matrices of <span class="math inline">\(\mathbf{x}\)</span>.
 The restriction is introduced to obtain a (convenient) unique solution.</p>
 <hr />
-<div id="between-and-within-sums-of-squares" class="section level2">
+<div id="between-and-within-sums-of-squares" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Between and within sums of squares</h2>
 <ul>
 <li><p>In the training dataset, let <span class="math inline">\(\mathbf{x}_{ik}\)</span> denote the <span class="math inline">\(i\)</span>th <span class="math inline">\(p\)</span>-dimensional observation in the <span class="math inline">\(k\)</span>th group (<span class="math inline">\(k=0,1\)</span> referring to <span class="math inline">\(Y=0\)</span> and <span class="math inline">\(Y=1\)</span>, resp.), <span class="math inline">\(i=1,\ldots, n_k\)</span>.</p></li>
@@ -622,32 +622,32 @@ with <span class="math inline">\(\bar{z}_k\)</span> the sample mean of <span cla
 <li><p>The <span class="math inline">\(p \times p\)</span> matrix
 <span class="math display">\[
   \mathbf{W}=\sum_{k=0,1}\sum_{i=1}^{n_k} (\mathbf{x}_{ik}-\bar{\mathbf{x}}_k)(\mathbf{x}_{ik}-\bar{\mathbf{x}}_k)^t
- \]</span>
+\]</span>
 is referred to as the matrix of <strong>within</strong> sum of squares and cross products.</p></li>
 <li><p>The <span class="math inline">\(p \times p\)</span> matrix
 <span class="math display">\[
   \mathbf{B}=\sum_{k=0,1} n_k (\bar{\mathbf{x}_{k}}-\bar{\mathbf{x}})(\bar{\mathbf{x}_{k}}-\bar{\mathbf{x}})^t
- \]</span>
+\]</span>
 is referred to as the matrix of <strong>between</strong> sum of squares and cross products.</p></li>
 <li><p>Note that on the diagonal of <span class="math inline">\(\mathbf{W}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> you find the ordinary univariate within and between sums of squares of the individual components of <span class="math inline">\(\mathbf{x}\)</span>.</p></li>
 </ul>
 </div>
-<div id="obtain-projections" class="section level2">
+<div id="obtain-projections" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Obtain projections</h2>
 <p>An equivalent formulation:
 <span class="math display">\[
   \mathbf{v} = \text{ArgMax}_a \mathbf{a}^t\mathbf{B}\mathbf{a} \text{ subject to } \mathbf{a}^t\mathbf{W}\mathbf{a}=1.
- \]</span></p>
+\]</span></p>
 <p>This can be solved by introducing a Langrange multiplier:
 <span class="math display">\[
   \mathbf{v} = \text{ArgMax}_a \mathbf{a}^t\mathbf{B}\mathbf{a} -\lambda(\mathbf{a}^t\mathbf{W}\mathbf{a}-1).
- \]</span></p>
+\]</span></p>
 <p>Calculating the partial derivative w.r.t. <span class="math inline">\(\mathbf{a}\)</span> and setting it to zero gives
 <span class="math display">\[\begin{eqnarray*}
    2\mathbf{B}\mathbf{a} -2\lambda \mathbf{W}\mathbf{a} &amp;=&amp; 0\\
    \mathbf{B}\mathbf{a}  &amp;=&amp; \lambda \mathbf{W}\mathbf{a} \\
    \mathbf{W}^{-1}\mathbf{B}\mathbf{a} &amp;=&amp; \lambda\mathbf{a}.
- \end{eqnarray*}\]</span></p>
+\end{eqnarray*}\]</span></p>
 <p>From the final equation we recognise that <span class="math inline">\(\mathbf{v}=\mathbf{a}\)</span> is an <strong>eigenvector</strong> of <span class="math inline">\(\mathbf{W}^{-1}\mathbf{B}\)</span>, and <span class="math inline">\(\lambda\)</span> is the corresponding <strong>eigenvalue</strong>.</p>
 <p>The equation has in general <span class="math inline">\(\text{rank}(\mathbf{W}^{-1}\mathbf{B})\)</span> solutions. In the case of two classes, the rank equals 1 and thus only one solution exists.</p>
 <hr />
@@ -659,7 +659,7 @@ is referred to as the matrix of <strong>between</strong> sum of squares and cros
 <p>An advantage of this approach is that <span class="math inline">\(\mathbf{v}\)</span> can be interpreted (similar as the loadings in a PCA) in terms of which predictors <span class="math inline">\(x_j\)</span> are important to discriminate between classes 0 and 1.</p>
 <hr />
 </div>
-<div id="more-than-two-classes" class="section level2">
+<div id="more-than-two-classes" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> More than two classes</h2>
 <p>When the outcome <span class="math inline">\(Y\)</span> refers to more than two classes, say <span class="math inline">\(m\)</span> classes, then Fisher’s method is constructed in exactly the same way. Now
 <span class="math display">\[
@@ -678,12 +678,12 @@ will have <span class="math inline">\(r=\text{rank}(\mathbf{W}^{-1}\mathbf{B}) =
 <hr />
 <p>For eigenvectors <span class="math inline">\(\mathbf{v}_i\)</span> and <span class="math inline">\(\mathbf{v}_j\)</span>, it holds that
 <span class="math display">\[
- \text{cov}\left[Z_i,Z_j\right] = \text{cov}\left[\mathbf{X}\mathbf{v}_i,\mathbf{X}\mathbf{v}_j\right]= \mathbf{v}_i^t \mathbf{W} \mathbf{v}_j = \delta_{ij} ,
+\text{cov}\left[Z_i,Z_j\right] = \text{cov}\left[\mathbf{X}\mathbf{v}_i,\mathbf{X}\mathbf{v}_j\right]= \mathbf{v}_i^t \mathbf{W} \mathbf{v}_j = \delta_{ij} ,
 \]</span>
 in which the covariances are defined within groups. Hence, within the groups (classes) the scores are uncorrelated.</p>
 </div>
 </div>
-<div id="high-dimensional-predictors" class="section level1">
+<div id="high-dimensional-predictors" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> High dimensional predictors</h1>
 <p>With high-dimensional predictors</p>
 <ul>
@@ -692,39 +692,39 @@ in which the covariances are defined within groups. Hence, within the groups (cl
 </ul>
 <p>Two approaches: Zhou <em>et al.</em> (2006), Journal of Computational and Graphical Statistics , <strong>15</strong>, 265-286, and <a href="https://web.stanford.edu/~hastie/Papers/sda_resubm_daniela-final.pdf">Clemmensen <em>et al.</em> (2011), Technometrics, <strong>53</strong></a>.</p>
 </div>
-<div id="breast-cancer-example-1" class="section level1">
+<div id="breast-cancer-example-1" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Breast cancer example</h1>
-<div id="all-genes" class="section level2">
+<div id="all-genes" class="section level2" number="4.1">
 <h2><span class="header-section-number">4.1</span> All genes</h2>
-<div id="lda" class="section level3">
+<div id="lda" class="section level3" number="4.1.1">
 <h3><span class="header-section-number">4.1.1</span> LDA</h3>
 <ul>
 <li><p>Fisher’s LDA is illustrated on the breast cancer data with all three tumor stages as outcome.</p></li>
 <li><p>We try to discriminate between the different stages according to the gene expression data of all genes.</p></li>
 <li><p>We cache the result because the calculation takes 10 minutes.</p></li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>breast.lda &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(<span class="dt">x =</span> X, <span class="dt">grouping =</span> Y)</span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>Vlda &lt;-<span class="st"> </span>breast.lda<span class="op">$</span>scaling</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">colnames</span>(Vlda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Vlda))</span>
-<span id="cb6-3"><a href="#cb6-3"></a></span>
-<span id="cb6-4"><a href="#cb6-4"></a>Zlda &lt;-<span class="st"> </span>X<span class="op">%*%</span>Vlda</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="kw">colnames</span>(Zlda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Zlda))</span>
-<span id="cb6-6"><a href="#cb6-6"></a></span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="kw">grid.arrange</span>(</span>
-<span id="cb6-8"><a href="#cb6-8"></a>  Zlda <span class="op">%&gt;%</span></span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="st">    </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb6-10"><a href="#cb6-10"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">grade =</span> Y <span class="op">%&gt;%</span><span class="st"> </span>as.factor) <span class="op">%&gt;%</span></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> Z1, <span class="dt">y =</span> Z2, <span class="dt">color =</span> grade)) <span class="op">+</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a><span class="st">    </span><span class="kw">coord_fixed</span>(),</span>
-<span id="cb6-14"><a href="#cb6-14"></a>  <span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb6-15"><a href="#cb6-15"></a><span class="st">    </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;z1&quot;</span>,<span class="st">&quot;z2&quot;</span>), <span class="dt">y =</span> breast.lda<span class="op">$</span>svd), <span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></span>
-<span id="cb6-16"><a href="#cb6-16"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;Discriminant&quot;</span>) <span class="op">+</span></span>
-<span id="cb6-17"><a href="#cb6-17"></a><span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Eigen Values&quot;</span>),</span>
-<span id="cb6-18"><a href="#cb6-18"></a>  <span class="dt">layout_matrix =</span> <span class="kw">matrix</span>(</span>
-<span id="cb6-19"><a href="#cb6-19"></a>    <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>),</span>
-<span id="cb6-20"><a href="#cb6-20"></a>    <span class="dt">nrow=</span><span class="dv">1</span>)</span>
-<span id="cb6-21"><a href="#cb6-21"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>breast.lda <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">lda</span>(<span class="at">x =</span> X, <span class="at">grouping =</span> Y)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Vlda <span class="ot">&lt;-</span> breast.lda<span class="sc">$</span>scaling</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Vlda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Vlda))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>Zlda <span class="ot">&lt;-</span> X<span class="sc">%*%</span>Vlda</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Zlda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Zlda))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  Zlda <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">grade =</span> Y <span class="sc">%&gt;%</span> as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> Z1, <span class="at">y =</span> Z2, <span class="at">color =</span> grade)) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>(),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;z1&quot;</span>,<span class="st">&quot;z2&quot;</span>), <span class="at">y =</span> breast.lda<span class="sc">$</span>svd), <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;Discriminant&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;Eigen Values&quot;</span>),</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout_matrix =</span> <span class="fu">matrix</span>(</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrow=</span><span class="dv">1</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="lda_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <hr />
 <ul>
@@ -742,23 +742,23 @@ or (upon using <span class="math inline">\(\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j=
 <li><p>To some extent the first Fisher discriminant dimension discriminates stage 3 (green dots) from the other two stages, and the second dimension separates stage 1 (black dots) from the two others.</p></li>
 </ul>
 </div>
-<div id="interpretation-of-loadings" class="section level3">
+<div id="interpretation-of-loadings" class="section level3" number="4.1.2">
 <h3><span class="header-section-number">4.1.2</span> Interpretation of loadings</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">grid.arrange</span>(</span>
-<span id="cb7-2"><a href="#cb7-2"></a>  Vlda <span class="op">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="st">    </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">geneID =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Vlda)) <span class="op">%&gt;%</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> geneID, <span class="dt">y =</span> V1)) <span class="op">+</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">pch=</span><span class="dv">21</span>) <span class="op">+</span></span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="op">*</span><span class="kw">sd</span>(Vlda[,<span class="dv">1</span>]), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>),</span>
-<span id="cb7-8"><a href="#cb7-8"></a></span>
-<span id="cb7-9"><a href="#cb7-9"></a>  Vlda <span class="op">%&gt;%</span></span>
-<span id="cb7-10"><a href="#cb7-10"></a><span class="st">    </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb7-11"><a href="#cb7-11"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">geneID =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Vlda)) <span class="op">%&gt;%</span></span>
-<span id="cb7-12"><a href="#cb7-12"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> geneID, <span class="dt">y =</span> V2)) <span class="op">+</span></span>
-<span id="cb7-13"><a href="#cb7-13"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">pch=</span><span class="dv">21</span>) <span class="op">+</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a><span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="op">*</span><span class="kw">sd</span>(Vlda[,<span class="dv">2</span>]), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>),</span>
-<span id="cb7-15"><a href="#cb7-15"></a>  <span class="dt">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  Vlda <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vlda)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V1)) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vlda[,<span class="dv">1</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  Vlda <span class="sc">%&gt;%</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vlda)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V2)) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vlda[,<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="lda_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>The loadings of the Fisher discriminants are within the columns of the <span class="math inline">\(\mathbf{V}\)</span> matrix.</p>
 <ul>
@@ -771,127 +771,126 @@ or (upon using <span class="math inline">\(\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j=
 <hr />
 </div>
 </div>
-<div id="sparse-lda-based-on-150-random-genes" class="section level2">
+<div id="sparse-lda-based-on-150-random-genes" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Sparse LDA based on 150 random genes</h2>
 <ul>
 <li><p>We only present the results of the sparse LDA based on a random subset of 150 genes (ordering of genes in datamatrix is random).</p></li>
 <li><p>The discrimination seems better than with classical LDA based on all genes. This is very likely caused by too much noise in the full data matrix with over 20000 predictors.</p></li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># BiocManager::install(&quot;sparseLDA&quot;)</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">library</span>(sparseLDA)</span>
-<span id="cb8-4"><a href="#cb8-4"></a></span>
-<span id="cb8-5"><a href="#cb8-5"></a>YDummy &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb8-6"><a href="#cb8-6"></a>  <span class="dt">Y1 =</span> <span class="kw">ifelse</span>(Y <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb8-7"><a href="#cb8-7"></a>  <span class="dt">Y2 =</span> <span class="kw">ifelse</span>(Y <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb8-8"><a href="#cb8-8"></a>  <span class="dt">Y3 =</span> <span class="kw">ifelse</span>(Y <span class="op">==</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb8-9"><a href="#cb8-9"></a>  )</span>
-<span id="cb8-10"><a href="#cb8-10"></a></span>
-<span id="cb8-11"><a href="#cb8-11"></a>X2 &lt;-<span class="st"> </span>X[,<span class="dv">1</span><span class="op">:</span><span class="dv">150</span>]</span>
-<span id="cb8-12"><a href="#cb8-12"></a></span>
-<span id="cb8-13"><a href="#cb8-13"></a>breast.slda &lt;-<span class="st"> </span><span class="kw">sda</span>(<span class="dt">x =</span> X2,</span>
-<span id="cb8-14"><a href="#cb8-14"></a>  <span class="dt">y =</span> <span class="kw">as.matrix</span>(YDummy),</span>
-<span id="cb8-15"><a href="#cb8-15"></a>  <span class="dt">lambda =</span> <span class="fl">1e-6</span>,</span>
-<span id="cb8-16"><a href="#cb8-16"></a>  <span class="dt">stop =</span> <span class="dv">-50</span>,</span>
-<span id="cb8-17"><a href="#cb8-17"></a>  <span class="dt">maxIte =</span> <span class="dv">25</span>,</span>
-<span id="cb8-18"><a href="#cb8-18"></a>  <span class="dt">trace =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>#&gt; ite:  1  ridge cost:  89.96984  |b|_1:  6.224284 
-#&gt; ite:  2  ridge cost:  91.62458  |b|_1:  5.507591 
-#&gt; ite:  3  ridge cost:  90.95336  |b|_1:  5.450194 
-#&gt; ite:  4  ridge cost:  89.08206  |b|_1:  5.703261 
-#&gt; ite:  5  ridge cost:  88.17903  |b|_1:  5.840134 
-#&gt; ite:  6  ridge cost:  88.15263  |b|_1:  5.835501 
-#&gt; ite:  7  ridge cost:  88.07364  |b|_1:  5.847253 
-#&gt; ite:  8  ridge cost:  87.9239  |b|_1:  5.874621 
-#&gt; ite:  9  ridge cost:  87.85136  |b|_1:  5.888108 
-#&gt; ite:  10  ridge cost:  87.81592  |b|_1:  5.894755 
-#&gt; ite:  11  ridge cost:  87.79852  |b|_1:  5.898031 
-#&gt; ite:  12  ridge cost:  87.78997  |b|_1:  5.899645 
-#&gt; ite:  13  ridge cost:  87.78576  |b|_1:  5.900441 
-#&gt; ite:  14  ridge cost:  87.78368  |b|_1:  5.900834 
-#&gt; ite:  15  ridge cost:  87.78266  |b|_1:  5.901027 
-#&gt; ite:  16  ridge cost:  87.78215  |b|_1:  5.901123 
-#&gt; ite:  17  ridge cost:  87.7819  |b|_1:  5.90117 
-#&gt; ite:  18  ridge cost:  87.78178  |b|_1:  5.901193 
-#&gt; ite:  19  ridge cost:  87.78172  |b|_1:  5.901204 
-#&gt; ite:  1  ridge cost:  134.7777  |b|_1:  5.379259 
-#&gt; ite:  2  ridge cost:  134.7777  |b|_1:  5.379259 
-#&gt; final update, total ridge cost:  222.5595  |b|_1:  11.28046</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>Vsda &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow=</span><span class="kw">ncol</span>(X2), <span class="dt">ncol=</span><span class="dv">2</span>)</span>
-<span id="cb10-2"><a href="#cb10-2"></a>Vsda[breast.slda<span class="op">$</span>varIndex,] &lt;-<span class="st"> </span>breast.slda<span class="op">$</span>beta</span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="kw">colnames</span>(Vsda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Vsda))</span>
-<span id="cb10-4"><a href="#cb10-4"></a></span>
-<span id="cb10-5"><a href="#cb10-5"></a>Zsda &lt;-<span class="st"> </span>X2<span class="op">%*%</span>Vsda</span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="kw">colnames</span>(Zsda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Zsda))</span>
-<span id="cb10-7"><a href="#cb10-7"></a></span>
-<span id="cb10-8"><a href="#cb10-8"></a>Zsda <span class="op">%&gt;%</span></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="st"> </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">grade =</span> Y <span class="op">%&gt;%</span><span class="st"> </span>as.factor) <span class="op">%&gt;%</span></span>
-<span id="cb10-11"><a href="#cb10-11"></a><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> Z1, <span class="dt">y =</span> Z2, <span class="dt">color =</span> grade)) <span class="op">+</span></span>
-<span id="cb10-12"><a href="#cb10-12"></a><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&quot;sparse LDA on 150 genes&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install(&quot;sparseLDA&quot;)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sparseLDA)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>YDummy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y1 =</span> <span class="fu">ifelse</span>(Y <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y2 =</span> <span class="fu">ifelse</span>(Y <span class="sc">==</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y3 =</span> <span class="fu">ifelse</span>(Y <span class="sc">==</span> <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> X[,<span class="dv">1</span><span class="sc">:</span><span class="dv">150</span>]</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>breast.slda <span class="ot">&lt;-</span> <span class="fu">sda</span>(<span class="at">x =</span> X2,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">as.matrix</span>(YDummy),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda =</span> <span class="fl">1e-6</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">stop =</span> <span class="sc">-</span><span class="dv">50</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxIte =</span> <span class="dv">25</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>#&gt; ite:  1  ridge cost:  90.78055  |b|_1:  5.663201 
+#&gt; ite:  2  ridge cost:  89.39778  |b|_1:  5.69702 
+#&gt; ite:  3  ridge cost:  88.09095  |b|_1:  5.871577 
+#&gt; ite:  4  ridge cost:  87.7303  |b|_1:  5.918916 
+#&gt; ite:  5  ridge cost:  88.17631  |b|_1:  5.829024 
+#&gt; ite:  6  ridge cost:  87.62468  |b|_1:  5.931557 
+#&gt; ite:  7  ridge cost:  87.87542  |b|_1:  5.88365 
+#&gt; ite:  8  ridge cost:  87.83165  |b|_1:  5.891806 
+#&gt; ite:  9  ridge cost:  87.78529  |b|_1:  5.90054 
+#&gt; ite:  10  ridge cost:  87.7671  |b|_1:  5.903974 
+#&gt; ite:  11  ridge cost:  87.77448  |b|_1:  5.902575 
+#&gt; ite:  12  ridge cost:  87.77812  |b|_1:  5.901886 
+#&gt; ite:  13  ridge cost:  87.77992  |b|_1:  5.901546 
+#&gt; ite:  14  ridge cost:  87.7808  |b|_1:  5.901378 
+#&gt; ite:  15  ridge cost:  87.78124  |b|_1:  5.901296 
+#&gt; ite:  16  ridge cost:  87.78145  |b|_1:  5.901255 
+#&gt; ite:  17  ridge cost:  87.78156  |b|_1:  5.901235 
+#&gt; ite:  18  ridge cost:  87.78161  |b|_1:  5.901225 
+#&gt; ite:  1  ridge cost:  134.7777  |b|_1:  5.379261 
+#&gt; ite:  2  ridge cost:  134.7777  |b|_1:  5.379261 
+#&gt; final update, total ridge cost:  222.5593  |b|_1:  11.28049</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Vsda <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow=</span><span class="fu">ncol</span>(X2), <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Vsda[breast.slda<span class="sc">$</span>varIndex,] <span class="ot">&lt;-</span> breast.slda<span class="sc">$</span>beta</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Vsda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Vsda))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>Zsda <span class="ot">&lt;-</span> X2<span class="sc">%*%</span>Vsda</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Zsda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Zsda))</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>Zsda <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a> as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">grade =</span> Y <span class="sc">%&gt;%</span> as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> Z1, <span class="at">y =</span> Z2, <span class="at">color =</span> grade)) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggtitle</span>(<span class="st">&quot;sparse LDA on 150 genes&quot;</span>)</span></code></pre></div>
 <p><img src="lda_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">grid.arrange</span>(</span>
-<span id="cb11-2"><a href="#cb11-2"></a>   Vsda <span class="op">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="st">     </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="st">     </span><span class="kw">mutate</span>(<span class="dt">geneID =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Vsda)) <span class="op">%&gt;%</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a><span class="st">     </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> geneID, <span class="dt">y =</span> V1)) <span class="op">+</span></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="st">     </span><span class="kw">geom_point</span>(<span class="dt">pch=</span><span class="dv">21</span>) <span class="op">+</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a><span class="st">     </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="op">*</span><span class="kw">sd</span>(Vsda[,<span class="dv">1</span>]), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>) ,</span>
-<span id="cb11-8"><a href="#cb11-8"></a></span>
-<span id="cb11-9"><a href="#cb11-9"></a>   Vsda <span class="op">%&gt;%</span></span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="st">     </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb11-11"><a href="#cb11-11"></a><span class="st">     </span><span class="kw">mutate</span>(<span class="dt">geneID =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Vsda)) <span class="op">%&gt;%</span></span>
-<span id="cb11-12"><a href="#cb11-12"></a><span class="st">     </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> geneID, <span class="dt">y =</span> V2)) <span class="op">+</span></span>
-<span id="cb11-13"><a href="#cb11-13"></a><span class="st">     </span><span class="kw">geom_point</span>(<span class="dt">pch=</span><span class="dv">21</span>) <span class="op">+</span></span>
-<span id="cb11-14"><a href="#cb11-14"></a><span class="st">     </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="op">*</span><span class="kw">sd</span>(Vsda[,<span class="dv">2</span>]), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>),</span>
-<span id="cb11-15"><a href="#cb11-15"></a>   <span class="dt">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>   Vsda <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>     as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vsda)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V1)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vsda[,<span class="dv">1</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) ,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>   Vsda <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>     as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>     <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vsda)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>     <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V2)) <span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vsda[,<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>   <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="lda_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
 </div>
-<div id="lda-based-on-150-random-genes" class="section level2">
+<div id="lda-based-on-150-random-genes" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> LDA based on 150 random genes</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>breast.lda150 &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(<span class="dt">x =</span> X2, <span class="dt">grouping =</span> Y)</span>
-<span id="cb12-2"><a href="#cb12-2"></a></span>
-<span id="cb12-3"><a href="#cb12-3"></a>Vlda &lt;-<span class="st"> </span>breast.lda150<span class="op">$</span>scaling</span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="kw">colnames</span>(Vlda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Vlda))</span>
-<span id="cb12-5"><a href="#cb12-5"></a></span>
-<span id="cb12-6"><a href="#cb12-6"></a>Zlda &lt;-<span class="st"> </span>X2<span class="op">%*%</span>Vlda</span>
-<span id="cb12-7"><a href="#cb12-7"></a><span class="kw">colnames</span>(Zlda) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Zlda))</span>
-<span id="cb12-8"><a href="#cb12-8"></a></span>
-<span id="cb12-9"><a href="#cb12-9"></a><span class="kw">grid.arrange</span>(</span>
-<span id="cb12-10"><a href="#cb12-10"></a>  Zlda <span class="op">%&gt;%</span></span>
-<span id="cb12-11"><a href="#cb12-11"></a><span class="st">    </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb12-12"><a href="#cb12-12"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">grade =</span> Y <span class="op">%&gt;%</span><span class="st"> </span>as.factor) <span class="op">%&gt;%</span></span>
-<span id="cb12-13"><a href="#cb12-13"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> Z1, <span class="dt">y =</span> Z2, <span class="dt">color =</span> grade)) <span class="op">+</span></span>
-<span id="cb12-14"><a href="#cb12-14"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span></span>
-<span id="cb12-15"><a href="#cb12-15"></a><span class="st">    </span><span class="kw">coord_fixed</span>(),</span>
-<span id="cb12-16"><a href="#cb12-16"></a>  <span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb12-17"><a href="#cb12-17"></a><span class="st">    </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;z1&quot;</span>,<span class="st">&quot;z2&quot;</span>), <span class="dt">y =</span> breast.lda150<span class="op">$</span>svd), <span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></span>
-<span id="cb12-18"><a href="#cb12-18"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;Discriminant&quot;</span>) <span class="op">+</span></span>
-<span id="cb12-19"><a href="#cb12-19"></a><span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Eigen Values&quot;</span>),</span>
-<span id="cb12-20"><a href="#cb12-20"></a>  <span class="dt">layout_matrix =</span> <span class="kw">matrix</span>(</span>
-<span id="cb12-21"><a href="#cb12-21"></a>    <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>),</span>
-<span id="cb12-22"><a href="#cb12-22"></a>    <span class="dt">nrow=</span><span class="dv">1</span>)</span>
-<span id="cb12-23"><a href="#cb12-23"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>breast.lda150 <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">lda</span>(<span class="at">x =</span> X2, <span class="at">grouping =</span> Y)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>Vlda <span class="ot">&lt;-</span> breast.lda150<span class="sc">$</span>scaling</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Vlda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Vlda))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>Zlda <span class="ot">&lt;-</span> X2<span class="sc">%*%</span>Vlda</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Zlda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Zlda))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  Zlda <span class="sc">%&gt;%</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">grade =</span> Y <span class="sc">%&gt;%</span> as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> Z1, <span class="at">y =</span> Z2, <span class="at">color =</span> grade)) <span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>(),</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;z1&quot;</span>,<span class="st">&quot;z2&quot;</span>), <span class="at">y =</span> breast.lda150<span class="sc">$</span>svd), <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;Discriminant&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;Eigen Values&quot;</span>),</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout_matrix =</span> <span class="fu">matrix</span>(</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrow=</span><span class="dv">1</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="lda_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>  <span class="kw">grid.arrange</span>(</span>
-<span id="cb13-2"><a href="#cb13-2"></a>    Vlda <span class="op">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="st">      </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">geneID =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Vlda)) <span class="op">%&gt;%</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="st">      </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> geneID, <span class="dt">y =</span> V1)) <span class="op">+</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a><span class="st">      </span><span class="kw">geom_point</span>(<span class="dt">pch=</span><span class="dv">21</span>) <span class="op">+</span></span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="st">      </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="op">*</span><span class="kw">sd</span>(Vlda[,<span class="dv">1</span>]), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>),</span>
-<span id="cb13-8"><a href="#cb13-8"></a></span>
-<span id="cb13-9"><a href="#cb13-9"></a>    Vlda <span class="op">%&gt;%</span></span>
-<span id="cb13-10"><a href="#cb13-10"></a><span class="st">      </span>as.data.frame <span class="op">%&gt;%</span></span>
-<span id="cb13-11"><a href="#cb13-11"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">geneID =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Vlda)) <span class="op">%&gt;%</span></span>
-<span id="cb13-12"><a href="#cb13-12"></a><span class="st">      </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> geneID, <span class="dt">y =</span> V2)) <span class="op">+</span></span>
-<span id="cb13-13"><a href="#cb13-13"></a><span class="st">      </span><span class="kw">geom_point</span>(<span class="dt">pch=</span><span class="dv">21</span>) <span class="op">+</span></span>
-<span id="cb13-14"><a href="#cb13-14"></a><span class="st">      </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="op">*</span><span class="kw">sd</span>(Vlda[,<span class="dv">2</span>]), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>),</span>
-<span id="cb13-15"><a href="#cb13-15"></a>    <span class="dt">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grid.arrange</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    Vlda <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>      as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vlda)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V1)) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vlda[,<span class="dv">1</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    Vlda <span class="sc">%&gt;%</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>      as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vlda)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V2)) <span class="sc">+</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vlda[,<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="lda_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
 </div>
-<div id="wrapup" class="section level2">
+<div id="wrapup" class="section level2" number="4.4">
 <h2><span class="header-section-number">4.4</span> Wrapup</h2>
 <p>LDA on all 22283 genes gave poorer result than on 150 genes.
 This is probably caused by numerical instability when working with large <span class="math inline">\(\mathbf{W}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> matrices</p>
@@ -912,8 +911,10 @@ This is probably caused by numerical instability when working with large <span c
 <div id="session-info" class="section level1 unnumbered">
 <h1>Session info</h1>
 <details>
-<p><summary>Session info</summary></p>
-<pre><code>#&gt; [1] &quot;2022-10-10 09:47:39 UTC&quot;</code></pre>
+<summary>
+Session info
+</summary>
+<pre><code>#&gt; [1] &quot;2022-10-27 14:53:04 UTC&quot;</code></pre>
 <pre><code>#&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.3 (2022-03-10)
@@ -924,8 +925,8 @@ This is probably caused by numerical instability when working with large <span c
 #&gt;  collate  C.UTF-8
 #&gt;  ctype    C.UTF-8
 #&gt;  tz       UTC
-#&gt;  date     2022-10-10
-#&gt;  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
+#&gt;  date     2022-10-27
+#&gt;  pandoc   2.19.2 @ /usr/bin/ (via rmarkdown)
 #&gt; 
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
 #&gt;  ! package           * version    date (UTC) lib source
@@ -976,7 +977,7 @@ This is probably caused by numerical instability when working with large <span c
 #&gt;  P genefu            * 2.26.0     2021-10-26 [?] Bioconductor
 #&gt;  P generics            0.1.1      2021-10-25 [?] CRAN (R 4.1.3)
 #&gt;  P GenomeInfoDb        1.30.0     2021-10-26 [?] Bioconductor
-#&gt;  P GenomeInfoDbData    1.2.7      2022-10-07 [?] Bioconductor
+#&gt;  P GenomeInfoDbData    1.2.7      2022-10-27 [?] Bioconductor
 #&gt;  P ggplot2           * 3.3.5      2021-06-25 [?] CRAN (R 4.1.3)
 #&gt;  P globals             0.14.0     2020-11-22 [?] CRAN (R 4.1.3)
 #&gt;  P glue                1.6.1      2022-01-22 [?] CRAN (R 4.1.3)
@@ -1015,7 +1016,7 @@ This is probably caused by numerical instability when working with large <span c
 #&gt;  P pamr              * 1.56.1     2019-04-22 [?] CRAN (R 4.1.3)
 #&gt;  P parallelly          1.30.0     2021-12-17 [?] CRAN (R 4.1.3)
 #&gt;  P pillar              1.6.5      2022-01-25 [?] CRAN (R 4.1.3)
-#&gt;  P pkgconfig           2.0.3      2022-10-07 [?] Github (r-lib/pkgconfig@b81ae03)
+#&gt;  P pkgconfig           2.0.3      2022-10-27 [?] Github (r-lib/pkgconfig@b81ae03)
 #&gt;  P png                 0.1-7      2013-12-03 [?] CRAN (R 4.1.3)
 #&gt;  P prettyunits         1.1.1      2020-01-24 [?] CRAN (R 4.1.3)
 #&gt;  P prodlim           * 2019.11.13 2019-11-17 [?] CRAN (R 4.1.3)

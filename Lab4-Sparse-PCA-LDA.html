@@ -14,6 +14,7 @@
 
 <title>Lab 4: Sparse PCA and LDA</title>
 
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -35,7 +36,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -60,19 +60,19 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -92,7 +92,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {  background-color: #f8f8f8; }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -162,6 +162,28 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 }
 </style>
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
@@ -541,18 +563,18 @@ div.tocify {
 <div id="change-log" class="section level3 unnumbered">
 <h3><a href="https://github.com/statOmics/HDDA/commits/master/Lab4-Sparse-PCA-LDA.Rmd">Change log</a></h3>
 <hr />
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">## install packages with:</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># install.packages(c(&quot;glmnet&quot;, &quot;MASS&quot;))</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># if (!requireNamespace(&quot;remotes&quot;, quietly = TRUE)) {</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co">#     install.packages(&quot;remotes&quot;)</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># }</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># remotes::install_github(&quot;statOmics/HDDAData&quot;)</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">library</span>(glmnet)</span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="kw">library</span>(MASS)</span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">library</span>(HDDAData)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## install packages with:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c(&quot;glmnet&quot;, &quot;MASS&quot;))</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># if (!requireNamespace(&quot;remotes&quot;, quietly = TRUE)) {</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     install.packages(&quot;remotes&quot;)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github(&quot;statOmics/HDDAData&quot;)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HDDAData)</span></code></pre></div>
 </div>
-<div id="introduction" class="section level1">
+<div id="introduction" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p><strong>In this lab session we will look at the following topics</strong></p>
 <ul>
@@ -566,23 +588,23 @@ div.tocify {
 expression levels in 40 tumour and 22 normal colon tissue samples. They checked
 a total of 6500 human genes using the Affymetrix oligonucleotide array.</p>
 <p>You can load the data in as follows:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">data</span>(<span class="st">&quot;Alon1999&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">str</span>(Alon1999[, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="co">#&gt; &#39;data.frame&#39;:    62 obs. of  10 variables:</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt;  $ Y : chr  &quot;t&quot; &quot;n&quot; &quot;t&quot; &quot;n&quot; ...</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt;  $ X1: num  8589 9164 3826 6246 3230 ...</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt;  $ X2: num  5468 6720 6970 7824 3694 ...</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co">#&gt;  $ X3: num  4263 4883 5370 5956 3401 ...</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="co">#&gt;  $ X4: num  4065 3718 4706 3976 3464 ...</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt;  $ X5: num  1998 2015 1167 2003 2181 ...</span></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="co">#&gt;  $ X6: num  5282 5570 1572 2131 2923 ...</span></span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="co">#&gt;  $ X7: num  2170 3849 1325 1531 2069 ...</span></span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="co">#&gt;  $ X8: num  2773 2793 1472 1715 2949 ...</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="co">#&gt;  $ X9: num  7526 7018 3297 3870 3303 ...</span></span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="kw">table</span>(Alon1999<span class="op">$</span>Y)</span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="co">#&gt; </span></span>
-<span id="cb2-16"><a href="#cb2-16"></a><span class="co">#&gt;  n  t </span></span>
-<span id="cb2-17"><a href="#cb2-17"></a><span class="co">#&gt; 22 40</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;Alon1999&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Alon1999[, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    62 obs. of  10 variables:</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ Y : chr  &quot;t&quot; &quot;n&quot; &quot;t&quot; &quot;n&quot; ...</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X1: num  8589 9164 3826 6246 3230 ...</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X2: num  5468 6720 6970 7824 3694 ...</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X3: num  4263 4883 5370 5956 3401 ...</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X4: num  4065 3718 4706 3976 3464 ...</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X5: num  1998 2015 1167 2003 2181 ...</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X6: num  5282 5570 1572 2131 2923 ...</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X7: num  2170 3849 1325 1531 2069 ...</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X8: num  2773 2793 1472 1715 2949 ...</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ X9: num  7526 7018 3297 3870 3303 ...</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(Alon1999<span class="sc">$</span>Y)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  n  t </span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 22 40</span></span></code></pre></div>
 <p>The dataset contains one variable named <code>Y</code> with the values <code>t</code> and <code>n</code>. This
 variable indicates whether the sample came from tumourous (<code>t</code>) or normal (<code>n</code>)
 tissue. For more information on this dataset, see <code>?Alon1999</code>.</p>
@@ -591,73 +613,79 @@ As in <span class="citation">Alon et al. (1999)</span>, we use the 2000 genes wi
 across the samples.</p>
 </div>
 </div>
-<div id="sparse-pca" class="section level1">
+<div id="sparse-pca" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Sparse PCA</h1>
 <p>In order to work easily with the data, first construct a scaled matrix
 <code>X</code> and a vector <code>Y</code> which gives the scaled predictors and the response
 variable:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>X &lt;-<span class="st"> </span><span class="kw">scale</span>(Alon1999[, <span class="dv">-1</span>])</span>
-<span id="cb3-2"><a href="#cb3-2"></a>Y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(Alon1999[, <span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">scale</span>(Alon1999[, <span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(Alon1999[, <span class="dv">1</span>])</span></code></pre></div>
 <p>Use these objects to solve the following exercises.</p>
 <div id="exercises" class="section level2 unnumbered">
 <h2>Exercises</h2>
 <div id="perform-a-svd-on-x-and-store-the-scores-of-the-pcs-in-a-matrix-z." class="section level4 unnumbered">
 <h4>1. Perform a SVD on <code>X</code>, and store the scores of the PCs in a matrix <code>Z</code>.</h4>
 <details>
-<p><summary>Solution</summary></p>
+<summary>
+Solution
+</summary>
 <p>Using <code>svd</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>svd_X &lt;-<span class="st"> </span><span class="kw">svd</span>(X)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>Z &lt;-<span class="st"> </span>svd_X<span class="op">$</span>u <span class="op">%*%</span><span class="st"> </span><span class="kw">diag</span>(svd_X<span class="op">$</span>d) <span class="co"># Calculate the scores</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>V &lt;-<span class="st"> </span>svd_X<span class="op">$</span>v                 <span class="co"># Calculate the loadings</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>svd_X <span class="ot">&lt;-</span> <span class="fu">svd</span>(X)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> svd_X<span class="sc">$</span>u <span class="sc">%*%</span> <span class="fu">diag</span>(svd_X<span class="sc">$</span>d) <span class="co"># Calculate the scores</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> svd_X<span class="sc">$</span>v                 <span class="co"># Calculate the loadings</span></span></code></pre></div>
 <p>Using <code>prcomp</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">## X is already centered and scaled so no need to do again</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>pca_x &lt;-<span class="st"> </span><span class="kw">prcomp</span>(X, <span class="dt">center =</span> <span class="ot">FALSE</span>, <span class="dt">scale. =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="co">## The scores are given by `pca_x$x`, the loadings are `pca_x$rotation`</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## X is already centered and scaled so no need to do again</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pca_x <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(X, <span class="at">center =</span> <span class="cn">FALSE</span>, <span class="at">scale. =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## The scores are given by `pca_x$x`, the loadings are `pca_x$rotation`</span></span></code></pre></div>
 </details>
 </div>
 <div id="plot-the-singular-values-and-confirm-that-the-first-and-second-pcs-can-approximate-the-data-to-some-extent." class="section level4 unnumbered">
 <h4>2. Plot the singular values and confirm that the first and second PCs can approximate the data to some extent.</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## Plotting parameters</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">par</span>(<span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb6-3"><a href="#cb6-3"></a></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="kw">plot</span>(svd_X<span class="op">$</span>d, <span class="dt">type =</span> <span class="st">&quot;b&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Singular values&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;PCs&quot;</span>)</span>
-<span id="cb6-5"><a href="#cb6-5"></a></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="co">## Percentage variance explained for each PC</span></span>
-<span id="cb6-7"><a href="#cb6-7"></a>var_explained &lt;-<span class="st"> </span>svd_X<span class="op">$</span>d<span class="op">^</span><span class="dv">2</span> <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(svd_X<span class="op">$</span>d<span class="op">^</span><span class="dv">2</span>)</span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="kw">plot</span>(var_explained,</span>
-<span id="cb6-9"><a href="#cb6-9"></a>  <span class="dt">type =</span> <span class="st">&quot;b&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Percent variance explained&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;PCs&quot;</span>,</span>
-<span id="cb6-10"><a href="#cb6-10"></a>  <span class="dt">col =</span> <span class="dv">2</span></span>
-<span id="cb6-11"><a href="#cb6-11"></a>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting parameters</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">pch =</span> <span class="dv">19</span>, <span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svd_X<span class="sc">$</span>d, <span class="at">type =</span> <span class="st">&quot;b&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Singular values&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;PCs&quot;</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Percentage variance explained for each PC</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>var_explained <span class="ot">&lt;-</span> svd_X<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(svd_X<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(var_explained,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;b&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Percent variance explained&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;PCs&quot;</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="dv">2</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/pca-singular_values-plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </details>
 </div>
 <div id="plot-the-first-two-pcs-and-use-different-colours-for-tumornormal-tissue." class="section level4 unnumbered">
 <h4>3. Plot the first two PCs and use different colours for tumor/normal tissue.</h4>
 <p>In order to plot different colors and add a legend with base <code>R</code> plotting, you can do the following:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
-<span id="cb7-2"><a href="#cb7-2"></a>cols &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;n&quot;</span> =<span class="st"> &quot;red&quot;</span>, <span class="st">&quot;t&quot;</span> =<span class="st"> &quot;blue&quot;</span>)</span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="kw">plot</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="dt">col =</span> cols[Y], <span class="dt">pch =</span> <span class="dv">19</span>)</span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Normal&quot;</span>, <span class="st">&quot;Tumor&quot;</span>),</span>
-<span id="cb7-5"><a href="#cb7-5"></a>  <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>),</span>
-<span id="cb7-6"><a href="#cb7-6"></a>  <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">title =</span> <span class="st">&quot;Tissue&quot;</span></span>
-<span id="cb7-7"><a href="#cb7-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;n&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>, <span class="st">&quot;t&quot;</span> <span class="ot">=</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="at">col =</span> cols[Y], <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Normal&quot;</span>, <span class="st">&quot;Tumor&quot;</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">title =</span> <span class="st">&quot;Tissue&quot;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>This plots the first two dimensions of the <code>X</code> (!) matrix with solid
 points (<code>pch = 19</code>), and the color red for normal tissue and blue for
 tumorous tissue. You can adapt this code to create the proper plot.</p>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>cols &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;n&quot;</span> =<span class="st"> &quot;red&quot;</span>, <span class="st">&quot;t&quot;</span> =<span class="st"> &quot;blue&quot;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">plot</span>(Z[, <span class="dv">1</span>], Z[, <span class="dv">2</span>],</span>
-<span id="cb8-3"><a href="#cb8-3"></a>  <span class="dt">col =</span> cols[Y],</span>
-<span id="cb8-4"><a href="#cb8-4"></a>  <span class="dt">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;PC2&quot;</span>, <span class="dt">pch =</span> <span class="dv">19</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a>)</span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Normal&quot;</span>, <span class="st">&quot;Tumor&quot;</span>),</span>
-<span id="cb8-7"><a href="#cb8-7"></a>  <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>),</span>
-<span id="cb8-8"><a href="#cb8-8"></a>  <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">title =</span> <span class="st">&quot;Tissue&quot;</span></span>
-<span id="cb8-9"><a href="#cb8-9"></a>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;n&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>, <span class="st">&quot;t&quot;</span> <span class="ot">=</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Z[, <span class="dv">1</span>], Z[, <span class="dv">2</span>],</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> cols[Y],</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;PC2&quot;</span>, <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Normal&quot;</span>, <span class="st">&quot;Tumor&quot;</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">title =</span> <span class="st">&quot;Tissue&quot;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/pca-plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p><strong>Interpretation:</strong> using only the first 2 PCs does not seem to separate the tumour and normal cases clearly.</p>
 </details>
@@ -667,19 +695,21 @@ tumorous tissue. You can adapt this code to create the proper plot.</p>
 <p>You can use the <code>hist</code> function to plot a histogram.
 Be sure to you use an appropriate value for the <code>breaks</code> argument.</p>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="co"># First</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="kw">hist</span>(V[, <span class="dv">1</span>], <span class="dt">breaks =</span> <span class="dv">50</span>, <span class="dt">xlab =</span> <span class="st">&quot;PC 1 loadings&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="co"># Add vertical line at 95% quantile</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">quantile</span>(V[, <span class="dv">1</span>], <span class="fl">0.95</span>), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb9-6"><a href="#cb9-6"></a></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="co"># Second</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="kw">hist</span>(V[, <span class="dv">2</span>], <span class="dt">breaks =</span> <span class="dv">50</span>, <span class="dt">xlab =</span> <span class="st">&quot;PC 2 loadings&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb9-9"><a href="#cb9-9"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">c</span>(</span>
-<span id="cb9-10"><a href="#cb9-10"></a>  <span class="kw">quantile</span>(V[, <span class="dv">2</span>], <span class="fl">0.05</span>),</span>
-<span id="cb9-11"><a href="#cb9-11"></a>  <span class="kw">quantile</span>(V[, <span class="dv">2</span>], <span class="fl">0.95</span>)</span>
-<span id="cb9-12"><a href="#cb9-12"></a>), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># First</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(V[, <span class="dv">1</span>], <span class="at">breaks =</span> <span class="dv">50</span>, <span class="at">xlab =</span> <span class="st">&quot;PC 1 loadings&quot;</span>, <span class="at">main =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add vertical line at 95% quantile</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">quantile</span>(V[, <span class="dv">1</span>], <span class="fl">0.95</span>), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Second</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(V[, <span class="dv">2</span>], <span class="at">breaks =</span> <span class="dv">50</span>, <span class="at">xlab =</span> <span class="st">&quot;PC 2 loadings&quot;</span>, <span class="at">main =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">c</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">quantile</span>(V[, <span class="dv">2</span>], <span class="fl">0.05</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">quantile</span>(V[, <span class="dv">2</span>], <span class="fl">0.95</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/pc-loadings-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>Vertical lines were added at the 95th percentile for PC1 and the 5th and 95th percentiles for PC2 to reflect where the “highest” (in absolute value) loadings are situated (no negative loadings for PC1, so only showing the 95th percentile).</p>
 <p><strong>Interpretation:</strong> remember that the PC loadings reflect the <em>contributions</em> of each feature (in this case: gene) to the PC.
@@ -712,32 +742,34 @@ From these histograms it should be clear that only a minor fraction of the genes
 Remember that
 <span class="math inline">\(\|\boldsymbol\beta_{\text{ridge}}\|_2 = \sqrt{\sum_{j=1}^p \beta_j^2}\)</span></p>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>p &lt;-<span class="st"> </span><span class="kw">dim</span>(X)[<span class="dv">2</span>]</span>
-<span id="cb10-2"><a href="#cb10-2"></a></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="co"># Let&#39;s take a ridiculously large lambda: 200</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a>tXX_lambda_I &lt;-<span class="st"> </span><span class="kw">t</span>(X) <span class="op">%*%</span><span class="st"> </span>X <span class="op">+</span><span class="st"> </span><span class="dv">200</span> <span class="op">*</span><span class="st"> </span><span class="kw">diag</span>(p)</span>
-<span id="cb10-5"><a href="#cb10-5"></a></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co">## This might take a while to calculate</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a>beta_ridge &lt;-<span class="st"> </span><span class="kw">solve</span>(tXX_lambda_I) <span class="op">%*%</span><span class="st"> </span><span class="kw">t</span>(X) <span class="op">%*%</span><span class="st"> </span>Z[, <span class="dv">1</span>]</span>
-<span id="cb10-8"><a href="#cb10-8"></a></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="co">#||beta_ridge||_2</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a>mag_beta_ridge &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">sum</span>(beta_ridge<span class="op">^</span><span class="dv">2</span>))</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">dim</span>(X)[<span class="dv">2</span>]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s take a ridiculously large lambda: 200</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>tXX_lambda_I <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">+</span> <span class="dv">200</span> <span class="sc">*</span> <span class="fu">diag</span>(p)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="do">## This might take a while to calculate</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>beta_ridge <span class="ot">&lt;-</span> <span class="fu">solve</span>(tXX_lambda_I) <span class="sc">%*%</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> Z[, <span class="dv">1</span>]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#||beta_ridge||_2</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>mag_beta_ridge <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(beta_ridge<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
 <p>For comparison, let’s plot
 <span class="math inline">\(\boldsymbol\beta_{\text{ridge}} / \|\boldsymbol\beta_{\text{ridge}}\|_2\)</span>
 against the PC1 loadings <span class="math inline">\(\mathbf V_1\)</span>.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
-<span id="cb11-2"><a href="#cb11-2"></a></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="co"># Plot against the loadings</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="kw">plot</span>(svd_X<span class="op">$</span>v[, <span class="dv">1</span>], beta_ridge <span class="op">/</span><span class="st"> </span>mag_beta_ridge,</span>
-<span id="cb11-5"><a href="#cb11-5"></a>  <span class="dt">xlab =</span> <span class="kw">expression</span>(<span class="st">&quot;V&quot;</span>[<span class="dv">1</span>]),</span>
-<span id="cb11-6"><a href="#cb11-6"></a>  <span class="dt">ylab =</span> <span class="kw">expression</span>(beta[<span class="st">&quot;ridge&quot;</span>] <span class="op">/</span><span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;||&quot;</span>, beta, <span class="st">&quot;||&quot;</span>)[<span class="dv">2</span>]),</span>
-<span id="cb11-7"><a href="#cb11-7"></a>  <span class="dt">pch =</span> <span class="dv">19</span></span>
-<span id="cb11-8"><a href="#cb11-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot against the loadings</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svd_X<span class="sc">$</span>v[, <span class="dv">1</span>], beta_ridge <span class="sc">/</span> mag_beta_ridge,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="fu">expression</span>(<span class="st">&quot;V&quot;</span>[<span class="dv">1</span>]),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="fu">expression</span>(beta[<span class="st">&quot;ridge&quot;</span>] <span class="sc">/</span> <span class="fu">paste</span>(<span class="st">&quot;||&quot;</span>, beta, <span class="st">&quot;||&quot;</span>)[<span class="dv">2</span>]),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/beta_ridge-vs-V1-plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Or just simply take the difference between them</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">max</span>(<span class="kw">abs</span>(svd_X<span class="op">$</span>v[, <span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>beta_ridge <span class="op">/</span><span class="st"> </span>mag_beta_ridge))</span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="co">#&gt; [1] 5.187517e-14</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Or just simply take the difference between them</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(svd_X<span class="sc">$</span>v[, <span class="dv">1</span>] <span class="sc">-</span> beta_ridge <span class="sc">/</span> mag_beta_ridge))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5.187517e-14</span></span></code></pre></div>
 </details>
 <p>Then you’ve proven that the loadings of the PCs can be computed from the
 ridge regression coefficients.</p>
@@ -759,50 +791,52 @@ Fortunately we have other tools.</p>
 <p>Now use the <code>glmnet</code> and <code>cv.glmnet</code> functions to select an appropriate number of non-zero loadings for the first and second PCs.
 Use <code>alpha = 0.5</code> in your elastic net models and use <code>Z1</code> and <code>Z2</code> as the response variables (you should fit 2 separate models).</p>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># For PC1</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="kw">set.seed</span>(<span class="dv">45</span>)</span>
-<span id="cb13-4"><a href="#cb13-4"></a>fit_loadings1 &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(X, Z[, <span class="dv">1</span>],</span>
-<span id="cb13-5"><a href="#cb13-5"></a>  <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">nfolds =</span> <span class="dv">5</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a>)</span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="kw">plot</span>(fit_loadings1, <span class="dt">main =</span> <span class="st">&quot;PC1&quot;</span>)</span>
-<span id="cb13-8"><a href="#cb13-8"></a></span>
-<span id="cb13-9"><a href="#cb13-9"></a><span class="co"># For PC2</span></span>
-<span id="cb13-10"><a href="#cb13-10"></a><span class="kw">set.seed</span>(<span class="dv">45</span>)</span>
-<span id="cb13-11"><a href="#cb13-11"></a>fit_loadings2 &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(X, Z[, <span class="dv">2</span>], <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">nfolds =</span> <span class="dv">5</span>)</span>
-<span id="cb13-12"><a href="#cb13-12"></a><span class="kw">plot</span>(fit_loadings2, <span class="dt">main =</span> <span class="st">&quot;PC2&quot;</span>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># For PC1</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">45</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>fit_loadings1 <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(X, Z[, <span class="dv">1</span>],</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">nfolds =</span> <span class="dv">5</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit_loadings1, <span class="at">main =</span> <span class="st">&quot;PC1&quot;</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># For PC2</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">45</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>fit_loadings2 <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(X, Z[, <span class="dv">2</span>], <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">nfolds =</span> <span class="dv">5</span>)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit_loadings2, <span class="at">main =</span> <span class="st">&quot;PC2&quot;</span>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/PC-cv_glmnet-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>To see how many features are important for each fit, we can make coefficient profile plots.
 Note that the actual <code>glmnet</code> fit objects are included in the <code>cv.glmnet</code> objects under <code>$glmnet.fit</code>.</p>
 <p>I added vertical dashed lines at <code>lambda.min</code> and <code>lambda.1se</code>.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">plot</span>(fit_loadings1<span class="op">$</span>glmnet.fit, <span class="dt">main =</span> <span class="st">&quot;PC1&quot;</span>, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span>
-<span id="cb14-3"><a href="#cb14-3"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">log</span>(fit_loadings1<span class="op">$</span>lambda.min), <span class="dt">lty =</span> <span class="dv">3</span>)</span>
-<span id="cb14-4"><a href="#cb14-4"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">log</span>(fit_loadings1<span class="op">$</span>lambda<span class="fl">.1</span>se), <span class="dt">lty =</span> <span class="dv">3</span>)</span>
-<span id="cb14-5"><a href="#cb14-5"></a><span class="kw">plot</span>(fit_loadings2<span class="op">$</span>glmnet.fit, <span class="dt">main =</span> <span class="st">&quot;PC2&quot;</span>, <span class="dt">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span>
-<span id="cb14-6"><a href="#cb14-6"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">log</span>(fit_loadings2<span class="op">$</span>lambda.min), <span class="dt">lty =</span> <span class="dv">3</span>)</span>
-<span id="cb14-7"><a href="#cb14-7"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">log</span>(fit_loadings2<span class="op">$</span>lambda<span class="fl">.1</span>se), <span class="dt">lty =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit_loadings1<span class="sc">$</span>glmnet.fit, <span class="at">main =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">log</span>(fit_loadings1<span class="sc">$</span>lambda.min), <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">log</span>(fit_loadings1<span class="sc">$</span>lambda<span class="fl">.1</span>se), <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit_loadings2<span class="sc">$</span>glmnet.fit, <span class="at">main =</span> <span class="st">&quot;PC2&quot;</span>, <span class="at">xvar =</span> <span class="st">&quot;lambda&quot;</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">log</span>(fit_loadings2<span class="sc">$</span>lambda.min), <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">log</span>(fit_loadings2<span class="sc">$</span>lambda<span class="fl">.1</span>se), <span class="at">lty =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/PC-glmnet-coefficient-plots-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>To get the exact number of non-zero coefficients for <code>lambda.min</code> and <code>lambda.1se</code>, just print the <code>cv.glmnet</code> objects.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>fit_loadings1</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="co">#&gt; </span></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="co">#&gt; Call:  cv.glmnet(x = X, y = Z[, 1], nfolds = 5, alpha = 0.5) </span></span>
-<span id="cb15-4"><a href="#cb15-4"></a><span class="co">#&gt; </span></span>
-<span id="cb15-5"><a href="#cb15-5"></a><span class="co">#&gt; Measure: Mean-Squared Error </span></span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="co">#&gt; </span></span>
-<span id="cb15-7"><a href="#cb15-7"></a><span class="co">#&gt;     Lambda Index Measure    SE Nonzero</span></span>
-<span id="cb15-8"><a href="#cb15-8"></a><span class="co">#&gt; min  1.195    83   10.88 1.888     101</span></span>
-<span id="cb15-9"><a href="#cb15-9"></a><span class="co">#&gt; 1se  1.655    76   12.68 1.742      96</span></span>
-<span id="cb15-10"><a href="#cb15-10"></a>fit_loadings2</span>
-<span id="cb15-11"><a href="#cb15-11"></a><span class="co">#&gt; </span></span>
-<span id="cb15-12"><a href="#cb15-12"></a><span class="co">#&gt; Call:  cv.glmnet(x = X, y = Z[, 2], nfolds = 5, alpha = 0.5) </span></span>
-<span id="cb15-13"><a href="#cb15-13"></a><span class="co">#&gt; </span></span>
-<span id="cb15-14"><a href="#cb15-14"></a><span class="co">#&gt; Measure: Mean-Squared Error </span></span>
-<span id="cb15-15"><a href="#cb15-15"></a><span class="co">#&gt; </span></span>
-<span id="cb15-16"><a href="#cb15-16"></a><span class="co">#&gt;     Lambda Index Measure    SE Nonzero</span></span>
-<span id="cb15-17"><a href="#cb15-17"></a><span class="co">#&gt; min 0.2923    91   11.70 4.123      80</span></span>
-<span id="cb15-18"><a href="#cb15-18"></a><span class="co">#&gt; 1se 1.1800    61   15.79 6.171      67</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fit_loadings1</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:  cv.glmnet(x = X, y = Z[, 1], nfolds = 5, alpha = 0.5) </span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Measure: Mean-Squared Error </span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Lambda Index Measure    SE Nonzero</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; min  1.195    83   10.88 1.888     101</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1se  1.655    76   12.68 1.742      96</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>fit_loadings2</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:  cv.glmnet(x = X, y = Z[, 2], nfolds = 5, alpha = 0.5) </span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Measure: Mean-Squared Error </span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Lambda Index Measure    SE Nonzero</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; min 0.2923    91   11.70 4.123      80</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1se 1.1800    61   15.79 6.171      67</span></span></code></pre></div>
 <p><strong>Interpretation:</strong> for PC1, we see that around 90 to 100 genes are most important, based on the range of <span class="math inline">\(\lambda\)</span> (<code>lambda</code>) values between <code>lambda.min</code> and <code>lambda.1se</code>.
 Similarly, for PC2 we get around 65 - 80 genes.
 With this information, we can now choose one of the <code>lambda</code> values and construct PCs that will have non-zero loadings for only a few genes.</p>
@@ -814,36 +848,38 @@ With this information, we can now choose one of the <code>lambda</code> values a
 You can extract the coefficients (<span class="math inline">\(\beta\)</span>’s) from the <code>cv.glmnet</code> objects using the <code>coef</code> function, set the <code>s</code> argument to the chosen <span class="math inline">\(\lambda\)</span>.
 This will return a <em>sparse matrix</em> by default, so you might want to use <code>as.vector</code> to convert to a more friendly format.</p>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>sparse_loadings1 &lt;-<span class="st"> </span><span class="kw">as.vector</span>(<span class="kw">coef</span>(fit_loadings1, <span class="dt">s =</span> fit_loadings1<span class="op">$</span>lambda<span class="fl">.1</span>se))</span>
-<span id="cb16-2"><a href="#cb16-2"></a>sparse_loadings2 &lt;-<span class="st"> </span><span class="kw">as.vector</span>(<span class="kw">coef</span>(fit_loadings2, <span class="dt">s =</span> fit_loadings2<span class="op">$</span>lambda<span class="fl">.1</span>se))</span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="co">## How many non-zero loadings do we have (excluding the intercept)?</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a>(non_zero1 &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">abs</span>(sparse_loadings1[<span class="op">-</span><span class="dv">1</span>]) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>))</span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="co">#&gt; [1] 96</span></span>
-<span id="cb16-7"><a href="#cb16-7"></a>(non_zero2 &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">abs</span>(sparse_loadings2[<span class="op">-</span><span class="dv">1</span>]) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>))</span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="co">#&gt; [1] 67</span></span>
-<span id="cb16-9"><a href="#cb16-9"></a></span>
-<span id="cb16-10"><a href="#cb16-10"></a>SPC1 &lt;-<span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>sparse_loadings1[<span class="op">-</span><span class="dv">1</span>] <span class="co"># without the intercept</span></span>
-<span id="cb16-11"><a href="#cb16-11"></a>SPC2 &lt;-<span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>sparse_loadings2[<span class="op">-</span><span class="dv">1</span>] <span class="co"># without the intercept</span></span>
-<span id="cb16-12"><a href="#cb16-12"></a></span>
-<span id="cb16-13"><a href="#cb16-13"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb16-14"><a href="#cb16-14"></a><span class="kw">plot</span>(Z[, <span class="dv">1</span>], Z[, <span class="dv">2</span>],</span>
-<span id="cb16-15"><a href="#cb16-15"></a>  <span class="dt">col =</span> cols[Y], <span class="dt">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;PC2&quot;</span>, <span class="dt">pch =</span> <span class="dv">16</span>,</span>
-<span id="cb16-16"><a href="#cb16-16"></a>  <span class="dt">main =</span> <span class="st">&quot;All 2000 genes </span><span class="ch">\n</span><span class="st">for PC1 and PC2&quot;</span></span>
-<span id="cb16-17"><a href="#cb16-17"></a>)</span>
-<span id="cb16-18"><a href="#cb16-18"></a><span class="kw">legend</span>(<span class="op">-</span><span class="dv">45</span>, <span class="dv">-25</span>,</span>
-<span id="cb16-19"><a href="#cb16-19"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;Normal tissue&quot;</span>, <span class="st">&quot;Tumor tissue&quot;</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>,</span>
-<span id="cb16-20"><a href="#cb16-20"></a>  <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="dt">pch =</span> <span class="kw">c</span>(<span class="dv">16</span>, <span class="dv">16</span>), <span class="dt">cex =</span> <span class="dv">1</span></span>
-<span id="cb16-21"><a href="#cb16-21"></a>)</span>
-<span id="cb16-22"><a href="#cb16-22"></a><span class="kw">plot</span>(SPC1, SPC2,</span>
-<span id="cb16-23"><a href="#cb16-23"></a>  <span class="dt">col =</span> cols[Y], <span class="dt">xlab =</span> <span class="st">&quot;SPC1&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;SPC2&quot;</span>, <span class="dt">pch =</span> <span class="dv">16</span>,</span>
-<span id="cb16-24"><a href="#cb16-24"></a>  <span class="dt">main =</span> <span class="kw">paste</span>(non_zero1, <span class="st">&quot;genes for SPC1 </span><span class="ch">\n</span><span class="st"> and&quot;</span>, non_zero2, <span class="st">&quot;genes for SPC2&quot;</span>)</span>
-<span id="cb16-25"><a href="#cb16-25"></a>)</span>
-<span id="cb16-26"><a href="#cb16-26"></a><span class="kw">legend</span>(<span class="op">-</span><span class="dv">45</span>, <span class="dv">-25</span>,</span>
-<span id="cb16-27"><a href="#cb16-27"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;Normal tissue&quot;</span>, <span class="st">&quot;Tumor tissue&quot;</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>,</span>
-<span id="cb16-28"><a href="#cb16-28"></a>  <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="dt">pch =</span> <span class="kw">c</span>(<span class="dv">16</span>, <span class="dv">16</span>), <span class="dt">cex =</span> <span class="dv">1</span></span>
-<span id="cb16-29"><a href="#cb16-29"></a>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sparse_loadings1 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">coef</span>(fit_loadings1, <span class="at">s =</span> fit_loadings1<span class="sc">$</span>lambda<span class="fl">.1</span>se))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>sparse_loadings2 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">coef</span>(fit_loadings2, <span class="at">s =</span> fit_loadings2<span class="sc">$</span>lambda<span class="fl">.1</span>se))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">## How many non-zero loadings do we have (excluding the intercept)?</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>(non_zero1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">abs</span>(sparse_loadings1[<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 96</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>(non_zero2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">abs</span>(sparse_loadings2[<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 67</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>SPC1 <span class="ot">&lt;-</span> X <span class="sc">%*%</span> sparse_loadings1[<span class="sc">-</span><span class="dv">1</span>] <span class="co"># without the intercept</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>SPC2 <span class="ot">&lt;-</span> X <span class="sc">%*%</span> sparse_loadings2[<span class="sc">-</span><span class="dv">1</span>] <span class="co"># without the intercept</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Z[, <span class="dv">1</span>], Z[, <span class="dv">2</span>],</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> cols[Y], <span class="at">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;PC2&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;All 2000 genes </span><span class="sc">\n</span><span class="st">for PC1 and PC2&quot;</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="sc">-</span><span class="dv">45</span>, <span class="sc">-</span><span class="dv">25</span>,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Normal tissue&quot;</span>, <span class="st">&quot;Tumor tissue&quot;</span>), <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>,</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">16</span>, <span class="dv">16</span>), <span class="at">cex =</span> <span class="dv">1</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(SPC1, SPC2,</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> cols[Y], <span class="at">xlab =</span> <span class="st">&quot;SPC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;SPC2&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="fu">paste</span>(non_zero1, <span class="st">&quot;genes for SPC1 </span><span class="sc">\n</span><span class="st"> and&quot;</span>, non_zero2, <span class="st">&quot;genes for SPC2&quot;</span>)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="sc">-</span><span class="dv">45</span>, <span class="sc">-</span><span class="dv">25</span>,</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Normal tissue&quot;</span>, <span class="st">&quot;Tumor tissue&quot;</span>), <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>,</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">16</span>, <span class="dv">16</span>), <span class="at">cex =</span> <span class="dv">1</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/sparse-PCA-plots-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p><strong>Conclusion:</strong> Only about
 4.80% (96) of the genes are useful for PC1 and only about
@@ -855,7 +891,7 @@ The key point here is that SPCA uses only a minor proportion of the original fea
 </div>
 </div>
 </div>
-<div id="lda" class="section level1">
+<div id="lda" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> LDA</h1>
 <p>In this section, we will perform LDA on the gene data to get a clear understanding on the genes responsible for separating the tumor and normal tissue groups.</p>
 <p>Remember that the LDA problem can be stated as</p>
@@ -880,35 +916,43 @@ We can then write the PC-scores as</p>
 <div id="the-function-lda-in-the-mass-package-performs-lda.-similar-to-the-glmnet-function-you-will-need-to-supply-an-x-argument.-the-argument-grouping-is-the-vector-with-the-response-and-this-has-to-be-a-factor-variable.-you-have-that-stored-as-y.-fit-an-lda-on-x-with-grouping-y." class="section level4 unnumbered">
 <h4>1. The function <code>lda()</code> in the <code>MASS</code> package performs LDA. Similar to the <code>glmnet()</code> function, you will need to supply an <code>x</code> argument. The argument <code>grouping</code> is the vector with the response, and this has to be a factor variable. You have that stored as <code>Y</code>. Fit an LDA on <code>X</code> with grouping <code>Y</code>.</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co">## Perform LDA</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>alon_lda &lt;-<span class="st"> </span><span class="kw">lda</span>(<span class="dt">x =</span> X, <span class="dt">grouping =</span> Y)</span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="co">#&gt; Warning in lda.default(x, grouping, ...): variables are collinear</span></span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Perform LDA</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>alon_lda <span class="ot">&lt;-</span> <span class="fu">lda</span>(<span class="at">x =</span> X, <span class="at">grouping =</span> Y)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in lda.default(x, grouping, ...): variables are collinear</span></span></code></pre></div>
 <p>Note the warning regarding collinearity.</p>
 </details>
 </div>
 <div id="mathbf-v-can-be-extracted-from-the-object-as-the-element-scaling.-extract-this-and-call-it-v1." class="section level4 unnumbered">
 <h4>2. <span class="math inline">\(\mathbf v\)</span> can be extracted from the object as the element <code>scaling</code>. Extract this and call it <code>V1</code>.</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>V1 &lt;-<span class="st"> </span>alon_lda<span class="op">$</span>scaling</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>V1 <span class="ot">&lt;-</span> alon_lda<span class="sc">$</span>scaling</span></code></pre></div>
 </details>
 </div>
 <div id="compute-mathbf-z-and-call-it-z1." class="section level4 unnumbered">
 <h4>3. Compute <span class="math inline">\(\mathbf Z\)</span> and call it <code>Z1</code>.</h4>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>Z1 &lt;-<span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>V1</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> X <span class="sc">%*%</span> V1</span></code></pre></div>
 </details>
 </div>
 <div id="now-check-to-see-how-well-your-single-ldaz1-separates-the-tumour-and-normal-tissues-groups.-compare-it-to-the-plot-in-3-of-the-previous-exercise-and-observe-whether-lda-performs-better-in-separating-the-two-groups." class="section level4 unnumbered">
 <h4>4. Now check to see how well your single LDA/<code>Z1</code> separates the tumour and normal tissues groups. Compare it to the plot in (3) of the previous exercise, and observe whether LDA performs better in separating the two groups.</h4>
 <p>You could use a boxplot for visualization, but feel free to be creative!</p>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">boxplot</span>(Z1 <span class="op">~</span><span class="st"> </span>Y, <span class="dt">col =</span> cols, <span class="dt">ylab =</span> <span class="kw">expression</span>(<span class="st">&quot;Z&quot;</span>[<span class="dv">1</span>]),</span>
-<span id="cb20-3"><a href="#cb20-3"></a>        <span class="dt">main =</span> <span class="st">&quot;Separation of normal and tumour samples by LDA&quot;</span>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(Z1 <span class="sc">~</span> Y, <span class="at">col =</span> cols, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="st">&quot;Z&quot;</span>[<span class="dv">1</span>]),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;Separation of normal and tumour samples by LDA&quot;</span>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </details>
 </div>
@@ -918,48 +962,52 @@ We can then write the PC-scores as</p>
 <li>Use the <code>cv.glmnet</code> function with <code>x=X</code>, <code>y=Z1</code> and <code>alpha=0.5</code> to select an appropriate number of non-zero genes for the LDA.</li>
 </ol>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">set.seed</span>(<span class="dv">45</span>)</span>
-<span id="cb21-2"><a href="#cb21-2"></a>lda_loadings &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(X, Z1, <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">nfolds =</span> <span class="dv">5</span>)</span>
-<span id="cb21-3"><a href="#cb21-3"></a><span class="kw">plot</span>(lda_loadings)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">45</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>lda_loadings <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(X, Z1, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">nfolds =</span> <span class="dv">5</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lda_loadings)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </details>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Check to see how well this subset of genes does in separating the tumour and normal tissue groups. Are they as effective as the entire set of genes?</li>
 </ol>
 <details>
-<p><summary>Solution</summary></p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>sparse_lda_loadings &lt;-<span class="st"> </span><span class="kw">as.vector</span>(</span>
-<span id="cb22-2"><a href="#cb22-2"></a>  <span class="kw">coef</span>(lda_loadings, <span class="dt">s =</span> lda_loadings<span class="op">$</span>lambda<span class="fl">.1</span>se)</span>
-<span id="cb22-3"><a href="#cb22-3"></a>)</span>
-<span id="cb22-4"><a href="#cb22-4"></a></span>
-<span id="cb22-5"><a href="#cb22-5"></a><span class="co"># See the genes involved</span></span>
-<span id="cb22-6"><a href="#cb22-6"></a><span class="kw">plot</span>(sparse_lda_loadings[sparse_lda_loadings <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>],</span>
-<span id="cb22-7"><a href="#cb22-7"></a>  <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">type =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">20</span>)</span>
-<span id="cb22-8"><a href="#cb22-8"></a>)</span>
-<span id="cb22-9"><a href="#cb22-9"></a><span class="kw">text</span>(</span>
-<span id="cb22-10"><a href="#cb22-10"></a>  sparse_lda_loadings[sparse_lda_loadings <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>],</span>
-<span id="cb22-11"><a href="#cb22-11"></a>  <span class="kw">colnames</span>(X)[sparse_lda_loadings <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>]</span>
-<span id="cb22-12"><a href="#cb22-12"></a>)</span>
-<span id="cb22-13"><a href="#cb22-13"></a><span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">0</span>, <span class="dt">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sparse_lda_loadings <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(lda_loadings, <span class="at">s =</span> lda_loadings<span class="sc">$</span>lambda<span class="fl">.1</span>se)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># See the genes involved</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sparse_lda_loadings[sparse_lda_loadings <span class="sc">!=</span> <span class="dv">0</span>],</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">type =</span> <span class="st">&quot;n&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">20</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  sparse_lda_loadings[sparse_lda_loadings <span class="sc">!=</span> <span class="dv">0</span>],</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(X)[sparse_lda_loadings <span class="sc">!=</span> <span class="dv">0</span>]</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a></span>
-<span id="cb23-2"><a href="#cb23-2"></a><span class="co"># without the intercept</span></span>
-<span id="cb23-3"><a href="#cb23-3"></a>SLDA &lt;-<span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>sparse_lda_loadings[<span class="op">-</span><span class="dv">1</span>]</span>
-<span id="cb23-4"><a href="#cb23-4"></a></span>
-<span id="cb23-5"><a href="#cb23-5"></a><span class="co"># number of non-zero loadings</span></span>
-<span id="cb23-6"><a href="#cb23-6"></a>n_nonzero &lt;-<span class="st"> </span><span class="kw">sum</span>(sparse_lda_loadings <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb23-7"><a href="#cb23-7"></a></span>
-<span id="cb23-8"><a href="#cb23-8"></a><span class="co"># boxplots</span></span>
-<span id="cb23-9"><a href="#cb23-9"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb23-10"><a href="#cb23-10"></a><span class="kw">boxplot</span>(Z1 <span class="op">~</span><span class="st"> </span>Y,</span>
-<span id="cb23-11"><a href="#cb23-11"></a>  <span class="dt">col =</span> cols, <span class="dt">ylab =</span> <span class="st">&quot;LDA&quot;</span>,</span>
-<span id="cb23-12"><a href="#cb23-12"></a>  <span class="dt">main =</span> <span class="st">&quot;Entire set of 2000 genes&quot;</span></span>
-<span id="cb23-13"><a href="#cb23-13"></a>)</span>
-<span id="cb23-14"><a href="#cb23-14"></a><span class="kw">boxplot</span>(SLDA <span class="op">~</span><span class="st"> </span>Y,</span>
-<span id="cb23-15"><a href="#cb23-15"></a>  <span class="dt">col =</span> cols, <span class="dt">ylab =</span> <span class="st">&quot;SLDA&quot;</span>,</span>
-<span id="cb23-16"><a href="#cb23-16"></a>  <span class="dt">main =</span> <span class="kw">sprintf</span>(<span class="st">&quot;Subset of %d genes&quot;</span>, n_nonzero)</span>
-<span id="cb23-17"><a href="#cb23-17"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># without the intercept</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>SLDA <span class="ot">&lt;-</span> X <span class="sc">%*%</span> sparse_lda_loadings[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># number of non-zero loadings</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>n_nonzero <span class="ot">&lt;-</span> <span class="fu">sum</span>(sparse_lda_loadings <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># boxplots</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(Z1 <span class="sc">~</span> Y,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> cols, <span class="at">ylab =</span> <span class="st">&quot;LDA&quot;</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Entire set of 2000 genes&quot;</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(SLDA <span class="sc">~</span> Y,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> cols, <span class="at">ylab =</span> <span class="st">&quot;SLDA&quot;</span>,</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="fu">sprintf</span>(<span class="st">&quot;Subset of %d genes&quot;</span>, n_nonzero)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Lab4-Sparse-PCA-LDA_files/figure-html/unnamed-chunk-12-2.png" width="100%" style="display: block; margin: auto;" /></p>
 </details>
 <p>For a simple explanation of the concept and interpretation of LDA (and other statistical methods), have a look at <a href="https://www.youtube.com/watch?v=azXCzI57Yfc" class="uri">https://www.youtube.com/watch?v=azXCzI57Yfc</a></p>
@@ -969,8 +1017,10 @@ We can then write the PC-scores as</p>
 <div id="session-info" class="section level1 unnumbered">
 <h1>Session info</h1>
 <details>
-<p><summary>Session info</summary></p>
-<pre><code>#&gt; [1] &quot;2022-10-10 09:42:42 UTC&quot;
+<summary>
+Session info
+</summary>
+<pre><code>#&gt; [1] &quot;2022-10-27 14:47:08 UTC&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.3 (2022-03-10)
@@ -981,8 +1031,8 @@ We can then write the PC-scores as</p>
 #&gt;  collate  C.UTF-8
 #&gt;  ctype    C.UTF-8
 #&gt;  tz       UTC
-#&gt;  date     2022-10-10
-#&gt;  pandoc   2.7.3 @ /usr/bin/ (via rmarkdown)
+#&gt;  date     2022-10-27
+#&gt;  pandoc   2.19.2 @ /usr/bin/ (via rmarkdown)
 #&gt; 
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
 #&gt;  ! package     * version date (UTC) lib source
@@ -996,7 +1046,7 @@ We can then write the PC-scores as</p>
 #&gt;  P fastmap       1.1.0   2021-01-25 [?] CRAN (R 4.1.3)
 #&gt;  P foreach       1.5.1   2020-10-15 [?] CRAN (R 4.1.3)
 #&gt;  P glmnet      * 4.1-3   2021-11-02 [?] CRAN (R 4.1.3)
-#&gt;  P HDDAData    * 1.0.0   2022-10-07 [?] Github (statOmics/HDDAData@f175e96)
+#&gt;  P HDDAData    * 1.0.0   2022-10-27 [?] Github (statOmics/HDDAData@f175e96)
 #&gt;  P highr         0.9     2021-04-16 [?] CRAN (R 4.1.3)
 #&gt;  P htmltools     0.5.2   2021-08-25 [?] CRAN (R 4.1.3)
 #&gt;  P iterators     1.0.13  2020-10-15 [?] CRAN (R 4.1.3)
@@ -1031,9 +1081,9 @@ We can then write the PC-scores as</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
-<div id="refs" class="references">
-<div id="ref-alon1999broad">
-<p>Alon, Uri, Naama Barkai, Daniel A Notterman, Kurt Gish, Suzanne Ybarra, Daniel Mack, and Arnold J Levine. 1999. “Broad Patterns of Gene Expression Revealed by Clustering Analysis of Tumor and Normal Colon Tissues Probed by Oligonucleotide Arrays.” <em>Proceedings of the National Academy of Sciences</em> 96 (12): 6745–50.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-alon1999broad" class="csl-entry">
+Alon, Uri, Naama Barkai, Daniel A Notterman, Kurt Gish, Suzanne Ybarra, Daniel Mack, and Arnold J Levine. 1999. <span>“Broad Patterns of Gene Expression Revealed by Clustering Analysis of Tumor and Normal Colon Tissues Probed by Oligonucleotide Arrays.”</span> <em>Proceedings of the National Academy of Sciences</em> 96 (12): 6745–50.
 </div>
 </div>
 </div>
