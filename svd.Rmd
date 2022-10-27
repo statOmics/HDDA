@@ -1143,8 +1143,8 @@ This follows from (w.l.g. rank($\mathbf{X}$)=$r$)
               0 & 0 & \ldots & 0 \\
               \vdots & \vdots & \vdots & \vdots \\
               0 & 0 & \ldots & 0
-              \end{pmatrix} \
-              = \mathbf{U}_k\boldsymbol{\Delta}_k = \mathbf{Z}_k
+              \end{pmatrix} \\
+      &=& \mathbf{U}_k\boldsymbol{\Delta}_k = \mathbf{Z}_k
 \end{eqnarray*}
 
 The $p \times k$ matrix $\mathbf{V}_k$ acts as a transformation matrix: transforming $n$ points in a $p$ dimensional space to $n$ points in a $k$ dimensional space.
