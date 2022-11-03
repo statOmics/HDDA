@@ -25,8 +25,9 @@ options(
 
 ```{r libraries, warning=FALSE, message=FALSE}
 ## install packages with:
-## install.packages(c("glmnet", "pls", "NormalBetaPrime", "boot"))
-library(NormalBetaPrime)
+# install.packages(c("glmnet", "pls", "boot"))
+# remotes::install_github("HDDAData")
+library(HDDAData)
 library(glmnet)
 library(pls)
 library(boot)
@@ -60,6 +61,9 @@ The dataset consists of two objects:
 
 ```{r load-data}
 data(eyedata)
+genes <- eyedata$genes
+trim32 <- eyedata$trim32
+
 ## Look at objects that were just loaded
 str(genes)
 str(trim32)
