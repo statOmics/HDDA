@@ -366,14 +366,6 @@
         "tidyr"
       ]
     },
-    "GIGrvg": {
-      "Package": "GIGrvg",
-      "Version": "0.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "4f7f7bb7136f9b5ff75969f0688b9a18",
-      "Requirements": []
-    },
     "GenomeInfoDb": {
       "Package": "GenomeInfoDb",
       "Version": "1.30.0",
@@ -417,23 +409,15 @@
     },
     "HDDAData": {
       "Package": "HDDAData",
-      "Version": "1.0.0",
+      "Version": "1.0.1",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "HDDAData",
       "RemoteUsername": "statOmics",
       "RemoteRef": "HEAD",
-      "RemoteSha": "f175e963e4092143080310c4b47b7fbbcc1bf6f8",
-      "Hash": "79dfc555da9a1ea7e263b21decfcc0a7",
-      "Requirements": []
-    },
-    "HyperbolicDist": {
-      "Package": "HyperbolicDist",
-      "Version": "0.6-2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "ac1ac72358feeabd7437fd548c52dbca",
+      "RemoteSha": "b832c7168821395e51932893949230d4b0e40066",
+      "Hash": "d8699dc05b990adf17e1a3613427cb57",
       "Requirements": []
     },
     "IRanges": {
@@ -502,23 +486,6 @@
       "Hash": "506b92cb263d9e014a391b41939badcf",
       "Requirements": [
         "matrixStats"
-      ]
-    },
-    "NormalBetaPrime": {
-      "Package": "NormalBetaPrime",
-      "Version": "2.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "0bc3fe707d8a27c94b74d1ceafde4968",
-      "Requirements": [
-        "GIGrvg",
-        "HyperbolicDist",
-        "MASS",
-        "Matrix",
-        "glmnet",
-        "pracma",
-        "pscl",
-        "truncnorm"
       ]
     },
     "PMA": {
@@ -2596,16 +2563,6 @@
       "Hash": "32620e2001c1dce1af49c49dccbb9420",
       "Requirements": []
     },
-    "pscl": {
-      "Package": "pscl",
-      "Version": "1.5.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c55158537b8c4754a8c3de3382f1a659",
-      "Requirements": [
-        "MASS"
-      ]
-    },
     "purrr": {
       "Package": "purrr",
       "Version": "0.3.4",
@@ -3204,14 +3161,6 @@
       "Requirements": [
         "xfun"
       ]
-    },
-    "truncnorm": {
-      "Package": "truncnorm",
-      "Version": "1.0-8",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "cc8b5bfa01c930ccb56d3051e515fbd8",
-      "Requirements": []
     },
     "tweenr": {
       "Package": "tweenr",
