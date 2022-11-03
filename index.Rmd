@@ -101,6 +101,12 @@ email or during the lectures or practical sessions, and for the C003549 ECTS cou
 
 ---
 
+## Homework assignments
+
+- [Homework: Canonical Correlation Analysis](./HW-CCA.html) [[PDF](./HW-CCA.pdf)]
+<!-- - [Group Project](./Project.html) [[PDF](./Project.pdf)] -->
+
+---
 
 ## Instructors
 
