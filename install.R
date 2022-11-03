@@ -4,6 +4,8 @@ install.packages(c("remotes", "BiocManager"))
 BiocManager::install(version = "3.14")
 
 BiocManager::install(c(
+   "BiocStyle",
+   "CCA",
    "DAAG",
    "ExperimentHub",
    "GGally",
