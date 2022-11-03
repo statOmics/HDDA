@@ -107,7 +107,7 @@ When submitting, please use the following format:
 
 * Source code: `HW-Name1-Name2.Rmd` (or `HW1-Name1-Name2.R`)
 
-Submissions should be done __through [UFora](https://ufora.ugent.be/d2l/home/444226)__ under the
+Submissions should be done __through UFora__ under the
 "Assignments" tab (`UFora-tools --> Assignments`).
 
 <span style="color:red">__The deadline for submission is November 17th at 23:59.__</span>
