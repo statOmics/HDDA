@@ -11,7 +11,6 @@ BiocManager::install(c(
    "GGally",
    "statOmics/HDDAData@HEAD",
    "MASS",
-   "NormalBetaPrime",
    "PMA",
    "SemiPar",
    "bookdown",
