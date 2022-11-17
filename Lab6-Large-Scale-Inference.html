@@ -477,16 +477,16 @@ div.tocify {
       <a href="lda.html">5. Linear Discriminant Analysis</a>
     </li>
     <li>
-      <a href="lsi.html">6. Large Scale Inference</a>
+      <a href="hclust.html">6.1. Introduction to Clustering</a>
     </li>
     <li>
-      <a href="hclust.html">7.1. Introduction to Clustering</a>
+      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">6.2. Paper Model-based Clustering</a>
     </li>
     <li>
-      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">7.2. Paper Model-based Clustering</a>
+      <a href="em.html">6.3. EM algorithm</a>
     </li>
     <li>
-      <a href="em.html">7.3. EM algorithm</a>
+      <a href="lsi.html">7. Large Scale Inference</a>
     </li>
   </ul>
 </li>
@@ -512,10 +512,10 @@ div.tocify {
       <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
     </li>
     <li>
-      <a href="Lab5-Large-Scale-Inference.html">Lab 5: LSI</a>
+      <a href="Lab5-Clustering.html">Lab 5: Clustering</a>
     </li>
     <li>
-      <a href="Lab6-Clustering.html">Lab 6: Clustering</a>
+      <a href="Lab6-Large-Scale-Inference.html">Lab 6: LSI</a>
     </li>
   </ul>
 </li>
@@ -675,7 +675,7 @@ Z-scores since it’s the same for each test.</p>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">100</span>), <span class="fu">dnorm</span>(x), <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Draw vertical lines at 2.5 and 97.5th percentiles</span></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)), <span class="at">col =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
-<p><img src="Lab5-Large-Scale-Inference_files/figure-html/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="Lab6-Large-Scale-Inference_files/figure-html/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>We see that the Z-scores are nicely distributed as a standard normal.
 The vertical dashed lines indicate the 2.5th and 97.5th percentiles of the standard
 normal. The regions outside these lines indicate the Z-scores that we would call
@@ -694,7 +694,7 @@ argument in <code>pnorm</code> to <code>FALSE</code> (by default it’s <code>TR
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(null_pvals, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>))</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> alpha, <span class="at">col =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
-<p><img src="Lab5-Large-Scale-Inference_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="Lab6-Large-Scale-Inference_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>called <span class="ot">&lt;-</span> (null_pvals <span class="sc">&lt;</span> alpha)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1111,7 +1111,7 @@ we often use as cutoff).</p>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>), <span class="at">main =</span> <span class="st">&quot;&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;p-value&quot;</span>,</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>)</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="Lab5-Large-Scale-Inference_files/figure-html/p_val-hist-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="Lab6-Large-Scale-Inference_files/figure-html/p_val-hist-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </details>
 </div>
 <div id="how-many-discoveries-significant-genes-do-you-find-when-using-alpha-0.05" class="section level4 unnumbered">
@@ -1193,7 +1193,7 @@ Solution
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;Benjamini-Hochberg&quot;</span>, <span class="st">&quot;Bonferroni&quot;</span>),</span>
 <span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">2</span>), <span class="at">pch =</span> <span class="dv">19</span></span>
 <span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="Lab5-Large-Scale-Inference_files/figure-html/fdr-adjust-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="Lab6-Large-Scale-Inference_files/figure-html/fdr-adjust-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 190</span></span></code></pre></div>
@@ -1216,7 +1216,7 @@ Solution
 <summary>
 Session info
 </summary>
-<pre><code>#&gt; [1] &quot;2022-11-03 15:02:24 UTC&quot;
+<pre><code>#&gt; [1] &quot;2022-11-17 09:53:58 UTC&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.3 (2022-03-10)
@@ -1227,7 +1227,7 @@ Session info
 #&gt;  collate  C.UTF-8
 #&gt;  ctype    C.UTF-8
 #&gt;  tz       UTC
-#&gt;  date     2022-11-03
+#&gt;  date     2022-11-17
 #&gt;  pandoc   2.19.2 @ /usr/bin/ (via rmarkdown)
 #&gt; 
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
@@ -1239,7 +1239,7 @@ Session info
 #&gt;  P digest        0.6.29  2021-12-01 [?] CRAN (R 4.1.3)
 #&gt;  P evaluate      0.14    2019-05-28 [?] CRAN (R 4.1.3)
 #&gt;  P fastmap       1.1.0   2021-01-25 [?] CRAN (R 4.1.3)
-#&gt;  P HDDAData    * 1.0.1   2022-11-03 [?] Github (statOmics/HDDAData@b832c71)
+#&gt;  P HDDAData    * 1.0.1   2022-11-17 [?] Github (statOmics/HDDAData@b832c71)
 #&gt;  P highr         0.9     2021-04-16 [?] CRAN (R 4.1.3)
 #&gt;  P htmltools     0.5.2   2021-08-25 [?] CRAN (R 4.1.3)
 #&gt;  P jquerylib     0.1.4   2021-04-26 [?] CRAN (R 4.1.3)
@@ -1317,7 +1317,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("Lab5-Large-Scale-Inference.Rmd");
+  window.initializeSourceEmbed("Lab6-Large-Scale-Inference.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>

@@ -455,16 +455,16 @@ div.tocify {
       <a href="lda.html">5. Linear Discriminant Analysis</a>
     </li>
     <li>
-      <a href="lsi.html">6. Large Scale Inference</a>
+      <a href="hclust.html">6.1. Introduction to Clustering</a>
     </li>
     <li>
-      <a href="hclust.html">7.1. Introduction to Clustering</a>
+      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">6.2. Paper Model-based Clustering</a>
     </li>
     <li>
-      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">7.2. Paper Model-based Clustering</a>
+      <a href="em.html">6.3. EM algorithm</a>
     </li>
     <li>
-      <a href="em.html">7.3. EM algorithm</a>
+      <a href="lsi.html">7. Large Scale Inference</a>
     </li>
   </ul>
 </li>
@@ -490,10 +490,10 @@ div.tocify {
       <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
     </li>
     <li>
-      <a href="Lab5-Large-Scale-Inference.html">Lab 5: LSI</a>
+      <a href="Lab5-Clustering.html">Lab 5: Clustering</a>
     </li>
     <li>
-      <a href="Lab6-Clustering.html">Lab 6: Clustering</a>
+      <a href="Lab6-Large-Scale-Inference.html">Lab 6: LSI</a>
     </li>
   </ul>
 </li>
@@ -621,7 +621,7 @@ Solution
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>hc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(wine_dist, <span class="at">method =</span> <span class="st">&quot;complete&quot;</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc, <span class="at">labels =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p><img src="Lab6-Clustering_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 </details>
 </div>
 <div id="select-an-appropriate-number-of-clusters-from-the-hierarchical-clustering-see-cutree.-visualize-the-clusters-on-a-pca-biplot-and-compare-with-the-original-labels." class="section level4 unnumbered">
@@ -648,7 +648,7 @@ Solution
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;HC clusters&quot;</span>) <span class="sc">+</span></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
-<p><img src="Lab6-Clustering_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="Lab6-Clustering_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
 </details>
 </div>
 <div id="bonus-can-you-improve-the-results-by-using-different-distance-metrics-or-linkages" class="section level4 unnumbered">
@@ -697,7 +697,7 @@ Solution
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">what =</span> <span class="st">&quot;BIC&quot;</span>, <span class="at">ylim =</span> <span class="fu">range</span>(mod<span class="sc">$</span>BIC[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">legendArgs =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&quot;bottomleft&quot;</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="Lab6-Clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>There is a clear indication of a three-component mixture with covariances having
 different shapes and volumes but the same orientation (VVE). See
 <code>?mclustModelNames</code> for a description of the different <code>mclust</code> models.</p>
@@ -719,7 +719,7 @@ Solution
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;mclust clusters&quot;</span>) <span class="sc">+</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
-<p><img src="Lab6-Clustering_files/figure-html/unnamed-chunk-8-1.png" width="672" /><img src="Lab6-Clustering_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-8-1.png" width="672" /><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
 </details>
 </div>
 <div id="perform-a-dimensionality-reduction-of-the-wine-data-using-the-pca.-select-an-appropriate-number-of-pcs.-redo-the-clustering-on-this-reduced-dimension-representation-and-make-the-same-figures-as-before.-how-do-the-results-differ" class="section level4 unnumbered">
@@ -766,7 +766,7 @@ Solution
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Cumulative proportion of variance&quot;</span>)</span>
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
-<p><img src="Lab6-Clustering_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>Selecting first 6 PC’s, keeping 85% of the variance.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">6</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pca_X <span class="ot">&lt;-</span> wine_pca<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span>k]</span>
@@ -809,7 +809,7 @@ Solution
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod2, <span class="at">what =</span> <span class="st">&quot;BIC&quot;</span>, <span class="at">ylim =</span> <span class="fu">range</span>(mod2<span class="sc">$</span>BIC[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">legendArgs =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&quot;bottomleft&quot;</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="Lab6-Clustering_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(pca_X)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>clusters <span class="ot">&lt;-</span> mc_pca_clusters</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -817,7 +817,7 @@ Solution
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggscatmat</span>(df, <span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span>k, <span class="at">color =</span> <span class="st">&quot;clusters&quot;</span>) <span class="sc">+</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>, <span class="at">aspect.ratio =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>, <span class="at">name =</span> <span class="st">&quot;mclust-PCA clusters&quot;</span>)</span></code></pre></div>
-<p><img src="Lab6-Clustering_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p><em>Note: you can ignore the upper-right panels of this figure. These give the correlations between each pair of variables (PC’s here) for each group, but are not relevant here.</em></p>
 </details>
 </div>
@@ -829,7 +829,7 @@ Solution
 <summary>
 Session info
 </summary>
-<pre><code>#&gt; [1] &quot;2022-11-03 15:02:41 UTC&quot;
+<pre><code>#&gt; [1] &quot;2022-11-17 09:53:53 UTC&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.1.3 (2022-03-10)
@@ -840,7 +840,7 @@ Session info
 #&gt;  collate  C.UTF-8
 #&gt;  ctype    C.UTF-8
 #&gt;  tz       UTC
-#&gt;  date     2022-11-03
+#&gt;  date     2022-11-17
 #&gt;  pandoc   2.19.2 @ /usr/bin/ (via rmarkdown)
 #&gt; 
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
@@ -870,7 +870,7 @@ Session info
 #&gt;  P gclus        * 1.3.2   2019-01-07 [?] CRAN (R 4.1.3)
 #&gt;  P generics       0.1.1   2021-10-25 [?] CRAN (R 4.1.3)
 #&gt;  P GGally       * 2.1.2   2021-06-21 [?] CRAN (R 4.1.3)
-#&gt;  P ggbiplot     * 0.55    2022-10-27 [?] Github (vqv/ggbiplot@7325e88)
+#&gt;  P ggbiplot     * 0.55    2022-11-17 [?] Github (vqv/ggbiplot@7325e88)
 #&gt;  P ggplot2      * 3.3.5   2021-06-25 [?] CRAN (R 4.1.3)
 #&gt;  P glue           1.6.1   2022-01-22 [?] CRAN (R 4.1.3)
 #&gt;  P gridExtra      2.3     2017-09-09 [?] CRAN (R 4.1.3)
@@ -891,7 +891,7 @@ Session info
 #&gt;  P modelr         0.1.8   2020-05-19 [?] CRAN (R 4.1.3)
 #&gt;  P munsell        0.5.0   2018-06-12 [?] CRAN (R 4.1.3)
 #&gt;  P pillar         1.6.5   2022-01-25 [?] CRAN (R 4.1.3)
-#&gt;  P pkgconfig      2.0.3   2022-10-27 [?] Github (r-lib/pkgconfig@b81ae03)
+#&gt;  P pkgconfig      2.0.3   2022-11-17 [?] Github (r-lib/pkgconfig@b81ae03)
 #&gt;  P plyr         * 1.8.6   2020-03-03 [?] CRAN (R 4.1.3)
 #&gt;  P purrr        * 0.3.4   2020-04-17 [?] CRAN (R 4.1.3)
 #&gt;  P R6             2.5.1   2021-08-19 [?] CRAN (R 4.1.3)
@@ -975,7 +975,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("Lab6-Clustering.Rmd");
+  window.initializeSourceEmbed("Lab5-Clustering.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>
