@@ -18,14 +18,14 @@ navbar:
         href: sparseSvd.html
       - text: "5. Linear Discriminant Analysis"
         href: lda.html
-      - text: "6. Large Scale Inference"
-        href: lsi.html
-      - text: "7.1. Introduction to Clustering"
+      - text: "6.1. Introduction to Clustering"
         href: hclust.html
-      - text: "7.2. Paper Model-based Clustering"
+      - text: "6.2. Paper Model-based Clustering"
         href: https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf
-      - text: "7.3. EM algorithm"
+      - text: "6.3. EM algorithm"
         href: em.html
+      - text: "7. Large Scale Inference"
+        href: lsi.html
     - text: "Labs"
       icon: fa-laptop
       menu:
@@ -37,10 +37,10 @@ navbar:
         href: Lab3-Penalized-Regression.html
       - text: "Lab 4: Sparse PCA & LDA"
         href: Lab4-Sparse-PCA-LDA.html
-      - text: "Lab 5: LSI"
-        href: Lab5-Large-Scale-Inference.html
-      - text: "Lab 6: Clustering"
-        href: Lab6-Clustering.html
+      - text: "Lab 5: Clustering"
+        href: Lab5-Clustering.html
+      - text: "Lab 6: LSI"
+        href: Lab6-Large-Scale-Inference.html
   right:
     - text: "About"
       href: about.html

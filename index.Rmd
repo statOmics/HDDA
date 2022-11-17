@@ -84,12 +84,8 @@ email or during the lectures or practical sessions, and for the C003549 ECTS cou
   - [Lecture 5: Linear Discriminant Analysis Theory](./lda.html) [[PDF](./lda.pdf)]
   - [Lab 4: Sparse PCA and LDA](./Lab4-Sparse-PCA-LDA.html)
 
-### 6. Large Scale inference
 
-  - [Lecture 6: Large Scale Inference](./lsi.html) [[PDF](./lsi.pdf)]
-  - [Lab 5: Large Scale Inference](./Lab5-Large-Scale-Inference.html)
-
-### 7. Clustering 
+### 6. Clustering 
 
 - [Introduction to Clustering](./hclust.html) [[PDF](./hclust.pdf)]
   
@@ -97,7 +93,13 @@ email or during the lectures or practical sessions, and for the C003549 ECTS cou
 
 - [EM algorithm](./em.html) [[PDF](./em.pdf)]
 
-- [Lab 6: Clustering](./Lab6-Clustering.Rmd)
+- [Lab 5: Clustering](./Lab5-Clustering.Rmd)
+
+
+### 7. Large Scale inference
+
+  - [Lecture 6: Large Scale Inference](./lsi.html) [[PDF](./lsi.pdf)]
+  - [Lab 6: Large Scale Inference](./Lab6-Large-Scale-Inference.html)
 
 ---
 
