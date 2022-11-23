@@ -1,5 +1,5 @@
 ---
-title: "Lab 5: Large Scale Inference"
+title: "Lab 6: Large Scale Inference"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait"
 date: "21 Feb 2022 <br/> (Last updated: 2022-02-21)"

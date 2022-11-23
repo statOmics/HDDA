@@ -1,5 +1,5 @@
 ---
-title: "Lab 6: Clustering"
+title: "Lab 5: Clustering"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Milan Malfait"
 date: "24 Feb 2022 <br/> (Last updated: 2022-02-22)"
