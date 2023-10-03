@@ -133,6 +133,7 @@ mc_clusters <- factor(mod$classification)
 plot(mod, what = "BIC", ylim = range(mod$BIC[, -(1:2)], na.rm = TRUE),
   legendArgs = list(x = "bottomleft")
 )
+plot(mod, what = "classification")
 ```
 
 There is a clear indication of a three-component mixture with covariances having

@@ -21,7 +21,9 @@ Affiliation: Department of Applied Mathematics, Computer Science and Statistics,
 </br>
 </br>
 
-### Milan Malfait
+### Yao Chen
+
+<!--
 
 <img src="./figures/milan.jpg" alt="Milan" width="17%" style="float:left;padding:10px"/>
 
@@ -29,3 +31,4 @@ Milan Malfait is a PhD student in the [statOmics](https://statomics.github.io/) 
 After completing a bachelor's and master's degree in Bio-engineering at VUB, he obtained an additional master's degree in bioinformatics at ULB. Milan is currently developing fast and scalable methods for differential analysis of single cell RNA-seq data.
 
 Affiliation: Department of Applied Mathematics, Computer Science and Statistics, Ghent University, Ghent, BE
+-->
