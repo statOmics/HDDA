@@ -1,5 +1,5 @@
 ---
-title: "High Dimensional Data Analysis 2021-2022"
+title: "High Dimensional Data Analysis 2023-2024"
 author: "Lieven Clement"
 date: "statOmics, Ghent University (https://statomics.github.io)"
 
@@ -14,14 +14,14 @@ output:
 ## Lectures
 
 - Theory (6-7 x 2.5 hours)
-- PC Labs (5 x 2.5 hours)
+- PC Labs (6 x 2.5 hours)
 - Q&A session (2.5 hours)
-- Paper reading sessions (2 x 2.5hours)
+- Paper reading sessions (1 x 2.5hours)
 
 ## Instructors 
 
-- Lectures: Lieven Clement (lieven[dot]clement[at]ugent[dot]be)
-- Tutorials: Milan Malfait (milan[dot]malfait[at]ugent[dot]be)
+- Lectures: Lieven Clement (lieven.clement@ugent.be)
+- Tutorials: Yao Chen (yao.chen@ugent.be)
 
 # Evaluation
 
@@ -30,9 +30,9 @@ output:
 - Exam in January: 10/20
 - Written open book exam with open questions
 
-## Permanent evaluation 
+## Non-period evaluation 
 
-- 1 Project (7.5) + 1 homeworks (2.5): 10/20
+- 1 Project (7.5) + 1 homework (2.5): 10/20
 - Written reports
 - Group work: 
     - project 4 people, 
