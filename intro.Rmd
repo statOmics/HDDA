@@ -462,7 +462,7 @@ geom_segment(aes(x = 0, y = 0, xend = 1, yend = 0),
 2. Projection of error on y-axis
 
 \begin{eqnarray*}
-\mathbf{u}_2^T \mathbf{e} &=& \left[\begin{array}{cc} 1&0\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right]\\ &=& 0\times e_1 + 1 \times e_2 \\
+\mathbf{u}_2^T \mathbf{e} &=& \left[\begin{array}{cc} 0&1\end{array}\right] \left[\begin{array}{c} e_1\\e_2\end{array}\right]\\ &=& 0\times e_1 + 1 \times e_2 \\
 &=& e_2
 \end{eqnarray*}
 
