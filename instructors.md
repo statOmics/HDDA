@@ -23,12 +23,9 @@ Affiliation: Department of Applied Mathematics, Computer Science and Statistics,
 
 ### Yao Chen
 
-<!--
+<img src="./figures/yao.jpeg" alt="Yao" width="17%" style="float:left;padding:10px"/>
 
-<img src="./figures/milan.jpg" alt="Milan" width="17%" style="float:left;padding:10px"/>
-
-Milan Malfait is a PhD student in the [statOmics](https://statomics.github.io/) Group at Ghent University, headed by prof. Lieven Clement.
-After completing a bachelor's and master's degree in Bio-engineering at VUB, he obtained an additional master's degree in bioinformatics at ULB. Milan is currently developing fast and scalable methods for differential analysis of single cell RNA-seq data.
+Yao Chen is a PhD student in the [DIGPCR](https://dpcr.ugent.be/) Group at Ghent University. She obtained her master degree in Statistical Science for the Life & Behavioural Sciences (Data Science track) in Leiden in the Netherlands. Yao is currently developing clustering methods for higher-order multiplexing dPCR data. She is also collaborating with the department of Morphology at Merelbeke where she provided some statistical assistance in both animal and human clinical data analysis.
 
 Affiliation: Department of Applied Mathematics, Computer Science and Statistics, Ghent University, Ghent, BE
--->
+
