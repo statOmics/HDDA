@@ -48,6 +48,9 @@ navbar:
       href: https://github.com/statOmics/HDDA
     - text: "statOmics"
       href: http://statomics.github.io/
+      
+output_dir: "docs"
+
 output:
   bookdown::html_document2:
       code_download: true

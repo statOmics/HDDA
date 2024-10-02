@@ -2,22 +2,11 @@
 .Rhistory
 .RData
 .Ruserdata
-course_admin/
 
 # Rmd output
-*.html
-*.pdf
+./*.html
 *_files/
 *_cache/
-_site/
-site_libs/
-*.log
-*.tex
-
-raw-data/
-
-# Office stuff
-~$*
-
+:w
 # Don't ignore these specific files
 !footer.html

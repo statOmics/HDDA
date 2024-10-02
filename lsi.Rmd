@@ -678,7 +678,7 @@ components %>%
   ggplot(aes(z,density,color = component)) +
   geom_line() +
   scale_color_manual(values=c("blue","red"))
- ```
+```
 
 The graphs shows the two component distributions separately.
 
@@ -728,7 +728,7 @@ scaledComponents %>%
 
 Mixture $\pi_0 f_0(z)+\pi_1 f_1(z)$ with $\pi_0=0.65$ and $f_1= N(2,1)$ and $f_0 = N(0,1)$
 
-```{r}
+
 ```{r}
 p0 <- 0.65
 p1 <- 1-p0

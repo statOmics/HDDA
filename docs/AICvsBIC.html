@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Lieven Clement" />
+
+
+<title>AIC vs BIC</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HDDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="intro.html">1. Introduction</a>
+    </li>
+    <li>
+      <a href="svd.html">2. Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="prediction.html">3. Prediction with High Dimensional Predictors</a>
+    </li>
+    <li>
+      <a href="sparseSvd.html">4. Sparse Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="lda.html">5. Linear Discriminant Analysis</a>
+    </li>
+    <li>
+      <a href="hclust.html">6.1. Introduction to Clustering</a>
+    </li>
+    <li>
+      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">6.2. Paper Model-based Clustering</a>
+    </li>
+    <li>
+      <a href="em.html">6.3. EM algorithm</a>
+    </li>
+    <li>
+      <a href="lsi.html">7. Large Scale Inference</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab1-Intro-SVD.html">Lab 1: Intro &amp; SVD</a>
+    </li>
+    <li>
+      <a href="Lab2-PCA.html">Lab 2: SVD - PCA</a>
+    </li>
+    <li>
+      <a href="Lab3-Penalized-Regression.html">Lab 3: Prediction</a>
+    </li>
+    <li>
+      <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
+    </li>
+    <li>
+      <a href="Lab5-Clustering.html">Lab 5: Clustering</a>
+    </li>
+    <li>
+      <a href="Lab6-Large-Scale-Inference.html">Lab 6: LSI</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="https://github.com/statOmics/HDDA">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">AIC vs BIC</h1>
+<h4 class="author">Lieven Clement</h4>
+<h4 class="date">statOmics, Ghent University (<a
+href="https://statomics.github.io"
+class="uri">https://statomics.github.io</a>)</h4>
+
+</div>
+
+
+<div
+id="when-large-datasets-are-used-the-bic-will-favour-smaller-models-than-the-aic."
+class="section level1" number="1">
+<h1><span class="header-section-number">1</span> When large datasets are
+used, the BIC will favour smaller models than the AIC.</h1>
+<p>Both the BIC and the AIC criterion are a trade-off between fit (-2
+log L) and model complexity (2p for the AIC and p log(n) for BIC).</p>
+<ul>
+<li>When we use the BIC for model selection we will select the model
+with the lowest BIC.</li>
+<li>When we use the AIC for model selection we will select the model
+with the lowest AIC.</li>
+</ul>
+<p>However, the trade-off between fit and model complexity is different
+for the AIC and the BIC.</p>
+<ul>
+<li>They use the same measure for the fit -2 log L.</li>
+<li>Increasing the model complexity will result in a better fit and thus
+a decrease of -2 log L.</li>
+<li>However, both criteria also penalise for model complexity: 2p vs p
+log(n).</li>
+</ul>
+<p>In order to favour a more complex model,</p>
+<ul>
+<li>the decrease of -2 log L has to be larger than the increase in 2p
+for the AIC criterion,</li>
+<li>while the decrease of -2 log L has to be larger than the increase in
+p log(n) for the BIC criterion.</li>
+</ul>
+<p>Because log(n) &gt; 2 as soon as n &gt;= 8, the BIC criterion will
+penalise more for the increase in model complexity and it will therefore
+favour smaller models than the AIC criterion, which punishes less for
+the increase in model complexity.</p>
+</div>
+<div id="illustration" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Illustration</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>),<span class="at">ncol=</span><span class="dv">10</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span></code></pre></div>
+<p>model</p>
+<p><span class="math display">\[
+Y = V1 + 2* V2 + 4*V3 +\epsilon
+\]</span></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19325</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> x[,<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span> x[,<span class="dv">2</span>] <span class="sc">+</span> <span class="dv">4</span><span class="sc">*</span>x[,<span class="dv">3</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span></code></pre></div>
+<div id="backward-modelselection-with-aic" class="section level2"
+number="2.1">
+<h2><span class="header-section-number">2.1</span> Backward
+modelselection with AIC</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>lm0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>.,<span class="at">data=</span>x)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>lmAIC <span class="ot">&lt;-</span> <span class="fu">step</span>(lm0)</span></code></pre></div>
+<pre><code>#&gt; Start:  AIC=10.31
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V7    1      0.31   89.28   8.657
+#&gt; - V4    1      0.37   89.33   8.722
+#&gt; - V9    1      0.66   89.63   9.053
+#&gt; - V10   1      1.15   90.12   9.599
+#&gt; - V6    1      1.20   90.17   9.652
+#&gt; &lt;none&gt;                88.97  10.311
+#&gt; - V5    1      5.07   94.04  13.855
+#&gt; - V8    1      5.66   94.63  14.476
+#&gt; - V1    1    127.33  216.30  97.150
+#&gt; - V2    1    320.34  409.30 160.929
+#&gt; - V3    1   1518.09 1607.06 297.699
+#&gt; 
+#&gt; Step:  AIC=8.66
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V4    1      0.56   89.83   7.278
+#&gt; - V9    1      0.63   89.91   7.359
+#&gt; - V10   1      1.05   90.32   7.824
+#&gt; - V6    1      1.15   90.43   7.942
+#&gt; &lt;none&gt;                89.28   8.657
+#&gt; - V5    1      5.01   94.28  12.113
+#&gt; - V8    1      5.59   94.87  12.731
+#&gt; - V1    1    127.24  216.52  95.251
+#&gt; - V2    1    325.09  414.37 160.158
+#&gt; - V3    1   1572.65 1661.92 299.056
+#&gt; 
+#&gt; Step:  AIC=7.28
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V9    1      0.64   90.47   5.984
+#&gt; - V10   1      1.13   90.96   6.527
+#&gt; - V6    1      1.18   91.01   6.583
+#&gt; &lt;none&gt;                89.83   7.278
+#&gt; - V5    1      4.58   94.41  10.249
+#&gt; - V8    1      5.25   95.08  10.956
+#&gt; - V1    1    127.10  216.93  93.441
+#&gt; - V2    1    327.62  417.46 158.901
+#&gt; - V3    1   1584.28 1674.11 297.787
+#&gt; 
+#&gt; Step:  AIC=5.98
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V10   1      1.49   91.96   5.620
+#&gt; - V6    1      1.52   91.99   5.654
+#&gt; &lt;none&gt;                90.47   5.984
+#&gt; - V5    1      4.44   94.91   8.776
+#&gt; - V8    1      5.83   96.30  10.228
+#&gt; - V1    1    130.29  220.76  93.190
+#&gt; - V2    1    327.02  417.49 156.909
+#&gt; - V3    1   1588.71 1679.18 296.089
+#&gt; 
+#&gt; Step:  AIC=5.62
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V6    1      1.33   93.29   5.058
+#&gt; &lt;none&gt;                91.96   5.620
+#&gt; - V5    1      4.59   96.55   8.491
+#&gt; - V8    1      4.88   96.84   8.788
+#&gt; - V1    1    128.80  220.76  91.190
+#&gt; - V2    1    336.71  428.67 157.553
+#&gt; - V3    1   1587.72 1679.68 294.119
+#&gt; 
+#&gt; Step:  AIC=5.06
+#&gt; y ~ V1 + V2 + V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; &lt;none&gt;                93.29   5.058
+#&gt; - V8    1      3.94   97.23   7.193
+#&gt; - V5    1      4.11   97.41   7.371
+#&gt; - V1    1    127.53  220.83  89.221
+#&gt; - V2    1    348.90  442.19 158.658
+#&gt; - V3    1   1608.86 1702.16 293.448</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>lmAIC</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = y ~ V1 + V2 + V3 + V5 + V8, data = x)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)           V1           V2           V3           V5           V8  
+#&gt;      9.9709       0.9868       1.9685       3.8627      -0.2056       0.2121</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>realPredAIC <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">names</span>(lmAIC<span class="sc">$</span>coefficients) <span class="sc">%in%</span> pred)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>falsePredAIC <span class="ot">&lt;-</span> <span class="fu">length</span>(lmAIC<span class="sc">$</span>coefficients) <span class="sc">-</span> realPredAIC <span class="sc">-</span> <span class="dv">1</span></span></code></pre></div>
+<p>The AIC criterion selects the model with the lowest AIC.</p>
+<p>This model correctly selects 3 out of 3 real predictors. However, it
+also selects 2 predictors that are not associated with the response!</p>
+</div>
+<div id="backward-modelselection-with-bic." class="section level2"
+number="2.2">
+<h2><span class="header-section-number">2.2</span> Backward
+modelselection with BIC.</h2>
+<p>We can do this in the step function by specifying k. By default k=2.
+If we define <code>k=log(n)</code> than we use the BIC.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>lmBIC <span class="ot">&lt;-</span> <span class="fu">step</span>(lm0, <span class="at">k=</span><span class="fu">log</span>(<span class="fu">nrow</span>(x)))</span></code></pre></div>
+<pre><code>#&gt; Start:  AIC=38.97
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V7    1      0.31   89.28  34.71
+#&gt; - V4    1      0.37   89.33  34.77
+#&gt; - V9    1      0.66   89.63  35.10
+#&gt; - V10   1      1.15   90.12  35.65
+#&gt; - V6    1      1.20   90.17  35.70
+#&gt; &lt;none&gt;                88.97  38.97
+#&gt; - V5    1      5.07   94.04  39.91
+#&gt; - V8    1      5.66   94.63  40.53
+#&gt; - V1    1    127.33  216.30 123.20
+#&gt; - V2    1    320.34  409.30 186.98
+#&gt; - V3    1   1518.09 1607.06 323.75
+#&gt; 
+#&gt; Step:  AIC=34.71
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V4    1      0.56   89.83  30.72
+#&gt; - V9    1      0.63   89.91  30.81
+#&gt; - V10   1      1.05   90.32  31.27
+#&gt; - V6    1      1.15   90.43  31.39
+#&gt; &lt;none&gt;                89.28  34.71
+#&gt; - V5    1      5.01   94.28  35.56
+#&gt; - V8    1      5.59   94.87  36.18
+#&gt; - V1    1    127.24  216.52 118.70
+#&gt; - V2    1    325.09  414.37 183.60
+#&gt; - V3    1   1572.65 1661.92 322.50
+#&gt; 
+#&gt; Step:  AIC=30.72
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V9    1      0.64   90.47  26.83
+#&gt; - V10   1      1.13   90.96  27.37
+#&gt; - V6    1      1.18   91.01  27.42
+#&gt; &lt;none&gt;                89.83  30.72
+#&gt; - V5    1      4.58   94.41  31.09
+#&gt; - V8    1      5.25   95.08  31.80
+#&gt; - V1    1    127.10  216.93 114.28
+#&gt; - V2    1    327.62  417.46 179.74
+#&gt; - V3    1   1584.28 1674.11 318.63
+#&gt; 
+#&gt; Step:  AIC=26.83
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V10   1      1.49   91.96  23.856
+#&gt; - V6    1      1.52   91.99  23.891
+#&gt; &lt;none&gt;                90.47  26.825
+#&gt; - V5    1      4.44   94.91  27.013
+#&gt; - V8    1      5.83   96.30  28.465
+#&gt; - V1    1    130.29  220.76 111.426
+#&gt; - V2    1    327.02  417.49 175.145
+#&gt; - V3    1   1588.71 1679.18 314.325
+#&gt; 
+#&gt; Step:  AIC=23.86
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V6    1      1.33   93.29  20.689
+#&gt; &lt;none&gt;                91.96  23.856
+#&gt; - V5    1      4.59   96.55  24.122
+#&gt; - V8    1      4.88   96.84  24.419
+#&gt; - V1    1    128.80  220.76 106.821
+#&gt; - V2    1    336.71  428.67 173.184
+#&gt; - V3    1   1587.72 1679.68 309.750
+#&gt; 
+#&gt; Step:  AIC=20.69
+#&gt; y ~ V1 + V2 + V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V8    1      3.94   97.23  20.219
+#&gt; - V5    1      4.11   97.41  20.397
+#&gt; &lt;none&gt;                93.29  20.689
+#&gt; - V1    1    127.53  220.83 102.247
+#&gt; - V2    1    348.90  442.19 171.683
+#&gt; - V3    1   1608.86 1702.16 306.474
+#&gt; 
+#&gt; Step:  AIC=20.22
+#&gt; y ~ V1 + V2 + V3 + V5
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; - V5    1      3.54  100.77  19.187
+#&gt; &lt;none&gt;                97.23  20.219
+#&gt; - V1    1    124.15  221.38  97.891
+#&gt; - V2    1    389.45  486.68 176.664
+#&gt; - V3    1   1620.25 1717.48 302.765
+#&gt; 
+#&gt; Step:  AIC=19.19
+#&gt; y ~ V1 + V2 + V3
+#&gt; 
+#&gt;        Df Sum of Sq     RSS     AIC
+#&gt; &lt;none&gt;               100.77  19.187
+#&gt; - V1    1    123.13  223.90  94.419
+#&gt; - V2    1    393.16  493.93 173.539
+#&gt; - V3    1   1618.02 1718.79 298.236</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>lmBIC</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = y ~ V1 + V2 + V3, data = x)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)           V1           V2           V3  
+#&gt;     10.0389       0.9633       2.0267       3.8315</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>realPredBIC <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">names</span>(lmBIC<span class="sc">$</span>coefficients) <span class="sc">%in%</span> pred)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>falsePredBIC <span class="ot">&lt;-</span> <span class="fu">length</span>(lmBIC<span class="sc">$</span>coefficients) <span class="sc">-</span> realPredBIC <span class="sc">-</span> <span class="dv">1</span></span></code></pre></div>
+<p>The BIC criterion selects the model with the lowest BIC.</p>
+<p>This model correctly selects 3 out of 3 real predictors. However, it
+selects 0 predictors that are not associated with the response!</p>
+</div>
+</div>
+<div id="what-happens-when-the-variance-increase" class="section level1"
+number="3">
+<h1><span class="header-section-number">3</span> What happens when the
+variance increase?</h1>
+<p>If the noise increases it will be harder to select the correct model
+and we still can expect the AIC to result in more complex models than
+the BIC.</p>
+<p>We will use the same seed so that the difference in the response is
+not induced by the random generator but only by the difference in
+variance.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19325</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> x[,<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span> x[,<span class="dv">2</span>] <span class="sc">+</span> <span class="dv">4</span><span class="sc">*</span>x[,<span class="dv">3</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="at">sd=</span><span class="dv">10</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>lm0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>., <span class="at">data=</span>x)</span></code></pre></div>
+<div id="backward-modelselection-with-aic-1" class="section level2"
+number="3.1">
+<h2><span class="header-section-number">3.1</span> Backward
+modelselection with AIC</h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>lm0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>.,<span class="at">data=</span>x)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>lmAIC10 <span class="ot">&lt;-</span> <span class="fu">step</span>(lm0)</span></code></pre></div>
+<pre><code>#&gt; Start:  AIC=470.83
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V7    1     30.79 8927.6 469.17
+#&gt; - V4    1     36.64 8933.5 469.24
+#&gt; - V9    1     66.24 8963.1 469.57
+#&gt; - V10   1    115.29 9012.1 470.12
+#&gt; - V6    1    120.08 9016.9 470.17
+#&gt; - V1    1    127.61 9024.5 470.25
+#&gt; - V2    1    144.13 9041.0 470.44
+#&gt; &lt;none&gt;              8896.8 470.83
+#&gt; - V5    1    507.13 9404.0 474.37
+#&gt; - V8    1    565.69 9462.5 474.99
+#&gt; - V3    1    834.14 9731.0 477.79
+#&gt; 
+#&gt; Step:  AIC=469.17
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V4    1     55.60 8983.2 467.79
+#&gt; - V9    1     62.93 8990.6 467.88
+#&gt; - V10   1    104.79 9032.4 468.34
+#&gt; - V6    1    115.47 9043.1 468.46
+#&gt; - V1    1    126.64 9054.3 468.58
+#&gt; - V2    1    158.35 9086.0 468.93
+#&gt; &lt;none&gt;              8927.6 469.17
+#&gt; - V5    1    500.69 9428.3 472.63
+#&gt; - V8    1    559.12 9486.8 473.25
+#&gt; - V3    1    803.42 9731.1 475.79
+#&gt; 
+#&gt; Step:  AIC=467.79
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V9    1     63.68 9046.9 466.50
+#&gt; - V10   1    112.93 9096.2 467.04
+#&gt; - V6    1    118.00 9101.2 467.10
+#&gt; - V1    1    125.12 9108.4 467.18
+#&gt; - V2    1    169.56 9152.8 467.66
+#&gt; &lt;none&gt;              8983.2 467.79
+#&gt; - V5    1    457.91 9441.1 470.77
+#&gt; - V8    1    524.92 9508.2 471.47
+#&gt; - V3    1    836.85 9820.1 474.70
+#&gt; 
+#&gt; Step:  AIC=466.5
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V1    1    145.47 9192.4 466.10
+#&gt; - V10   1    149.20 9196.1 466.14
+#&gt; - V6    1    152.40 9199.3 466.17
+#&gt; - V2    1    162.80 9209.7 466.28
+#&gt; &lt;none&gt;              9046.9 466.50
+#&gt; - V5    1    444.13 9491.0 469.29
+#&gt; - V8    1    582.94 9629.9 470.75
+#&gt; - V3    1    854.90 9901.8 473.53
+#&gt; 
+#&gt; Step:  AIC=466.1
+#&gt; y ~ V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V10   1    120.54  9312.9 465.40
+#&gt; - V6    1    128.99  9321.4 465.49
+#&gt; - V2    1    161.82  9354.2 465.84
+#&gt; &lt;none&gt;               9192.4 466.10
+#&gt; - V5    1    424.91  9617.3 468.61
+#&gt; - V8    1    512.28  9704.7 469.52
+#&gt; - V3    1    812.18 10004.6 472.56
+#&gt; 
+#&gt; Step:  AIC=465.4
+#&gt; y ~ V2 + V3 + V5 + V6 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V6    1    115.07  9428.0 464.63
+#&gt; &lt;none&gt;               9312.9 465.40
+#&gt; - V2    1    198.94  9511.9 465.51
+#&gt; - V8    1    436.36  9749.3 467.98
+#&gt; - V5    1    440.21  9753.1 468.02
+#&gt; - V3    1    787.70 10100.6 471.52
+#&gt; 
+#&gt; Step:  AIC=464.63
+#&gt; y ~ V2 + V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; &lt;none&gt;               9428.0 464.63
+#&gt; - V2    1    247.31  9675.3 465.22
+#&gt; - V8    1    355.83  9783.8 466.33
+#&gt; - V5    1    397.89  9825.9 466.76
+#&gt; - V3    1    718.83 10146.8 469.97</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>lmAIC10</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = y ~ V2 + V3 + V5 + V8, data = x)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)           V2           V3           V5           V8  
+#&gt;       9.715        1.657        2.579       -2.022        2.004</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>realPredAIC10 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">names</span>(lmAIC10<span class="sc">$</span>coefficients) <span class="sc">%in%</span> pred)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>falsePredAIC10 <span class="ot">&lt;-</span> <span class="fu">length</span>(lmAIC10<span class="sc">$</span>coefficients) <span class="sc">-</span> realPredAIC10 <span class="sc">-</span> <span class="dv">1</span></span></code></pre></div>
+<p>The AIC criterion selects the model with the lowest AIC.</p>
+<p>This model correctly selects 2 out of 3 real predictors. However, it
+also selects 2 predictors that are not associated with the response!</p>
+</div>
+<div id="backward-modelselection-with-bic.-1" class="section level2"
+number="3.2">
+<h2><span class="header-section-number">3.2</span> Backward
+modelselection with BIC.</h2>
+<p>We can do this in the step function by specifying k. By default k=2.
+If we define <code>k=log(n)</code> than we use the BIC.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>lmBIC10 <span class="ot">&lt;-</span> <span class="fu">step</span>(lm0, <span class="at">k=</span><span class="fu">log</span>(<span class="fu">nrow</span>(x)))</span></code></pre></div>
+<pre><code>#&gt; Start:  AIC=499.49
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V7    1     30.79 8927.6 495.23
+#&gt; - V4    1     36.64 8933.5 495.29
+#&gt; - V9    1     66.24 8963.1 495.62
+#&gt; - V10   1    115.29 9012.1 496.17
+#&gt; - V6    1    120.08 9016.9 496.22
+#&gt; - V1    1    127.61 9024.5 496.30
+#&gt; - V2    1    144.13 9041.0 496.49
+#&gt; &lt;none&gt;              8896.8 499.49
+#&gt; - V5    1    507.13 9404.0 500.42
+#&gt; - V8    1    565.69 9462.5 501.04
+#&gt; - V3    1    834.14 9731.0 503.84
+#&gt; 
+#&gt; Step:  AIC=495.23
+#&gt; y ~ V1 + V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V4    1     55.60 8983.2 491.24
+#&gt; - V9    1     62.93 8990.6 491.32
+#&gt; - V10   1    104.79 9032.4 491.79
+#&gt; - V6    1    115.47 9043.1 491.91
+#&gt; - V1    1    126.64 9054.3 492.03
+#&gt; - V2    1    158.35 9086.0 492.38
+#&gt; &lt;none&gt;              8927.6 495.23
+#&gt; - V5    1    500.69 9428.3 496.08
+#&gt; - V8    1    559.12 9486.8 496.69
+#&gt; - V3    1    803.42 9731.1 499.24
+#&gt; 
+#&gt; Step:  AIC=491.24
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V9 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V9    1     63.68 9046.9 487.34
+#&gt; - V10   1    112.93 9096.2 487.89
+#&gt; - V6    1    118.00 9101.2 487.94
+#&gt; - V1    1    125.12 9108.4 488.02
+#&gt; - V2    1    169.56 9152.8 488.51
+#&gt; &lt;none&gt;              8983.2 491.24
+#&gt; - V5    1    457.91 9441.1 491.61
+#&gt; - V8    1    524.92 9508.2 492.31
+#&gt; - V3    1    836.85 9820.1 495.54
+#&gt; 
+#&gt; Step:  AIC=487.34
+#&gt; y ~ V1 + V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq    RSS    AIC
+#&gt; - V1    1    145.47 9192.4 484.33
+#&gt; - V10   1    149.20 9196.1 484.37
+#&gt; - V6    1    152.40 9199.3 484.41
+#&gt; - V2    1    162.80 9209.7 484.52
+#&gt; &lt;none&gt;              9046.9 487.34
+#&gt; - V5    1    444.13 9491.0 487.53
+#&gt; - V8    1    582.94 9629.9 488.98
+#&gt; - V3    1    854.90 9901.8 491.77
+#&gt; 
+#&gt; Step:  AIC=484.33
+#&gt; y ~ V2 + V3 + V5 + V6 + V8 + V10
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V10   1    120.54  9312.9 481.03
+#&gt; - V6    1    128.99  9321.4 481.12
+#&gt; - V2    1    161.82  9354.2 481.47
+#&gt; - V5    1    424.91  9617.3 484.25
+#&gt; &lt;none&gt;               9192.4 484.33
+#&gt; - V8    1    512.28  9704.7 485.15
+#&gt; - V3    1    812.18 10004.6 488.19
+#&gt; 
+#&gt; Step:  AIC=481.03
+#&gt; y ~ V2 + V3 + V5 + V6 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V6    1    115.07  9428.0 477.65
+#&gt; - V2    1    198.94  9511.9 478.54
+#&gt; - V8    1    436.36  9749.3 481.00
+#&gt; &lt;none&gt;               9312.9 481.03
+#&gt; - V5    1    440.21  9753.1 481.04
+#&gt; - V3    1    787.70 10100.6 484.54
+#&gt; 
+#&gt; Step:  AIC=477.65
+#&gt; y ~ V2 + V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V2    1    247.31  9675.3 475.64
+#&gt; - V8    1    355.83  9783.8 476.75
+#&gt; - V5    1    397.89  9825.9 477.18
+#&gt; &lt;none&gt;               9428.0 477.65
+#&gt; - V3    1    718.83 10146.8 480.40
+#&gt; 
+#&gt; Step:  AIC=475.64
+#&gt; y ~ V3 + V5 + V8
+#&gt; 
+#&gt;        Df Sum of Sq     RSS    AIC
+#&gt; - V5    1    437.44 10112.7 475.45
+#&gt; &lt;none&gt;               9675.3 475.64
+#&gt; - V8    1    548.90 10224.2 476.55
+#&gt; - V3    1    723.85 10399.1 478.25
+#&gt; 
+#&gt; Step:  AIC=475.45
+#&gt; y ~ V3 + V8
+#&gt; 
+#&gt;        Df Sum of Sq   RSS    AIC
+#&gt; &lt;none&gt;              10113 475.45
+#&gt; - V8    1    492.56 10605 475.60
+#&gt; - V3    1    693.98 10807 477.49</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>lmBIC10</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = y ~ V3 + V8, data = x)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)           V3           V8  
+#&gt;      10.020        2.533        2.281</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>realPredBIC10 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">names</span>(lmBIC10<span class="sc">$</span>coefficients) <span class="sc">%in%</span> pred)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>falsePredBIC10 <span class="ot">&lt;-</span> <span class="fu">length</span>(lmBIC10<span class="sc">$</span>coefficients) <span class="sc">-</span> realPredBIC10 <span class="sc">-</span> <span class="dv">1</span></span></code></pre></div>
+<p>The BIC criterion selects the model with the lowest BIC.</p>
+<p>This model correctly selects 1 out of 3 real predictors. However, it
+selects 1 predictor that is not associated with the response!</p>
+<p>Note, that AIC and BIC are a good estimate of the insample error,
+however, when building prediction models we are interested in using the
+model for predictor patterns that are not observed in the training set.
+So it is better to build a model based on an estimate of the outsample
+error.</p>
+</div>
+</div>
+<div id="session-info" class="section level1 unnumbered">
+<h1 class="unnumbered">Session info</h1>
+<details>
+<summary>
+Session info
+</summary>
+<pre><code>#&gt; [1] &quot;2024-10-02 16:15:48 CEST&quot;</code></pre>
+<pre><code>#&gt; ─ Session info ───────────────────────────────────────────────────────────────
+#&gt;  setting  value
+#&gt;  version  R version 4.4.0 RC (2024-04-16 r86468)
+#&gt;  os       macOS Big Sur 11.6
+#&gt;  system   aarch64, darwin20
+#&gt;  ui       X11
+#&gt;  language (EN)
+#&gt;  collate  en_US.UTF-8
+#&gt;  ctype    en_US.UTF-8
+#&gt;  tz       Europe/Brussels
+#&gt;  date     2024-10-02
+#&gt;  pandoc   3.1.1 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/ (via rmarkdown)
+#&gt; 
+#&gt; ─ Packages ───────────────────────────────────────────────────────────────────
+#&gt;  package     * version date (UTC) lib source
+#&gt;  bookdown      0.40    2024-07-02 [1] CRAN (R 4.4.0)
+#&gt;  bslib         0.8.0   2024-07-29 [1] CRAN (R 4.4.0)
+#&gt;  cachem        1.1.0   2024-05-16 [1] CRAN (R 4.4.0)
+#&gt;  cli           3.6.3   2024-06-21 [1] CRAN (R 4.4.0)
+#&gt;  digest        0.6.37  2024-08-19 [1] CRAN (R 4.4.1)
+#&gt;  evaluate      1.0.0   2024-09-17 [1] CRAN (R 4.4.1)
+#&gt;  fastmap       1.2.0   2024-05-15 [1] CRAN (R 4.4.0)
+#&gt;  fontawesome   0.5.2   2023-08-19 [1] CRAN (R 4.4.0)
+#&gt;  htmltools     0.5.8.1 2024-04-04 [1] CRAN (R 4.4.0)
+#&gt;  jquerylib     0.1.4   2021-04-26 [1] CRAN (R 4.4.0)
+#&gt;  jsonlite      1.8.9   2024-09-20 [1] CRAN (R 4.4.1)
+#&gt;  knitr         1.48    2024-07-07 [1] CRAN (R 4.4.0)
+#&gt;  lifecycle     1.0.4   2023-11-07 [1] CRAN (R 4.4.0)
+#&gt;  R6            2.5.1   2021-08-19 [1] CRAN (R 4.4.0)
+#&gt;  rlang         1.1.4   2024-06-04 [1] CRAN (R 4.4.0)
+#&gt;  rmarkdown     2.28    2024-08-17 [1] CRAN (R 4.4.0)
+#&gt;  rstudioapi    0.16.0  2024-03-24 [1] CRAN (R 4.4.0)
+#&gt;  sass          0.4.9   2024-03-15 [1] CRAN (R 4.4.0)
+#&gt;  sessioninfo   1.2.2   2021-12-06 [1] CRAN (R 4.4.0)
+#&gt;  xfun          0.47    2024-08-17 [1] CRAN (R 4.4.0)
+#&gt;  yaml          2.3.10  2024-07-26 [1] CRAN (R 4.4.0)
+#&gt; 
+#&gt;  [1] /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library
+#&gt; 
+#&gt; ──────────────────────────────────────────────────────────────────────────────</code></pre>
+</details>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiQUlDIHZzIEJJQyIKYXV0aG9yOiAiTGlldmVuIENsZW1lbnQiCmRhdGU6ICJzdGF0T21pY3MsIEdoZW50IFVuaXZlcnNpdHkgKGh0dHBzOi8vc3RhdG9taWNzLmdpdGh1Yi5pbykiCm91dHB1dDoKICAgIGh0bWxfZG9jdW1lbnQ6CiAgICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgICAgdGhlbWU6IGNvc21vCiAgICAgIHRvYzogdHJ1ZQogICAgICB0b2NfZmxvYXQ6IHRydWUKICAgICAgaGlnaGxpZ2h0OiB0YW5nbwogICAgICBudW1iZXJfc2VjdGlvbnM6IHRydWUKICAgIHBkZl9kb2N1bWVudDoKICAgICAgdG9jOiB0cnVlCiAgICAgIG51bWJlcl9zZWN0aW9uczogdHJ1ZQogICAgICBsYXRleF9lbmdpbmU6IHhlbGF0ZXgKLS0tCgpgYGB7ciwgY2hpbGQ9Il9zZXR1cC5SbWQifQpgYGAKCgojIFdoZW4gbGFyZ2UgZGF0YXNldHMgYXJlIHVzZWQsIHRoZSBCSUMgd2lsbCBmYXZvdXIgc21hbGxlciBtb2RlbHMgdGhhbiB0aGUgQUlDLgoKQm90aCB0aGUgQklDIGFuZCB0aGUgQUlDIGNyaXRlcmlvbiBhcmUgYSB0cmFkZS1vZmYgYmV0d2VlbiBmaXQgKC0yIGxvZyBMKSBhbmQgbW9kZWwgY29tcGxleGl0eSAoMnAgZm9yIHRoZSBBSUMgYW5kIHAgbG9nKG4pIGZvciBCSUMpLgoKLSBXaGVuIHdlIHVzZSB0aGUgQklDIGZvciBtb2RlbCBzZWxlY3Rpb24gd2Ugd2lsbCBzZWxlY3QgdGhlIG1vZGVsIHdpdGggdGhlIGxvd2VzdCBCSUMuCi0gV2hlbiB3ZSB1c2UgdGhlIEFJQyBmb3IgbW9kZWwgc2VsZWN0aW9uIHdlIHdpbGwgc2VsZWN0IHRoZSBtb2RlbCB3aXRoIHRoZSBsb3dlc3QgQUlDLgoKSG93ZXZlciwgdGhlIHRyYWRlLW9mZiBiZXR3ZWVuIGZpdCBhbmQgbW9kZWwgY29tcGxleGl0eSBpcyBkaWZmZXJlbnQgZm9yIHRoZSBBSUMgYW5kIHRoZSBCSUMuCgotIFRoZXkgdXNlIHRoZSBzYW1lIG1lYXN1cmUgZm9yIHRoZSBmaXQgLTIgbG9nIEwuCi0gSW5jcmVhc2luZyB0aGUgbW9kZWwgY29tcGxleGl0eSB3aWxsIHJlc3VsdCBpbiBhIGJldHRlciBmaXQgYW5kIHRodXMgYSAgZGVjcmVhc2Ugb2YgLTIgbG9nIEwuCi0gSG93ZXZlciwgYm90aCBjcml0ZXJpYSBhbHNvIHBlbmFsaXNlIGZvciBtb2RlbCBjb21wbGV4aXR5OiAycCB2cyBwIGxvZyhuKS4KCkluIG9yZGVyIHRvIGZhdm91ciBhIG1vcmUgY29tcGxleCBtb2RlbCwKCi0gdGhlIGRlY3JlYXNlIG9mIC0yIGxvZyBMIGhhcyB0byBiZSBsYXJnZXIgdGhhbiB0aGUgaW5jcmVhc2UgaW4gMnAgZm9yIHRoZSBBSUMgY3JpdGVyaW9uLAotIHdoaWxlIHRoZSBkZWNyZWFzZSBvZiAtMiBsb2cgTCBoYXMgdG8gYmUgbGFyZ2VyIHRoYW4gdGhlIGluY3JlYXNlIGluIHAgbG9nKG4pIGZvciB0aGUgQklDIGNyaXRlcmlvbi4KCkJlY2F1c2UgbG9nKG4pID4gMiBhcyBzb29uIGFzIG4gPj0gOCwgIHRoZSBCSUMgY3JpdGVyaW9uIHdpbGwgcGVuYWxpc2UgbW9yZSBmb3IgdGhlIGluY3JlYXNlIGluIG1vZGVsIGNvbXBsZXhpdHkgYW5kIGl0IHdpbGwgdGhlcmVmb3JlIGZhdm91ciBzbWFsbGVyIG1vZGVscyB0aGFuIHRoZSBBSUMgY3JpdGVyaW9uLCB3aGljaCBwdW5pc2hlcyBsZXNzIGZvciB0aGUgaW5jcmVhc2UgaW4gbW9kZWwgY29tcGxleGl0eS4KCgojIElsbHVzdHJhdGlvbgoKYGBge3J9CnNldC5zZWVkKDIpCnggPC0gYXMuZGF0YS5mcmFtZShtYXRyaXgocm5vcm0oMTAwMCksbmNvbD0xMCkpCnByZWQgPC0gcGFzdGUwKCJWIiwxOjMpCmBgYAoKbW9kZWwKCiQkClkgPSBWMSArIDIqIFYyICsgNCpWMyArXGVwc2lsb24KJCQKCgpgYGB7cn0Kc2V0LnNlZWQoMTkzMjUpCnkgPC0gMTAgKyB4WywxXSArIDIqIHhbLDJdICsgNCp4WywzXSArIHJub3JtKDEwMCkKYGBgCgojIyBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEFJQwoKYGBge3J9CmxtMCA8LSBsbSh5fi4sZGF0YT14KQpsbUFJQyA8LSBzdGVwKGxtMCkKbG1BSUMKcmVhbFByZWRBSUMgPC0gc3VtKG5hbWVzKGxtQUlDJGNvZWZmaWNpZW50cykgJWluJSBwcmVkKQpmYWxzZVByZWRBSUMgPC0gbGVuZ3RoKGxtQUlDJGNvZWZmaWNpZW50cykgLSByZWFsUHJlZEFJQyAtIDEKYGBgCgpUaGUgQUlDIGNyaXRlcmlvbiBzZWxlY3RzIHRoZSBtb2RlbCB3aXRoIHRoZSBsb3dlc3QgQUlDLgoKVGhpcyBtb2RlbCBjb3JyZWN0bHkgc2VsZWN0cyBgciByZWFsUHJlZEFJQ2Agb3V0IG9mIGByIGxlbmd0aChwcmVkKWAgcmVhbCBwcmVkaWN0b3JzLgpIb3dldmVyLCBpdCBhbHNvIHNlbGVjdHMgYHIgZmFsc2VQcmVkQUlDYCBwcmVkaWN0b3JzIHRoYXQgYXJlIG5vdCBhc3NvY2lhdGVkIHdpdGggdGhlIHJlc3BvbnNlIQoKCiMjICBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEJJQy4KCldlIGNhbiBkbyB0aGlzIGluIHRoZSBzdGVwIGZ1bmN0aW9uIGJ5IHNwZWNpZnlpbmcgay4gQnkgZGVmYXVsdCBrPTIuIElmIHdlIGRlZmluZSBgaz1sb2cobilgIHRoYW4gd2UgdXNlIHRoZSBCSUMuCmBgYHtyfQpsbUJJQyA8LSBzdGVwKGxtMCwgaz1sb2cobnJvdyh4KSkpCmxtQklDCnJlYWxQcmVkQklDIDwtIHN1bShuYW1lcyhsbUJJQyRjb2VmZmljaWVudHMpICVpbiUgcHJlZCkKZmFsc2VQcmVkQklDIDwtIGxlbmd0aChsbUJJQyRjb2VmZmljaWVudHMpIC0gcmVhbFByZWRCSUMgLSAxCmBgYAoKVGhlIEJJQyBjcml0ZXJpb24gc2VsZWN0cyB0aGUgbW9kZWwgd2l0aCB0aGUgbG93ZXN0IEJJQy4KClRoaXMgbW9kZWwgY29ycmVjdGx5IHNlbGVjdHMgYHIgcmVhbFByZWRCSUNgIG91dCBvZiBgciBsZW5ndGgocHJlZClgIHJlYWwgcHJlZGljdG9ycy4KSG93ZXZlciwgaXQgc2VsZWN0cyBgciBmYWxzZVByZWRCSUNgIHByZWRpY3RvcnMgdGhhdCBhcmUgbm90IGFzc29jaWF0ZWQgd2l0aCB0aGUgcmVzcG9uc2UhCgoKIyBXaGF0IGhhcHBlbnMgd2hlbiB0aGUgdmFyaWFuY2UgaW5jcmVhc2U/CgpJZiB0aGUgbm9pc2UgaW5jcmVhc2VzIGl0IHdpbGwgYmUgaGFyZGVyIHRvIHNlbGVjdCB0aGUgY29ycmVjdCBtb2RlbCBhbmQgd2Ugc3RpbGwgY2FuIGV4cGVjdCB0aGUgQUlDIHRvIHJlc3VsdCBpbiBtb3JlIGNvbXBsZXggbW9kZWxzIHRoYW4gdGhlIEJJQy4KCldlIHdpbGwgdXNlIHRoZSBzYW1lIHNlZWQgc28gdGhhdCB0aGUgZGlmZmVyZW5jZSBpbiB0aGUgcmVzcG9uc2UgaXMgbm90IGluZHVjZWQgYnkgdGhlIHJhbmRvbSBnZW5lcmF0b3IgYnV0IG9ubHkgYnkgdGhlIGRpZmZlcmVuY2UgaW4gdmFyaWFuY2UuCgoKYGBge3J9CnNldC5zZWVkKDE5MzI1KQp5IDwtIDEwICsgeFssMV0gKyAyKiB4WywyXSArIDQqeFssM10gKyBybm9ybSgxMDAsc2Q9MTApCmxtMCA8LSBsbSh5fi4sIGRhdGE9eCkKYGBgCgojIyBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEFJQwoKYGBge3J9CmxtMCA8LSBsbSh5fi4sZGF0YT14KQpsbUFJQzEwIDwtIHN0ZXAobG0wKQpsbUFJQzEwCnJlYWxQcmVkQUlDMTAgPC0gc3VtKG5hbWVzKGxtQUlDMTAkY29lZmZpY2llbnRzKSAlaW4lIHByZWQpCmZhbHNlUHJlZEFJQzEwIDwtIGxlbmd0aChsbUFJQzEwJGNvZWZmaWNpZW50cykgLSByZWFsUHJlZEFJQzEwIC0gMQpgYGAKClRoZSBBSUMgY3JpdGVyaW9uIHNlbGVjdHMgdGhlIG1vZGVsIHdpdGggdGhlIGxvd2VzdCBBSUMuCgpUaGlzIG1vZGVsIGNvcnJlY3RseSBzZWxlY3RzIGByIHJlYWxQcmVkQUlDMTBgIG91dCBvZiBgciBsZW5ndGgocHJlZClgIHJlYWwgcHJlZGljdG9ycy4KSG93ZXZlciwgaXQgYWxzbyBzZWxlY3RzIGByIGZhbHNlUHJlZEFJQzEwYCBwcmVkaWN0b3JzIHRoYXQgYXJlIG5vdCBhc3NvY2lhdGVkIHdpdGggdGhlIHJlc3BvbnNlIQoKCiMjICBCYWNrd2FyZCBtb2RlbHNlbGVjdGlvbiB3aXRoIEJJQy4KCldlIGNhbiBkbyB0aGlzIGluIHRoZSBzdGVwIGZ1bmN0aW9uIGJ5IHNwZWNpZnlpbmcgay4gQnkgZGVmYXVsdCBrPTIuIElmIHdlIGRlZmluZSBgaz1sb2cobilgIHRoYW4gd2UgdXNlIHRoZSBCSUMuCgpgYGB7cn0KbG1CSUMxMCA8LSBzdGVwKGxtMCwgaz1sb2cobnJvdyh4KSkpCmxtQklDMTAKcmVhbFByZWRCSUMxMCA8LSBzdW0obmFtZXMobG1CSUMxMCRjb2VmZmljaWVudHMpICVpbiUgcHJlZCkKZmFsc2VQcmVkQklDMTAgPC0gbGVuZ3RoKGxtQklDMTAkY29lZmZpY2llbnRzKSAtIHJlYWxQcmVkQklDMTAgLSAxCmBgYAoKVGhlIEJJQyBjcml0ZXJpb24gc2VsZWN0cyB0aGUgbW9kZWwgd2l0aCB0aGUgbG93ZXN0IEJJQy4KClRoaXMgbW9kZWwgY29ycmVjdGx5IHNlbGVjdHMgYHIgcmVhbFByZWRCSUMxMGAgb3V0IG9mIGByIGxlbmd0aChwcmVkKWAgcmVhbCBwcmVkaWN0b3JzLgpIb3dldmVyLCBpdCBzZWxlY3RzIGByIGZhbHNlUHJlZEJJQzEwYCBwcmVkaWN0b3IgdGhhdCBpcyBub3QgYXNzb2NpYXRlZCB3aXRoIHRoZSByZXNwb25zZSEKCgpOb3RlLCB0aGF0IEFJQyBhbmQgQklDIGFyZSBhIGdvb2QgZXN0aW1hdGUgb2YgdGhlIGluc2FtcGxlIGVycm9yLCBob3dldmVyLCB3aGVuIGJ1aWxkaW5nIHByZWRpY3Rpb24gbW9kZWxzIHdlIGFyZSBpbnRlcmVzdGVkIGluIHVzaW5nIHRoZSBtb2RlbCBmb3IgcHJlZGljdG9yIHBhdHRlcm5zIHRoYXQgYXJlIG5vdCBvYnNlcnZlZCBpbiB0aGUgdHJhaW5pbmcgc2V0LiBTbyBpdCBpcyBiZXR0ZXIgdG8gYnVpbGQgYSBtb2RlbCBiYXNlZCBvbiBhbiBlc3RpbWF0ZSBvZiB0aGUgb3V0c2FtcGxlIGVycm9yLgoKYGBge3IsIGNoaWxkPSJfc2Vzc2lvbi1pbmZvLlJtZCJ9CmBgYAo=</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("AICvsBIC.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

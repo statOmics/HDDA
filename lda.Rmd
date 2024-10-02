@@ -384,7 +384,8 @@ grid.arrange(
       geom_point(pch=21) +
       geom_hline(yintercept = c(-2,0,2)*sd(Vlda[,2]), col = "red"),
     ncol = 2)
-  ```
+
+```
 
 ## Wrapup
 

@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Adapted by Milan Malfait" />
+
+<meta name="date" content="2024-10-02" />
+
+<title>Working with matrices in R</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HDDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="intro.html">1. Introduction</a>
+    </li>
+    <li>
+      <a href="svd.html">2. Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="prediction.html">3. Prediction with High Dimensional Predictors</a>
+    </li>
+    <li>
+      <a href="sparseSvd.html">4. Sparse Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="lda.html">5. Linear Discriminant Analysis</a>
+    </li>
+    <li>
+      <a href="hclust.html">6.1. Introduction to Clustering</a>
+    </li>
+    <li>
+      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">6.2. Paper Model-based Clustering</a>
+    </li>
+    <li>
+      <a href="em.html">6.3. EM algorithm</a>
+    </li>
+    <li>
+      <a href="lsi.html">7. Large Scale Inference</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab1-Intro-SVD.html">Lab 1: Intro &amp; SVD</a>
+    </li>
+    <li>
+      <a href="Lab2-PCA.html">Lab 2: SVD - PCA</a>
+    </li>
+    <li>
+      <a href="Lab3-Penalized-Regression.html">Lab 3: Prediction</a>
+    </li>
+    <li>
+      <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
+    </li>
+    <li>
+      <a href="Lab5-Clustering.html">Lab 5: Clustering</a>
+    </li>
+    <li>
+      <a href="Lab6-Large-Scale-Inference.html">Lab 6: LSI</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="https://github.com/statOmics/HDDA">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Working with matrices in R</h1>
+<h4 class="author">Adapted by Milan Malfait</h4>
+<h4 class="date">October 02, 2024</h4>
+
+</div>
+
+
+<hr />
+<div id="creating-and-manipulating-matrices" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Creating and manipulating matrices</h1>
+<p>We will create a <span class="math inline">\(4 \times 2\)</span> matrix, starting from a vector of values.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">## Define the matrix X, filling matrix &quot;byrow&quot;: 4 x 2</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="fl">0.23</span>, <span class="fl">0.46</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="dv">4</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>X</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; [1,]  3.00  6.00</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; [2,]  1.00  2.00</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; [3,]  0.23  0.46</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; [4,] -2.00 -4.00</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="do">## Alternative way to define the matrix, `byrow = FALSE` is the default</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="fl">0.23</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">2</span>, <span class="fl">0.46</span>, <span class="sc">-</span><span class="dv">4</span>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>X</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; [1,]  3.00  6.00</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; [2,]  1.00  2.00</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt; [3,]  0.23  0.46</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt; [4,] -2.00 -4.00</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co"># Creating a second matrix: 2 x 4, using the square of `X`</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(X<span class="sc">^</span><span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>Y</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co">#&gt;      [,1]   [,2] [,3]    [,4]</span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="co">#&gt; [1,]    9 0.0529   36  0.2116</span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="co">#&gt; [2,]    1 4.0000    4 16.0000</span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="do">## Check that we really have a matrix</span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="fu">class</span>(X)</span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="co">#&gt; [1] &quot;matrix&quot; &quot;array&quot;</span></span></code></pre></div>
+<p>Generally you can check the arguments of a function, e.g. <code>matrix</code>, in R with <code>?matrix</code>.</p>
+<p>The <code>dim</code> function tells you the <strong>dimensions</strong> of the matrix, <code>nrow</code> and <code>ncol</code> give you the number of rows and columns, respectively.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">dim</span>(X)  <span class="co"># nr. of rows, nr. of columns</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; [1] 4 2</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">nrow</span>(X)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; [1] 4</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">ncol</span>(X)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="fu">dim</span>(Y)</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; [1] 2 4</span></span></code></pre></div>
+<div id="subsetting" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Subsetting</h2>
+<p>Note that R sees a matrix as <code>X[row, column]</code>, so you can subset <code>X</code> with</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>X[<span class="dv">1</span>, ] <span class="co"># first row of X</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; [1] 3 6</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>X[, <span class="dv">2</span>] <span class="co"># second column of X</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; [1]  6.00  2.00  0.46 -4.00</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>X[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, ] <span class="co"># first 2 rows of X</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; [1,]    3    6</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; [2,]    1    2</span></span></code></pre></div>
+<p>Note that, by default, subsetting a single row or column from a matrix <strong>returns a vector</strong>, not a column- or row-matrix as might be expected.
+We can see this from the fact that the subset does not have dimensions anymore (an attribute only defined for matrices in R):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">dim</span>(X[, <span class="dv">1</span>]) <span class="co"># NULL = non-existent</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">class</span>(X[, <span class="dv">1</span>]) <span class="co"># not matrix but numeric vector</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;numeric&quot;</span></span></code></pre></div>
+<p>This can lead to unexpected behavior when doing <strong>matrix multiplication</strong> (see further below).
+To avoid this, we can set <code>drop = FALSE</code> in the subsetting brackets.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="do">## This creates a &quot;column-vector&quot;</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>X[, <span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt;       [,1]</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; [1,]  3.00</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; [2,]  1.00</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; [3,]  0.23</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [4,] -2.00</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="fu">dim</span>(X[, <span class="dv">1</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; [1] 4 1</span></span></code></pre></div>
+</div>
+<div id="row--and-column-binding" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Row- and column-binding</h2>
+<p>You can also create matrices by ‘binding’ together vectors (of the same length) column-wise or row-wise with <code>cbind()</code> and <code>rbind()</code>, respectively.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Create vectors from the rows of X</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>(x1 <span class="ot">&lt;-</span> X[<span class="dv">1</span>, ])</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; [1] 3 6</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>(x2 <span class="ot">&lt;-</span> X[<span class="dv">2</span>, ])</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; [1] 1 2</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>(x3 <span class="ot">&lt;-</span> X[<span class="dv">3</span>, ])</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; [1] 0.23 0.46</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>(x4 <span class="ot">&lt;-</span> X[<span class="dv">4</span>, ])</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; [1] -2 -4</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co"># Bind them back together row-wise: re-creates X</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="fu">rbind</span>(x1, x2, x3, x4)</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt;     [,1]  [,2]</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; x1  3.00  6.00</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; x2  1.00  2.00</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; x3  0.23  0.46</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; x4 -2.00 -4.00</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co"># Bind them back together column-wise: (essentially the transpose of X)</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="fu">cbind</span>(x1, x2, x3, x4)</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt;      x1 x2   x3 x4</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; [1,]  3  1 0.23 -2</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; [2,]  6  2 0.46 -4</span></span></code></pre></div>
+<p>Binding together 2 matrices also works (but be mindful of their dimensions!).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Row-binding two matrices</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co"># X and Y don&#39;t have the same dimensions (4x2 vs. 2x4),</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co"># so binding them directly doesn&#39;t work</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="fu">rbind</span>(X, Y)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; Error in rbind(X, Y): number of columns of matrices must match (see arg 2)</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co"># For rbind we need the same number of columns</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="fu">rbind</span>(X, Y[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]) <span class="co"># works</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;       [,1]    [,2]</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; [1,]  3.00  6.0000</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; [2,]  1.00  2.0000</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; [3,]  0.23  0.4600</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; [4,] -2.00 -4.0000</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; [5,]  9.00  0.0529</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; [6,]  1.00  4.0000</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co"># For cbind, same number of rows</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="fu">cbind</span>(X[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, ], Y)</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3]   [,4] [,5]    [,6]</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt; [1,]    3    6    9 0.0529   36  0.2116</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt; [2,]    1    2    1 4.0000    4 16.0000</span></span></code></pre></div>
+<p>Note that R automatically creates row names or column names from the variable names when using <code>rbind()</code> and <code>cbind()</code>.</p>
+<p>To add row and columns names to an existing matrix, use <code>rownames()</code>, <code>colnames()</code> or the more general <code>dimnames()</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">rownames</span>(X) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;row_1&quot;</span>, <span class="st">&quot;row_2&quot;</span>, <span class="st">&quot;row_3&quot;</span>, <span class="st">&quot;row_4&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">colnames</span>(X) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;col_1&quot;</span>, <span class="st">&quot;col_2&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>X</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt;       col_1 col_2</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; row_1  3.00  6.00</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; row_2  1.00  2.00</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; row_3  0.23  0.46</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; row_4 -2.00 -4.00</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="do">## Using `NULL` removes the dimnames again</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="fu">dimnames</span>(X) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>X</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; [1,]  3.00  6.00</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; [2,]  1.00  2.00</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; [3,]  0.23  0.46</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; [4,] -2.00 -4.00</span></span></code></pre></div>
+<div id="diagonal-elements-and-diagonal-matrices-diag" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Diagonal elements and diagonal matrices: <code>diag()</code></h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="do">## Get diagonal elements from X, returns vector</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">diag</span>(X)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; [1] 3 2</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="do">## Create diagonal matrix, vector as input, returns matrix</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="fu">diag</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> ,<span class="dv">4</span>))</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4]</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [1,]    1    0    0    0</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; [2,]    0    2    0    0</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; [3,]    0    0    3    0</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; [4,]    0    0    0    4</span></span></code></pre></div>
+</div>
+<div id="identity-matrices" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Identity matrices</h3>
+<p>The <code>diag</code> function can also be used to create identity matrices with specific dimensions</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">diag</span>(<span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol =</span> <span class="dv">4</span>)  <span class="co"># 4 x 4</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4]</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; [1,]    1    0    0    0</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; [2,]    0    1    0    0</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; [3,]    0    0    1    0</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; [4,]    0    0    0    1</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="fu">diag</span>(<span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">4</span>)  <span class="co"># 2 x 4</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4]</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; [1,]    1    0    0    0</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; [2,]    0    1    0    0</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="fu">diag</span>(<span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol =</span> <span class="dv">2</span>)  <span class="co"># 4 x 2</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; [1,]    1    0</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; [2,]    0    1</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; [3,]    0    0</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; [4,]    0    0</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="math-operations" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Math operations</h1>
+<div id="scalars-and-vectors" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Scalars and vectors</h2>
+<p>Scalar operations occur element-wise for matrices.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>X <span class="co"># for reference</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt; [1,]  3.00  6.00</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; [2,]  1.00  2.00</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; [3,]  0.23  0.46</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; [4,] -2.00 -4.00</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>X <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; [1,]  4.00  7.00</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; [2,]  2.00  3.00</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; [3,]  1.23  1.46</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt; [4,] -1.00 -3.00</span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>X <span class="sc">-</span> <span class="dv">100</span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt;         [,1]    [,2]</span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt; [1,]  -97.00  -94.00</span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt; [2,]  -99.00  -98.00</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt; [3,]  -99.77  -99.54</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt; [4,] -102.00 -104.00</span></span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> X</span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt; [1,]  6.00 12.00</span></span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt; [2,]  2.00  4.00</span></span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt; [3,]  0.46  0.92</span></span>
+<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#&gt; [4,] -4.00 -8.00</span></span>
+<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a>X <span class="sc">/</span> <span class="dv">3</span></span>
+<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a><span class="co">#&gt;             [,1]       [,2]</span></span>
+<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a><span class="co">#&gt; [1,]  1.00000000  2.0000000</span></span>
+<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a><span class="co">#&gt; [2,]  0.33333333  0.6666667</span></span>
+<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a><span class="co">#&gt; [3,]  0.07666667  0.1533333</span></span>
+<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a><span class="co">#&gt; [4,] -0.66666667 -1.3333333</span></span>
+<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a>X<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a><span class="co">#&gt;        [,1]    [,2]</span></span>
+<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a><span class="co">#&gt; [1,] 9.0000 36.0000</span></span>
+<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a><span class="co">#&gt; [2,] 1.0000  4.0000</span></span>
+<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="co">#&gt; [3,] 0.0529  0.2116</span></span>
+<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="co">#&gt; [4,] 4.0000 16.0000</span></span></code></pre></div>
+<p>Note that <code>^2</code> also occurs element-wise, <em>not</em> using matrix multiplication (see further below)!</p>
+<p>You can also do operations with vectors, though you should be careful with the dimensions.
+<code>R</code> will add the vector to each <strong>column</strong> of the matrix.
+When using a vector with a different length than the number of rows (elements in a column), the vector elements will be <em>recycled</em>.
+When the longer object is not a multiple of the shorter, the operation still occurs but a <em>warning</em> is produced (technically a <code>message</code>).</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>X</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#&gt; [1,]  3.00  6.00</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt; [2,]  1.00  2.00</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt; [3,]  0.23  0.46</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt; [4,] -2.00 -4.00</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>v4 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)  <span class="co"># vector of length 4</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>X <span class="sc">+</span> v4</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt; [1,] 4.00 7.00</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt; [2,] 3.00 4.00</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; [3,] 3.23 3.46</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt; [4,] 2.00 0.00</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>v2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># vector of length 2, will be recycled</span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>X <span class="sc">+</span> v2</span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co">#&gt;      [,1]  [,2]</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="co">#&gt; [1,] 4.00  7.00</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co">#&gt; [2,] 3.00  4.00</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co">#&gt; [3,] 1.23  1.46</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="co">#&gt; [4,] 0.00 -2.00</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a>v3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>) <span class="co"># vector or length 3, also recycled with warning</span></span>
+<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a>X <span class="sc">+</span> v3</span>
+<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="co">#&gt; Warning in X + v3: longer object length is not a multiple of shorter object</span></span>
+<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="co">#&gt; length</span></span>
+<span id="cb12-27"><a href="#cb12-27" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb12-28"><a href="#cb12-28" tabindex="-1"></a><span class="co">#&gt; [1,]  4.00  8.00</span></span>
+<span id="cb12-29"><a href="#cb12-29" tabindex="-1"></a><span class="co">#&gt; [2,]  3.00  5.00</span></span>
+<span id="cb12-30"><a href="#cb12-30" tabindex="-1"></a><span class="co">#&gt; [3,]  3.23  1.46</span></span>
+<span id="cb12-31"><a href="#cb12-31" tabindex="-1"></a><span class="co">#&gt; [4,] -1.00 -2.00</span></span>
+<span id="cb12-32"><a href="#cb12-32" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="#cb12-33" tabindex="-1"></a>v5 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>) <span class="co"># vector or length 5, also recycled with warning</span></span>
+<span id="cb12-34"><a href="#cb12-34" tabindex="-1"></a>X <span class="sc">+</span> v5</span>
+<span id="cb12-35"><a href="#cb12-35" tabindex="-1"></a><span class="co">#&gt; Warning in X + v5: longer object length is not a multiple of shorter object</span></span>
+<span id="cb12-36"><a href="#cb12-36" tabindex="-1"></a><span class="co">#&gt; length</span></span>
+<span id="cb12-37"><a href="#cb12-37" tabindex="-1"></a><span class="co">#&gt;      [,1]  [,2]</span></span>
+<span id="cb12-38"><a href="#cb12-38" tabindex="-1"></a><span class="co">#&gt; [1,] 4.00 11.00</span></span>
+<span id="cb12-39"><a href="#cb12-39" tabindex="-1"></a><span class="co">#&gt; [2,] 3.00  3.00</span></span>
+<span id="cb12-40"><a href="#cb12-40" tabindex="-1"></a><span class="co">#&gt; [3,] 3.23  2.46</span></span>
+<span id="cb12-41"><a href="#cb12-41" tabindex="-1"></a><span class="co">#&gt; [4,] 2.00 -1.00</span></span></code></pre></div>
+<div id="two-matrices" class="section level4" number="2.1.0.1">
+<h4><span class="header-section-number">2.1.0.1</span> Two matrices</h4>
+<p>Define a second matrix <code>Y</code> with same dimensions as <code>X</code>.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># We will generate a matrix Y with 2s and 4s at random places (using `sample`)</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co"># Setting a seed allows reproducibility</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>), <span class="at">size =</span> <span class="fu">nrow</span>(X) <span class="sc">*</span> <span class="fu">ncol</span>(X), <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>            <span class="at">nrow =</span> <span class="fu">nrow</span>(X), <span class="at">ncol =</span> <span class="fu">ncol</span>(X))</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>Y</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; [1,]    2    4</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; [2,]    4    2</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; [3,]    2    2</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; [4,]    2    2</span></span></code></pre></div>
+<p>Using the standard math operators occurs element-wise.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>X <span class="sc">+</span> Y</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="co">#&gt;      [,1]  [,2]</span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt; [1,] 5.00 10.00</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt; [2,] 5.00  4.00</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt; [3,] 2.23  2.46</span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt; [4,] 0.00 -2.00</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>X <span class="sc">-</span> Y</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt; [1,]  1.00  2.00</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co">#&gt; [2,] -3.00  0.00</span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt; [3,] -1.77 -1.54</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt; [4,] -4.00 -6.00</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>X <span class="sc">*</span> Y</span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co">#&gt; [1,]  6.00 24.00</span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="co">#&gt; [2,]  4.00  4.00</span></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co">#&gt; [3,]  0.46  0.92</span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co">#&gt; [4,] -4.00 -8.00</span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a>X <span class="sc">/</span> Y</span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="co">#&gt;        [,1]  [,2]</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="co">#&gt; [1,]  1.500  1.50</span></span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a><span class="co">#&gt; [2,]  0.250  1.00</span></span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a><span class="co">#&gt; [3,]  0.115  0.23</span></span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a><span class="co">#&gt; [4,] -1.000 -2.00</span></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a>X <span class="sc">^</span> Y</span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a><span class="co">#&gt;        [,1]      [,2]</span></span>
+<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a><span class="co">#&gt; [1,] 9.0000 1296.0000</span></span>
+<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a><span class="co">#&gt; [2,] 1.0000    4.0000</span></span>
+<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a><span class="co">#&gt; [3,] 0.0529    0.2116</span></span>
+<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a><span class="co">#&gt; [4,] 4.0000   16.0000</span></span></code></pre></div>
+</div>
+<div id="matrix-algebra" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Matrix algebra</h3>
+<p><a href="https://www.statmethods.net/advstats/matrix.html" class="uri">https://www.statmethods.net/advstats/matrix.html</a></p>
+<div id="transpose-t" class="section level4" number="2.1.1.1">
+<h4><span class="header-section-number">2.1.1.1</span> Transpose: <code>t()</code></h4>
+<p><span class="math inline">\(\mathbf{X}^T\)</span></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">t</span>(X)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4]</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#&gt; [1,]    3    1 0.23   -2</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="co">#&gt; [2,]    6    2 0.46   -4</span></span></code></pre></div>
+</div>
+<div id="matrix-multiplication" class="section level4" number="2.1.1.2">
+<h4><span class="header-section-number">2.1.1.2</span> Matrix multiplication: <code>%*%</code></h4>
+<p>Note that <code>X</code> and <code>Y</code> have the same dimensions, so multiplying them straight away doesn’t work (incompatible dimensions)</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="do">## This produces an error because the dimensions are not compatible</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>X <span class="sc">%*%</span> Y</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="co">#&gt; Error in X %*% Y: non-conformable arguments</span></span></code></pre></div>
+<p>Instead, we can transpose <code>X</code> and compute <span class="math inline">\(\mathbf{X}^T \cdot \mathbf{Y}\)</span>:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">t</span>(X) <span class="sc">%*%</span> Y</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="co">#&gt; [1,]  6.46 10.46</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co">#&gt; [2,] 12.92 20.92</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="do">## `crossprod()` is a shortcut for this operation, and is slightly faster</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="fu">crossprod</span>(X, Y)</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co">#&gt; [1,]  6.46 10.46</span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="co">#&gt; [2,] 12.92 20.92</span></span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a><span class="do">## `tcrossprod()` calculates X.Y^T</span></span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>X <span class="sc">%*%</span> <span class="fu">t</span>(Y)</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a><span class="co">#&gt;       [,1]   [,2]   [,3]   [,4]</span></span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a><span class="co">#&gt; [1,]  30.0  24.00  18.00  18.00</span></span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a><span class="co">#&gt; [2,]  10.0   8.00   6.00   6.00</span></span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a><span class="co">#&gt; [3,]   2.3   1.84   1.38   1.38</span></span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a><span class="co">#&gt; [4,] -20.0 -16.00 -12.00 -12.00</span></span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a><span class="fu">tcrossprod</span>(X, Y)</span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a><span class="co">#&gt;       [,1]   [,2]   [,3]   [,4]</span></span>
+<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a><span class="co">#&gt; [1,]  30.0  24.00  18.00  18.00</span></span>
+<span id="cb17-22"><a href="#cb17-22" tabindex="-1"></a><span class="co">#&gt; [2,]  10.0   8.00   6.00   6.00</span></span>
+<span id="cb17-23"><a href="#cb17-23" tabindex="-1"></a><span class="co">#&gt; [3,]   2.3   1.84   1.38   1.38</span></span>
+<span id="cb17-24"><a href="#cb17-24" tabindex="-1"></a><span class="co">#&gt; [4,] -20.0 -16.00 -12.00 -12.00</span></span></code></pre></div>
+<p>The <code>crossprod()</code> and <code>tcrossprod()</code> functions also work with a single matrix as input, in which case they calculate <span class="math inline">\(\mathbf{X}^T\mathbf{X}\)</span> and <span class="math inline">\(\mathbf{X}\mathbf{X}^T\)</span>, respectively:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="do">## X^TX</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">crossprod</span>(X)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="co">#&gt;         [,1]    [,2]</span></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="co">#&gt; [1,] 14.0529 28.1058</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="co">#&gt; [2,] 28.1058 56.2116</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="do">## XX^T</span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="fu">tcrossprod</span>(X)</span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="co">#&gt;        [,1]   [,2]    [,3]  [,4]</span></span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="co">#&gt; [1,]  45.00  15.00  3.4500 -30.0</span></span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="co">#&gt; [2,]  15.00   5.00  1.1500 -10.0</span></span>
+<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a><span class="co">#&gt; [3,]   3.45   1.15  0.2645  -2.3</span></span>
+<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a><span class="co">#&gt; [4,] -30.00 -10.00 -2.3000  20.0</span></span></code></pre></div>
+<p>As already mentioned before, subsetting a matrix with <code>[</code> returns a vector by default.
+Doing matrix multiplication with vectors in R can be ambiguous as R will “guess” itself whether the vector should be treated as a column- or row-vector.
+See <code>?`%*%`</code> for details.</p>
+<p>The example below illustrates some potentially unexpected results</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="do">## Selecting the first column of X, we would expect this to be treated as a column</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="do">## vector with dimensions 4 x 1...</span></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>X[, <span class="dv">1</span>]</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a><span class="co">#&gt; [1]  3.00  1.00  0.23 -2.00</span></span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a><span class="fu">dim</span>(X[, <span class="dv">1</span>])</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a><span class="do">## ...but in R vectors don&#39;t have dimensions</span></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a><span class="do">## Mathematically, multiplicating the first column of X with X is not possible</span></span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a><span class="do">## (multiplying a 4x1 with a 4x2 matrix doesn&#39;t work)</span></span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a><span class="do">## So we would expect the following code to throw an error...</span></span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>X[, <span class="dv">1</span>] <span class="sc">%*%</span> X</span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a><span class="co">#&gt;         [,1]    [,2]</span></span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a><span class="co">#&gt; [1,] 14.0529 28.1058</span></span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a><span class="do">## ...but it doesn&#39;t and instead returns the result as if X[, 1] is a row-vector</span></span></code></pre></div>
+<p>To avoid confusion and when you intend to use single rows or vectors from a matrix as they were single-row or single-column matrices, it’s better to use <code>drop = FALSE</code> when subsetting.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> X[, <span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="do">## Now X1 does have dimensions</span></span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="fu">dim</span>(X1)</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="co">#&gt; [1] 4 1</span></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a><span class="do">## And the following code throws an error</span></span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>X1 <span class="sc">%*%</span> X</span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a><span class="co">#&gt; Error in X1 %*% X: non-conformable arguments</span></span></code></pre></div>
+<p>You can also do matrix multiplication with 2 vectors, in which case again R will guess if they should be treated as column- or row-vectors.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>(a <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="dv">3</span>))</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3</span></span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>(b <span class="ot">&lt;-</span> a <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="co">#&gt; [1] 2 3 4</span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>a <span class="sc">%*%</span> b</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="co">#&gt;      [,1]</span></span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a><span class="co">#&gt; [1,]   20</span></span></code></pre></div>
+</div>
+<div id="inverse-solve" class="section level4" number="2.1.1.3">
+<h4><span class="header-section-number">2.1.1.3</span> Inverse: <code>solve()</code></h4>
+<p><strong>Inverse</strong>: <span class="math inline">\(\mathbf{X}^{-1}\)</span> (only for square matrices)</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="do">## Create new square matrix Z</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>(Z <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span>))</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="co">#&gt; [1,]    1    3</span></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="co">#&gt; [2,]    2    4</span></span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="do">## Compute inverse</span></span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a>(Z_inv <span class="ot">&lt;-</span> <span class="fu">solve</span>(Z))</span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="co">#&gt; [1,]   -2  1.5</span></span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="co">#&gt; [2,]    1 -0.5</span></span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="do">## Check that it&#39;s indeed the inverse</span></span>
+<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a>Z <span class="sc">%*%</span> Z_inv  <span class="co"># the 2x2 identity matrix</span></span>
+<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a><span class="co">#&gt; [1,]    1    0</span></span>
+<span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a><span class="co">#&gt; [2,]    0    1</span></span></code></pre></div>
+<p><strong>Warning:</strong> DON’T USE <code>X^-1</code> to compute a matrix inverse!</p>
+<p>The notation might be confusing because of the way we mathematically describe the inverse of a matrix (<span class="math inline">\(\mathbf{X}^{-1}\)</span>).
+In R, however, <code>X^-1</code> computes <strong>element-wise</strong> inverses of each value.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>Z<span class="sc">^-</span><span class="dv">1</span></span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="co">#&gt;      [,1]      [,2]</span></span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a><span class="co">#&gt; [1,]  1.0 0.3333333</span></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a><span class="co">#&gt; [2,]  0.5 0.2500000</span></span></code></pre></div>
+<p>If you’re wondering why the name “<code>solve</code>” is used for the function to compute a matrix inverse, it’s because <code>solve</code> can do more than just that.
+See <code>?solve</code> for details.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="rank-of-a-matrix" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Rank of a matrix</h1>
+<p>Calculating the rank of the matrix <span class="math inline">\(\mathbf X\)</span>.
+There are several ways to do this in R.
+We’ll use the <code>qr()</code> function (see <code>?qr</code>).
+An alternative would be to use <code>rankMatrix</code> from the <a href="https://cran.r-project.org/package=Matrix"><em>Matrix</em></a> package: <code>Matrix::rankMatrix()</code>.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="do">## Run `qr` and access the `rank` from the results with `$`</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>rank <span class="ot">&lt;-</span> <span class="fu">qr</span>(X)<span class="sc">$</span>rank</span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>rank</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<p>We see that the rank of <code>X</code> is lower than its number of columns and rows, meaning the matrix is <a href="https://en.wikipedia.org/wiki/Rank_(linear_algebra)#Main_definitions"><em>not</em> of full rank</a>.</p>
+<p>Considering the contents of <code>X</code>, can you see why this is?</p>
+<p><strong>Hint</strong>:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">all</span>(X[, <span class="dv">2</span>] <span class="sc">==</span> <span class="dv">2</span> <span class="sc">*</span> X[, <span class="dv">1</span>])</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+</div>
+<div id="session-info" class="section level1 unnumbered">
+<h1>Session info</h1>
+<details>
+<summary>
+Session info
+</summary>
+<pre><code>#&gt; [1] &quot;2024-10-02 16:16:54 CEST&quot;
+#&gt; ─ Session info ───────────────────────────────────────────────────────────────
+#&gt;  setting  value
+#&gt;  version  R version 4.4.0 RC (2024-04-16 r86468)
+#&gt;  os       macOS Big Sur 11.6
+#&gt;  system   aarch64, darwin20
+#&gt;  ui       X11
+#&gt;  language (EN)
+#&gt;  collate  en_US.UTF-8
+#&gt;  ctype    en_US.UTF-8
+#&gt;  tz       Europe/Brussels
+#&gt;  date     2024-10-02
+#&gt;  pandoc   3.1.1 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/ (via rmarkdown)
+#&gt; 
+#&gt; ─ Packages ───────────────────────────────────────────────────────────────────
+#&gt;  package     * version date (UTC) lib source
+#&gt;  bookdown      0.40    2024-07-02 [1] CRAN (R 4.4.0)
+#&gt;  bslib         0.8.0   2024-07-29 [1] CRAN (R 4.4.0)
+#&gt;  cachem        1.1.0   2024-05-16 [1] CRAN (R 4.4.0)
+#&gt;  cli           3.6.3   2024-06-21 [1] CRAN (R 4.4.0)
+#&gt;  digest        0.6.37  2024-08-19 [1] CRAN (R 4.4.1)
+#&gt;  evaluate      1.0.0   2024-09-17 [1] CRAN (R 4.4.1)
+#&gt;  fastmap       1.2.0   2024-05-15 [1] CRAN (R 4.4.0)
+#&gt;  htmltools     0.5.8.1 2024-04-04 [1] CRAN (R 4.4.0)
+#&gt;  jquerylib     0.1.4   2021-04-26 [1] CRAN (R 4.4.0)
+#&gt;  jsonlite      1.8.9   2024-09-20 [1] CRAN (R 4.4.1)
+#&gt;  knitr         1.48    2024-07-07 [1] CRAN (R 4.4.0)
+#&gt;  lifecycle     1.0.4   2023-11-07 [1] CRAN (R 4.4.0)
+#&gt;  R6            2.5.1   2021-08-19 [1] CRAN (R 4.4.0)
+#&gt;  rlang         1.1.4   2024-06-04 [1] CRAN (R 4.4.0)
+#&gt;  rmarkdown     2.28    2024-08-17 [1] CRAN (R 4.4.0)
+#&gt;  rstudioapi    0.16.0  2024-03-24 [1] CRAN (R 4.4.0)
+#&gt;  sass          0.4.9   2024-03-15 [1] CRAN (R 4.4.0)
+#&gt;  sessioninfo   1.2.2   2021-12-06 [1] CRAN (R 4.4.0)
+#&gt;  xfun          0.47    2024-08-17 [1] CRAN (R 4.4.0)
+#&gt;  yaml          2.3.10  2024-07-26 [1] CRAN (R 4.4.0)
+#&gt; 
+#&gt;  [1] /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library
+#&gt; 
+#&gt; ──────────────────────────────────────────────────────────────────────────────</code></pre>
+</details>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiV29ya2luZyB3aXRoIG1hdHJpY2VzIGluIFIiCmF1dGhvcjogIkFkYXB0ZWQgYnkgTWlsYW4gTWFsZmFpdCIKZGF0ZTogJ2ByIGZvcm1hdChTeXMuRGF0ZSgpLCAiJUIgJWQsICVZIilgJwotLS0KCmBgYHtyIHNldHVwLCBpbmNsdWRlPUZBTFNFLCBjYWNoZT1GQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KAogIGNvbGxhcHNlID0gVFJVRSwKICBjb21tZW50ID0gIiM+IgopCmBgYAoKKioqCgojIENyZWF0aW5nIGFuZCBtYW5pcHVsYXRpbmcgbWF0cmljZXMKCldlIHdpbGwgY3JlYXRlIGEgJDQgXHRpbWVzIDIkIG1hdHJpeCwgc3RhcnRpbmcgZnJvbSBhIHZlY3RvciBvZiB2YWx1ZXMuCgpgYGB7ciBjcmVhdGVfbWF0cml4fQojIyBEZWZpbmUgdGhlIG1hdHJpeCBYLCBmaWxsaW5nIG1hdHJpeCAiYnlyb3ciOiA0IHggMgpYIDwtIG1hdHJpeChjKDMsIDYsIDEsIDIsIDAuMjMsIDAuNDYsIC0yLCAtNCksIG5yb3cgPSA0LCBieXJvdyA9IFRSVUUpClgKCiMjIEFsdGVybmF0aXZlIHdheSB0byBkZWZpbmUgdGhlIG1hdHJpeCwgYGJ5cm93ID0gRkFMU0VgIGlzIHRoZSBkZWZhdWx0ClggPC0gbWF0cml4KGMoMywgMSwgMC4yMywgLTIsIDYsIDIsIDAuNDYsIC00KSwgbmNvbCA9IDIsIGJ5cm93ID0gRkFMU0UpClgKCiMgQ3JlYXRpbmcgYSBzZWNvbmQgbWF0cml4OiAyIHggNCwgdXNpbmcgdGhlIHNxdWFyZSBvZiBgWGAKWSA8LSBtYXRyaXgoWF4yLCBucm93ID0gMiwgbmNvbCA9IDQpClkKCiMjIENoZWNrIHRoYXQgd2UgcmVhbGx5IGhhdmUgYSBtYXRyaXgKY2xhc3MoWCkKYGBgCkdlbmVyYWxseSB5b3UgY2FuIGNoZWNrIHRoZSBhcmd1bWVudHMgb2YgYSBmdW5jdGlvbiwgZS5nLiBgbWF0cml4YCwgaW4gUiB3aXRoIGA/bWF0cml4YC4KClRoZSBgZGltYCBmdW5jdGlvbiB0ZWxscyB5b3UgdGhlIF9fZGltZW5zaW9uc19fIG9mIHRoZSBtYXRyaXgsIGBucm93YCBhbmQgYG5jb2xgIGdpdmUgeW91IHRoZSBudW1iZXIgb2Ygcm93cyBhbmQgY29sdW1ucywgcmVzcGVjdGl2ZWx5LgoKYGBge3J9CmRpbShYKSAgIyBuci4gb2Ygcm93cywgbnIuIG9mIGNvbHVtbnMKbnJvdyhYKQpuY29sKFgpCgpkaW0oWSkKYGBgCgoKIyMgU3Vic2V0dGluZwoKTm90ZSB0aGF0IFIgc2VlcyBhIG1hdHJpeCBhcyBgWFtyb3csIGNvbHVtbl1gLCBzbyB5b3UgY2FuIHN1YnNldCBgWGAgd2l0aAoKYGBge3Igc3Vic2V0X21hdHJpeH0KWFsxLCBdICMgZmlyc3Qgcm93IG9mIFgKWFssIDJdICMgc2Vjb25kIGNvbHVtbiBvZiBYClhbMToyLCBdICMgZmlyc3QgMiByb3dzIG9mIFgKYGBgCgpOb3RlIHRoYXQsIGJ5IGRlZmF1bHQsIHN1YnNldHRpbmcgYSBzaW5nbGUgcm93IG9yIGNvbHVtbiBmcm9tIGEgbWF0cml4IF9fcmV0dXJucyBhIHZlY3Rvcl9fLCBub3QgYSBjb2x1bW4tIG9yIHJvdy1tYXRyaXggYXMgbWlnaHQgYmUgZXhwZWN0ZWQuCldlIGNhbiBzZWUgdGhpcyBmcm9tIHRoZSBmYWN0IHRoYXQgdGhlIHN1YnNldCBkb2VzIG5vdCBoYXZlIGRpbWVuc2lvbnMgYW55bW9yZSAoYW4gYXR0cmlidXRlIG9ubHkgZGVmaW5lZCBmb3IgbWF0cmljZXMgaW4gUik6CgpgYGB7cn0KZGltKFhbLCAxXSkgIyBOVUxMID0gbm9uLWV4aXN0ZW50CmNsYXNzKFhbLCAxXSkgIyBub3QgbWF0cml4IGJ1dCBudW1lcmljIHZlY3RvcgpgYGAKClRoaXMgY2FuIGxlYWQgdG8gdW5leHBlY3RlZCBiZWhhdmlvciB3aGVuIGRvaW5nIF9fbWF0cml4IG11bHRpcGxpY2F0aW9uX18gKHNlZSBmdXJ0aGVyIGJlbG93KS4KVG8gYXZvaWQgdGhpcywgd2UgY2FuIHNldCBgZHJvcCA9IEZBTFNFYCBpbiB0aGUgc3Vic2V0dGluZyBicmFja2V0cy4KCmBgYHtyfQojIyBUaGlzIGNyZWF0ZXMgYSAiY29sdW1uLXZlY3RvciIKWFssIDEsIGRyb3AgPSBGQUxTRV0KZGltKFhbLCAxLCBkcm9wID0gRkFMU0VdKQpgYGAKCgojIyBSb3ctIGFuZCBjb2x1bW4tYmluZGluZwoKWW91IGNhbiBhbHNvIGNyZWF0ZSBtYXRyaWNlcyBieSAnYmluZGluZycgdG9nZXRoZXIgdmVjdG9ycyAob2YgdGhlIHNhbWUgbGVuZ3RoKSBjb2x1bW4td2lzZSBvciByb3ctd2lzZSB3aXRoIGBjYmluZCgpYCBhbmQgYHJiaW5kKClgLCByZXNwZWN0aXZlbHkuCgpgYGB7cn0KIyBDcmVhdGUgdmVjdG9ycyBmcm9tIHRoZSByb3dzIG9mIFgKKHgxIDwtIFhbMSwgXSkKKHgyIDwtIFhbMiwgXSkKKHgzIDwtIFhbMywgXSkKKHg0IDwtIFhbNCwgXSkKCiMgQmluZCB0aGVtIGJhY2sgdG9nZXRoZXIgcm93LXdpc2U6IHJlLWNyZWF0ZXMgWApyYmluZCh4MSwgeDIsIHgzLCB4NCkKCiMgQmluZCB0aGVtIGJhY2sgdG9nZXRoZXIgY29sdW1uLXdpc2U6IChlc3NlbnRpYWxseSB0aGUgdHJhbnNwb3NlIG9mIFgpCmNiaW5kKHgxLCB4MiwgeDMsIHg0KQpgYGAKCkJpbmRpbmcgdG9nZXRoZXIgMiBtYXRyaWNlcyBhbHNvIHdvcmtzIChidXQgYmUgbWluZGZ1bCBvZiB0aGVpciBkaW1lbnNpb25zISkuCgpgYGB7ciwgZXJyb3I9VFJVRX0KIyBSb3ctYmluZGluZyB0d28gbWF0cmljZXMKIyBYIGFuZCBZIGRvbid0IGhhdmUgdGhlIHNhbWUgZGltZW5zaW9ucyAoNHgyIHZzLiAyeDQpLAojIHNvIGJpbmRpbmcgdGhlbSBkaXJlY3RseSBkb2Vzbid0IHdvcmsKcmJpbmQoWCwgWSkKCiMgRm9yIHJiaW5kIHdlIG5lZWQgdGhlIHNhbWUgbnVtYmVyIG9mIGNvbHVtbnMKcmJpbmQoWCwgWVssIDE6Ml0pICMgd29ya3MKCiMgRm9yIGNiaW5kLCBzYW1lIG51bWJlciBvZiByb3dzCmNiaW5kKFhbMToyLCBdLCBZKQpgYGAKCk5vdGUgdGhhdCBSIGF1dG9tYXRpY2FsbHkgY3JlYXRlcyByb3cgbmFtZXMgb3IgY29sdW1uIG5hbWVzIGZyb20gdGhlIHZhcmlhYmxlIG5hbWVzIHdoZW4gdXNpbmcgYHJiaW5kKClgIGFuZCBgY2JpbmQoKWAuCgpUbyBhZGQgcm93IGFuZCBjb2x1bW5zIG5hbWVzIHRvIGFuIGV4aXN0aW5nIG1hdHJpeCwgdXNlIGByb3duYW1lcygpYCwgYGNvbG5hbWVzKClgIG9yIHRoZSBtb3JlIGdlbmVyYWwgYGRpbW5hbWVzKClgLgoKYGBge3J9CnJvd25hbWVzKFgpIDwtIGMoInJvd18xIiwgInJvd18yIiwgInJvd18zIiwgInJvd180IikKY29sbmFtZXMoWCkgPC0gYygiY29sXzEiLCAiY29sXzIiKQpYCgojIyBVc2luZyBgTlVMTGAgcmVtb3ZlcyB0aGUgZGltbmFtZXMgYWdhaW4KZGltbmFtZXMoWCkgPC0gTlVMTApYCmBgYAoKCiMjIyBEaWFnb25hbCBlbGVtZW50cyBhbmQgZGlhZ29uYWwgbWF0cmljZXM6IGBkaWFnKClgCgpgYGB7cn0KIyMgR2V0IGRpYWdvbmFsIGVsZW1lbnRzIGZyb20gWCwgcmV0dXJucyB2ZWN0b3IKZGlhZyhYKQoKIyMgQ3JlYXRlIGRpYWdvbmFsIG1hdHJpeCwgdmVjdG9yIGFzIGlucHV0LCByZXR1cm5zIG1hdHJpeApkaWFnKGMoMSwgMiwgMyAsNCkpCmBgYAoKIyMjIElkZW50aXR5IG1hdHJpY2VzCgpUaGUgYGRpYWdgIGZ1bmN0aW9uIGNhbiBhbHNvIGJlIHVzZWQgdG8gY3JlYXRlIGlkZW50aXR5IG1hdHJpY2VzIHdpdGggc3BlY2lmaWMgZGltZW5zaW9ucwoKYGBge3J9CmRpYWcoMSwgbnJvdyA9IDQsIG5jb2wgPSA0KSAgIyA0IHggNApkaWFnKDEsIG5yb3cgPSAyLCBuY29sID0gNCkgICMgMiB4IDQKZGlhZygxLCBucm93ID0gNCwgbmNvbCA9IDIpICAjIDQgeCAyCmBgYAoKCgojIE1hdGggb3BlcmF0aW9ucwoKIyMgU2NhbGFycyBhbmQgdmVjdG9ycwoKU2NhbGFyIG9wZXJhdGlvbnMgb2NjdXIgZWxlbWVudC13aXNlIGZvciBtYXRyaWNlcy4KCmBgYHtyfQpYICMgZm9yIHJlZmVyZW5jZQpYICsgMQpYIC0gMTAwCjIgKiBYClggLyAzClheMgpgYGAKCk5vdGUgdGhhdCBgXjJgIGFsc28gb2NjdXJzIGVsZW1lbnQtd2lzZSwgKm5vdCogdXNpbmcgbWF0cml4IG11bHRpcGxpY2F0aW9uIChzZWUgZnVydGhlciBiZWxvdykhCgpZb3UgY2FuIGFsc28gZG8gb3BlcmF0aW9ucyB3aXRoIHZlY3RvcnMsIHRob3VnaCB5b3Ugc2hvdWxkIGJlIGNhcmVmdWwgd2l0aCB0aGUgZGltZW5zaW9ucy4KYFJgIHdpbGwgYWRkIHRoZSB2ZWN0b3IgdG8gZWFjaCBfX2NvbHVtbl9fIG9mIHRoZSBtYXRyaXguCldoZW4gdXNpbmcgYSB2ZWN0b3Igd2l0aCBhIGRpZmZlcmVudCBsZW5ndGggdGhhbiB0aGUgbnVtYmVyIG9mIHJvd3MgKGVsZW1lbnRzIGluIGEgY29sdW1uKSwgdGhlIHZlY3RvciBlbGVtZW50cyB3aWxsIGJlICpyZWN5Y2xlZCouCldoZW4gdGhlIGxvbmdlciBvYmplY3QgaXMgbm90IGEgbXVsdGlwbGUgb2YgdGhlIHNob3J0ZXIsIHRoZSBvcGVyYXRpb24gc3RpbGwgb2NjdXJzIGJ1dCBhICp3YXJuaW5nKiBpcyBwcm9kdWNlZCAodGVjaG5pY2FsbHkgYSBgbWVzc2FnZWApLgoKYGBge3J9ClgKdjQgPC0gYygxLCAyLCAzLCA0KSAgIyB2ZWN0b3Igb2YgbGVuZ3RoIDQKWCArIHY0Cgp2MiA8LSBjKDEsIDIpICAjIHZlY3RvciBvZiBsZW5ndGggMiwgd2lsbCBiZSByZWN5Y2xlZApYICsgdjIKCnYzIDwtIGMoMSwgMiwgMykgIyB2ZWN0b3Igb3IgbGVuZ3RoIDMsIGFsc28gcmVjeWNsZWQgd2l0aCB3YXJuaW5nClggKyB2MwoKdjUgPC0gYygxLCAyLCAzLCA0LCA1KSAjIHZlY3RvciBvciBsZW5ndGggNSwgYWxzbyByZWN5Y2xlZCB3aXRoIHdhcm5pbmcKWCArIHY1CmBgYAoKIyMjIyBUd28gbWF0cmljZXMKCkRlZmluZSBhIHNlY29uZCBtYXRyaXggYFlgIHdpdGggc2FtZSBkaW1lbnNpb25zIGFzIGBYYC4KCmBgYHtyfQojIFdlIHdpbGwgZ2VuZXJhdGUgYSBtYXRyaXggWSB3aXRoIDJzIGFuZCA0cyBhdCByYW5kb20gcGxhY2VzICh1c2luZyBgc2FtcGxlYCkKIyBTZXR0aW5nIGEgc2VlZCBhbGxvd3MgcmVwcm9kdWNpYmlsaXR5CnNldC5zZWVkKDEpClkgPC0gbWF0cml4KHNhbXBsZShjKDIsIDQpLCBzaXplID0gbnJvdyhYKSAqIG5jb2woWCksIHJlcGxhY2UgPSBUUlVFKSwKICAgICAgICAgICAgbnJvdyA9IG5yb3coWCksIG5jb2wgPSBuY29sKFgpKQpZCmBgYAoKVXNpbmcgdGhlIHN0YW5kYXJkIG1hdGggb3BlcmF0b3JzIG9jY3VycyBlbGVtZW50LXdpc2UuCgpgYGB7cn0KWCArIFkKWCAtIFkKWCAqIFkKWCAvIFkKWCBeIFkKYGBgCgoKIyMjIE1hdHJpeCBhbGdlYnJhCgo8aHR0cHM6Ly93d3cuc3RhdG1ldGhvZHMubmV0L2FkdnN0YXRzL21hdHJpeC5odG1sPgoKIyMjIyBUcmFuc3Bvc2U6IGB0KClgCgokXG1hdGhiZntYfV5UJAoKYGBge3J9CnQoWCkKYGBgCgojIyMjIE1hdHJpeCBtdWx0aXBsaWNhdGlvbjogYCUqJWAKCk5vdGUgdGhhdCBgWGAgYW5kIGBZYCBoYXZlIHRoZSBzYW1lIGRpbWVuc2lvbnMsIHNvIG11bHRpcGx5aW5nIHRoZW0gc3RyYWlnaHQgYXdheSBkb2Vzbid0IHdvcmsgKGluY29tcGF0aWJsZSBkaW1lbnNpb25zKQoKYGBge3IsIGVycm9yPVRSVUV9CiMjIFRoaXMgcHJvZHVjZXMgYW4gZXJyb3IgYmVjYXVzZSB0aGUgZGltZW5zaW9ucyBhcmUgbm90IGNvbXBhdGlibGUKWCAlKiUgWQpgYGAKCkluc3RlYWQsIHdlIGNhbiB0cmFuc3Bvc2UgYFhgIGFuZCBjb21wdXRlICRcbWF0aGJme1h9XlQgXGNkb3QgXG1hdGhiZntZfSQ6CgpgYGB7cn0KdChYKSAlKiUgWQoKIyMgYGNyb3NzcHJvZCgpYCBpcyBhIHNob3J0Y3V0IGZvciB0aGlzIG9wZXJhdGlvbiwgYW5kIGlzIHNsaWdodGx5IGZhc3Rlcgpjcm9zc3Byb2QoWCwgWSkKCiMjIGB0Y3Jvc3Nwcm9kKClgIGNhbGN1bGF0ZXMgWC5ZXlQKWCAlKiUgdChZKQp0Y3Jvc3Nwcm9kKFgsIFkpCmBgYAoKVGhlIGBjcm9zc3Byb2QoKWAgYW5kIGB0Y3Jvc3Nwcm9kKClgIGZ1bmN0aW9ucyBhbHNvIHdvcmsgd2l0aCBhIHNpbmdsZSBtYXRyaXggYXMgaW5wdXQsIGluIHdoaWNoIGNhc2UgdGhleSBjYWxjdWxhdGUgJFxtYXRoYmZ7WH1eVFxtYXRoYmZ7WH0kIGFuZCAkXG1hdGhiZntYfVxtYXRoYmZ7WH1eVCQsIHJlc3BlY3RpdmVseToKCmBgYHtyfQojIyBYXlRYCmNyb3NzcHJvZChYKQojIyBYWF5UCnRjcm9zc3Byb2QoWCkKYGBgCgpBcyBhbHJlYWR5IG1lbnRpb25lZCBiZWZvcmUsIHN1YnNldHRpbmcgYSBtYXRyaXggd2l0aCBgW2AgcmV0dXJucyBhIHZlY3RvciBieSBkZWZhdWx0LgpEb2luZyBtYXRyaXggbXVsdGlwbGljYXRpb24gd2l0aCB2ZWN0b3JzIGluIFIgY2FuIGJlIGFtYmlndW91cyBhcyBSIHdpbGwgImd1ZXNzIiBpdHNlbGYgd2hldGhlciB0aGUgdmVjdG9yIHNob3VsZCBiZSB0cmVhdGVkIGFzIGEgY29sdW1uLSBvciByb3ctdmVjdG9yLgpTZWUgYGAgP2AlKiVgIGBgIGZvciBkZXRhaWxzLgoKVGhlIGV4YW1wbGUgYmVsb3cgaWxsdXN0cmF0ZXMgc29tZSBwb3RlbnRpYWxseSB1bmV4cGVjdGVkIHJlc3VsdHMKCmBgYHtyLCBlcnJvcj1UUlVFfQojIyBTZWxlY3RpbmcgdGhlIGZpcnN0IGNvbHVtbiBvZiBYLCB3ZSB3b3VsZCBleHBlY3QgdGhpcyB0byBiZSB0cmVhdGVkIGFzIGEgY29sdW1uCiMjIHZlY3RvciB3aXRoIGRpbWVuc2lvbnMgNCB4IDEuLi4KWFssIDFdCmRpbShYWywgMV0pCiMjIC4uLmJ1dCBpbiBSIHZlY3RvcnMgZG9uJ3QgaGF2ZSBkaW1lbnNpb25zCgojIyBNYXRoZW1hdGljYWxseSwgbXVsdGlwbGljYXRpbmcgdGhlIGZpcnN0IGNvbHVtbiBvZiBYIHdpdGggWCBpcyBub3QgcG9zc2libGUKIyMgKG11bHRpcGx5aW5nIGEgNHgxIHdpdGggYSA0eDIgbWF0cml4IGRvZXNuJ3Qgd29yaykKIyMgU28gd2Ugd291bGQgZXhwZWN0IHRoZSBmb2xsb3dpbmcgY29kZSB0byB0aHJvdyBhbiBlcnJvci4uLgpYWywgMV0gJSolIFgKIyMgLi4uYnV0IGl0IGRvZXNuJ3QgYW5kIGluc3RlYWQgcmV0dXJucyB0aGUgcmVzdWx0IGFzIGlmIFhbLCAxXSBpcyBhIHJvdy12ZWN0b3IKYGBgCgpUbyBhdm9pZCBjb25mdXNpb24gYW5kIHdoZW4geW91IGludGVuZCB0byB1c2Ugc2luZ2xlIHJvd3Mgb3IgdmVjdG9ycyBmcm9tIGEgbWF0cml4IGFzIHRoZXkgd2VyZSBzaW5nbGUtcm93IG9yIHNpbmdsZS1jb2x1bW4gbWF0cmljZXMsIGl0J3MgYmV0dGVyIHRvIHVzZSBgZHJvcCA9IEZBTFNFYCB3aGVuIHN1YnNldHRpbmcuCgpgYGB7ciwgZXJyb3I9VFJVRX0KWDEgPC0gWFssIDEsIGRyb3AgPSBGQUxTRV0KIyMgTm93IFgxIGRvZXMgaGF2ZSBkaW1lbnNpb25zCmRpbShYMSkKCiMjIEFuZCB0aGUgZm9sbG93aW5nIGNvZGUgdGhyb3dzIGFuIGVycm9yClgxICUqJSBYCmBgYAoKWW91IGNhbiBhbHNvIGRvIG1hdHJpeCBtdWx0aXBsaWNhdGlvbiB3aXRoIDIgdmVjdG9ycywgaW4gd2hpY2ggY2FzZSBhZ2FpbiBSIHdpbGwgZ3Vlc3MgaWYgdGhleSBzaG91bGQgYmUgdHJlYXRlZCBhcyBjb2x1bW4tIG9yIHJvdy12ZWN0b3JzLgoKYGBge3J9CihhIDwtIHNlcV9sZW4oMykpCihiIDwtIGEgKyAxKQphICUqJSBiCmBgYAoKCiMjIyMgSW52ZXJzZTogYHNvbHZlKClgCgpfX0ludmVyc2VfXzogJFxtYXRoYmZ7WH1eey0xfSQgKG9ubHkgZm9yIHNxdWFyZSBtYXRyaWNlcykKCmBgYHtyfQojIyBDcmVhdGUgbmV3IHNxdWFyZSBtYXRyaXggWgooWiA8LSBtYXRyaXgoMTo0LCBucm93ID0gMiwgbmNvbCA9IDIpKQoKIyMgQ29tcHV0ZSBpbnZlcnNlCihaX2ludiA8LSBzb2x2ZShaKSkKCiMjIENoZWNrIHRoYXQgaXQncyBpbmRlZWQgdGhlIGludmVyc2UKWiAlKiUgWl9pbnYgICMgdGhlIDJ4MiBpZGVudGl0eSBtYXRyaXgKYGBgCgpfX1dhcm5pbmc6X18gRE9OJ1QgVVNFIGBYXi0xYCB0byBjb21wdXRlIGEgbWF0cml4IGludmVyc2UhCgpUaGUgbm90YXRpb24gbWlnaHQgYmUgY29uZnVzaW5nIGJlY2F1c2Ugb2YgdGhlIHdheSB3ZSBtYXRoZW1hdGljYWxseSBkZXNjcmliZSB0aGUgaW52ZXJzZSBvZiBhIG1hdHJpeCAoJFxtYXRoYmZ7WH1eey0xfSQpLgpJbiBSLCBob3dldmVyLCBgWF4tMWAgY29tcHV0ZXMgX19lbGVtZW50LXdpc2VfXyBpbnZlcnNlcyBvZiBlYWNoIHZhbHVlLgoKYGBge3J9ClpeLTEKYGBgCgpJZiB5b3UncmUgd29uZGVyaW5nIHdoeSB0aGUgbmFtZSAiYHNvbHZlYCIgaXMgdXNlZCBmb3IgdGhlIGZ1bmN0aW9uIHRvIGNvbXB1dGUgYSBtYXRyaXggaW52ZXJzZSwgaXQncyBiZWNhdXNlIGBzb2x2ZWAgY2FuIGRvIG1vcmUgdGhhbiBqdXN0IHRoYXQuClNlZSBgP3NvbHZlYCBmb3IgZGV0YWlscy4KCgojIFJhbmsgb2YgYSBtYXRyaXgKCkNhbGN1bGF0aW5nIHRoZSByYW5rIG9mIHRoZSBtYXRyaXggJFxtYXRoYmYgWCQuClRoZXJlIGFyZSBzZXZlcmFsIHdheXMgdG8gZG8gdGhpcyBpbiBSLgpXZSdsbCB1c2UgdGhlIGBxcigpYCBmdW5jdGlvbiAoc2VlIGA/cXJgKS4KQW4gYWx0ZXJuYXRpdmUgd291bGQgYmUgdG8gdXNlIGByYW5rTWF0cml4YCBmcm9tIHRoZSBbKk1hdHJpeCpdKGh0dHBzOi8vY3Jhbi5yLXByb2plY3Qub3JnL3BhY2thZ2U9TWF0cml4KSBwYWNrYWdlOiBgTWF0cml4OjpyYW5rTWF0cml4KClgLgoKYGBge3IgcmFua30KIyMgUnVuIGBxcmAgYW5kIGFjY2VzcyB0aGUgYHJhbmtgIGZyb20gdGhlIHJlc3VsdHMgd2l0aCBgJGAKcmFuayA8LSBxcihYKSRyYW5rCnJhbmsKYGBgCgpXZSBzZWUgdGhhdCB0aGUgcmFuayBvZiBgWGAgaXMgbG93ZXIgdGhhbiBpdHMgbnVtYmVyIG9mIGNvbHVtbnMgYW5kIHJvd3MsIG1lYW5pbmcgdGhlIG1hdHJpeCBpcyBbKm5vdCogb2YgZnVsbCByYW5rXShodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9SYW5rXyhsaW5lYXJfYWxnZWJyYSkjTWFpbl9kZWZpbml0aW9ucykuCgpDb25zaWRlcmluZyB0aGUgY29udGVudHMgb2YgYFhgLCBjYW4geW91IHNlZSB3aHkgdGhpcyBpcz8KCl9fSGludF9fOgoKYGBge3J9CmFsbChYWywgMl0gPT0gMiAqIFhbLCAxXSkKYGBgCgpgYGB7ciwgY2hpbGQ9Il9zZXNzaW9uLWluZm8uUm1kIn0KYGBgCg==</div>
+<div class="footer">
+    <hr>
+    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
+    CC BY-NC-SA 4.0</a> licence.
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Introduction-Matrices-R.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

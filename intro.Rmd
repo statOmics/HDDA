@@ -1073,9 +1073,9 @@ With (suppressing the dependence on $\mathbf{x}$)
 the error can be expressed as
 \begin{eqnarray*}
   \text{Err}
-    &=&E\left\{\left[(\hat{Y} -\mu)-(Y-\mu^*)-(\mu^*-\mu)\right]^2\right\} \\
-    &=& E[(\hat{Y} -\mu)^2]+E[(Y-\mu^*)^2]+E[(\mu^*-\mu)^2] \\
-    &=& \text{var}[\hat{Y}] +\text{var}[Y] +\text{bias}^2
+    &=&E\left\{\left[(\hat{Y} -\mu)-(Y^*-\mu^*)-(\mu^*-\mu)\right]^2\right\} \\
+    &=& E[(\hat{Y} -\mu)^2]+E[(Y^*-\mu^*)^2]+E[(\mu^*-\mu)^2] \\
+    &=& \text{var}[\hat{Y}] +\text{var}[Y^*] +\text{bias}^2
 \end{eqnarray*}
 
  The term $\text{var}[Y]$ (irreducible error) does not depend on the model and may therefore be ignored when $\text{Err}$ is used for comparing prediction models.

@@ -14,9 +14,10 @@ output:
 ## Lectures
 
 - Theory (6-7 x 2.5 hours)
-- PC Labs (6 x 2.5 hours)
-- Q&A session (2.5 hours)
 - Paper reading sessions (1 x 2.5hours)
+- Q&A session (2.5 hours)
+- PC Labs (6 x 2.5 hours)
+- Project work (2 x 2.5 hours)
 
 ## Instructors 
 

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Milan Malfait" />
+
+<meta name="date" content="2024-10-02" />
+
+<title>Introduction to RMarkdown</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HDDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="intro.html">1. Introduction</a>
+    </li>
+    <li>
+      <a href="svd.html">2. Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="prediction.html">3. Prediction with High Dimensional Predictors</a>
+    </li>
+    <li>
+      <a href="sparseSvd.html">4. Sparse Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="lda.html">5. Linear Discriminant Analysis</a>
+    </li>
+    <li>
+      <a href="hclust.html">6.1. Introduction to Clustering</a>
+    </li>
+    <li>
+      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">6.2. Paper Model-based Clustering</a>
+    </li>
+    <li>
+      <a href="em.html">6.3. EM algorithm</a>
+    </li>
+    <li>
+      <a href="lsi.html">7. Large Scale Inference</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab1-Intro-SVD.html">Lab 1: Intro &amp; SVD</a>
+    </li>
+    <li>
+      <a href="Lab2-PCA.html">Lab 2: SVD - PCA</a>
+    </li>
+    <li>
+      <a href="Lab3-Penalized-Regression.html">Lab 3: Prediction</a>
+    </li>
+    <li>
+      <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
+    </li>
+    <li>
+      <a href="Lab5-Clustering.html">Lab 5: Clustering</a>
+    </li>
+    <li>
+      <a href="Lab6-Large-Scale-Inference.html">Lab 6: LSI</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="https://github.com/statOmics/HDDA">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Introduction to RMarkdown</h1>
+<h4 class="author">Milan Malfait</h4>
+<h4 class="date">October 02, 2024</h4>
+
+</div>
+
+
+<div id="rmd-documents" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> <code>.Rmd</code> documents</h1>
+<p>With RMarkdown it is easy to create documents or webpages that include text, code and plots. During the practical sessions we will work with RMarkdown, and not with <code>R</code> scripts. RMarkdown allows you to combine the code required to produce an analysis, its results, visualizations and descriptive text all in one document.</p>
+<p>For a detailed guide on RMarkdown see <a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The Definitive Guide</a>. Most of the contents discussed here come from that source.</p>
+<div id="metadata" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Metadata</h2>
+<p>The markdown notebook will start with a <a href="https://en.wikipedia.org/wiki/YAML">YAML</a> header, which includes the title, names of the authors and type of RMarkdown file. We typically work with <code>html_document</code> (the default).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Title&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Author names&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Date&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">output</span><span class="kw">:</span><span class="at">  html_document</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<p>The <code>html_document</code> output specifies that your document will be converted to HTML when you “knit” or compile it.</p>
+</div>
+<div id="compiling-an-r-markdown-file" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Compiling an R Markdown file</h2>
+<p>Essentially, an .Rmd file is just a plain text file used to store all your text and code needed to produce your final report. Although RStudio allows you to preview the output of your code, the output is not itself part of the .Rmd file. When you save and close your Rmd file and open it again later or send it to someone, the output will have disappeared (although also here, RStudio has some tricks to keep the output). The way to properly generate the output version of your Rmd file is by <strong>compiling</strong> it. This can be done in RStudio by pressing the <code>Knit</code> button in the toolbar, or by pressing <code>Shift + Ctrl + K</code> (Mac: <code>Shift + Cmd + K</code>). This will produce an HTML file with the same name as your Rmd and located in the same folder. You can open this file in any internet browser (you don’t need an internet connection since it’s a local file) and marvel at the nicely formatted output of your hard work. Another advantage of working with RStudio is that it will open this file automatically, either in a new window or in the “Viewer” pane (you can change this in the RStudio settings).</p>
+<p><strong>Important</strong>: saving your Rmd file does <strong>not</strong> update the corresponding HTML file automatically. In contrast, when you compile (“Knit”), your Rmd file will be saved first.</p>
+<p>While editing you generally want to save often (you don’t want to lose stuff if something goes wrong) but you don’t need to compile every time you make a minor change, unless you want to see what the output will look like.</p>
+</div>
+<div id="formatting-text" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Formatting text</h2>
+<div id="bold-and-italic-text" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Bold and italic text</h3>
+<p>Text in an R Markdown document (i.e. everything that is not considered code) is written in <a href="https://bookdown.org/yihui/rmarkdown/markdown-syntax.html">Markdown syntax</a>. This enables you to format text by surrounding it with special characters.</p>
+<p><em>Italic text</em> is generated by surrounding the text with a pair of either underscores (<code>_text_</code>) or asterisks (<code>*text*</code>). <strong>Bold text</strong> uses a pair of double underscores (<code>__text__</code>) or asterisks (<code>**text**</code>). <strong><em>Bold italic text</em></strong> can be achieved by using a combination of the two (<code>__*text*__</code>).</p>
+</div>
+<div id="lists" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> Lists</h3>
+<p>Unordered list items start with <code>*</code>, <code>-</code>, or <code>+</code>, and you can nest one list within another list by indenting the sub-list, for example:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ss">- </span>one item</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="ss">- </span>one item</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="ss">- </span>one item</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="ss">    * </span>one more item</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="ss">    * </span>one more item</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="ss">    * </span>one more item</span></code></pre></div>
+<p>The output of the above syntax would be:</p>
+<ul>
+<li>one item</li>
+<li>one item</li>
+<li>one item
+<ul>
+<li>one more item</li>
+<li>one more item</li>
+<li>one more item</li>
+</ul></li>
+</ul>
+<p>A numbered list can be created by starting each item with a number:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ss">1. </span>the first item</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="ss">2. </span>the second item</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="ss">3. </span>the third item</span></code></pre></div>
+<p>Output:</p>
+<ol style="list-style-type: decimal">
+<li>the first item</li>
+<li>the second item</li>
+<li>the third item</li>
+</ol>
+<p><strong>Note:</strong> make sure to leave an empty line between text and a list for correct formatting.</p>
+</div>
+<div id="section-headers" class="section level3" number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> Section headers</h3>
+<p>Section headers can be written using a number of # signs, where the amount of #’s specifies the level:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu"># Main section title: first level</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">## Subsection: second level</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">### Sub-subsection: third level</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="fu">#### Sub-sub-subsection: fourth level</span></span></code></pre></div>
+<p>The output:</p>
+</div>
+</div>
+</div>
+<div id="main-section-title-first-level" class="section level1 unnumbered">
+<h1>Main section title: first level</h1>
+<div id="subsection-second-level" class="section level2 unnumbered">
+<h2>Subsection: second level</h2>
+<div id="sub-subsection-third-level" class="section level3 unnumbered">
+<h3>Sub-subsection: third level</h3>
+<div id="sub-sub-subsection-fourth-level" class="section level4 unnumbered">
+<h4>Sub-sub-subsection: fourth level</h4>
+<p>In general it’s not recommended to go further than 4 sub-levels of sections.</p>
+<p>Note that you can also include a <a href="https://bookdown.org/yihui/rmarkdown/html-document.html#table-of-contents">table of contents</a> at the top of your file by specifying <code>toc: true</code> in the YAML header.</p>
+</div>
+</div>
+</div>
+<div id="integrating-text-and-r-code" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Integrating text and R code</h2>
+<p>You can insert chunks of R code in your RMarkdown file by wrapping a code block inside <code>```{r}</code> and <code>```</code>.</p>
+<p>In RStudio this is easily done by using the <code>Insert</code> button in the toolbar or the keyboard shorcut <code>Ctrl + Alt + I</code> (<code>Cmd + Option + I</code> on macOS).</p>
+<p>For more information, see <a href="https://bookdown.org/yihui/rmarkdown/r-code.html">section 2.6</a> of <em>The Definitive Guide</em></p>
+<p>We will demonstrete the use of R-code with various examples in the sections below so that you can familiarise yourself with the syntax.</p>
+</div>
+</div>
+<div id="basic-r-stuff" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Basic R stuff</h1>
+<div id="simple-calculations" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Simple calculations</h2>
+<p>R can be used as a simple calculator. Executing code can be done in various ways. To execute the entire chunk of code:</p>
+<ul>
+<li>In RStudio: click the green arrow in the upper right corner of the code chunk</li>
+<li>Place your cursor inside the chunk and press <code>Shift + Ctrl + Enter</code> (Mac: <code>Shift + Cmd + Enter</code>)</li>
+</ul>
+<p>Code can also be run line by line by selecting a line with your cursor and pressing <code>Ctrl + Enter</code> (Mac: <code>Cmd + Enter</code>).</p>
+<p>Try executing the code below using both ways: line-by-line and the entire chunk.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="dv">1</span><span class="sc">+</span><span class="dv">1</span></span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>(<span class="dv">5-3</span>)<span class="sc">+</span><span class="dv">7</span><span class="sc">*</span><span class="dv">10</span><span class="sc">/</span><span class="dv">2</span></span></code></pre></div>
+<pre><code>## [1] 37</code></pre>
+<p>The output should be displayed either right below the code chunk or in the R console. You can change this behaviour by selecting the settings gear in the RStudio toolbar and selecting <code>Chunk Output Inline</code> or <code>Chunk Output in Console</code>.</p>
+<p>You can also run all chunks in you Rmd file by pressing the <code>Run</code> button in the toolbar (upper right) and then select <code>Run All</code> (or using the keyboard shortcut <code>Shift + Ctrl + R</code> on Windows or <code>Shift + Cmd + R</code> on Mac). Note that this menu also provides additional ways of running R chunks, the most useful ones being:</p>
+<ul>
+<li><code>Run All Chunks Above</code>: this executes all code chunks preceding your cursor location, starting at the top and tehn running down.</li>
+<li><code>Restart R and Run All Chunks</code>: this will restart R and re-run your entire document. Note that this will <strong>remove all current objects and data from memory</strong> and re-starting R in a blank state. This means that any code that was run in the console and not saved in a code chunk will be lost. This might seem scary at first, but there are very good reasons to do this often. You can read more about this workflow <a href="https://rstats.wtf/save-source.html#restart-r-often-during-development">here</a>.</li>
+</ul>
+</div>
+<div id="commenting-r-code" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Commenting R code</h2>
+<p>You can add comments to your R code by starting a line with #. This is useful to describe what your code is doing (or should be doing). Annotating your code this way is very useful to communicate both with others and your future self. Try to keep these comments clear but short. Longer descriptions should go in the main text of your RMarkdown file. Commenting also provides a way of “disabling” code without having to remove it. Note that each new line of a comment should be preceded by a #. You can easily “comment out” multiple lines by selecting them and pressing <code>Shift + Ctrl + C</code> (Mac: <code>Shift + Cmd + C</code>).</p>
+<p>Try running the chunk below and verify that it does not produce any output. What happens if you remove one of the # signs?</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># This is a comment</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co"># This is a very long comment split over</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co"># multiple lines</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co"># Code inside a comment is not executed</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># 1+1</span></span></code></pre></div>
+</div>
+<div id="assigning-objects-to-save-results-and-perform-calculations" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Assigning objects to save results and perform calculations</h2>
+<p>You can save results of function calls or calculations by assigning the value to a <em>variable</em> using the assign operator <code>&lt;-</code>.</p>
+<p>Run the code below and verify the value of <code>c</code>. You can also check the value of a variable by entering it in the Console and pressing <code>Enter</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>c <span class="ot">&lt;-</span> a <span class="sc">+</span> b</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>c</span></code></pre></div>
+<pre><code>## [1] 5</code></pre>
+<p>Note that in principle, you can also use <code>=</code> for assignment, but this is considered to be bad practice because the equal sign is reserved for function arguments (see next section). So you should always use <code>&lt;-</code> for assignment.</p>
+<p><strong>Hint:</strong> a quick and easy way to type <code>&lt;-</code> in RStudio is by using the shortcut <code>Alt + -</code> (Mac: <code>Option + -</code>).</p>
+</div>
+<div id="functions" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Functions</h2>
+<p>Functions are commands in R that perform certain tasks. They take inputs in the form of <em>arguments</em> and return their results as <em>output</em>. They are called using their name, followed by parentheses <code>()</code> in which the arguments are specified. There are many built-in functions in R. In addition, you can write your own functions or load other functins through the use of <em>packages</em> (more on that later).</p>
+<p>As an example, we can use the function <code>rnorm</code> to sample 100 draws from a Normal distribution. We assign the result (a vector of 100 random numbers) to a new variable <code>draws</code> and display the first 6 values by caling the function <code>head</code> on this new variable.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># sample 100 numbers from a standard normal distribution</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co"># (mean = 0, standard deviation = 1)</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">head</span>(draws)</span></code></pre></div>
+<pre><code>## [1]  0.2097984 -0.9040995 -0.9580038 -1.3722333 -0.1535026 -1.0673587</code></pre>
+</div>
+<div id="getting-help-in-r" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Getting help in R: <code>?</code></h2>
+<p>What if instead of drawing from the standard normal distribution we want to sample from a normal with a mean of 5 and a standard deviation of 2? Knowing that <code>rnorm</code> is the function to generate normally distributed numbers, we can get more information on it by executing <code>?rnorm</code> (usually you would do this in the Console, but for demonstration, we run it inside a code chunk here). This will open up the <em>help</em> page for the “The Normal Distribution” and all its related functions inside R, one of which is <code>rnorm</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>?rnorm</span></code></pre></div>
+<p>Read through the documentation, can you figure out how to change the mean and standard deviation?</p>
+<p>The solution is to specify the <code>mean</code> and <code>sd</code> arguments.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>draws2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">head</span>(draws2)</span></code></pre></div>
+<pre><code>## [1]  7.102105  2.708233  3.591863  5.386021  6.364308 10.225009</code></pre>
+<p>Each built-in R function or functions loaded through a package has a help page. In addition, there is a wealth of information through the wonderful magic of <a href="https://www.google.com/">Google</a>. Another great place to look for answers or ask questions yourself is <a href="https://stackoverflow.com/">StackOverflow</a>.</p>
+</div>
+<div id="tidyverse" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> Tidyverse</h2>
+<p>The <em>tidyverse</em> is a set of packages designed to make data science in R more user-friendly.
+It shares a common philosophy and grammar of doing data science, which can change somewhat from how base R works (though it shouldn’t be an excuse to learn how to use base R!!!).</p>
+<p>Instead of installing each <em>tidyverse</em> package individually, you can install all of them simultaneously by simply calling</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
+<p>Note that this code won’t be executed when compiling this report, because I specified <code>eval=FALSE</code> in the <a href="https://bookdown.org/yihui/rmarkdown/r-code.html">chunk options</a>.
+Instead it should be called manually, for example in an R console.</p>
+<p>For more information see</p>
+<ul>
+<li><a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a></li>
+<li><a href="https://rafalab.github.io/dsbook/tidyverse.html" class="uri">https://rafalab.github.io/dsbook/tidyverse.html</a></li>
+<li><a href="https://r4ds.had.co.nz/" class="uri">https://r4ds.had.co.nz/</a></li>
+</ul>
+</div>
+<div id="visualizations" class="section level2" number="2.7">
+<h2><span class="header-section-number">2.7</span> Visualizations</h2>
+<div id="base-r" class="section level3" number="2.7.1">
+<h3><span class="header-section-number">2.7.1</span> Base R</h3>
+<p>A picture often says more than words (or lines of code output) and R has a rich <a href="https://rstudio-pubs-static.s3.amazonaws.com/7953_4e3efd5b9415444ca065b1167862c349.html">visualization toolbox</a> that allows us to make powerful visualizations of our data.</p>
+<p>For example, to visually verify that the random numbers we generated earlier (which are still stored in memory under the variables <code>draws</code> and <code>draws2</code>) are indeed normally distributed, we could make a histogram of them, using the <code>hist</code> function.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># draws comes from a standard normal (mean = 0, sd = 1)</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">hist</span>(draws)</span></code></pre></div>
+<p><img src="Introduction-RMarkdown_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># draws 2 comes from a normal with mean = 5, sd = 2</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="fu">hist</span>(draws2)</span></code></pre></div>
+<p><img src="Introduction-RMarkdown_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<p>Note that you can customize these plots in a lot of ways. Looking at the help page of <code>hist</code> or doing a quick internet search will take you a long way!</p>
+</div>
+<div id="ggplot2" class="section level3" number="2.7.2">
+<h3><span class="header-section-number">2.7.2</span> ggplot2</h3>
+<p>Although powerful, the base R visualization framework can be somewhat challenging to work with.
+A good alternative is the <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code> package</a>, part of the larger <code>tidyverse</code> which includes more useful packages for data manipulation and analysis.
+<code>ggplot2</code> uses a visualization framework based on the <a href="https://ggplot2-book.org/introduction.html#what-is-the-grammar-of-graphics"><em>grammar of graphics</em> philosophy</a>, which we won’t get further into here but which can be quite an intuitive way to think about data visualizations.</p>
+<p><code>ggplot2</code> works best with a <code>data.frame</code> as input.
+As an example, we’ll use the <code>mtcars</code> data, which is available by default in every R installation (for more info on this data set, see <code>?mtcars</code>).
+With just a few lines, we can create already quite elegant visualizations:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(displ, hwy, <span class="at">colour =</span> class)) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
+<p><img src="Introduction-RMarkdown_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>You could perfectly recreate this plot with base R, but it’s going to take more lines of code and potential headaches.
+Still, both frameworks have their strengths and weaknesses and they are complementary in many ways, so it pays to learn both of them rather than stubbornly sticking to one.</p>
+<p>There are tons of documentation and tutorials on <code>ggplot2</code> to be found online.
+A good place to start is <a href="https://ggplot2.tidyverse.org/" class="uri">https://ggplot2.tidyverse.org/</a>.</p>
+</div>
+</div>
+<div id="importing-data" class="section level2" number="2.8">
+<h2><span class="header-section-number">2.8</span> Importing data</h2>
+<p>See <a href="https://r4ds.had.co.nz/data-import.html" class="uri">https://r4ds.had.co.nz/data-import.html</a>.</p>
+<p>Note that both the base <code>read.csv</code> and the <em>tidyverse</em> equivalent <code>readr::read_csv()</code> can both use URLs to read in data.
+That way you don’t have to download the data locally on your machine or worry about different versions.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="do">## Example from HDA2020 course (https://statomics.github.io/HDA2020/)</span></span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>uk_foods <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">&quot;https://raw.githubusercontent.com/statOmics/HDA2020/data/ukFoods.csv&quot;</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="cn">TRUE</span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## New names:
+## Rows: 17 Columns: 5
+## ── Column specification
+## ──────────────────────────────────────────────────────── Delimiter: &quot;,&quot; chr
+## (1): ...1 dbl (4): England, Wales, Scotland, N.Ireland
+## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## • `` -&gt; `...1`</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>uk_foods</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["...1"],"name":[1],"type":["chr"],"align":["left"]},{"label":["England"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Wales"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Scotland"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["N.Ireland"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"Cheese","2":"105","3":"103","4":"103","5":"66"},{"1":"Carcass_meat","2":"245","3":"227","4":"242","5":"267"},{"1":"Other_meat","2":"685","3":"803","4":"750","5":"586"},{"1":"Fish","2":"147","3":"160","4":"122","5":"93"},{"1":"Fats_and_oils","2":"193","3":"235","4":"184","5":"209"},{"1":"Sugars","2":"156","3":"175","4":"147","5":"139"},{"1":"Fresh_potatoes","2":"720","3":"874","4":"566","5":"1033"},{"1":"Fresh_Veg","2":"253","3":"265","4":"171","5":"143"},{"1":"Other_Veg","2":"488","3":"570","4":"418","5":"355"},{"1":"Processed_potatoes","2":"198","3":"203","4":"220","5":"187"},{"1":"Processed_Veg","2":"360","3":"365","4":"337","5":"334"},{"1":"Fresh_fruit","2":"1102","3":"1137","4":"957","5":"674"},{"1":"Cereals","2":"1472","3":"1582","4":"1462","5":"1494"},{"1":"Beverages","2":"57","3":"73","4":"53","5":"47"},{"1":"Soft_drinks","2":"1374","3":"1256","4":"1572","5":"1506"},{"1":"Alcoholic_drinks","2":"375","3":"475","4":"458","5":"135"},{"1":"Confectionery","2":"54","3":"64","4":"62","5":"41"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="summary-of-data" class="section level2" number="2.9">
+<h2><span class="header-section-number">2.9</span> Summary of data</h2>
+<p>To get a quick summary of the data, you can use the <code>summary</code> function. This will return some summary statistics for the columns present in the data.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="do">## iris is a default data set available in R</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="do">## To get more info, use `?iris`</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="fu">summary</span>(iris)</span></code></pre></div>
+<pre><code>##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
+##  Min.   :4.300   Min.   :2.000   Min.   :1.000   Min.   :0.100  
+##  1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600   1st Qu.:0.300  
+##  Median :5.800   Median :3.000   Median :4.350   Median :1.300  
+##  Mean   :5.843   Mean   :3.057   Mean   :3.758   Mean   :1.199  
+##  3rd Qu.:6.400   3rd Qu.:3.300   3rd Qu.:5.100   3rd Qu.:1.800  
+##  Max.   :7.900   Max.   :4.400   Max.   :6.900   Max.   :2.500  
+##        Species  
+##  setosa    :50  
+##  versicolor:50  
+##  virginica :50  
+##                 
+##                 
+## </code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">class</span>(iris)</span></code></pre></div>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+</div>
+<div id="subsetting-data" class="section level2" number="2.10">
+<h2><span class="header-section-number">2.10</span> Subsetting data</h2>
+<p>You can select subsets of a <code>data.frame</code> by using square brackets <code>[]</code> and specifying the number(s) of the row(s) or column(s) you want to select. Alternatively, you can use the dollar sign <code>$</code> to select a column using its name.</p>
+<p>To reduce the output printed out, we will first make a subset of the <code>iris</code> data containing just the first 10 rows.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># make subset of data to prevent long outputs</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>iris_sub <span class="ot">&lt;-</span> iris[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, ]</span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>iris_sub</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"5.1","2":"3.5","3":"1.4","4":"0.2","5":"setosa","_rn_":"1"},{"1":"4.9","2":"3.0","3":"1.4","4":"0.2","5":"setosa","_rn_":"2"},{"1":"4.7","2":"3.2","3":"1.3","4":"0.2","5":"setosa","_rn_":"3"},{"1":"4.6","2":"3.1","3":"1.5","4":"0.2","5":"setosa","_rn_":"4"},{"1":"5.0","2":"3.6","3":"1.4","4":"0.2","5":"setosa","_rn_":"5"},{"1":"5.4","2":"3.9","3":"1.7","4":"0.4","5":"setosa","_rn_":"6"},{"1":"4.6","2":"3.4","3":"1.4","4":"0.3","5":"setosa","_rn_":"7"},{"1":"5.0","2":"3.4","3":"1.5","4":"0.2","5":"setosa","_rn_":"8"},{"1":"4.4","2":"2.9","3":"1.4","4":"0.2","5":"setosa","_rn_":"9"},{"1":"4.9","2":"3.1","3":"1.5","4":"0.1","5":"setosa","_rn_":"10"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="co"># Select first column, single brackets returns data.frame</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>iris_sub[<span class="dv">1</span>]</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"5.1","_rn_":"1"},{"1":"4.9","_rn_":"2"},{"1":"4.7","_rn_":"3"},{"1":"4.6","_rn_":"4"},{"1":"5.0","_rn_":"5"},{"1":"5.4","_rn_":"6"},{"1":"4.6","_rn_":"7"},{"1":"5.0","_rn_":"8"},{"1":"4.4","_rn_":"9"},{"1":"4.9","_rn_":"10"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>iris_sub[<span class="st">&quot;Sepal.Length&quot;</span>]</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"5.1","_rn_":"1"},{"1":"4.9","_rn_":"2"},{"1":"4.7","_rn_":"3"},{"1":"4.6","_rn_":"4"},{"1":"5.0","_rn_":"5"},{"1":"5.4","_rn_":"6"},{"1":"4.6","_rn_":"7"},{"1":"5.0","_rn_":"8"},{"1":"4.4","_rn_":"9"},{"1":"4.9","_rn_":"10"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co"># double brackets returns vector</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>iris_sub[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>##  [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 4.4 4.9</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>iris_sub[[<span class="st">&quot;Sepal.Length&quot;</span>]]</span></code></pre></div>
+<pre><code>##  [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 4.4 4.9</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="co"># using the dollar sign, also returns vector</span></span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>iris_sub<span class="sc">$</span>Sepal.Length</span></code></pre></div>
+<pre><code>##  [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 4.4 4.9</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="co"># Select all columns except the first one</span></span>
+<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a>iris_sub[<span class="sc">-</span><span class="dv">1</span>]</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sepal.Width"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[4],"type":["fct"],"align":["left"]}],"data":[{"1":"3.5","2":"1.4","3":"0.2","4":"setosa","_rn_":"1"},{"1":"3.0","2":"1.4","3":"0.2","4":"setosa","_rn_":"2"},{"1":"3.2","2":"1.3","3":"0.2","4":"setosa","_rn_":"3"},{"1":"3.1","2":"1.5","3":"0.2","4":"setosa","_rn_":"4"},{"1":"3.6","2":"1.4","3":"0.2","4":"setosa","_rn_":"5"},{"1":"3.9","2":"1.7","3":"0.4","4":"setosa","_rn_":"6"},{"1":"3.4","2":"1.4","3":"0.3","4":"setosa","_rn_":"7"},{"1":"3.4","2":"1.5","3":"0.2","4":"setosa","_rn_":"8"},{"1":"2.9","2":"1.4","3":"0.2","4":"setosa","_rn_":"9"},{"1":"3.1","2":"1.5","3":"0.1","4":"setosa","_rn_":"10"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="co"># Selecting rows</span></span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a>iris_sub[<span class="dv">1</span>, ] <span class="co"># Select the first row</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"5.1","2":"3.5","3":"1.4","4":"0.2","5":"setosa","_rn_":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a>iris_sub[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,] <span class="co"># Select the first five rows</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"5.1","2":"3.5","3":"1.4","4":"0.2","5":"setosa","_rn_":"1"},{"1":"4.9","2":"3.0","3":"1.4","4":"0.2","5":"setosa","_rn_":"2"},{"1":"4.7","2":"3.2","3":"1.3","4":"0.2","5":"setosa","_rn_":"3"},{"1":"4.6","2":"3.1","3":"1.5","4":"0.2","5":"setosa","_rn_":"4"},{"1":"5.0","2":"3.6","3":"1.4","4":"0.2","5":"setosa","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a>iris_sub[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>), ] <span class="co"># select the second and fourth rows</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"4.9","2":"3.0","3":"1.4","4":"0.2","5":"setosa","_rn_":"2"},{"1":"4.6","2":"3.1","3":"1.5","4":"0.2","5":"setosa","_rn_":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co"># columns and rows</span></span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>iris_sub[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="st">&quot;Sepal.Length&quot;</span>] <span class="co"># first 5 rows of &quot;Sepal.Length&quot; column</span></span></code></pre></div>
+<pre><code>## [1] 5.1 4.9 4.7 4.6 5.0</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>iris_sub[<span class="dv">3</span>, <span class="dv">2</span>]  <span class="co"># third row, second column</span></span></code></pre></div>
+<pre><code>## [1] 3.2</code></pre>
+</div>
+<div id="including-r-object-values-or-results-in-the-text" class="section level2" number="2.11">
+<h2><span class="header-section-number">2.11</span> Including R object values or results in the text</h2>
+<p>You can add inline R code results by wrapping them inside <code>`r `</code>. This is useful for discussing the value of a result in your text. Instead of having to copy the value of a result (which is prone to error and not robust to changes), you can just call it inside the text. For example, we could calculate the mean sepal length of the iris flowers as follow:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a><span class="fu">mean</span>(iris<span class="sc">$</span>Sepal.Length)</span></code></pre></div>
+<pre><code>## [1] 5.843333</code></pre>
+<p>We could copy the value inside our text, but a better way is by just running the code inline as <code>mean(iris$Sepal.Length)</code> surrounded by <code>`r</code> and <code>`</code>. So we could say that the iris flowers in our data have a mean length of 5.8433333.</p>
+<p>Note: to actually see the value of the inline code, place your cursor inside the backticks <code>` `r</code> and press <code>Ctrl + Enter</code> or <code>Cmd + Enter</code>. When you knit your Rmd file and build the HTML output, the inline R code will be replaced by its output value.</p>
+</div>
+<div id="including-equations" class="section level2" number="2.12">
+<h2><span class="header-section-number">2.12</span> Including equations</h2>
+<p>Finally, you can include equations in your text using <a href="https://en.wikipedia.org/wiki/LaTeX">LaTeX</a> syntax and surrounding it by a pair of double dollar signs <code>$$</code>. This is useful to specify models. For example, we can write the equation of a linear model as</p>
+<pre><code>$$
+y_i = \beta_0 + \beta_1 x_i + \epsilon_i
+$$</code></pre>
+<p>Which will be converted to the following output:</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x_i + \epsilon_i
+\]</span></p>
+<p>Note that RStudio will give you a preview of what your equation will look like in the final document.</p>
+<p>You can also include inline <span class="math inline">\(\LaTeX\)</span> equations by using a pair of single <code>$</code> signs. For example, the following sentence:</p>
+<p><code>The sample mean of $y$ is given by $\bar{y}=\sum\limits_{i=1}^{n}\frac{y_i}{n}$</code></p>
+<p>Will be converted to:</p>
+<p>The sample mean of <span class="math inline">\(y\)</span> is given by <span class="math inline">\(\bar{y}=\sum\limits_{i=1}^{n}\frac{y_i}{n}\)</span></p>
+</div>
+</div>
+<div id="useful-resources" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Useful resources</h1>
+<ul>
+<li><a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The Definitive Guide</a></li>
+<li><a href="https://r4ds.had.co.nz/">R for Data Science</a> by Hadley Wickham (main author of the <code>tidyverse</code> packages)</li>
+<li><a href="https://rafalab.github.io/dsbook/">Introduction to Data Science</a> by Rafael Irizarry</li>
+<li><a href="https://rstats.wtf/">What They Forgot to Teach You About R</a>, for some useful “good practices” tips when working with R</li>
+</ul>
+</div>
+<div id="session-info" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Session Info</h1>
+<p>Finally, it’s always good practice to include the <a href="">Session Info</a> for your R session in your document.
+That way, other persons (including your future self) looking at your document can see what versions of R and loaded packages were used, which can be quite essential for reproducibility.</p>
+<p>You can also include the date with <code>Sys.time()</code> so you have a time stamp of when the report was compiled.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="fu">Sys.time</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;2024-10-02 16:16:57 CEST&quot;</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 4.4.0 RC (2024-04-16 r86468)
+## Platform: aarch64-apple-darwin20
+## Running under: macOS Big Sur 11.6
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: Europe/Brussels
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] ggplot2_3.5.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] bit_4.5.0         gtable_0.3.5      jsonlite_1.8.9    crayon_1.5.3     
+##  [5] dplyr_1.1.4       compiler_4.4.0    highr_0.11        tidyselect_1.2.1 
+##  [9] parallel_4.4.0    jquerylib_0.1.4   scales_1.3.0      yaml_2.3.10      
+## [13] fastmap_1.2.0     readr_2.1.5       R6_2.5.1          labeling_0.4.3   
+## [17] generics_0.1.3    curl_5.2.3        knitr_1.48        tibble_3.2.1     
+## [21] bookdown_0.40     munsell_0.5.1     bslib_0.8.0       pillar_1.9.0     
+## [25] tzdb_0.4.0        rlang_1.1.4       utf8_1.2.4        cachem_1.1.0     
+## [29] xfun_0.47         sass_0.4.9        bit64_4.5.2       cli_3.6.3        
+## [33] withr_3.0.1       magrittr_2.0.3    digest_0.6.37     grid_4.4.0       
+## [37] vroom_1.6.5       rstudioapi_0.16.0 hms_1.1.3         lifecycle_1.0.4  
+## [41] vctrs_0.6.5       evaluate_1.0.0    glue_1.8.0        farver_2.1.2     
+## [45] fansi_1.0.6       colorspace_2.1-1  rmarkdown_2.28    tools_4.4.0      
+## [49] pkgconfig_2.0.3   htmltools_0.5.8.1</code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiSW50cm9kdWN0aW9uIHRvIFJNYXJrZG93biIKYXV0aG9yOiAiTWlsYW4gTWFsZmFpdCIKZGF0ZTogJ2ByIGZvcm1hdChTeXMuRGF0ZSgpLCAiJUIgJWQsICVZIilgJwotLS0KCiMgYC5SbWRgIGRvY3VtZW50cwoKV2l0aCBSTWFya2Rvd24gaXQgaXMgZWFzeSB0byBjcmVhdGUgZG9jdW1lbnRzIG9yIHdlYnBhZ2VzIHRoYXQgaW5jbHVkZSB0ZXh0LCBjb2RlIGFuZCBwbG90cy4gRHVyaW5nIHRoZSBwcmFjdGljYWwgc2Vzc2lvbnMgd2Ugd2lsbCB3b3JrIHdpdGggUk1hcmtkb3duLCBhbmQgbm90IHdpdGggYFJgIHNjcmlwdHMuIFJNYXJrZG93biBhbGxvd3MgeW91IHRvIGNvbWJpbmUgdGhlIGNvZGUgcmVxdWlyZWQgdG8gcHJvZHVjZSBhbiBhbmFseXNpcywgaXRzIHJlc3VsdHMsIHZpc3VhbGl6YXRpb25zIGFuZCBkZXNjcmlwdGl2ZSB0ZXh0IGFsbCBpbiBvbmUgZG9jdW1lbnQuCgpGb3IgYSBkZXRhaWxlZCBndWlkZSBvbiBSTWFya2Rvd24gc2VlIFtSIE1hcmtkb3duOiBUaGUgRGVmaW5pdGl2ZSBHdWlkZV0oaHR0cHM6Ly9ib29rZG93bi5vcmcveWlodWkvcm1hcmtkb3duLykuIE1vc3Qgb2YgdGhlIGNvbnRlbnRzIGRpc2N1c3NlZCBoZXJlIGNvbWUgZnJvbSB0aGF0IHNvdXJjZS4KCiMjIE1ldGFkYXRhCgpUaGUgbWFya2Rvd24gbm90ZWJvb2sgd2lsbCBzdGFydCB3aXRoIGEgW1lBTUxdKGh0dHBzOi8vZW4ud2lraXBlZGlhLm9yZy93aWtpL1lBTUwpIGhlYWRlciwgd2hpY2ggaW5jbHVkZXMgdGhlIHRpdGxlLCBuYW1lcyBvZiB0aGUgYXV0aG9ycyBhbmQgdHlwZSBvZiBSTWFya2Rvd24gZmlsZS4gV2UgdHlwaWNhbGx5IHdvcmsgd2l0aCBgaHRtbF9kb2N1bWVudGAgKHRoZSBkZWZhdWx0KS4KCmBgYCB5YW1sCi0tLQp0aXRsZTogIlRpdGxlIgphdXRob3I6ICJBdXRob3IgbmFtZXMiCmRhdGU6ICJEYXRlIgpvdXRwdXQ6ICBodG1sX2RvY3VtZW50Ci0tLQpgYGAKClRoZSBgaHRtbF9kb2N1bWVudGAgb3V0cHV0IHNwZWNpZmllcyB0aGF0IHlvdXIgZG9jdW1lbnQgd2lsbCBiZSBjb252ZXJ0ZWQgdG8gSFRNTCB3aGVuIHlvdSAia25pdCIgb3IgY29tcGlsZSBpdC4KCgojIyBDb21waWxpbmcgYW4gUiBNYXJrZG93biBmaWxlCgpFc3NlbnRpYWxseSwgYW4gLlJtZCBmaWxlIGlzIGp1c3QgYSBwbGFpbiB0ZXh0IGZpbGUgdXNlZCB0byBzdG9yZSBhbGwgeW91ciB0ZXh0IGFuZCBjb2RlIG5lZWRlZCB0byBwcm9kdWNlIHlvdXIgZmluYWwgcmVwb3J0LiBBbHRob3VnaCBSU3R1ZGlvIGFsbG93cyB5b3UgdG8gcHJldmlldyB0aGUgb3V0cHV0IG9mIHlvdXIgY29kZSwgdGhlIG91dHB1dCBpcyBub3QgaXRzZWxmIHBhcnQgb2YgdGhlIC5SbWQgZmlsZS4gV2hlbiB5b3Ugc2F2ZSBhbmQgY2xvc2UgeW91ciBSbWQgZmlsZSBhbmQgb3BlbiBpdCBhZ2FpbiBsYXRlciBvciBzZW5kIGl0IHRvIHNvbWVvbmUsIHRoZSBvdXRwdXQgd2lsbCBoYXZlIGRpc2FwcGVhcmVkIChhbHRob3VnaCBhbHNvIGhlcmUsIFJTdHVkaW8gaGFzIHNvbWUgdHJpY2tzIHRvIGtlZXAgdGhlIG91dHB1dCkuIFRoZSB3YXkgdG8gcHJvcGVybHkgZ2VuZXJhdGUgdGhlIG91dHB1dCB2ZXJzaW9uIG9mIHlvdXIgUm1kIGZpbGUgaXMgYnkgX19jb21waWxpbmdfXyBpdC4gVGhpcyBjYW4gYmUgZG9uZSBpbiBSU3R1ZGlvIGJ5IHByZXNzaW5nIHRoZSBgS25pdGAgYnV0dG9uIGluIHRoZSB0b29sYmFyLCBvciBieSBwcmVzc2luZyBgU2hpZnQgKyBDdHJsICsgS2AgKE1hYzogYFNoaWZ0ICsgQ21kICsgS2ApLiBUaGlzIHdpbGwgcHJvZHVjZSBhbiBIVE1MIGZpbGUgd2l0aCB0aGUgc2FtZSBuYW1lIGFzIHlvdXIgUm1kIGFuZCBsb2NhdGVkIGluIHRoZSBzYW1lIGZvbGRlci4gWW91IGNhbiBvcGVuIHRoaXMgZmlsZSBpbiBhbnkgaW50ZXJuZXQgYnJvd3NlciAoeW91IGRvbid0IG5lZWQgYW4gaW50ZXJuZXQgY29ubmVjdGlvbiBzaW5jZSBpdCdzIGEgbG9jYWwgZmlsZSkgYW5kIG1hcnZlbCBhdCB0aGUgbmljZWx5IGZvcm1hdHRlZCBvdXRwdXQgb2YgeW91ciBoYXJkIHdvcmsuIEFub3RoZXIgYWR2YW50YWdlIG9mIHdvcmtpbmcgd2l0aCBSU3R1ZGlvIGlzIHRoYXQgaXQgd2lsbCBvcGVuIHRoaXMgZmlsZSBhdXRvbWF0aWNhbGx5LCBlaXRoZXIgaW4gYSBuZXcgd2luZG93IG9yIGluIHRoZSAiVmlld2VyIiBwYW5lICh5b3UgY2FuIGNoYW5nZSB0aGlzIGluIHRoZSBSU3R1ZGlvIHNldHRpbmdzKS4KCl9fSW1wb3J0YW50X186IHNhdmluZyB5b3VyIFJtZCBmaWxlIGRvZXMgX19ub3RfXyB1cGRhdGUgdGhlIGNvcnJlc3BvbmRpbmcgSFRNTCBmaWxlIGF1dG9tYXRpY2FsbHkuIEluIGNvbnRyYXN0LCB3aGVuIHlvdSBjb21waWxlICgiS25pdCIpLCB5b3VyIFJtZCBmaWxlIHdpbGwgYmUgc2F2ZWQgZmlyc3QuCgpXaGlsZSBlZGl0aW5nIHlvdSBnZW5lcmFsbHkgd2FudCB0byBzYXZlIG9mdGVuICh5b3UgZG9uJ3Qgd2FudCB0byBsb3NlIHN0dWZmIGlmIHNvbWV0aGluZyBnb2VzIHdyb25nKSBidXQgeW91IGRvbid0IG5lZWQgdG8gY29tcGlsZSBldmVyeSB0aW1lIHlvdSBtYWtlIGEgbWlub3IgY2hhbmdlLCB1bmxlc3MgeW91ICB3YW50IHRvIHNlZSB3aGF0IHRoZSBvdXRwdXQgd2lsbCBsb29rIGxpa2UuCgoKIyMgRm9ybWF0dGluZyB0ZXh0CgojIyMgQm9sZCBhbmQgaXRhbGljIHRleHQKClRleHQgaW4gYW4gUiBNYXJrZG93biBkb2N1bWVudCAoaS5lLiBldmVyeXRoaW5nIHRoYXQgaXMgbm90IGNvbnNpZGVyZWQgY29kZSkgaXMgd3JpdHRlbiBpbiBbTWFya2Rvd24gc3ludGF4XShodHRwczovL2Jvb2tkb3duLm9yZy95aWh1aS9ybWFya2Rvd24vbWFya2Rvd24tc3ludGF4Lmh0bWwpLiBUaGlzIGVuYWJsZXMgeW91IHRvIGZvcm1hdCB0ZXh0IGJ5IHN1cnJvdW5kaW5nIGl0IHdpdGggc3BlY2lhbCBjaGFyYWN0ZXJzLgoKKkl0YWxpYyB0ZXh0KiBpcyBnZW5lcmF0ZWQgYnkgc3Vycm91bmRpbmcgdGhlIHRleHQgd2l0aCBhIHBhaXIgb2YgZWl0aGVyIHVuZGVyc2NvcmVzIChgX3RleHRfYCkgb3IgYXN0ZXJpc2tzIChgKnRleHQqYCkuICoqQm9sZCB0ZXh0KiogdXNlcyBhIHBhaXIgb2YgZG91YmxlIHVuZGVyc2NvcmVzIChgX190ZXh0X19gKSBvciBhc3Rlcmlza3MgKGAqKnRleHQqKmApLiBfXypCb2xkIGl0YWxpYyB0ZXh0Kl9fIGNhbiBiZSBhY2hpZXZlZCBieSB1c2luZyBhIGNvbWJpbmF0aW9uIG9mIHRoZSB0d28gKGBfXyp0ZXh0Kl9fYCkuCgojIyMgTGlzdHMKClVub3JkZXJlZCBsaXN0IGl0ZW1zIHN0YXJ0IHdpdGggYCpgLCBgLWAsIG9yIGArYCwgYW5kIHlvdSBjYW4gbmVzdCBvbmUgbGlzdCB3aXRoaW4gYW5vdGhlciBsaXN0IGJ5IGluZGVudGluZyB0aGUgc3ViLWxpc3QsIGZvciBleGFtcGxlOgoKYGBgbWFya2Rvd24KLSBvbmUgaXRlbQotIG9uZSBpdGVtCi0gb25lIGl0ZW0KICAgICogb25lIG1vcmUgaXRlbQogICAgKiBvbmUgbW9yZSBpdGVtCiAgICAqIG9uZSBtb3JlIGl0ZW0KYGBgCgpUaGUgb3V0cHV0IG9mIHRoZSBhYm92ZSBzeW50YXggd291bGQgYmU6CgotIG9uZSBpdGVtCi0gb25lIGl0ZW0KLSBvbmUgaXRlbQogICAgKiBvbmUgbW9yZSBpdGVtCiAgICAqIG9uZSBtb3JlIGl0ZW0KICAgICogb25lIG1vcmUgaXRlbQoKCkEgbnVtYmVyZWQgbGlzdCBjYW4gYmUgY3JlYXRlZCBieSBzdGFydGluZyBlYWNoIGl0ZW0gd2l0aCBhIG51bWJlcjoKCmBgYG1hcmtkb3duCjEuIHRoZSBmaXJzdCBpdGVtCjIuIHRoZSBzZWNvbmQgaXRlbQozLiB0aGUgdGhpcmQgaXRlbQpgYGAKCk91dHB1dDoKCjEuIHRoZSBmaXJzdCBpdGVtCjIuIHRoZSBzZWNvbmQgaXRlbQozLiB0aGUgdGhpcmQgaXRlbQoKX19Ob3RlOl9fIG1ha2Ugc3VyZSB0byBsZWF2ZSBhbiBlbXB0eSBsaW5lIGJldHdlZW4gdGV4dCBhbmQgYSBsaXN0IGZvciBjb3JyZWN0IGZvcm1hdHRpbmcuCgoKIyMjIFNlY3Rpb24gaGVhZGVycwoKU2VjdGlvbiBoZWFkZXJzIGNhbiBiZSB3cml0dGVuIHVzaW5nIGEgbnVtYmVyIG9mIFwjIHNpZ25zLCB3aGVyZSB0aGUgYW1vdW50IG9mIFwjJ3Mgc3BlY2lmaWVzIHRoZSBsZXZlbDoKCmBgYG1hcmtkb3duCiMgTWFpbiBzZWN0aW9uIHRpdGxlOiBmaXJzdCBsZXZlbAoKIyMgU3Vic2VjdGlvbjogc2Vjb25kIGxldmVsCgojIyMgU3ViLXN1YnNlY3Rpb246IHRoaXJkIGxldmVsCgojIyMjIFN1Yi1zdWItc3Vic2VjdGlvbjogZm91cnRoIGxldmVsCmBgYAoKVGhlIG91dHB1dDoKCiMgTWFpbiBzZWN0aW9uIHRpdGxlOiBmaXJzdCBsZXZlbCB7LX0KCiMjIFN1YnNlY3Rpb246IHNlY29uZCBsZXZlbCB7LX0KCiMjIyBTdWItc3Vic2VjdGlvbjogdGhpcmQgbGV2ZWwgey19CgojIyMjIFN1Yi1zdWItc3Vic2VjdGlvbjogZm91cnRoIGxldmVsIHstfQoKSW4gZ2VuZXJhbCBpdCdzIG5vdCByZWNvbW1lbmRlZCB0byBnbyBmdXJ0aGVyIHRoYW4gNCBzdWItbGV2ZWxzIG9mIHNlY3Rpb25zLgoKTm90ZSB0aGF0IHlvdSBjYW4gYWxzbyBpbmNsdWRlIGEgW3RhYmxlIG9mIGNvbnRlbnRzXShodHRwczovL2Jvb2tkb3duLm9yZy95aWh1aS9ybWFya2Rvd24vaHRtbC1kb2N1bWVudC5odG1sI3RhYmxlLW9mLWNvbnRlbnRzKSBhdCB0aGUgdG9wIG9mIHlvdXIgZmlsZSBieSBzcGVjaWZ5aW5nIGB0b2M6IHRydWVgIGluIHRoZSBZQU1MIGhlYWRlci4KCgojIyBJbnRlZ3JhdGluZyB0ZXh0IGFuZCBSIGNvZGUKCllvdSBjYW4gaW5zZXJ0IGNodW5rcyBvZiBSIGNvZGUgaW4geW91ciBSTWFya2Rvd24gZmlsZSBieSB3cmFwcGluZyBhIGNvZGUgYmxvY2sgaW5zaWRlIGBgYGAgYGBge3J9IGBgYGAgYW5kIGBgYGAgYGBgIGBgYGAuCgpJbiBSU3R1ZGlvIHRoaXMgaXMgZWFzaWx5IGRvbmUgYnkgdXNpbmcgdGhlIGBJbnNlcnRgIGJ1dHRvbiBpbiB0aGUgdG9vbGJhciBvciB0aGUga2V5Ym9hcmQgc2hvcmN1dCBgQ3RybCArIEFsdCArIElgIChgQ21kICsgT3B0aW9uICsgSWAgb24gbWFjT1MpLgoKRm9yIG1vcmUgaW5mb3JtYXRpb24sIHNlZSBbc2VjdGlvbiAyLjZdKGh0dHBzOi8vYm9va2Rvd24ub3JnL3lpaHVpL3JtYXJrZG93bi9yLWNvZGUuaHRtbCkgb2YgKlRoZSBEZWZpbml0aXZlIEd1aWRlKgoKV2Ugd2lsbCBkZW1vbnN0cmV0ZSB0aGUgdXNlIG9mIFItY29kZSB3aXRoIHZhcmlvdXMgZXhhbXBsZXMgaW4gdGhlIHNlY3Rpb25zIGJlbG93IHNvIHRoYXQgeW91IGNhbiBmYW1pbGlhcmlzZSB5b3Vyc2VsZiB3aXRoIHRoZSBzeW50YXguCgoKIyBCYXNpYyBSIHN0dWZmCgojIyBTaW1wbGUgY2FsY3VsYXRpb25zCgpSIGNhbiBiZSB1c2VkIGFzIGEgc2ltcGxlIGNhbGN1bGF0b3IuIEV4ZWN1dGluZyBjb2RlIGNhbiBiZSBkb25lIGluIHZhcmlvdXMgd2F5cy4gVG8gZXhlY3V0ZSB0aGUgZW50aXJlIGNodW5rIG9mIGNvZGU6CgogLSBJbiBSU3R1ZGlvOiBjbGljayB0aGUgZ3JlZW4gYXJyb3cgaW4gdGhlIHVwcGVyIHJpZ2h0IGNvcm5lciBvZiB0aGUgY29kZSBjaHVuawogLSBQbGFjZSB5b3VyIGN1cnNvciBpbnNpZGUgdGhlIGNodW5rIGFuZCBwcmVzcyBgU2hpZnQgKyBDdHJsICsgRW50ZXJgIChNYWM6IGBTaGlmdCArIENtZCArIEVudGVyYCkKCkNvZGUgY2FuIGFsc28gYmUgcnVuIGxpbmUgYnkgbGluZSBieSBzZWxlY3RpbmcgYSBsaW5lIHdpdGggeW91ciBjdXJzb3IgYW5kIHByZXNzaW5nIGBDdHJsICsgRW50ZXJgIChNYWM6IGBDbWQgKyBFbnRlcmApLgoKVHJ5IGV4ZWN1dGluZyB0aGUgY29kZSBiZWxvdyB1c2luZyBib3RoIHdheXM6IGxpbmUtYnktbGluZSBhbmQgdGhlIGVudGlyZSBjaHVuay4KCmBgYHtyfQoxKzEKKDUtMykrNyoxMC8yCmBgYAoKVGhlIG91dHB1dCBzaG91bGQgYmUgZGlzcGxheWVkIGVpdGhlciByaWdodCBiZWxvdyB0aGUgY29kZSBjaHVuayBvciBpbiB0aGUgUiBjb25zb2xlLiBZb3UgY2FuIGNoYW5nZSB0aGlzIGJlaGF2aW91ciBieSBzZWxlY3RpbmcgdGhlIHNldHRpbmdzIGdlYXIgaW4gdGhlIFJTdHVkaW8gdG9vbGJhciBhbmQgc2VsZWN0aW5nIGBDaHVuayBPdXRwdXQgSW5saW5lYCBvciBgQ2h1bmsgT3V0cHV0IGluIENvbnNvbGVgLgoKWW91IGNhbiBhbHNvIHJ1biBhbGwgY2h1bmtzIGluIHlvdSBSbWQgZmlsZSBieSBwcmVzc2luZyB0aGUgYFJ1bmAgYnV0dG9uIGluIHRoZSB0b29sYmFyICh1cHBlciByaWdodCkgYW5kIHRoZW4gc2VsZWN0IGBSdW4gQWxsYCAob3IgdXNpbmcgdGhlIGtleWJvYXJkIHNob3J0Y3V0IGBTaGlmdCArIEN0cmwgKyBSYCBvbiBXaW5kb3dzIG9yIGBTaGlmdCArIENtZCArIFJgIG9uIE1hYykuIE5vdGUgdGhhdCB0aGlzIG1lbnUgYWxzbyBwcm92aWRlcyBhZGRpdGlvbmFsIHdheXMgb2YgcnVubmluZyBSIGNodW5rcywgdGhlIG1vc3QgdXNlZnVsIG9uZXMgYmVpbmc6CgogICogYFJ1biBBbGwgQ2h1bmtzIEFib3ZlYDogdGhpcyBleGVjdXRlcyBhbGwgY29kZSBjaHVua3MgcHJlY2VkaW5nIHlvdXIgY3Vyc29yIGxvY2F0aW9uLCBzdGFydGluZyBhdCB0aGUgdG9wIGFuZCB0ZWhuIHJ1bm5pbmcgZG93bi4KICAqIGBSZXN0YXJ0IFIgYW5kIFJ1biBBbGwgQ2h1bmtzYDogdGhpcyB3aWxsIHJlc3RhcnQgUiBhbmQgcmUtcnVuIHlvdXIgZW50aXJlIGRvY3VtZW50LiBOb3RlIHRoYXQgdGhpcyB3aWxsIF9fcmVtb3ZlIGFsbCBjdXJyZW50IG9iamVjdHMgYW5kIGRhdGEgZnJvbSBtZW1vcnlfXyBhbmQgcmUtc3RhcnRpbmcgUiBpbiBhIGJsYW5rIHN0YXRlLiBUaGlzIG1lYW5zIHRoYXQgYW55IGNvZGUgdGhhdCB3YXMgcnVuIGluIHRoZSBjb25zb2xlIGFuZCBub3Qgc2F2ZWQgaW4gYSBjb2RlIGNodW5rIHdpbGwgYmUgbG9zdC4gVGhpcyBtaWdodCBzZWVtIHNjYXJ5IGF0IGZpcnN0LCBidXQgdGhlcmUgYXJlIHZlcnkgZ29vZCByZWFzb25zIHRvIGRvIHRoaXMgb2Z0ZW4uIFlvdSBjYW4gcmVhZCBtb3JlIGFib3V0IHRoaXMgd29ya2Zsb3cgW2hlcmVdKGh0dHBzOi8vcnN0YXRzLnd0Zi9zYXZlLXNvdXJjZS5odG1sI3Jlc3RhcnQtci1vZnRlbi1kdXJpbmctZGV2ZWxvcG1lbnQpLgoKIyMgQ29tbWVudGluZyBSIGNvZGUKCllvdSBjYW4gYWRkIGNvbW1lbnRzIHRvIHlvdXIgUiBjb2RlIGJ5IHN0YXJ0aW5nIGEgbGluZSB3aXRoIFwjLiBUaGlzIGlzIHVzZWZ1bCB0byBkZXNjcmliZSB3aGF0IHlvdXIgY29kZSBpcyBkb2luZyAob3Igc2hvdWxkIGJlIGRvaW5nKS4gQW5ub3RhdGluZyB5b3VyIGNvZGUgdGhpcyB3YXkgaXMgdmVyeSB1c2VmdWwgdG8gY29tbXVuaWNhdGUgYm90aCB3aXRoIG90aGVycyBhbmQgeW91ciBmdXR1cmUgc2VsZi4gVHJ5IHRvIGtlZXAgdGhlc2UgY29tbWVudHMgY2xlYXIgYnV0IHNob3J0LiBMb25nZXIgZGVzY3JpcHRpb25zIHNob3VsZCBnbyBpbiB0aGUgbWFpbiB0ZXh0IG9mIHlvdXIgUk1hcmtkb3duIGZpbGUuIENvbW1lbnRpbmcgYWxzbyBwcm92aWRlcyBhIHdheSBvZiAiZGlzYWJsaW5nIiBjb2RlIHdpdGhvdXQgaGF2aW5nIHRvIHJlbW92ZSBpdC4gTm90ZSB0aGF0IGVhY2ggbmV3IGxpbmUgb2YgYSBjb21tZW50IHNob3VsZCBiZSBwcmVjZWRlZCBieSBhIFwjLiBZb3UgY2FuIGVhc2lseSAiY29tbWVudCBvdXQiIG11bHRpcGxlIGxpbmVzIGJ5IHNlbGVjdGluZyB0aGVtIGFuZCBwcmVzc2luZyBgU2hpZnQgKyBDdHJsICsgQ2AgKE1hYzogYFNoaWZ0ICsgQ21kICsgQ2ApLgoKVHJ5IHJ1bm5pbmcgdGhlIGNodW5rIGJlbG93IGFuZCB2ZXJpZnkgdGhhdCBpdCBkb2VzIG5vdCBwcm9kdWNlIGFueSBvdXRwdXQuIFdoYXQgaGFwcGVucyBpZiB5b3UgcmVtb3ZlIG9uZSBvZiB0aGUgXCMgc2lnbnM/CgpgYGB7cn0KIyBUaGlzIGlzIGEgY29tbWVudAoKIyBUaGlzIGlzIGEgdmVyeSBsb25nIGNvbW1lbnQgc3BsaXQgb3ZlcgojIG11bHRpcGxlIGxpbmVzCgojIENvZGUgaW5zaWRlIGEgY29tbWVudCBpcyBub3QgZXhlY3V0ZWQKIyAxKzEKYGBgCgoKIyMgQXNzaWduaW5nIG9iamVjdHMgdG8gc2F2ZSByZXN1bHRzIGFuZCBwZXJmb3JtIGNhbGN1bGF0aW9ucwoKWW91IGNhbiBzYXZlIHJlc3VsdHMgb2YgZnVuY3Rpb24gY2FsbHMgb3IgY2FsY3VsYXRpb25zIGJ5IGFzc2lnbmluZyB0aGUgdmFsdWUgdG8gYSAqdmFyaWFibGUqIHVzaW5nIHRoZSBhc3NpZ24gb3BlcmF0b3IgYDwtYC4KClJ1biB0aGUgY29kZSBiZWxvdyBhbmQgdmVyaWZ5IHRoZSB2YWx1ZSBvZiBgY2AuIFlvdSBjYW4gYWxzbyBjaGVjayB0aGUgdmFsdWUgb2YgYSB2YXJpYWJsZSBieSBlbnRlcmluZyBpdCBpbiB0aGUgQ29uc29sZSBhbmQgcHJlc3NpbmcgYEVudGVyYC4KCmBgYHtyfQphIDwtIDIKYiA8LSAzCmMgPC0gYSArIGIKYwpgYGAKCk5vdGUgdGhhdCBpbiBwcmluY2lwbGUsIHlvdSBjYW4gYWxzbyB1c2UgYD1gIGZvciBhc3NpZ25tZW50LCBidXQgdGhpcyBpcyBjb25zaWRlcmVkIHRvIGJlIGJhZCBwcmFjdGljZSBiZWNhdXNlIHRoZSBlcXVhbCBzaWduIGlzIHJlc2VydmVkIGZvciBmdW5jdGlvbiBhcmd1bWVudHMgKHNlZSBuZXh0IHNlY3Rpb24pLiBTbyB5b3Ugc2hvdWxkIGFsd2F5cyB1c2UgYDwtYCBmb3IgYXNzaWdubWVudC4KCioqSGludDoqKiBhIHF1aWNrIGFuZCBlYXN5IHdheSB0byB0eXBlIGA8LWAgaW4gUlN0dWRpbyBpcyBieSB1c2luZyB0aGUgc2hvcnRjdXQgYEFsdCArIC1gIChNYWM6IGBPcHRpb24gKyAtYCkuCgoKIyMgRnVuY3Rpb25zCgpGdW5jdGlvbnMgYXJlIGNvbW1hbmRzIGluIFIgdGhhdCBwZXJmb3JtIGNlcnRhaW4gdGFza3MuIFRoZXkgdGFrZSBpbnB1dHMgaW4gdGhlIGZvcm0gb2YgKmFyZ3VtZW50cyogYW5kIHJldHVybiB0aGVpciByZXN1bHRzIGFzICpvdXRwdXQqLiBUaGV5IGFyZSBjYWxsZWQgdXNpbmcgdGhlaXIgbmFtZSwgZm9sbG93ZWQgYnkgcGFyZW50aGVzZXMgYCgpYCBpbiB3aGljaCB0aGUgYXJndW1lbnRzIGFyZSBzcGVjaWZpZWQuIFRoZXJlIGFyZSBtYW55IGJ1aWx0LWluIGZ1bmN0aW9ucyBpbiBSLiBJbiBhZGRpdGlvbiwgeW91IGNhbiB3cml0ZSB5b3VyIG93biBmdW5jdGlvbnMgb3IgbG9hZCBvdGhlciBmdW5jdGlucyB0aHJvdWdoIHRoZSB1c2Ugb2YgKnBhY2thZ2VzKiAobW9yZSBvbiB0aGF0IGxhdGVyKS4KCkFzIGFuIGV4YW1wbGUsIHdlIGNhbiB1c2UgdGhlIGZ1bmN0aW9uIGBybm9ybWAgdG8gc2FtcGxlIDEwMCBkcmF3cyBmcm9tIGEgTm9ybWFsIGRpc3RyaWJ1dGlvbi4gV2UgYXNzaWduIHRoZSByZXN1bHQgKGEgdmVjdG9yIG9mIDEwMCByYW5kb20gbnVtYmVycykgdG8gYSBuZXcgdmFyaWFibGUgYGRyYXdzYCBhbmQgZGlzcGxheSB0aGUgZmlyc3QgNiB2YWx1ZXMgYnkgY2FsaW5nIHRoZSBmdW5jdGlvbiBgaGVhZGAgb24gdGhpcyBuZXcgdmFyaWFibGUuCgpgYGB7cn0KIyBzYW1wbGUgMTAwIG51bWJlcnMgZnJvbSBhIHN0YW5kYXJkIG5vcm1hbCBkaXN0cmlidXRpb24KIyAobWVhbiA9IDAsIHN0YW5kYXJkIGRldmlhdGlvbiA9IDEpCmRyYXdzIDwtIHJub3JtKDEwMCkKaGVhZChkcmF3cykKYGBgCgoKIyMgR2V0dGluZyBoZWxwIGluIFI6IGA/YAoKV2hhdCBpZiBpbnN0ZWFkIG9mIGRyYXdpbmcgZnJvbSB0aGUgc3RhbmRhcmQgbm9ybWFsIGRpc3RyaWJ1dGlvbiB3ZSB3YW50IHRvIHNhbXBsZSBmcm9tIGEgbm9ybWFsIHdpdGggYSBtZWFuIG9mIDUgYW5kIGEgc3RhbmRhcmQgZGV2aWF0aW9uIG9mIDI/IEtub3dpbmcgdGhhdCBgcm5vcm1gIGlzIHRoZSBmdW5jdGlvbiB0byBnZW5lcmF0ZSBub3JtYWxseSBkaXN0cmlidXRlZCBudW1iZXJzLCB3ZSBjYW4gZ2V0IG1vcmUgaW5mb3JtYXRpb24gb24gaXQgYnkgZXhlY3V0aW5nIGA/cm5vcm1gICh1c3VhbGx5IHlvdSB3b3VsZCBkbyB0aGlzIGluIHRoZSBDb25zb2xlLCBidXQgZm9yIGRlbW9uc3RyYXRpb24sIHdlIHJ1biBpdCBpbnNpZGUgYSBjb2RlIGNodW5rIGhlcmUpLiBUaGlzIHdpbGwgb3BlbiB1cCB0aGUgKmhlbHAqIHBhZ2UgZm9yIHRoZSAiVGhlIE5vcm1hbCBEaXN0cmlidXRpb24iIGFuZCBhbGwgaXRzIHJlbGF0ZWQgZnVuY3Rpb25zIGluc2lkZSBSLCBvbmUgb2Ygd2hpY2ggaXMgYHJub3JtYC4KCmBgYHtyLCBldmFsID0gRkFMU0V9Cj9ybm9ybQpgYGAKClJlYWQgdGhyb3VnaCB0aGUgZG9jdW1lbnRhdGlvbiwgY2FuIHlvdSBmaWd1cmUgb3V0IGhvdyB0byBjaGFuZ2UgdGhlIG1lYW4gYW5kIHN0YW5kYXJkIGRldmlhdGlvbj8KClRoZSBzb2x1dGlvbiBpcyB0byBzcGVjaWZ5IHRoZSBgbWVhbmAgYW5kIGBzZGAgYXJndW1lbnRzLgoKYGBge3J9CmRyYXdzMiA8LSBybm9ybSgxMDAsIG1lYW4gPSA1LCBzZCA9IDIpCmhlYWQoZHJhd3MyKQpgYGAKCkVhY2ggYnVpbHQtaW4gUiBmdW5jdGlvbiBvciBmdW5jdGlvbnMgbG9hZGVkIHRocm91Z2ggYSBwYWNrYWdlIGhhcyBhIGhlbHAgcGFnZS4gSW4gYWRkaXRpb24sIHRoZXJlIGlzIGEgd2VhbHRoIG9mIGluZm9ybWF0aW9uIHRocm91Z2ggdGhlIHdvbmRlcmZ1bCBtYWdpYyBvZiBbR29vZ2xlXShodHRwczovL3d3dy5nb29nbGUuY29tLykuIEFub3RoZXIgZ3JlYXQgcGxhY2UgdG8gbG9vayBmb3IgYW5zd2VycyBvciBhc2sgcXVlc3Rpb25zIHlvdXJzZWxmIGlzIFtTdGFja092ZXJmbG93XShodHRwczovL3N0YWNrb3ZlcmZsb3cuY29tLykuCgoKIyMgVGlkeXZlcnNlCgpUaGUgKnRpZHl2ZXJzZSogaXMgYSBzZXQgb2YgcGFja2FnZXMgZGVzaWduZWQgdG8gbWFrZSBkYXRhIHNjaWVuY2UgaW4gUiBtb3JlIHVzZXItZnJpZW5kbHkuCkl0IHNoYXJlcyBhIGNvbW1vbiBwaGlsb3NvcGh5IGFuZCBncmFtbWFyIG9mIGRvaW5nIGRhdGEgc2NpZW5jZSwgd2hpY2ggY2FuIGNoYW5nZSBzb21ld2hhdCBmcm9tIGhvdyBiYXNlIFIgd29ya3MgKHRob3VnaCBpdCBzaG91bGRuJ3QgYmUgYW4gZXhjdXNlIHRvIGxlYXJuIGhvdyB0byB1c2UgYmFzZSBSISEhKS4KCkluc3RlYWQgb2YgaW5zdGFsbGluZyBlYWNoICp0aWR5dmVyc2UqIHBhY2thZ2UgaW5kaXZpZHVhbGx5LCB5b3UgY2FuIGluc3RhbGwgYWxsIG9mIHRoZW0gc2ltdWx0YW5lb3VzbHkgYnkgc2ltcGx5IGNhbGxpbmcKCmBgYHtyLCBldmFsPUZBTFNFfQppbnN0YWxsLnBhY2thZ2VzKCJ0aWR5dmVyc2UiKQpgYGAKCk5vdGUgdGhhdCB0aGlzIGNvZGUgd29uJ3QgYmUgZXhlY3V0ZWQgd2hlbiBjb21waWxpbmcgdGhpcyByZXBvcnQsIGJlY2F1c2UgSSBzcGVjaWZpZWQgYGV2YWw9RkFMU0VgIGluIHRoZSBbY2h1bmsgb3B0aW9uc10oaHR0cHM6Ly9ib29rZG93bi5vcmcveWlodWkvcm1hcmtkb3duL3ItY29kZS5odG1sKS4KSW5zdGVhZCBpdCBzaG91bGQgYmUgY2FsbGVkIG1hbnVhbGx5LCBmb3IgZXhhbXBsZSBpbiBhbiBSIGNvbnNvbGUuCgoKRm9yIG1vcmUgaW5mb3JtYXRpb24gc2VlCgotIDxodHRwczovL3d3dy50aWR5dmVyc2Uub3JnLz4KLSA8aHR0cHM6Ly9yYWZhbGFiLmdpdGh1Yi5pby9kc2Jvb2svdGlkeXZlcnNlLmh0bWw+Ci0gPGh0dHBzOi8vcjRkcy5oYWQuY28ubnovPgoKCgojIyBWaXN1YWxpemF0aW9ucwoKIyMjIEJhc2UgUgoKQSBwaWN0dXJlIG9mdGVuIHNheXMgbW9yZSB0aGFuIHdvcmRzIChvciBsaW5lcyBvZiBjb2RlIG91dHB1dCkgYW5kIFIgaGFzIGEgcmljaCBbdmlzdWFsaXphdGlvbiB0b29sYm94XShodHRwczovL3JzdHVkaW8tcHVicy1zdGF0aWMuczMuYW1hem9uYXdzLmNvbS83OTUzXzRlM2VmZDViOTQxNTQ0NGNhMDY1YjExNjc4NjJjMzQ5Lmh0bWwpIHRoYXQgYWxsb3dzIHVzIHRvIG1ha2UgcG93ZXJmdWwgdmlzdWFsaXphdGlvbnMgb2Ygb3VyIGRhdGEuCgpGb3IgZXhhbXBsZSwgdG8gdmlzdWFsbHkgdmVyaWZ5IHRoYXQgdGhlIHJhbmRvbSBudW1iZXJzIHdlIGdlbmVyYXRlZCBlYXJsaWVyICh3aGljaCBhcmUgc3RpbGwgc3RvcmVkIGluIG1lbW9yeSB1bmRlciB0aGUgdmFyaWFibGVzIGBkcmF3c2AgYW5kIGBkcmF3czJgKSBhcmUgaW5kZWVkIG5vcm1hbGx5IGRpc3RyaWJ1dGVkLCB3ZSBjb3VsZCBtYWtlIGEgaGlzdG9ncmFtIG9mIHRoZW0sIHVzaW5nIHRoZSBgaGlzdGAgZnVuY3Rpb24uCgpgYGB7cn0KIyBkcmF3cyBjb21lcyBmcm9tIGEgc3RhbmRhcmQgbm9ybWFsIChtZWFuID0gMCwgc2QgPSAxKQpoaXN0KGRyYXdzKQoKIyBkcmF3cyAyIGNvbWVzIGZyb20gYSBub3JtYWwgd2l0aCBtZWFuID0gNSwgc2QgPSAyCmhpc3QoZHJhd3MyKQpgYGAKCk5vdGUgdGhhdCB5b3UgY2FuIGN1c3RvbWl6ZSB0aGVzZSBwbG90cyBpbiBhIGxvdCBvZiB3YXlzLiBMb29raW5nIGF0IHRoZSBoZWxwIHBhZ2Ugb2YgYGhpc3RgIG9yIGRvaW5nIGEgcXVpY2sgaW50ZXJuZXQgc2VhcmNoIHdpbGwgdGFrZSB5b3UgYSBsb25nIHdheSEKCgojIyMgZ2dwbG90MgoKQWx0aG91Z2ggcG93ZXJmdWwsIHRoZSBiYXNlIFIgdmlzdWFsaXphdGlvbiBmcmFtZXdvcmsgY2FuIGJlIHNvbWV3aGF0IGNoYWxsZW5naW5nIHRvIHdvcmsgd2l0aC4KQSBnb29kIGFsdGVybmF0aXZlIGlzIHRoZSBbYGdncGxvdDJgIHBhY2thZ2VdKGh0dHBzOi8vZ2dwbG90Mi50aWR5dmVyc2Uub3JnLyksIHBhcnQgb2YgdGhlIGxhcmdlciBgdGlkeXZlcnNlYCB3aGljaCBpbmNsdWRlcyBtb3JlIHVzZWZ1bCBwYWNrYWdlcyBmb3IgZGF0YSBtYW5pcHVsYXRpb24gYW5kIGFuYWx5c2lzLgpgZ2dwbG90MmAgdXNlcyBhIHZpc3VhbGl6YXRpb24gZnJhbWV3b3JrIGJhc2VkIG9uIHRoZSBbKmdyYW1tYXIgb2YgZ3JhcGhpY3MqIHBoaWxvc29waHldKGh0dHBzOi8vZ2dwbG90Mi1ib29rLm9yZy9pbnRyb2R1Y3Rpb24uaHRtbCN3aGF0LWlzLXRoZS1ncmFtbWFyLW9mLWdyYXBoaWNzKSwgd2hpY2ggd2Ugd29uJ3QgZ2V0IGZ1cnRoZXIgaW50byBoZXJlIGJ1dCB3aGljaCBjYW4gYmUgcXVpdGUgYW4gaW50dWl0aXZlIHdheSB0byB0aGluayBhYm91dCBkYXRhIHZpc3VhbGl6YXRpb25zLgoKYGdncGxvdDJgIHdvcmtzIGJlc3Qgd2l0aCBhIGBkYXRhLmZyYW1lYCBhcyBpbnB1dC4KQXMgYW4gZXhhbXBsZSwgd2UnbGwgdXNlIHRoZSBgbXRjYXJzYCBkYXRhLCB3aGljaCBpcyBhdmFpbGFibGUgYnkgZGVmYXVsdCBpbiBldmVyeSBSIGluc3RhbGxhdGlvbiAoZm9yIG1vcmUgaW5mbyBvbiB0aGlzIGRhdGEgc2V0LCBzZWUgYD9tdGNhcnNgKS4KV2l0aCBqdXN0IGEgZmV3IGxpbmVzLCB3ZSBjYW4gY3JlYXRlIGFscmVhZHkgcXVpdGUgZWxlZ2FudCB2aXN1YWxpemF0aW9uczoKCmBgYHtyfQpsaWJyYXJ5KGdncGxvdDIpCgpnZ3Bsb3QobXBnLCBhZXMoZGlzcGwsIGh3eSwgY29sb3VyID0gY2xhc3MpKSArCiAgZ2VvbV9wb2ludCgpCmBgYAoKWW91IGNvdWxkIHBlcmZlY3RseSByZWNyZWF0ZSB0aGlzIHBsb3Qgd2l0aCBiYXNlIFIsIGJ1dCBpdCdzIGdvaW5nIHRvIHRha2UgbW9yZSBsaW5lcyBvZiBjb2RlIGFuZCBwb3RlbnRpYWwgaGVhZGFjaGVzLgpTdGlsbCwgYm90aCBmcmFtZXdvcmtzIGhhdmUgdGhlaXIgc3RyZW5ndGhzIGFuZCB3ZWFrbmVzc2VzIGFuZCB0aGV5IGFyZSBjb21wbGVtZW50YXJ5IGluIG1hbnkgd2F5cywgc28gaXQgcGF5cyB0byBsZWFybiBib3RoIG9mIHRoZW0gcmF0aGVyIHRoYW4gc3R1YmJvcm5seSBzdGlja2luZyB0byBvbmUuCgpUaGVyZSBhcmUgdG9ucyBvZiBkb2N1bWVudGF0aW9uIGFuZCB0dXRvcmlhbHMgb24gYGdncGxvdDJgIHRvIGJlIGZvdW5kIG9ubGluZS4KQSBnb29kIHBsYWNlIHRvIHN0YXJ0IGlzIDxodHRwczovL2dncGxvdDIudGlkeXZlcnNlLm9yZy8+LgoKCiMjIEltcG9ydGluZyBkYXRhCgpTZWUgPGh0dHBzOi8vcjRkcy5oYWQuY28ubnovZGF0YS1pbXBvcnQuaHRtbD4uCgpOb3RlIHRoYXQgYm90aCB0aGUgYmFzZSBgcmVhZC5jc3ZgIGFuZCB0aGUgKnRpZHl2ZXJzZSogZXF1aXZhbGVudCBgcmVhZHI6OnJlYWRfY3N2KClgIGNhbiBib3RoIHVzZSBVUkxzIHRvIHJlYWQgaW4gZGF0YS4KVGhhdCB3YXkgeW91IGRvbid0IGhhdmUgdG8gZG93bmxvYWQgdGhlIGRhdGEgbG9jYWxseSBvbiB5b3VyIG1hY2hpbmUgb3Igd29ycnkgYWJvdXQgZGlmZmVyZW50IHZlcnNpb25zLgoKYGBge3J9CiMjIEV4YW1wbGUgZnJvbSBIREEyMDIwIGNvdXJzZSAoaHR0cHM6Ly9zdGF0b21pY3MuZ2l0aHViLmlvL0hEQTIwMjAvKQp1a19mb29kcyA8LSByZWFkcjo6cmVhZF9jc3YoCiAgZmlsZSA9ICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vc3RhdE9taWNzL0hEQTIwMjAvZGF0YS91a0Zvb2RzLmNzdiIsCiAgY29sX25hbWVzID0gVFJVRQopCnVrX2Zvb2RzCmBgYAoKCgojIyBTdW1tYXJ5IG9mIGRhdGEKClRvIGdldCBhIHF1aWNrIHN1bW1hcnkgb2YgdGhlIGRhdGEsIHlvdSBjYW4gdXNlIHRoZSBgc3VtbWFyeWAgZnVuY3Rpb24uIFRoaXMgd2lsbCByZXR1cm4gc29tZSBzdW1tYXJ5IHN0YXRpc3RpY3MgZm9yIHRoZSBjb2x1bW5zIHByZXNlbnQgaW4gdGhlIGRhdGEuCgpgYGB7cn0KIyMgaXJpcyBpcyBhIGRlZmF1bHQgZGF0YSBzZXQgYXZhaWxhYmxlIGluIFIKIyMgVG8gZ2V0IG1vcmUgaW5mbywgdXNlIGA/aXJpc2AKc3VtbWFyeShpcmlzKQpjbGFzcyhpcmlzKQpgYGAKCgojIyBTdWJzZXR0aW5nIGRhdGEKCllvdSBjYW4gc2VsZWN0IHN1YnNldHMgb2YgYSBgZGF0YS5mcmFtZWAgYnkgdXNpbmcgc3F1YXJlIGJyYWNrZXRzIGBbXWAgYW5kIHNwZWNpZnlpbmcgdGhlIG51bWJlcihzKSBvZiB0aGUgcm93KHMpIG9yIGNvbHVtbihzKSB5b3Ugd2FudCB0byBzZWxlY3QuIEFsdGVybmF0aXZlbHksIHlvdSBjYW4gdXNlIHRoZSBkb2xsYXIgc2lnbiBgJGAgdG8gc2VsZWN0IGEgY29sdW1uIHVzaW5nIGl0cyBuYW1lLgoKVG8gcmVkdWNlIHRoZSBvdXRwdXQgcHJpbnRlZCBvdXQsIHdlIHdpbGwgZmlyc3QgbWFrZSBhIHN1YnNldCBvZiB0aGUgYGlyaXNgIGRhdGEgY29udGFpbmluZyBqdXN0IHRoZSBmaXJzdCAxMCByb3dzLgoKYGBge3J9CiMgbWFrZSBzdWJzZXQgb2YgZGF0YSB0byBwcmV2ZW50IGxvbmcgb3V0cHV0cwppcmlzX3N1YiA8LSBpcmlzWzE6MTAsIF0KaXJpc19zdWIKCiMgU2VsZWN0IGZpcnN0IGNvbHVtbiwgc2luZ2xlIGJyYWNrZXRzIHJldHVybnMgZGF0YS5mcmFtZQppcmlzX3N1YlsxXQppcmlzX3N1YlsiU2VwYWwuTGVuZ3RoIl0KIyBkb3VibGUgYnJhY2tldHMgcmV0dXJucyB2ZWN0b3IKaXJpc19zdWJbWzFdXQppcmlzX3N1YltbIlNlcGFsLkxlbmd0aCJdXQojIHVzaW5nIHRoZSBkb2xsYXIgc2lnbiwgYWxzbyByZXR1cm5zIHZlY3RvcgppcmlzX3N1YiRTZXBhbC5MZW5ndGgKCiMgU2VsZWN0IGFsbCBjb2x1bW5zIGV4Y2VwdCB0aGUgZmlyc3Qgb25lCmlyaXNfc3ViWy0xXQoKIyBTZWxlY3Rpbmcgcm93cwppcmlzX3N1YlsxLCBdICMgU2VsZWN0IHRoZSBmaXJzdCByb3cKaXJpc19zdWJbMTo1LF0gIyBTZWxlY3QgdGhlIGZpcnN0IGZpdmUgcm93cwppcmlzX3N1YltjKDIsIDQpLCBdICMgc2VsZWN0IHRoZSBzZWNvbmQgYW5kIGZvdXJ0aCByb3dzCgojIGNvbHVtbnMgYW5kIHJvd3MKaXJpc19zdWJbMTo1LCAiU2VwYWwuTGVuZ3RoIl0gIyBmaXJzdCA1IHJvd3Mgb2YgIlNlcGFsLkxlbmd0aCIgY29sdW1uCmlyaXNfc3ViWzMsIDJdICAjIHRoaXJkIHJvdywgc2Vjb25kIGNvbHVtbgpgYGAKCgojIyBJbmNsdWRpbmcgUiBvYmplY3QgdmFsdWVzIG9yIHJlc3VsdHMgaW4gdGhlIHRleHQKCllvdSBjYW4gYWRkIGlubGluZSBSIGNvZGUgcmVzdWx0cyBieSB3cmFwcGluZyB0aGVtIGluc2lkZSBgYCBgciBgIGBgLiBUaGlzIGlzIHVzZWZ1bCBmb3IgZGlzY3Vzc2luZyB0aGUgdmFsdWUgb2YgYSByZXN1bHQgaW4geW91ciB0ZXh0LiBJbnN0ZWFkIG9mIGhhdmluZyB0byBjb3B5IHRoZSB2YWx1ZSBvZiBhIHJlc3VsdCAod2hpY2ggaXMgcHJvbmUgdG8gZXJyb3IgYW5kIG5vdCByb2J1c3QgdG8gY2hhbmdlcyksIHlvdSBjYW4ganVzdCBjYWxsIGl0IGluc2lkZSB0aGUgdGV4dC4gRm9yIGV4YW1wbGUsIHdlIGNvdWxkIGNhbGN1bGF0ZSB0aGUgbWVhbiBzZXBhbCBsZW5ndGggb2YgdGhlIGlyaXMgZmxvd2VycyBhcyBmb2xsb3c6CgpgYGB7cn0KbWVhbihpcmlzJFNlcGFsLkxlbmd0aCkKYGBgCgpXZSBjb3VsZCBjb3B5IHRoZSB2YWx1ZSBpbnNpZGUgb3VyIHRleHQsIGJ1dCBhIGJldHRlciB3YXkgaXMgYnkganVzdCBydW5uaW5nIHRoZSBjb2RlIGlubGluZSBhcyBgbWVhbihpcmlzJFNlcGFsLkxlbmd0aClgIHN1cnJvdW5kZWQgYnkgYGAgYHIgYGAgYW5kIGBgIGAgYGAuIFNvIHdlIGNvdWxkIHNheSB0aGF0IHRoZSBpcmlzIGZsb3dlcnMgaW4gb3VyIGRhdGEgaGF2ZSBhIG1lYW4gbGVuZ3RoIG9mIGByIG1lYW4oaXJpcyRTZXBhbC5MZW5ndGgpYC4KCk5vdGU6IHRvIGFjdHVhbGx5IHNlZSB0aGUgdmFsdWUgb2YgdGhlIGlubGluZSBjb2RlLCBwbGFjZSB5b3VyIGN1cnNvciBpbnNpZGUgdGhlIGJhY2t0aWNrcyBgYCBgIGByIGBgIGFuZCBwcmVzcyBgQ3RybCArIEVudGVyYCBvciBgQ21kICsgRW50ZXJgLiBXaGVuIHlvdSBrbml0IHlvdXIgUm1kIGZpbGUgYW5kIGJ1aWxkIHRoZSBIVE1MIG91dHB1dCwgdGhlIGlubGluZSBSIGNvZGUgd2lsbCBiZSByZXBsYWNlZCBieSBpdHMgb3V0cHV0IHZhbHVlLgoKCiMjIEluY2x1ZGluZyBlcXVhdGlvbnMKCkZpbmFsbHksIHlvdSBjYW4gaW5jbHVkZSBlcXVhdGlvbnMgaW4geW91ciB0ZXh0IHVzaW5nIFtMYVRlWF0oaHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvTGFUZVgpIHN5bnRheCBhbmQgc3Vycm91bmRpbmcgaXQgYnkgIGEgcGFpciBvZiBkb3VibGUgZG9sbGFyIHNpZ25zIGAkJGAuIFRoaXMgaXMgdXNlZnVsIHRvIHNwZWNpZnkgbW9kZWxzLiBGb3IgZXhhbXBsZSwgd2UgY2FuIHdyaXRlIHRoZSBlcXVhdGlvbiBvZiBhIGxpbmVhciBtb2RlbCBhcwoKYGBgCiQkCnlfaSA9IFxiZXRhXzAgKyBcYmV0YV8xIHhfaSArIFxlcHNpbG9uX2kKJCQKYGBgCgpXaGljaCB3aWxsIGJlIGNvbnZlcnRlZCB0byB0aGUgZm9sbG93aW5nIG91dHB1dDoKCiQkCnlfaSA9IFxiZXRhXzAgKyBcYmV0YV8xIHhfaSArIFxlcHNpbG9uX2kKJCQKCk5vdGUgdGhhdCBSU3R1ZGlvIHdpbGwgZ2l2ZSB5b3UgYSBwcmV2aWV3IG9mIHdoYXQgeW91ciBlcXVhdGlvbiB3aWxsIGxvb2sgbGlrZSBpbiB0aGUgZmluYWwgZG9jdW1lbnQuCgpZb3UgY2FuIGFsc28gaW5jbHVkZSBpbmxpbmUgJFxMYVRlWCQgZXF1YXRpb25zIGJ5IHVzaW5nIGEgcGFpciBvZiBzaW5nbGUgYCRgIHNpZ25zLiBGb3IgZXhhbXBsZSwgdGhlIGZvbGxvd2luZyBzZW50ZW5jZToKCmBUaGUgc2FtcGxlIG1lYW4gb2YgJHkkIGlzIGdpdmVuIGJ5ICRcYmFye3l9PVxzdW1cbGltaXRzX3tpPTF9XntufVxmcmFje3lfaX17bn0kYAoKV2lsbCBiZSBjb252ZXJ0ZWQgdG86CgpUaGUgc2FtcGxlIG1lYW4gb2YgJHkkIGlzIGdpdmVuIGJ5ICRcYmFye3l9PVxzdW1cbGltaXRzX3tpPTF9XntufVxmcmFje3lfaX17bn0kCgoKCiMgVXNlZnVsIHJlc291cmNlcwoKLSBbUiBNYXJrZG93bjogVGhlIERlZmluaXRpdmUgR3VpZGVdKGh0dHBzOi8vYm9va2Rvd24ub3JnL3lpaHVpL3JtYXJrZG93bi8pCi0gW1IgZm9yIERhdGEgU2NpZW5jZV0oaHR0cHM6Ly9yNGRzLmhhZC5jby5uei8pIGJ5IEhhZGxleSBXaWNraGFtIChtYWluIGF1dGhvciBvZiB0aGUgYHRpZHl2ZXJzZWAgcGFja2FnZXMpCi0gW0ludHJvZHVjdGlvbiB0byBEYXRhIFNjaWVuY2VdKGh0dHBzOi8vcmFmYWxhYi5naXRodWIuaW8vZHNib29rLykgYnkgUmFmYWVsIElyaXphcnJ5Ci0gW1doYXQgVGhleSBGb3Jnb3QgdG8gVGVhY2ggWW91IEFib3V0IFJdKGh0dHBzOi8vcnN0YXRzLnd0Zi8pLCBmb3Igc29tZSB1c2VmdWwgImdvb2QgcHJhY3RpY2VzIiB0aXBzIHdoZW4gd29ya2luZyB3aXRoIFIKCgoKIyBTZXNzaW9uIEluZm8KCkZpbmFsbHksIGl0J3MgYWx3YXlzIGdvb2QgcHJhY3RpY2UgdG8gaW5jbHVkZSB0aGUgW1Nlc3Npb24gSW5mb10oKSBmb3IgeW91ciBSIHNlc3Npb24gaW4geW91ciBkb2N1bWVudC4KVGhhdCB3YXksIG90aGVyIHBlcnNvbnMgKGluY2x1ZGluZyB5b3VyIGZ1dHVyZSBzZWxmKSBsb29raW5nIGF0IHlvdXIgZG9jdW1lbnQgY2FuIHNlZSB3aGF0IHZlcnNpb25zIG9mIFIgYW5kIGxvYWRlZCBwYWNrYWdlcyB3ZXJlIHVzZWQsIHdoaWNoIGNhbiBiZSBxdWl0ZSBlc3NlbnRpYWwgZm9yIHJlcHJvZHVjaWJpbGl0eS4KCllvdSBjYW4gYWxzbyBpbmNsdWRlIHRoZSBkYXRlIHdpdGggYFN5cy50aW1lKClgIHNvIHlvdSBoYXZlIGEgdGltZSBzdGFtcCBvZiB3aGVuIHRoZSByZXBvcnQgd2FzIGNvbXBpbGVkLgoKYGBge3Igc2Vzc2lvbl9pbmZvLCBjYWNoZT1GQUxTRX0KU3lzLnRpbWUoKQpzZXNzaW9uSW5mbygpCmBgYAo=</div>
+<div class="footer">
+    <hr>
+    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
+    CC BY-NC-SA 4.0</a> licence.
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Introduction-RMarkdown.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Lieven Clement" />
+
+
+<title>EM</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HDDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="intro.html">1. Introduction</a>
+    </li>
+    <li>
+      <a href="svd.html">2. Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="prediction.html">3. Prediction with High Dimensional Predictors</a>
+    </li>
+    <li>
+      <a href="sparseSvd.html">4. Sparse Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="lda.html">5. Linear Discriminant Analysis</a>
+    </li>
+    <li>
+      <a href="hclust.html">6.1. Introduction to Clustering</a>
+    </li>
+    <li>
+      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">6.2. Paper Model-based Clustering</a>
+    </li>
+    <li>
+      <a href="em.html">6.3. EM algorithm</a>
+    </li>
+    <li>
+      <a href="lsi.html">7. Large Scale Inference</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab1-Intro-SVD.html">Lab 1: Intro &amp; SVD</a>
+    </li>
+    <li>
+      <a href="Lab2-PCA.html">Lab 2: SVD - PCA</a>
+    </li>
+    <li>
+      <a href="Lab3-Penalized-Regression.html">Lab 3: Prediction</a>
+    </li>
+    <li>
+      <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
+    </li>
+    <li>
+      <a href="Lab5-Clustering.html">Lab 5: Clustering</a>
+    </li>
+    <li>
+      <a href="Lab6-Large-Scale-Inference.html">Lab 6: LSI</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="https://github.com/statOmics/HDDA">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">EM</h1>
+<h4 class="author">Lieven Clement</h4>
+<h4 class="date">statOmics, Ghent University (<a
+href="https://statomics.github.io"
+class="uri">https://statomics.github.io</a>)</h4>
+
+</div>
+
+
+<div id="example-of-model-based-clustering-with-two-groups"
+class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Example of model based
+clustering with two groups</h1>
+<p>We will use a toy example to explain the EM algorithm for model based
+clustering.</p>
+<ul>
+<li>Two groups <span class="math inline">\(k=1,2\)</span></li>
+<li>Univariate observations are observed <span
+class="math inline">\(x_i\)</span> with <span class="math inline">\(i=
+1, \dots, n\)</span></li>
+<li>The data of group j follows a normal distribution <span
+class="math inline">\(N(u_j,1)\)</span> with a variance <span
+class="math inline">\(\sigma^2=1\)</span> and a mean <span
+class="math inline">\(\mu_j\)</span> that depends on the group <span
+class="math inline">\(j=1,2\)</span>.</li>
+</ul>
+<p>The data follows the following mixture distribution:</p>
+<p><span class="math display">\[f(x) = \pi_1 f_1(x) + (1-\pi_1)
+f_2(x)\]</span></p>
+<p>With</p>
+<ul>
+<li><p><span class="math inline">\(\pi_1\)</span> the probability that a
+random sample from the population belongs to group 1</p></li>
+<li><p><span class="math inline">\(f_1(x)\)</span> the density of the
+data in group 1, i.e. <span
+class="math inline">\(N(\mu_1,1)\)</span></p></li>
+<li><p><span class="math inline">\(f_2(x)\)</span> the density of the
+data in group 2, i.e. <span
+class="math inline">\(N(\mu_2,1)\)</span>.</p></li>
+<li><p>Unknowns? Group membership <span
+class="math inline">\(z_i\)</span>, the group means <span
+class="math inline">\(\mu_j\)</span> and the proportion of subjects in
+the population of group 1 <span class="math inline">\(\pi_1\)</span> are
+unknown.</p></li>
+</ul>
+<p>We can estimate the model parameters <span
+class="math inline">\(\boldsymbol{\theta} =
+[\mu_1,\mu_2,\pi_1]^T\)</span> using maximum likelihood.</p>
+<p><span class="math display">\[
+L\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X}\right) = \prod_{i=1}^n
+\left[\pi_1 f_1(x_i) + (1-\pi_1) f_2(x_i)
+\right]\]</span></p>
+<p>It is easier to maximise the log-likelihood:</p>
+<p><span class="math display">\[
+l\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X}\right) = \sum_{i=1}^n
+\log\left[\pi_1 f_1(x_i) + (1-\pi_1) f_2(x_i)
+\right]\]</span></p>
+<p>The optimisation is difficult because we have to take the log of a
+sum and the likelihood does not factorise further.</p>
+</div>
+<div id="simulate-toy-data" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Simulate toy Data</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>mu1Real <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>mu2Real <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>pi1Real <span class="ot">=</span> .<span class="dv">4</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">114</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>zReal <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">500</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> pi1Real)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(zReal<span class="sc">==</span><span class="dv">1</span>, <span class="fu">rnorm</span>(<span class="dv">500</span>,<span class="at">mean=</span>mu1Real), <span class="fu">rnorm</span>(<span class="dv">500</span>, <span class="at">mean=</span>mu2Real))</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">data.frame</span>(x) <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
+<p><img src="em_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">data.frame</span>(x,zReal) <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(zReal,x,<span class="at">color=</span>zReal)) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    <span class="fu">scale_colour_gradient2</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>      <span class="at">low =</span> <span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>      <span class="at">mid=</span><span class="st">&quot;white&quot;</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>      <span class="at">high=</span><span class="st">&quot;red&quot;</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>      <span class="at">midpoint =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">x=</span>.<span class="dv">95</span>,<span class="at">y=</span>mu1Real, <span class="at">shape=</span><span class="dv">25</span>, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">x=</span><span class="fl">0.05</span>,<span class="at">y=</span>mu2Real, <span class="at">shape=</span><span class="dv">25</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">&quot;Simulated data with real group means (triangles)&quot;</span>)</span></code></pre></div>
+<p><img src="em_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+</div>
+<div id="parameter-estimation" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Parameter
+estimation</h1>
+<p>If we would know the cluster membership <span
+class="math inline">\(z_{i1}\)</span> <span
+class="math display">\[z_{i1}=\left\{ \begin{matrix} 1 &amp; \text{if }
+x_i \text{ belongs to group 1}\\
+0 &amp;  \text{if } x_i \text{ belongs to group 2}
+\end{matrix}\right.\]</span></p>
+<p>with <span class="math inline">\(z_{i1}\)</span> follows a Bernoulli
+distribution</p>
+<p><span
+class="math display">\[B(\pi_1)=\pi_1^{z_{i1}}(1-\pi_1)^{(1-z_{i1})}
+\]</span></p>
+<p>Then the density of <span class="math inline">\(x_i\)</span> given
+<span class="math inline">\(z_{i1}\)</span> becomes</p>
+<p><span class="math display">\[f(x_i\vert z_{i1}) =
+f_1(x_i)^{z_{i1}}f_2(x_i)^{1-z_{i1}}\]</span></p>
+<p>and the joint distribution of <span
+class="math inline">\(z_{i1}\)</span> and <span
+class="math inline">\(x_i\)</span> then becomes <span
+class="math display">\[\begin{eqnarray}
+f(x_i, z_{i1})&amp;=&amp;f(x_i\vert z_{i1}) f(z_{i1})\\
+&amp;=&amp;
+f_1(x_i)^{z_{i1}}f_2(x_i)^{1-z_{i1}}\pi_1^{z_{i1}}(1-\pi_1)^{(1-z_{ik})}
+\end{eqnarray}\]</span></p>
+<p>and the log likelihood of the complete data becomes</p>
+<p><span class="math display">\[
+l\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right) = \sum_{i=1}^n z_{i1}
+\log \left[\pi_1  f_1(x_i)\right] + (1-z_{i1})\log \left[(1-\pi_1)
+f_2(x_i)\right]
+\]</span></p>
+<ul>
+<li>Note, that in the notation of the <a
+href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">Frayley
+and Raftery (1998)</a> <span class="math inline">\(z_2=1-z_1\)</span>
+and <span class="math inline">\(\pi_2= 1- \pi_1\)</span></li>
+</ul>
+<div id="em-algorithm" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> EM algorithm</h2>
+<p>If we would know the cluster membership, we could estimate all model
+parameters based on the complete likelihood.</p>
+<p>Note, that the complete likelihood also factorises nicely!</p>
+<p>However, the cluster membership is unknown.</p>
+<p>The EM algorithm has been developed for missing data problems.</p>
+<p>It is an iterative algorithm that consists of two steps:</p>
+<ol style="list-style-type: decimal">
+<li><p>E-step: calculate the expected log likelihood given the data and
+the current model parameter estimates</p></li>
+<li><p>M-step: maximise the expected log-likelihood</p></li>
+<li><p>Iterate between 1 and 2 until convergence.</p></li>
+</ol>
+<div id="e-step" class="section level3" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> E-step</h3>
+<p>In iteration m+1</p>
+<p><span class="math display">\[\begin{eqnarray}
+Q\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right)&amp;=&amp;
+E\left[l\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right)\vert
+\mathbf{X}, \mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\\
+&amp;=&amp;
+E\left[\sum_{i=1}^n z_{i1} \log\left[\pi_1  f_1(x_i)\right] +
+(1-z_{i1})\log \left[(1-\pi_1) f_2(x_i)\right]\vert \mathbf{X},
+\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\\
+&amp;=&amp;\sum_{i=1}^n E\left[z_{i1}\vert x_i,\mu_1=\mu_1^m,
+\mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\log \left[\pi_1  f_1(x_i)\right] +
+\sum_{i=1}^n \left(1- E\left[z_{i1}\vert x_i,\mu_1=\mu_1^m,
+\mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\right)\log \left[(1-\pi_1)
+f_2(x_i)\right]
+\end{eqnarray}\]</span></p>
+<p>Note, that the expected log likelihood simplifies to replacing the
+unknown class memberships in the complete likelihood by their expected
+values.</p>
+<p><span class="math display">\[\begin{eqnarray}
+E\left[z_{i1}\vert \mathbf{X},\mu_1=\mu_1^m, \mu_2=\mu_2^m,
+\pi_1=\pi_1^m\right] &amp;=&amp; 1 \times f(z_{i1}=1 \vert
+x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m)  + 0 \times f(z_{i1}=0
+\vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m)  \\\\
+&amp;=&amp; f(z_{i1}= 1 \vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m,
+\pi_1=\pi_1^m)\\\\
+&amp;=&amp; \frac{f(z=1,x_i)}{f(x_i)}\\\\
+&amp;=&amp; \frac{\pi^m_1 f_1(x_i)}{\pi^m_1 f_1(x_i)+(1-\pi^m_1)
+f_2(x_i)}
+\end{eqnarray}\]</span></p>
+<p>We will refer to the expected class membership as <span
+class="math inline">\(\hat z_{i1}^{m+1}\)</span></p>
+</div>
+<div id="m-step" class="section level3" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> M-step</h3>
+<p>Maximise the expected log-likelihood to obtain the unknown model
+parameters:</p>
+<p><span class="math display">\[
+Q\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right) = \sum_{i=1}^n \hat
+z_{i1}^m  \log \pi_1 + \sum_{i=1}^n \hat z_{i1}^m  \log f_1(x_i) +
+\sum_{i=1}^n\left(1- \hat z_{i1}\right)\log (1-\pi_1) +
+\sum_{i=1}^n\left(1- \hat z_{i1}\right)\log f_2(x_i)
+\]</span></p>
+<p>So we observe that the expected log likelihood implies an estimation
+orthogonality between the normal distributions and the Bernoulli
+distribution.</p>
+<p>So the parameter estimates that maximise the expected log-likelihood
+become:</p>
+<p><span class="math display">\[
+\hat \pi_1^{m+1} =\frac{\sum_{i=1}^n \hat z_{i1}^{m+1}}{n}\]</span>
+<span class="math display">\[
+\hat \mu_1^{m+1} = \frac{\sum_{i=1}^n \hat z_{i1}^{m+1}
+x_i}{\sum_{i=1}^n \hat z_{i1}^{m+1}}\]</span> <span
+class="math display">\[
+\hat \mu_2^{m+1} = \frac{\sum_{i=1}^n (1- \hat z_{i1}^{m+1})
+x_i}{\sum_{i=1}^n (1-\hat z_{i1}^{m+1})}
+\]</span></p>
+</div>
+</div>
+</div>
+<div id="example" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Example</h1>
+<div id="initialize" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Initialize</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">as.double</span>(x <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(z)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x,zReal,z) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(zReal,x,<span class="at">color=</span>z)) <span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="fu">scale_colour_gradient2</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="at">low =</span> <span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    <span class="at">mid=</span><span class="st">&quot;white&quot;</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>    <span class="at">high=</span><span class="st">&quot;red&quot;</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>    <span class="at">midpoint =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x=</span>.<span class="dv">95</span>,<span class="at">y=</span>mu1Real, <span class="at">shape=</span><span class="dv">25</span>, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x=</span><span class="fl">0.05</span>,<span class="at">y=</span>mu2Real, <span class="at">shape=</span><span class="dv">25</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Simulated data with real group means (triangles)&quot;</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>p</span></code></pre></div>
+<p><img src="em_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="em-algorithm-1" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> EM algorithm</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>{</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="do">## M-step</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  pi1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(z)<span class="sc">/</span>n</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  mu1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(z <span class="sc">*</span> x)<span class="sc">/</span><span class="fu">sum</span>(z)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  mu2 <span class="ot">&lt;-</span> <span class="fu">sum</span>((<span class="dv">1</span><span class="sc">-</span>z) <span class="sc">*</span> x)<span class="sc">/</span><span class="fu">sum</span>(<span class="dv">1</span><span class="sc">-</span>z)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="do">## E-step</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  d1 <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x,<span class="at">mean=</span>mu1)</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  d2 <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x,<span class="at">mean=</span>mu2)</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  d <span class="ot">&lt;-</span> pi1 <span class="sc">*</span> d1 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>pi1)<span class="sc">*</span>d2</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  z <span class="ot">&lt;-</span> pi1<span class="sc">*</span>d1<span class="sc">/</span>d</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x,zReal,z) <span class="sc">%&gt;%</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(zReal,x,<span class="at">color=</span>z)) <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    <span class="fu">scale_colour_gradient2</span>(</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>      <span class="at">low =</span> <span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>      <span class="at">mid=</span><span class="st">&quot;white&quot;</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>      <span class="at">high=</span><span class="st">&quot;red&quot;</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>      <span class="at">midpoint =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">x=</span>.<span class="dv">95</span>,<span class="at">y=</span>mu1Real, <span class="at">shape=</span><span class="dv">25</span>, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">x=</span><span class="fl">0.05</span>,<span class="at">y=</span>mu2Real, <span class="at">shape=</span><span class="dv">25</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">x=</span>.<span class="dv">95</span>,<span class="at">y=</span>mu1, <span class="at">shape=</span><span class="dv">3</span>, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">x=</span>.<span class="dv">05</span>,<span class="at">y=</span>mu2, <span class="at">shape=</span><span class="dv">3</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">&quot;iteration &quot;</span>,k, <span class="st">&quot; real mean (triangle), estimate mean (+)&quot;</span>))</span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>  <span class="fu">print</span>(p)</span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="em_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="em_files/figure-html/unnamed-chunk-4-2.png" width="672" /><img src="em_files/figure-html/unnamed-chunk-4-3.png" width="672" /><img src="em_files/figure-html/unnamed-chunk-4-4.png" width="672" /><img src="em_files/figure-html/unnamed-chunk-4-5.png" width="672" /><img src="em_files/figure-html/unnamed-chunk-4-6.png" width="672" /><img src="em_files/figure-html/unnamed-chunk-4-7.png" width="672" /><img src="em_files/figure-html/unnamed-chunk-4-8.png" width="672" /><img src="em_files/figure-html/unnamed-chunk-4-9.png" width="672" /><img src="em_files/figure-html/unnamed-chunk-4-10.png" width="672" /></p>
+<div id="estimates" class="section level3" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Estimates</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">parameter</th>
+<th align="right">population</th>
+<th align="right">initial</th>
+<th align="right">estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mu1</td>
+<td align="right">2.0</td>
+<td align="right">1.715</td>
+<td align="right">2.020</td>
+</tr>
+<tr class="even">
+<td align="left">mu2</td>
+<td align="right">-1.0</td>
+<td align="right">-1.270</td>
+<td align="right">-0.935</td>
+</tr>
+<tr class="odd">
+<td align="left">pi1</td>
+<td align="right">0.4</td>
+<td align="right">0.512</td>
+<td align="right">0.404</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="session-info" class="section level1 unnumbered">
+<h1 class="unnumbered">Session info</h1>
+<details>
+<summary>
+Session info
+</summary>
+<pre><code>#&gt; [1] &quot;2024-10-02 16:15:58 CEST&quot;</code></pre>
+<pre><code>#&gt; ─ Session info ───────────────────────────────────────────────────────────────
+#&gt;  setting  value
+#&gt;  version  R version 4.4.0 RC (2024-04-16 r86468)
+#&gt;  os       macOS Big Sur 11.6
+#&gt;  system   aarch64, darwin20
+#&gt;  ui       X11
+#&gt;  language (EN)
+#&gt;  collate  en_US.UTF-8
+#&gt;  ctype    en_US.UTF-8
+#&gt;  tz       Europe/Brussels
+#&gt;  date     2024-10-02
+#&gt;  pandoc   3.1.1 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/ (via rmarkdown)
+#&gt; 
+#&gt; ─ Packages ───────────────────────────────────────────────────────────────────
+#&gt;  package     * version date (UTC) lib source
+#&gt;  bookdown      0.40    2024-07-02 [1] CRAN (R 4.4.0)
+#&gt;  bslib         0.8.0   2024-07-29 [1] CRAN (R 4.4.0)
+#&gt;  cachem        1.1.0   2024-05-16 [1] CRAN (R 4.4.0)
+#&gt;  cli           3.6.3   2024-06-21 [1] CRAN (R 4.4.0)
+#&gt;  colorspace    2.1-1   2024-07-26 [1] CRAN (R 4.4.0)
+#&gt;  digest        0.6.37  2024-08-19 [1] CRAN (R 4.4.1)
+#&gt;  dplyr       * 1.1.4   2023-11-17 [1] CRAN (R 4.4.0)
+#&gt;  evaluate      1.0.0   2024-09-17 [1] CRAN (R 4.4.1)
+#&gt;  fansi         1.0.6   2023-12-08 [1] CRAN (R 4.4.0)
+#&gt;  farver        2.1.2   2024-05-13 [1] CRAN (R 4.4.0)
+#&gt;  fastmap       1.2.0   2024-05-15 [1] CRAN (R 4.4.0)
+#&gt;  fontawesome   0.5.2   2023-08-19 [1] CRAN (R 4.4.0)
+#&gt;  forcats     * 1.0.0   2023-01-29 [1] CRAN (R 4.4.0)
+#&gt;  generics      0.1.3   2022-07-05 [1] CRAN (R 4.4.0)
+#&gt;  ggplot2     * 3.5.1   2024-04-23 [1] CRAN (R 4.4.0)
+#&gt;  glue          1.8.0   2024-09-30 [1] CRAN (R 4.4.1)
+#&gt;  gtable        0.3.5   2024-04-22 [1] CRAN (R 4.4.0)
+#&gt;  highr         0.11    2024-05-26 [1] CRAN (R 4.4.0)
+#&gt;  hms           1.1.3   2023-03-21 [1] CRAN (R 4.4.0)
+#&gt;  htmltools     0.5.8.1 2024-04-04 [1] CRAN (R 4.4.0)
+#&gt;  jquerylib     0.1.4   2021-04-26 [1] CRAN (R 4.4.0)
+#&gt;  jsonlite      1.8.9   2024-09-20 [1] CRAN (R 4.4.1)
+#&gt;  knitr         1.48    2024-07-07 [1] CRAN (R 4.4.0)
+#&gt;  labeling      0.4.3   2023-08-29 [1] CRAN (R 4.4.0)
+#&gt;  lifecycle     1.0.4   2023-11-07 [1] CRAN (R 4.4.0)
+#&gt;  lubridate   * 1.9.3   2023-09-27 [1] CRAN (R 4.4.0)
+#&gt;  magrittr      2.0.3   2022-03-30 [1] CRAN (R 4.4.0)
+#&gt;  munsell       0.5.1   2024-04-01 [1] CRAN (R 4.4.0)
+#&gt;  pillar        1.9.0   2023-03-22 [1] CRAN (R 4.4.0)
+#&gt;  pkgconfig     2.0.3   2019-09-22 [1] CRAN (R 4.4.0)
+#&gt;  purrr       * 1.0.2   2023-08-10 [1] CRAN (R 4.4.0)
+#&gt;  R6            2.5.1   2021-08-19 [1] CRAN (R 4.4.0)
+#&gt;  readr       * 2.1.5   2024-01-10 [1] CRAN (R 4.4.0)
+#&gt;  rlang         1.1.4   2024-06-04 [1] CRAN (R 4.4.0)
+#&gt;  rmarkdown     2.28    2024-08-17 [1] CRAN (R 4.4.0)
+#&gt;  rstudioapi    0.16.0  2024-03-24 [1] CRAN (R 4.4.0)
+#&gt;  sass          0.4.9   2024-03-15 [1] CRAN (R 4.4.0)
+#&gt;  scales        1.3.0   2023-11-28 [1] CRAN (R 4.4.0)
+#&gt;  sessioninfo   1.2.2   2021-12-06 [1] CRAN (R 4.4.0)
+#&gt;  stringi       1.8.4   2024-05-06 [1] CRAN (R 4.4.0)
+#&gt;  stringr     * 1.5.1   2023-11-14 [1] CRAN (R 4.4.0)
+#&gt;  tibble      * 3.2.1   2023-03-20 [1] CRAN (R 4.4.0)
+#&gt;  tidyr       * 1.3.1   2024-01-24 [1] CRAN (R 4.4.0)
+#&gt;  tidyselect    1.2.1   2024-03-11 [1] CRAN (R 4.4.0)
+#&gt;  tidyverse   * 2.0.0   2023-02-22 [1] CRAN (R 4.4.0)
+#&gt;  timechange    0.3.0   2024-01-18 [1] CRAN (R 4.4.0)
+#&gt;  tzdb          0.4.0   2023-05-12 [1] CRAN (R 4.4.0)
+#&gt;  utf8          1.2.4   2023-10-22 [1] CRAN (R 4.4.0)
+#&gt;  vctrs         0.6.5   2023-12-01 [1] CRAN (R 4.4.0)
+#&gt;  withr         3.0.1   2024-07-31 [1] CRAN (R 4.4.0)
+#&gt;  xfun          0.47    2024-08-17 [1] CRAN (R 4.4.0)
+#&gt;  yaml          2.3.10  2024-07-26 [1] CRAN (R 4.4.0)
+#&gt; 
+#&gt;  [1] /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library
+#&gt; 
+#&gt; ──────────────────────────────────────────────────────────────────────────────</code></pre>
+</details>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRU0iCmF1dGhvcjogIkxpZXZlbiBDbGVtZW50IgpkYXRlOiAic3RhdE9taWNzLCBHaGVudCBVbml2ZXJzaXR5IChodHRwczovL3N0YXRvbWljcy5naXRodWIuaW8pIgpvdXRwdXQ6CiAgICBodG1sX2RvY3VtZW50OgogICAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCiAgICAgIHRoZW1lOiBjb3NtbwogICAgICB0b2M6IHRydWUKICAgICAgdG9jX2Zsb2F0OiB0cnVlCiAgICAgIGhpZ2hsaWdodDogdGFuZ28KICAgICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlCiAgICBwZGZfZG9jdW1lbnQ6CiAgICAgIHRvYzogdHJ1ZQogICAgICBudW1iZXJfc2VjdGlvbnM6IHRydWUKLS0tCgpgYGB7ciwgY2hpbGQ9Il9zZXR1cC5SbWQifQpgYGAKCiMgRXhhbXBsZSBvZiBtb2RlbCBiYXNlZCBjbHVzdGVyaW5nIHdpdGggdHdvIGdyb3VwcwoKV2Ugd2lsbCB1c2UgYSB0b3kgZXhhbXBsZSB0byBleHBsYWluIHRoZSBFTSBhbGdvcml0aG0gZm9yIG1vZGVsIGJhc2VkIGNsdXN0ZXJpbmcuCgotIFR3byBncm91cHMgJGs9MSwyJAotIFVuaXZhcmlhdGUgb2JzZXJ2YXRpb25zIGFyZSBvYnNlcnZlZCAkeF9pJCB3aXRoICRpPSAxLCBcZG90cywgbiQKLSBUaGUgZGF0YSBvZiBncm91cCBqIGZvbGxvd3MgYSBub3JtYWwgZGlzdHJpYnV0aW9uICROKHVfaiwxKSQgd2l0aCBhIHZhcmlhbmNlICRcc2lnbWFeMj0xJCBhbmQgYSBtZWFuICRcbXVfaiQgdGhhdCBkZXBlbmRzIG9uIHRoZSBncm91cCAkaj0xLDIkLgoKClRoZSBkYXRhIGZvbGxvd3MgdGhlIGZvbGxvd2luZyAgbWl4dHVyZSBkaXN0cmlidXRpb246CgpcW2YoeCkgPSBccGlfMSBmXzEoeCkgKyAoMS1ccGlfMSkgZl8yKHgpXF0KCldpdGgKCi0gJFxwaV8xJCB0aGUgcHJvYmFiaWxpdHkgdGhhdCBhIHJhbmRvbSBzYW1wbGUgZnJvbSB0aGUgcG9wdWxhdGlvbiBiZWxvbmdzIHRvIGdyb3VwIDEKLSAkZl8xKHgpJCB0aGUgZGVuc2l0eSBvZiB0aGUgZGF0YSBpbiBncm91cCAxLCBpLmUuICROKFxtdV8xLDEpJAotICRmXzIoeCkkIHRoZSBkZW5zaXR5IG9mIHRoZSBkYXRhIGluIGdyb3VwIDIsIGkuZS4gJE4oXG11XzIsMSkkLgoKLSBVbmtub3ducz8gR3JvdXAgbWVtYmVyc2hpcCAkel9pJCwgdGhlIGdyb3VwIG1lYW5zICRcbXVfaiQgYW5kIHRoZSBwcm9wb3J0aW9uIG9mIHN1YmplY3RzIGluIHRoZSBwb3B1bGF0aW9uIG9mIGdyb3VwIDEgJFxwaV8xJCBhcmUgdW5rbm93bi4KCldlIGNhbiBlc3RpbWF0ZSB0aGUgbW9kZWwgcGFyYW1ldGVycyAkXGJvbGRzeW1ib2x7XHRoZXRhfSA9IFtcbXVfMSxcbXVfMixccGlfMV1eVCQgdXNpbmcgbWF4aW11bSBsaWtlbGlob29kLgoKXFsKTFxsZWZ0KFxtdV8xLFxtdV8yLFxwaV8xXHZlcnQgXG1hdGhiZntYfVxyaWdodCkgPSBccHJvZF97aT0xfV5uIFxsZWZ0W1xwaV8xIGZfMSh4X2kpICsgKDEtXHBpXzEpIGZfMih4X2kpClxyaWdodF1cXQoKSXQgaXMgZWFzaWVyIHRvIG1heGltaXNlIHRoZSBsb2ctbGlrZWxpaG9vZDoKClxbCmxcbGVmdChcbXVfMSxcbXVfMixccGlfMVx2ZXJ0IFxtYXRoYmZ7WH1ccmlnaHQpID0gXHN1bV97aT0xfV5uIFxsb2dcbGVmdFtccGlfMSBmXzEoeF9pKSArICgxLVxwaV8xKSBmXzIoeF9pKQpccmlnaHRdXF0KClRoZSBvcHRpbWlzYXRpb24gaXMgZGlmZmljdWx0IGJlY2F1c2Ugd2UgaGF2ZSB0byB0YWtlIHRoZSBsb2cgb2YgYSBzdW0gYW5kIHRoZSBsaWtlbGlob29kIGRvZXMgbm90IGZhY3RvcmlzZSBmdXJ0aGVyLgoKIyBTaW11bGF0ZSB0b3kgRGF0YQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQptdTFSZWFsIDwtIDIKbXUyUmVhbCA8LSAtMQpwaTFSZWFsID0gLjQKc2V0LnNlZWQoMTE0KQp6UmVhbCA8LSByYmlub20oNTAwLCBzaXplID0gMSwgcHJvYiA9IHBpMVJlYWwpCnggPC0gaWZlbHNlKHpSZWFsPT0xLCBybm9ybSg1MDAsbWVhbj1tdTFSZWFsKSwgcm5vcm0oNTAwLCBtZWFuPW11MlJlYWwpKQpkYXRhLmZyYW1lKHgpICU+JQogIGdncGxvdChhZXMoeCA9IHgpKSArCiAgZ2VvbV9oaXN0b2dyYW0oKQpkYXRhLmZyYW1lKHgselJlYWwpICU+JQogICAgZ2dwbG90KGFlcyh6UmVhbCx4LGNvbG9yPXpSZWFsKSkgKwogICAgZ2VvbV9wb2ludCgpICsKICAgIHNjYWxlX2NvbG91cl9ncmFkaWVudDIoCiAgICAgIGxvdyA9ICJibHVlIiwKICAgICAgbWlkPSJ3aGl0ZSIsCiAgICAgIGhpZ2g9InJlZCIsCiAgICAgIG1pZHBvaW50ID0gMC41KSArCiAgICAgIGdlb21fcG9pbnQoeD0uOTUseT1tdTFSZWFsLCBzaGFwZT0yNSwgY29sPSJyZWQiLCBzaXplPTMpICsKICAgICAgZ2VvbV9wb2ludCh4PTAuMDUseT1tdTJSZWFsLCBzaGFwZT0yNSwgY29sPSJibHVlIiwgc2l6ZT0zKSArCiAgICAgIGdndGl0bGUoIlNpbXVsYXRlZCBkYXRhIHdpdGggcmVhbCBncm91cCBtZWFucyAodHJpYW5nbGVzKSIpCmBgYAoKIyBQYXJhbWV0ZXIgZXN0aW1hdGlvbgoKSWYgd2Ugd291bGQga25vdyB0aGUgY2x1c3RlciBtZW1iZXJzaGlwICR6X3tpMX0kClxbel97aTF9PVxsZWZ0XHsgXGJlZ2lue21hdHJpeH0gMSAmIFx0ZXh0e2lmIH0geF9pIFx0ZXh0eyBiZWxvbmdzIHRvIGdyb3VwIDF9XFwKMCAmICBcdGV4dHtpZiB9IHhfaSBcdGV4dHsgYmVsb25ncyB0byBncm91cCAyfQpcZW5ke21hdHJpeH1ccmlnaHQuXF0KCndpdGggJHpfe2kxfSQgZm9sbG93cyBhIEJlcm5vdWxsaSBkaXN0cmlidXRpb24KClxbQihccGlfMSk9XHBpXzFee3pfe2kxfX0oMS1ccGlfMSleeygxLXpfe2kxfSl9IFxdCgoKVGhlbiB0aGUgZGVuc2l0eSBvZiAkeF9pJCBnaXZlbiAgJHpfe2kxfSQgYmVjb21lcwoKXFtmKHhfaVx2ZXJ0IHpfe2kxfSkgPSBmXzEoeF9pKV57el97aTF9fWZfMih4X2kpXnsxLXpfe2kxfX1cXQoKYW5kIHRoZSBqb2ludCBkaXN0cmlidXRpb24gb2YgJHpfe2kxfSQgYW5kICR4X2kkIHRoZW4gYmVjb21lcwpcYmVnaW57ZXFuYXJyYXl9CmYoeF9pLCB6X3tpMX0pJj0mZih4X2lcdmVydCB6X3tpMX0pIGYoel97aTF9KVxcCiY9JiBmXzEoeF9pKV57el97aTF9fWZfMih4X2kpXnsxLXpfe2kxfX1ccGlfMV57el97aTF9fSgxLVxwaV8xKV57KDEtel97aWt9KX0KXGVuZHtlcW5hcnJheX0KCmFuZCB0aGUgbG9nIGxpa2VsaWhvb2Qgb2YgdGhlIGNvbXBsZXRlIGRhdGEgYmVjb21lcwoKXFsKbFxsZWZ0KFxtdV8xLFxtdV8yLFxwaV8xXHZlcnQgXG1hdGhiZntYLCBafVxyaWdodCkgPSBcc3VtX3tpPTF9Xm4gel97aTF9IFxsb2cgXGxlZnRbXHBpXzEgIGZfMSh4X2kpXHJpZ2h0XSArICgxLXpfe2kxfSlcbG9nIFxsZWZ0WygxLVxwaV8xKSBmXzIoeF9pKVxyaWdodF0KXF0KCi0gTm90ZSwgdGhhdCBpbiB0aGUgbm90YXRpb24gb2YgdGhlIFtGcmF5bGV5IGFuZCBSYWZ0ZXJ5ICgxOTk4KV0oaHR0cHM6Ly9zaXRlcy5zdGF0Lndhc2hpbmd0b24uZWR1L3Blb3BsZS9yYWZ0ZXJ5L1Jlc2VhcmNoL1BERi9mcmFsZXkxOTk4LnBkZikgJHpfMj0xLXpfMSQgYW5kICRccGlfMj0gMS0gXHBpXzEkCgojIyBFTSBhbGdvcml0aG0KCklmIHdlIHdvdWxkIGtub3cgdGhlIGNsdXN0ZXIgbWVtYmVyc2hpcCwgd2UgY291bGQgZXN0aW1hdGUgYWxsIG1vZGVsIHBhcmFtZXRlcnMgYmFzZWQgb24gdGhlIGNvbXBsZXRlIGxpa2VsaWhvb2QuCgpOb3RlLCB0aGF0IHRoZSBjb21wbGV0ZSBsaWtlbGlob29kIGFsc28gZmFjdG9yaXNlcyBuaWNlbHkhCgpIb3dldmVyLCB0aGUgY2x1c3RlciBtZW1iZXJzaGlwIGlzIHVua25vd24uCgpUaGUgRU0gYWxnb3JpdGhtIGhhcyBiZWVuIGRldmVsb3BlZCBmb3IgbWlzc2luZyBkYXRhIHByb2JsZW1zLgoKSXQgaXMgYW4gaXRlcmF0aXZlIGFsZ29yaXRobSB0aGF0IGNvbnNpc3RzIG9mIHR3byBzdGVwczoKCjEuIEUtc3RlcDogY2FsY3VsYXRlIHRoZSBleHBlY3RlZCBsb2cgbGlrZWxpaG9vZCBnaXZlbiB0aGUgZGF0YSBhbmQgdGhlIGN1cnJlbnQgbW9kZWwgcGFyYW1ldGVyIGVzdGltYXRlcwoKMi4gTS1zdGVwOiBtYXhpbWlzZSB0aGUgZXhwZWN0ZWQgbG9nLWxpa2VsaWhvb2QKCjMuIEl0ZXJhdGUgYmV0d2VlbiAgMSBhbmQgMiB1bnRpbCBjb252ZXJnZW5jZS4KCiMjIyBFLXN0ZXAKCkluIGl0ZXJhdGlvbiBtKzEKClxiZWdpbntlcW5hcnJheX0KUVxsZWZ0KFxtdV8xLFxtdV8yLFxwaV8xXHZlcnQgXG1hdGhiZntYLCBafVxyaWdodCkmPSYKRVxsZWZ0W2xcbGVmdChcbXVfMSxcbXVfMixccGlfMVx2ZXJ0IFxtYXRoYmZ7WCwgWn1ccmlnaHQpXHZlcnQgXG1hdGhiZntYfSwgXG11XzE9XG11XzFebSwgXG11XzI9XG11XzJebSwgXHBpXzE9XHBpXzFebVxyaWdodF1cXCAmPSYKRVxsZWZ0W1xzdW1fe2k9MX1ebiB6X3tpMX0gXGxvZ1xsZWZ0W1xwaV8xICBmXzEoeF9pKVxyaWdodF0gKyAoMS16X3tpMX0pXGxvZyBcbGVmdFsoMS1ccGlfMSkgZl8yKHhfaSlccmlnaHRdXHZlcnQgXG1hdGhiZntYfSwgXG11XzE9XG11XzFebSwgXG11XzI9XG11XzJebSwgXHBpXzE9XHBpXzFebVxyaWdodF1cXAomPSZcc3VtX3tpPTF9Xm4gRVxsZWZ0W3pfe2kxfVx2ZXJ0IHhfaSxcbXVfMT1cbXVfMV5tLCBcbXVfMj1cbXVfMl5tLCBccGlfMT1ccGlfMV5tXHJpZ2h0XVxsb2cgXGxlZnRbXHBpXzEgIGZfMSh4X2kpXHJpZ2h0XSArIFxzdW1fe2k9MX1ebiBcbGVmdCgxLSBFXGxlZnRbel97aTF9XHZlcnQgeF9pLFxtdV8xPVxtdV8xXm0sIFxtdV8yPVxtdV8yXm0sIFxwaV8xPVxwaV8xXm1ccmlnaHRdXHJpZ2h0KVxsb2cgXGxlZnRbKDEtXHBpXzEpIGZfMih4X2kpXHJpZ2h0XQpcZW5ke2VxbmFycmF5fQoKTm90ZSwgdGhhdCB0aGUgZXhwZWN0ZWQgbG9nIGxpa2VsaWhvb2Qgc2ltcGxpZmllcyB0byByZXBsYWNpbmcgdGhlIHVua25vd24gY2xhc3MgbWVtYmVyc2hpcHMgaW4gdGhlIGNvbXBsZXRlIGxpa2VsaWhvb2QgYnkgdGhlaXIgZXhwZWN0ZWQgdmFsdWVzLgoKXGJlZ2lue2VxbmFycmF5fQogRVxsZWZ0W3pfe2kxfVx2ZXJ0IFxtYXRoYmZ7WH0sXG11XzE9XG11XzFebSwgXG11XzI9XG11XzJebSwgXHBpXzE9XHBpXzFebVxyaWdodF0gJj0mIDEgXHRpbWVzIGYoel97aTF9PTEgXHZlcnQgeF9pLFxtdV8xPVxtdV8xXm0sIFxtdV8yPVxtdV8yXm0sIFxwaV8xPVxwaV8xXm0pICArIDAgXHRpbWVzIGYoel97aTF9PTAgXHZlcnQgeF9pLFxtdV8xPVxtdV8xXm0sIFxtdV8yPVxtdV8yXm0sIFxwaV8xPVxwaV8xXm0pICBcXFxcCiAmPSYgZih6X3tpMX09IDEgXHZlcnQgeF9pLFxtdV8xPVxtdV8xXm0sIFxtdV8yPVxtdV8yXm0sIFxwaV8xPVxwaV8xXm0pXFxcXAogJj0mIFxmcmFje2Yoej0xLHhfaSl9e2YoeF9pKX1cXFxcCiY9JiBcZnJhY3tccGlebV8xIGZfMSh4X2kpfXtccGlebV8xIGZfMSh4X2kpKygxLVxwaV5tXzEpIGZfMih4X2kpfQpcZW5ke2VxbmFycmF5fQoKV2Ugd2lsbCByZWZlciB0byB0aGUgZXhwZWN0ZWQgY2xhc3MgbWVtYmVyc2hpcCBhcyAkXGhhdCB6X3tpMX1ee20rMX0kCgojIyMgTS1zdGVwCgpNYXhpbWlzZSB0aGUgZXhwZWN0ZWQgbG9nLWxpa2VsaWhvb2QgdG8gb2J0YWluIHRoZSB1bmtub3duIG1vZGVsIHBhcmFtZXRlcnM6CgpcWwogUVxsZWZ0KFxtdV8xLFxtdV8yLFxwaV8xXHZlcnQgXG1hdGhiZntYLCBafVxyaWdodCkgPSBcc3VtX3tpPTF9Xm4gXGhhdCB6X3tpMX1ebSAgXGxvZyBccGlfMSArIFxzdW1fe2k9MX1ebiBcaGF0IHpfe2kxfV5tICBcbG9nIGZfMSh4X2kpICsgXHN1bV97aT0xfV5uXGxlZnQoMS0gXGhhdCB6X3tpMX1ccmlnaHQpXGxvZyAoMS1ccGlfMSkgKwogXHN1bV97aT0xfV5uXGxlZnQoMS0gXGhhdCB6X3tpMX1ccmlnaHQpXGxvZyBmXzIoeF9pKQpcXQoKU28gd2Ugb2JzZXJ2ZSB0aGF0IHRoZSBleHBlY3RlZCBsb2cgbGlrZWxpaG9vZCBpbXBsaWVzIGFuIGVzdGltYXRpb24gb3J0aG9nb25hbGl0eSBiZXR3ZWVuIHRoZSBub3JtYWwgZGlzdHJpYnV0aW9ucyBhbmQgdGhlIEJlcm5vdWxsaSBkaXN0cmlidXRpb24uCgpTbyB0aGUgcGFyYW1ldGVyIGVzdGltYXRlcyB0aGF0IG1heGltaXNlIHRoZSBleHBlY3RlZCBsb2ctbGlrZWxpaG9vZCBiZWNvbWU6CgpcWwpcaGF0IFxwaV8xXnttKzF9ID1cZnJhY3tcc3VtX3tpPTF9Xm4gXGhhdCB6X3tpMX1ee20rMX19e259XF0KXFsKXGhhdCBcbXVfMV57bSsxfSA9IFxmcmFje1xzdW1fe2k9MX1ebiBcaGF0IHpfe2kxfV57bSsxfSB4X2l9e1xzdW1fe2k9MX1ebiBcaGF0IHpfe2kxfV57bSsxfX1cXQpcWwpcaGF0IFxtdV8yXnttKzF9ID0gXGZyYWN7XHN1bV97aT0xfV5uICgxLSBcaGF0IHpfe2kxfV57bSsxfSkgeF9pfXtcc3VtX3tpPTF9Xm4gKDEtXGhhdCB6X3tpMX1ee20rMX0pfQpcXQoKIyBFeGFtcGxlCiMjIEluaXRpYWxpemUKCmBgYHtyfQp6IDwtIGFzLmRvdWJsZSh4ID4gMCkKbiA8LSBsZW5ndGgoeikKCnAgPC0gZGF0YS5mcmFtZSh4LHpSZWFsLHopICU+JQogIGdncGxvdChhZXMoelJlYWwseCxjb2xvcj16KSkgKwogIGdlb21fcG9pbnQoKSArCiAgc2NhbGVfY29sb3VyX2dyYWRpZW50MigKICAgIGxvdyA9ICJibHVlIiwKICAgIG1pZD0id2hpdGUiLAogICAgaGlnaD0icmVkIiwKICAgIG1pZHBvaW50ID0gMC41KSArCiAgZ2VvbV9wb2ludCh4PS45NSx5PW11MVJlYWwsIHNoYXBlPTI1LCBjb2w9InJlZCIsIHNpemU9MykgKwogIGdlb21fcG9pbnQoeD0wLjA1LHk9bXUyUmVhbCwgc2hhcGU9MjUsIGNvbD0iYmx1ZSIsIHNpemU9MykgKwogIGdndGl0bGUoIlNpbXVsYXRlZCBkYXRhIHdpdGggcmVhbCBncm91cCBtZWFucyAodHJpYW5nbGVzKSIpCgoKcApgYGAKCiMjIEVNIGFsZ29yaXRobQoKYGBge3J9CmZvciAoayBpbiAxOjEwKQp7CiAgIyMgTS1zdGVwCiAgcGkxIDwtIHN1bSh6KS9uCiAgbXUxIDwtIHN1bSh6ICogeCkvc3VtKHopCiAgbXUyIDwtIHN1bSgoMS16KSAqIHgpL3N1bSgxLXopCgogICMjIEUtc3RlcAogIGQxIDwtIGRub3JtKHgsbWVhbj1tdTEpCiAgZDIgPC0gZG5vcm0oeCxtZWFuPW11MikKICBkIDwtIHBpMSAqIGQxICsgKDEtcGkxKSpkMgogIHogPC0gcGkxKmQxL2QKICBwIDwtIGRhdGEuZnJhbWUoeCx6UmVhbCx6KSAlPiUKICAgIGdncGxvdChhZXMoelJlYWwseCxjb2xvcj16KSkgKwogICAgZ2VvbV9wb2ludCgpICsKICAgIHNjYWxlX2NvbG91cl9ncmFkaWVudDIoCiAgICAgIGxvdyA9ICJibHVlIiwKICAgICAgbWlkPSJ3aGl0ZSIsCiAgICAgIGhpZ2g9InJlZCIsCiAgICAgIG1pZHBvaW50ID0gMC41KSArCiAgICAgIGdlb21fcG9pbnQoeD0uOTUseT1tdTFSZWFsLCBzaGFwZT0yNSwgY29sPSJyZWQiLCBzaXplPTMpICsKICAgICAgZ2VvbV9wb2ludCh4PTAuMDUseT1tdTJSZWFsLCBzaGFwZT0yNSwgY29sPSJibHVlIiwgc2l6ZT0zKSArCiAgICAgIGdlb21fcG9pbnQoeD0uOTUseT1tdTEsIHNoYXBlPTMsIGNvbD0icmVkIiwgc2l6ZT0zKSArCiAgICAgIGdlb21fcG9pbnQoeD0uMDUseT1tdTIsIHNoYXBlPTMsIGNvbD0iYmx1ZSIsIHNpemU9MykgKwogICAgICBnZ3RpdGxlKHBhc3RlMCgiaXRlcmF0aW9uICIsaywgIiByZWFsIG1lYW4gKHRyaWFuZ2xlKSwgZXN0aW1hdGUgbWVhbiAoKykiKSkKCiAgcHJpbnQocCkKfQpgYGAKCiMjIyBFc3RpbWF0ZXMKCmBgYHtyIGVjaG89RkFMU0V9CnpJbml0IDwtIGFzLmRvdWJsZSh4ID4gMCkKbXUxSW5pdCA8LSBzdW0oekluaXQqeCkvc3VtKHpJbml0KQptdTJJbml0IDwtIHN1bSgoMS16SW5pdCkqeCkvc3VtKCgxLXpJbml0KSkKcGkxSW5pdCA8LSBtZWFuKHpJbml0KQoKa25pdHI6OmthYmxlKGRhdGEuZnJhbWUoCiAgcGFyYW1ldGVyID0gYygibXUxIiwgIm11MiIsICJwaTEiKSwKICBwb3B1bGF0aW9uID0gYyhtdTFSZWFsLCBtdTJSZWFsLCBwaTFSZWFsKSwKICBpbml0aWFsID0gYyhtdTFJbml0LCBtdTJJbml0LCBwaTFJbml0KSAlPiUgcm91bmQoMyksCiAgZXN0aW1hdGUgPSBjKG11MSwgbXUyLCBwaTEpICU+JSByb3VuZCgzKQogICkKICApCmBgYAoKYGBge3IsIGNoaWxkPSJfc2Vzc2lvbi1pbmZvLlJtZCJ9CmBgYAo=</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("em.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Lieven Clement" />
+
+
+<title>Linear Discriminant Analysis (LDA)</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HDDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="intro.html">1. Introduction</a>
+    </li>
+    <li>
+      <a href="svd.html">2. Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="prediction.html">3. Prediction with High Dimensional Predictors</a>
+    </li>
+    <li>
+      <a href="sparseSvd.html">4. Sparse Singular Value Decomposition</a>
+    </li>
+    <li>
+      <a href="lda.html">5. Linear Discriminant Analysis</a>
+    </li>
+    <li>
+      <a href="hclust.html">6.1. Introduction to Clustering</a>
+    </li>
+    <li>
+      <a href="https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf">6.2. Paper Model-based Clustering</a>
+    </li>
+    <li>
+      <a href="em.html">6.3. EM algorithm</a>
+    </li>
+    <li>
+      <a href="lsi.html">7. Large Scale Inference</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab1-Intro-SVD.html">Lab 1: Intro &amp; SVD</a>
+    </li>
+    <li>
+      <a href="Lab2-PCA.html">Lab 2: SVD - PCA</a>
+    </li>
+    <li>
+      <a href="Lab3-Penalized-Regression.html">Lab 3: Prediction</a>
+    </li>
+    <li>
+      <a href="Lab4-Sparse-PCA-LDA.html">Lab 4: Sparse PCA &amp; LDA</a>
+    </li>
+    <li>
+      <a href="Lab5-Clustering.html">Lab 5: Clustering</a>
+    </li>
+    <li>
+      <a href="Lab6-Large-Scale-Inference.html">Lab 6: LSI</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="https://github.com/statOmics/HDDA">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Linear Discriminant Analysis (LDA)</h1>
+<h4 class="author">Lieven Clement</h4>
+<h4 class="date">statOmics, Ghent University (<a href="https://statomics.github.io" class="uri">https://statomics.github.io</a>)</h4>
+
+</div>
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span></code></pre></div>
+<div id="breast-cancer-example" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Breast cancer example</h1>
+<ul>
+<li><p>Schmidt <em>et al.</em>, 2008, Cancer Research, <strong>68</strong>, 5405-5413</p></li>
+<li><p>Gene expression patterns in n=200 breast tumors were investigated (p=22283 genes)</p></li>
+<li><p>After surgery the tumors were graded by a pathologist (stage 1,2,3)</p></li>
+</ul>
+<div id="data" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Data</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co">#BiocManager::install(&quot;genefu&quot;)</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#BiocManager::install(&quot;breastCancerMAINZ&quot;)</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">library</span>(genefu)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">library</span>(breastCancerMAINZ)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="fu">data</span>(mainz)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">exprs</span>(mainz)) <span class="co"># gene expressions</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="fu">diag</span>(n)<span class="sc">-</span><span class="dv">1</span><span class="sc">/</span>n<span class="sc">*</span><span class="fu">matrix</span>(<span class="dv">1</span>,<span class="at">ncol=</span>n,<span class="at">nrow=</span>n)</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>X <span class="ot">&lt;-</span> H<span class="sc">%*%</span>X</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">pData</span>(mainz)<span class="sc">$</span>grade</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="fu">table</span>(Y)</span></code></pre></div>
+<pre><code>#&gt; Y
+#&gt;   1   2   3 
+#&gt;  29 136  35</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>svdX <span class="ot">&lt;-</span> <span class="fu">svd</span>(X)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>Zk <span class="ot">&lt;-</span> svdX<span class="sc">$</span>u[,<span class="dv">1</span><span class="sc">:</span>k] <span class="sc">%*%</span> <span class="fu">diag</span>(svdX<span class="sc">$</span>d[<span class="dv">1</span><span class="sc">:</span>k])</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="fu">colnames</span>(Zk) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="sc">:</span>k)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>Zk <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grade =</span> Y <span class="sc">%&gt;%</span> as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> Z1, <span class="at">y =</span> Z2, <span class="at">color =</span> grade)) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="lda_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+</div>
+<div id="linear-discriminant-analysis" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Linear discriminant analysis</h1>
+<p>Fisher’s construction of LDA is simple: it allows for classification in a dimension-reduced subspace of <span class="math inline">\(\mathbb{R}^p\)</span>.</p>
+<p>First we assume that <span class="math inline">\(Y\)</span> can only take two values (0/1).</p>
+<p>Fisher aimed for a direction, say <span class="math inline">\(\mathbf{a}\)</span>, in the <span class="math inline">\(p\)</span>-dimensional predictor space such that the orthogonal projections of the predictors, <span class="math inline">\(\mathbf{x}^t\mathbf{a}\)</span>, show maximal ratio between the between and within sums of squares:
+<span class="math display">\[
+  \mathbf{v} = \text{ArgMax}_a \frac{\mathbf{a}^t\mathbf{B}\mathbf{a}}{\mathbf{a}^t\mathbf{W}\mathbf{a}} \text{ subject to } {\mathbf{a}^t\mathbf{W}\mathbf{a}}=1,
+\]</span>
+where <span class="math inline">\(\mathbf{W}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> are the within and between covariance matrices of <span class="math inline">\(\mathbf{x}\)</span>.
+The restriction is introduced to obtain a (convenient) unique solution.</p>
+<hr />
+<div id="between-and-within-sums-of-squares" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Between and within sums of squares</h2>
+<ul>
+<li><p>In the training dataset, let <span class="math inline">\(\mathbf{x}_{ik}\)</span> denote the <span class="math inline">\(i\)</span>th <span class="math inline">\(p\)</span>-dimensional observation in the <span class="math inline">\(k\)</span>th group (<span class="math inline">\(k=0,1\)</span> referring to <span class="math inline">\(Y=0\)</span> and <span class="math inline">\(Y=1\)</span>, resp.), <span class="math inline">\(i=1,\ldots, n_k\)</span>.</p></li>
+<li><p>Let <span class="math inline">\(z_{ik}=\mathbf{a}^t\mathbf{x}_{ik}\)</span> denote the orthogonal projection of <span class="math inline">\(\mathbf{x}_{ik}\)</span> onto <span class="math inline">\(\mathbf{a}\)</span></p></li>
+<li><p>For the one-dimensional <span class="math inline">\(z\)</span>-observations, consider the following sum of squares:
+<span class="math display">\[
+  \text{SSE}=\text{within sum of squares} = \sum_{k=0,1}\sum_{i=1}^{n_k} (z_{ik}-\bar{z}_k)^2
+\]</span>
+<span class="math display">\[
+  \text{SSB}=\text{between sum of squares} = \sum_{k=0,1}\sum_{i=1}^{n_k} (\bar{z}_{k}-\bar{z})^2 = \sum_{k=0,1} n_k (\bar{z}_{k}-\bar{z})^2
+\]</span>
+with <span class="math inline">\(\bar{z}_k\)</span> the sample mean of <span class="math inline">\(z_{ik}\)</span> within group <span class="math inline">\(k\)</span>, and <span class="math inline">\(\bar{z}\)</span> the sample mean of all <span class="math inline">\(z_{ik}\)</span>.</p></li>
+<li><p>To reformulate SSE and SSB in terms of the <span class="math inline">\(p\)</span>-dimensional <span class="math inline">\(\mathbf{x}_{ik}\)</span>, we need the sample means
+<span class="math display">\[
+  \bar{z}_k = \frac{1}{n_k} \sum_{i=1}^{n_k} z_{ik} = \frac{1}{n_k} \sum_{i=1}^{n_k} \mathbf{a}^t\mathbf{x}_{ik} = \mathbf{a}^t \frac{1}{n_k} \sum_{i=1}^{n_k} \mathbf{x}_{ik} = \mathbf{a}^t \bar{\mathbf{x}}_k
+\]</span>
+<span class="math display">\[
+  \bar{z} = \frac{1}{n}\sum_{k=0,1}\sum_{i=1}^{n_k} z_{ik} = \cdots = \mathbf{a}^t\bar{\mathbf{x}}.
+\]</span></p></li>
+<li><p>SSE becomes
+<span class="math display">\[
+  \text{SSE} = \sum_{k=0,1}\sum_{i=1}^{n_k} (z_{ik}-\bar{z}_k)^2 = \mathbf{a}^t \left(\sum_{k=0,1}\sum_{i=1}^{n_k} (\mathbf{x}_{ik}-\bar{\mathbf{x}}_k)(\mathbf{x}_{ik}-\bar{\mathbf{x}}_k)^t\right)\mathbf{a}
+\]</span></p></li>
+<li><p>SSB becomes
+<span class="math display">\[
+  \text{SSB} = \sum_{k=0,1} n_k (\bar{z}_{k}-\bar{z})^2 = \mathbf{a}^t \left(\sum_{k=0,1} n_k (\bar{\mathbf{x}_{k}}-\bar{\mathbf{x}})(\bar{\mathbf{x}_{k}}-\bar{\mathbf{x}})^t \right)\mathbf{a}
+\]</span></p></li>
+</ul>
+<hr />
+<ul>
+<li><p>The <span class="math inline">\(p \times p\)</span> matrix
+<span class="math display">\[
+  \mathbf{W}=\sum_{k=0,1}\sum_{i=1}^{n_k} (\mathbf{x}_{ik}-\bar{\mathbf{x}}_k)(\mathbf{x}_{ik}-\bar{\mathbf{x}}_k)^t
+\]</span>
+is referred to as the matrix of <strong>within</strong> sum of squares and cross products.</p></li>
+<li><p>The <span class="math inline">\(p \times p\)</span> matrix
+<span class="math display">\[
+  \mathbf{B}=\sum_{k=0,1} n_k (\bar{\mathbf{x}_{k}}-\bar{\mathbf{x}})(\bar{\mathbf{x}_{k}}-\bar{\mathbf{x}})^t
+\]</span>
+is referred to as the matrix of <strong>between</strong> sum of squares and cross products.</p></li>
+<li><p>Note that on the diagonal of <span class="math inline">\(\mathbf{W}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> you find the ordinary univariate within and between sums of squares of the individual components of <span class="math inline">\(\mathbf{x}\)</span>.</p></li>
+</ul>
+</div>
+<div id="obtain-projections" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Obtain projections</h2>
+<p>An equivalent formulation:
+<span class="math display">\[
+  \mathbf{v} = \text{ArgMax}_a \mathbf{a}^t\mathbf{B}\mathbf{a} \text{ subject to } \mathbf{a}^t\mathbf{W}\mathbf{a}=1.
+\]</span></p>
+<p>This can be solved by introducing a Langrange multiplier:
+<span class="math display">\[
+  \mathbf{v} = \text{ArgMax}_a \mathbf{a}^t\mathbf{B}\mathbf{a} -\lambda(\mathbf{a}^t\mathbf{W}\mathbf{a}-1).
+\]</span></p>
+<p>Calculating the partial derivative w.r.t. <span class="math inline">\(\mathbf{a}\)</span> and setting it to zero gives
+<span class="math display">\[\begin{eqnarray*}
+   2\mathbf{B}\mathbf{a} -2\lambda \mathbf{W}\mathbf{a} &amp;=&amp; 0\\
+   \mathbf{B}\mathbf{a}  &amp;=&amp; \lambda \mathbf{W}\mathbf{a} \\
+   \mathbf{W}^{-1}\mathbf{B}\mathbf{a} &amp;=&amp; \lambda\mathbf{a}.
+\end{eqnarray*}\]</span></p>
+<p>From the final equation we recognise that <span class="math inline">\(\mathbf{v}=\mathbf{a}\)</span> is an <strong>eigenvector</strong> of <span class="math inline">\(\mathbf{W}^{-1}\mathbf{B}\)</span>, and <span class="math inline">\(\lambda\)</span> is the corresponding <strong>eigenvalue</strong>.</p>
+<p>The equation has in general <span class="math inline">\(\text{rank}(\mathbf{W}^{-1}\mathbf{B})\)</span> solutions. In the case of two classes, the rank equals 1 and thus only one solution exists.</p>
+<hr />
+<ul>
+<li><p>A training data set is used for the calculation of <span class="math inline">\(\mathbf{W}\)</span> and <span class="math inline">\(\mathbf{B}\)</span>. <span class="math inline">\(\longrightarrow\)</span> This gives the eigenvector <span class="math inline">\(\mathbf{v}\)</span></p></li>
+<li><p>The training data is also used for the calculation of the centroids of the classes (e.g. the sample means, say <span class="math inline">\(\bar{\mathbf{x}}_1\)</span> and <span class="math inline">\(\bar{\mathbf{x}}_2\)</span>). <span class="math inline">\(\longrightarrow\)</span> The projected centroids are given by <span class="math inline">\(\bar{\mathbf{x}}_1^t\mathbf{v}\)</span> and <span class="math inline">\(\bar{\mathbf{x}}_2^t\mathbf{v}\)</span>.</p></li>
+<li><p>A new observation with predictor <span class="math inline">\(\mathbf{x}\)</span> is classified in the class for which the projected centroid is closest to the projected predictor <span class="math inline">\(z=\mathbf{x}^t\mathbf{v}\)</span>.</p></li>
+</ul>
+<p>An advantage of this approach is that <span class="math inline">\(\mathbf{v}\)</span> can be interpreted (similar as the loadings in a PCA) in terms of which predictors <span class="math inline">\(x_j\)</span> are important to discriminate between classes 0 and 1.</p>
+<hr />
+</div>
+<div id="more-than-two-classes" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> More than two classes</h2>
+<p>When the outcome <span class="math inline">\(Y\)</span> refers to more than two classes, say <span class="math inline">\(m\)</span> classes, then Fisher’s method is constructed in exactly the same way. Now
+<span class="math display">\[
+  \mathbf{W}^{-1}\mathbf{B}\mathbf{a} = \lambda\mathbf{a}
+\]</span>
+will have <span class="math inline">\(r=\text{rank}(\mathbf{W}^{-1}\mathbf{B}) = \min(m-1,p,n)\)</span> solutions (eigenvectors and eigenvalues). (<span class="math inline">\(n\)</span>: sample size of training data)</p>
+<p>Let <span class="math inline">\(\mathbf{v}_j\)</span> and <span class="math inline">\(\lambda_j\)</span> denote the <span class="math inline">\(r\)</span> solutions, and define</p>
+<ul>
+<li><p><span class="math inline">\(\mathbf{V}\)</span>: <span class="math inline">\(p\times r\)</span> matrix with collums <span class="math inline">\(\mathbf{v}\)</span></p></li>
+<li><p><span class="math inline">\(\mathbf{L}\)</span>: <span class="math inline">\(r \times r\)</span> diagonal matrix with elements <span class="math inline">\(\lambda_1 &gt; \lambda_2 &gt; \cdots &gt; \lambda_r\)</span></p></li>
+</ul>
+<p>The <span class="math inline">\(p\)</span>-dimensional predictor data in <span class="math inline">\(\mathbf{X}\)</span> may then be transformed to the <span class="math inline">\(r\)</span>-dimensional scores
+<span class="math display">\[
+  \mathbf{Z} = \mathbf{X}\mathbf{V}.
+\]</span></p>
+<hr />
+<p>For eigenvectors <span class="math inline">\(\mathbf{v}_i\)</span> and <span class="math inline">\(\mathbf{v}_j\)</span>, it holds that
+<span class="math display">\[
+\text{cov}\left[Z_i,Z_j\right] = \text{cov}\left[\mathbf{X}\mathbf{v}_i,\mathbf{X}\mathbf{v}_j\right]= \mathbf{v}_i^t \mathbf{W} \mathbf{v}_j = \delta_{ij} ,
+\]</span>
+in which the covariances are defined within groups. Hence, within the groups (classes) the scores are uncorrelated.</p>
+</div>
+</div>
+<div id="high-dimensional-predictors" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> High dimensional predictors</h1>
+<p>With high-dimensional predictors</p>
+<ul>
+<li><p>Replace the <span class="math inline">\(p\times p\)</span> matrices <span class="math inline">\(\mathbf{W}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> by their diagonal matrices (i.e. put zeroes on the off-diagonal positions)</p></li>
+<li><p><strong>Sparse LDA</strong> by imposing an <span class="math inline">\(L_1\)</span>-penalty on <span class="math inline">\(\mathbf{v}\)</span>.</p></li>
+</ul>
+<p>Two approaches: Zhou <em>et al.</em> (2006), Journal of Computational and Graphical Statistics , <strong>15</strong>, 265-286, and <a href="https://web.stanford.edu/~hastie/Papers/sda_resubm_daniela-final.pdf">Clemmensen <em>et al.</em> (2011), Technometrics, <strong>53</strong></a>.</p>
+</div>
+<div id="breast-cancer-example-1" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Breast cancer example</h1>
+<div id="all-genes" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> All genes</h2>
+<div id="lda" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> LDA</h3>
+<ul>
+<li><p>Fisher’s LDA is illustrated on the breast cancer data with all three tumor stages as outcome.</p></li>
+<li><p>We try to discriminate between the different stages according to the gene expression data of all genes.</p></li>
+<li><p>We cache the result because the calculation takes 10 minutes.</p></li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>breast.lda <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">lda</span>(<span class="at">x =</span> X, <span class="at">grouping =</span> Y)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>Vlda <span class="ot">&lt;-</span> breast.lda<span class="sc">$</span>scaling</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">colnames</span>(Vlda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Vlda))</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>Zlda <span class="ot">&lt;-</span> X<span class="sc">%*%</span>Vlda</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">colnames</span>(Zlda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Zlda))</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  Zlda <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>    as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">grade =</span> Y <span class="sc">%&gt;%</span> as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> Z1, <span class="at">y =</span> Z2, <span class="at">color =</span> grade)) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>    <span class="fu">coord_fixed</span>(),</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;z1&quot;</span>,<span class="st">&quot;z2&quot;</span>), <span class="at">y =</span> breast.lda<span class="sc">$</span>svd), <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;Discriminant&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;Eigen Values&quot;</span>),</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>  <span class="at">layout_matrix =</span> <span class="fu">matrix</span>(</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>    <span class="at">nrow=</span><span class="dv">1</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="lda_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<hr />
+<ul>
+<li><p>The columns of the matrix <span class="math inline">\(\mathbf{V}\)</span> contain the eigenvectors. There are <span class="math inline">\(\min(3-2,22283,200)=2\)</span> eigenvectors. The <span class="math inline">\(200\times 2\)</span> matrix <span class="math inline">\(\mathbf{Z}\)</span> contains the scores on the two Fisher discriminants.</p></li>
+<li><p>The eigenvalue <span class="math inline">\(\lambda_j\)</span> can be interpreted as the ratio
+<span class="math display">\[
+\frac{\mathbf{v}_j^t\mathbf{B}\mathbf{v}_j}{\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j} ,
+\]</span>
+or (upon using <span class="math inline">\(\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j=1\)</span>) the between-centroid sum of squares (in the reduced dimension space of the Fisher discriminants)
+<span class="math display">\[
+\mathbf{v}_j^t\mathbf{B}\mathbf{v}_j.
+\]</span></p></li>
+<li><p>From the screeplot of the eigenvalues we see that the first dimension is more important than the second (not hugely) in terms of discriminating between the groups.</p></li>
+<li><p>From the scatterplot we can see that there is no perfect separation (discrimination) between the three tumor stages (quite some overlap).</p></li>
+<li><p>To some extent the first Fisher discriminant dimension discriminates stage 3 (green dots) from the other two stages, and the second dimension separates stage 1 (black dots) from the two others.</p></li>
+</ul>
+</div>
+<div id="interpretation-of-loadings" class="section level3" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Interpretation of loadings</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  Vlda <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>    as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vlda)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V1)) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vlda[,<span class="dv">1</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  Vlda <span class="sc">%&gt;%</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>    as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vlda)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V2)) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vlda[,<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lda_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The loadings of the Fisher discriminants are within the columns of the <span class="math inline">\(\mathbf{V}\)</span> matrix.</p>
+<ul>
+<li><p>Since we have 22283 genes, each discriminant is a linear combination of 22283 gene expression. Instead of looking at the listing of 22283 loadings, we made an index plot (no particular ordering of genes on horizontal axis).</p></li>
+<li><p>The red horizontal reference lines correspond to the average of the loading (close to zero) and the average plus and minus twice the standard deviation of the loadings.</p></li>
+<li><p>If no genes had any “significant” discriminating power, then we would expect approximately <span class="math inline">\(95\%\)</span> of all loadings within the band. Thus loadings outside of the band are of potential interest and may perhaps be discriminating between the three tumor stages.</p></li>
+<li><p>In the graphs presented here we see many loadings within the bands, but also many outside of the band.</p></li>
+</ul>
+<p>We repeat the analysis, but now with the sparse LDA method of Clemmensen et al. (2011).</p>
+<hr />
+</div>
+</div>
+<div id="sparse-lda-based-on-150-random-genes" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Sparse LDA based on 150 random genes</h2>
+<ul>
+<li><p>We only present the results of the sparse LDA based on a random subset of 150 genes (ordering of genes in datamatrix is random).</p></li>
+<li><p>The discrimination seems better than with classical LDA based on all genes. This is very likely caused by too much noise in the full data matrix with over 20000 predictors.</p></li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># BiocManager::install(&quot;sparseLDA&quot;)</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">library</span>(sparseLDA)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>YDummy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="at">Y1 =</span> <span class="fu">ifelse</span>(Y <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="at">Y2 =</span> <span class="fu">ifelse</span>(Y <span class="sc">==</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="at">Y3 =</span> <span class="fu">ifelse</span>(Y <span class="sc">==</span> <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  )</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> X[,<span class="dv">1</span><span class="sc">:</span><span class="dv">150</span>]</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>breast.slda <span class="ot">&lt;-</span> <span class="fu">sda</span>(<span class="at">x =</span> X2,</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">as.matrix</span>(YDummy),</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>  <span class="at">lambda =</span> <span class="fl">1e-6</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>  <span class="at">stop =</span> <span class="sc">-</span><span class="dv">50</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>  <span class="at">maxIte =</span> <span class="dv">25</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>  <span class="at">trace =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>#&gt; ite:  1  ridge cost:  127.6749  |b|_1:  5.906065 
+#&gt; ite:  2  ridge cost:  120.3439  |b|_1:  5.783807 
+#&gt; ite:  3  ridge cost:  105.8252  |b|_1:  6.121234 
+#&gt; ite:  4  ridge cost:  98.82439  |b|_1:  5.52498 
+#&gt; ite:  5  ridge cost:  92.1252  |b|_1:  5.688817 
+#&gt; ite:  6  ridge cost:  91.60224  |b|_1:  5.437972 
+#&gt; ite:  7  ridge cost:  90.21394  |b|_1:  5.547137 
+#&gt; ite:  8  ridge cost:  88.65835  |b|_1:  5.767928 
+#&gt; ite:  9  ridge cost:  88.45896  |b|_1:  5.783885 
+#&gt; ite:  10  ridge cost:  88.25336  |b|_1:  5.815185 
+#&gt; ite:  11  ridge cost:  88.00995  |b|_1:  5.85882 
+#&gt; ite:  12  ridge cost:  87.89314  |b|_1:  5.880321 
+#&gt; ite:  13  ridge cost:  87.83636  |b|_1:  5.890917 
+#&gt; ite:  14  ridge cost:  87.80856  |b|_1:  5.896139 
+#&gt; ite:  15  ridge cost:  87.79491  |b|_1:  5.898713 
+#&gt; ite:  16  ridge cost:  87.78819  |b|_1:  5.899982 
+#&gt; ite:  17  ridge cost:  87.78488  |b|_1:  5.900607 
+#&gt; ite:  18  ridge cost:  87.78325  |b|_1:  5.900916 
+#&gt; ite:  19  ridge cost:  87.78244  |b|_1:  5.901068 
+#&gt; ite:  20  ridge cost:  87.78205  |b|_1:  5.901142 
+#&gt; ite:  21  ridge cost:  87.78185  |b|_1:  5.901179 
+#&gt; ite:  22  ridge cost:  87.78176  |b|_1:  5.901198 
+#&gt; ite:  23  ridge cost:  87.78171  |b|_1:  5.901207 
+#&gt; ite:  1  ridge cost:  134.7777  |b|_1:  5.379259 
+#&gt; ite:  2  ridge cost:  134.7777  |b|_1:  5.379259 
+#&gt; final update, total ridge cost:  222.5595  |b|_1:  11.28047</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>Vsda <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow=</span><span class="fu">ncol</span>(X2), <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>Vsda[breast.slda<span class="sc">$</span>varIndex,] <span class="ot">&lt;-</span> breast.slda<span class="sc">$</span>beta</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">colnames</span>(Vsda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Vsda))</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>Zsda <span class="ot">&lt;-</span> X2<span class="sc">%*%</span>Vsda</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="fu">colnames</span>(Zsda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Zsda))</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>Zsda <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a> as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">grade =</span> Y <span class="sc">%&gt;%</span> as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> Z1, <span class="at">y =</span> Z2, <span class="at">color =</span> grade)) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a> <span class="fu">ggtitle</span>(<span class="st">&quot;sparse LDA on 150 genes&quot;</span>)</span></code></pre></div>
+<p><img src="lda_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>   Vsda <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>     as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>     <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vsda)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>     <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V1)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>     <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>     <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vsda[,<span class="dv">1</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) ,</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>   Vsda <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>     as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>     <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vsda)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>     <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V2)) <span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>     <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>     <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vsda[,<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>   <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lda_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+</div>
+<div id="lda-based-on-150-random-genes" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> LDA based on 150 random genes</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>breast.lda150 <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">lda</span>(<span class="at">x =</span> X2, <span class="at">grouping =</span> Y)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>Vlda <span class="ot">&lt;-</span> breast.lda150<span class="sc">$</span>scaling</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">colnames</span>(Vlda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Vlda))</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>Zlda <span class="ot">&lt;-</span> X2<span class="sc">%*%</span>Vlda</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="fu">colnames</span>(Zlda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Z&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Zlda))</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>  Zlda <span class="sc">%&gt;%</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>    as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">grade =</span> Y <span class="sc">%&gt;%</span> as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> Z1, <span class="at">y =</span> Z2, <span class="at">color =</span> grade)) <span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>    <span class="fu">coord_fixed</span>(),</span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;z1&quot;</span>,<span class="st">&quot;z2&quot;</span>), <span class="at">y =</span> breast.lda150<span class="sc">$</span>svd), <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;Discriminant&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;Eigen Values&quot;</span>),</span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a>  <span class="at">layout_matrix =</span> <span class="fu">matrix</span>(</span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a>    <span class="at">nrow=</span><span class="dv">1</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="lda_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>  <span class="fu">grid.arrange</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>    Vlda <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>      as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vlda)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V1)) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>      <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vlda[,<span class="dv">1</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>    Vlda <span class="sc">%&gt;%</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>      as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">geneID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Vlda)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> geneID, <span class="at">y =</span> V2)) <span class="sc">+</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">pch=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>      <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="fu">sd</span>(Vlda[,<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lda_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+</div>
+<div id="wrapup" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Wrapup</h2>
+<p>LDA on all 22283 genes gave poorer result than on 150 genes.
+This is probably caused by numerical instability when working with large <span class="math inline">\(\mathbf{W}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> matrices</p>
+<ul>
+<li><p>Sparse LDA gave slightly poorer result than LDA on the subset of 150 genes. This may be caused by overfitting of the LDA.</p></li>
+<li><p>When (sparse) LDA is used to build a prediction model/classifier, then CV methods, or splitting of dataset into training and test datasets should be used to allow for an honest evaluation of the final prediction model.</p></li>
+<li><p>The graphs in the first two Fisher discriminant dimensions shown on the previous slides should only be used for data exploration.</p></li>
+<li><p>When the objective is to try to understand differences between groups in a high dimensional space, Fisher LDA is preferred over PCA.</p></li>
+</ul>
+</div>
+</div>
+<div id="acknowledgement" class="section level1 unnumbered">
+<h1>Acknowledgement</h1>
+<ul>
+<li>Olivier Thas for sharing his materials of Analysis of High Dimensional Data 2019-2020, which I used as the starting point for this chapter.</li>
+</ul>
+</div>
+<div id="session-info" class="section level1 unnumbered">
+<h1>Session info</h1>
+<details>
+<summary>
+Session info
+</summary>
+<pre><code>#&gt; [1] &quot;2024-10-02 16:19:42 CEST&quot;</code></pre>
+<pre><code>#&gt; ─ Session info ───────────────────────────────────────────────────────────────
+#&gt;  setting  value
+#&gt;  version  R version 4.4.0 RC (2024-04-16 r86468)
+#&gt;  os       macOS Big Sur 11.6
+#&gt;  system   aarch64, darwin20
+#&gt;  ui       X11
+#&gt;  language (EN)
+#&gt;  collate  en_US.UTF-8
+#&gt;  ctype    en_US.UTF-8
+#&gt;  tz       Europe/Brussels
+#&gt;  date     2024-10-02
+#&gt;  pandoc   3.1.1 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/ (via rmarkdown)
+#&gt; 
+#&gt; ─ Packages ───────────────────────────────────────────────────────────────────
+#&gt;  package           * version    date (UTC) lib source
+#&gt;  AIMS              * 1.36.0     2024-04-30 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  AnnotationDbi       1.66.0     2024-05-01 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  Biobase           * 2.64.0     2024-04-30 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  BiocFileCache       2.12.0     2024-04-30 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  BiocGenerics      * 0.50.0     2024-04-30 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  biomaRt           * 2.60.1     2024-06-26 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  Biostrings          2.72.1     2024-06-02 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  bit                 4.5.0      2024-09-20 [1] CRAN (R 4.4.1)
+#&gt;  bit64               4.5.2      2024-09-22 [1] CRAN (R 4.4.1)
+#&gt;  blob                1.2.4      2023-03-17 [1] CRAN (R 4.4.0)
+#&gt;  bookdown            0.40       2024-07-02 [1] CRAN (R 4.4.0)
+#&gt;  bootstrap           2019.6     2019-06-17 [1] CRAN (R 4.4.0)
+#&gt;  breastCancerMAINZ * 1.42.0     2024-05-02 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  bslib               0.8.0      2024-07-29 [1] CRAN (R 4.4.0)
+#&gt;  cachem              1.1.0      2024-05-16 [1] CRAN (R 4.4.0)
+#&gt;  class               7.3-22     2023-05-03 [1] CRAN (R 4.4.0)
+#&gt;  cli                 3.6.3      2024-06-21 [1] CRAN (R 4.4.0)
+#&gt;  cluster             2.1.6      2023-12-01 [1] CRAN (R 4.4.0)
+#&gt;  codetools           0.2-20     2024-03-31 [1] CRAN (R 4.4.0)
+#&gt;  colorspace          2.1-1      2024-07-26 [1] CRAN (R 4.4.0)
+#&gt;  crayon              1.5.3      2024-06-20 [1] CRAN (R 4.4.0)
+#&gt;  curl                5.2.3      2024-09-20 [1] CRAN (R 4.4.1)
+#&gt;  data.table          1.16.0     2024-08-27 [1] CRAN (R 4.4.1)
+#&gt;  DBI                 1.2.3      2024-06-02 [1] CRAN (R 4.4.0)
+#&gt;  dbplyr              2.5.0      2024-03-19 [1] CRAN (R 4.4.0)
+#&gt;  digest              0.6.37     2024-08-19 [1] CRAN (R 4.4.1)
+#&gt;  dplyr             * 1.1.4      2023-11-17 [1] CRAN (R 4.4.0)
+#&gt;  e1071             * 1.7-16     2024-09-16 [1] CRAN (R 4.4.1)
+#&gt;  elasticnet          1.3        2020-05-15 [1] CRAN (R 4.4.0)
+#&gt;  evaluate            1.0.0      2024-09-17 [1] CRAN (R 4.4.1)
+#&gt;  fansi               1.0.6      2023-12-08 [1] CRAN (R 4.4.0)
+#&gt;  farver              2.1.2      2024-05-13 [1] CRAN (R 4.4.0)
+#&gt;  fastmap             1.2.0      2024-05-15 [1] CRAN (R 4.4.0)
+#&gt;  filelock            1.0.3      2023-12-11 [1] CRAN (R 4.4.0)
+#&gt;  forcats           * 1.0.0      2023-01-29 [1] CRAN (R 4.4.0)
+#&gt;  future              1.34.0     2024-07-29 [1] CRAN (R 4.4.0)
+#&gt;  future.apply        1.11.2     2024-03-28 [1] CRAN (R 4.4.0)
+#&gt;  genefu            * 2.36.0     2024-04-30 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  generics            0.1.3      2022-07-05 [1] CRAN (R 4.4.0)
+#&gt;  GenomeInfoDb        1.40.1     2024-06-16 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  GenomeInfoDbData    1.2.12     2024-04-24 [1] Bioconductor
+#&gt;  ggplot2           * 3.5.1      2024-04-23 [1] CRAN (R 4.4.0)
+#&gt;  globals             0.16.3     2024-03-08 [1] CRAN (R 4.4.0)
+#&gt;  glue                1.8.0      2024-09-30 [1] CRAN (R 4.4.1)
+#&gt;  gridExtra         * 2.3        2017-09-09 [1] CRAN (R 4.4.0)
+#&gt;  gtable              0.3.5      2024-04-22 [1] CRAN (R 4.4.0)
+#&gt;  highr               0.11       2024-05-26 [1] CRAN (R 4.4.0)
+#&gt;  hms                 1.1.3      2023-03-21 [1] CRAN (R 4.4.0)
+#&gt;  htmltools           0.5.8.1    2024-04-04 [1] CRAN (R 4.4.0)
+#&gt;  httr                1.4.7      2023-08-15 [1] CRAN (R 4.4.0)
+#&gt;  httr2               1.0.5      2024-09-26 [1] CRAN (R 4.4.1)
+#&gt;  iC10              * 2.0.2      2024-07-19 [1] CRAN (R 4.4.0)
+#&gt;  iC10TrainingData    2.0.1      2024-07-16 [1] CRAN (R 4.4.0)
+#&gt;  impute              1.78.0     2024-04-30 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  IRanges             2.38.1     2024-07-03 [1] Bioconductor 3.19 (R 4.4.1)
+#&gt;  jquerylib           0.1.4      2021-04-26 [1] CRAN (R 4.4.0)
+#&gt;  jsonlite            1.8.9      2024-09-20 [1] CRAN (R 4.4.1)
+#&gt;  KEGGREST            1.44.1     2024-06-19 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  KernSmooth          2.23-24    2024-05-17 [1] CRAN (R 4.4.0)
+#&gt;  knitr               1.48       2024-07-07 [1] CRAN (R 4.4.0)
+#&gt;  labeling            0.4.3      2023-08-29 [1] CRAN (R 4.4.0)
+#&gt;  lars                1.3        2022-04-13 [1] CRAN (R 4.4.0)
+#&gt;  lattice             0.22-6     2024-03-20 [1] CRAN (R 4.4.0)
+#&gt;  lava                1.8.0      2024-03-05 [1] CRAN (R 4.4.0)
+#&gt;  lifecycle           1.0.4      2023-11-07 [1] CRAN (R 4.4.0)
+#&gt;  limma               3.60.5     2024-09-29 [1] Bioconductor 3.19 (R 4.4.1)
+#&gt;  listenv             0.9.1      2024-01-29 [1] CRAN (R 4.4.0)
+#&gt;  lubridate         * 1.9.3      2023-09-27 [1] CRAN (R 4.4.0)
+#&gt;  magrittr            2.0.3      2022-03-30 [1] CRAN (R 4.4.0)
+#&gt;  MASS                7.3-61     2024-06-13 [1] CRAN (R 4.4.0)
+#&gt;  Matrix              1.7-0      2024-03-22 [1] CRAN (R 4.4.0)
+#&gt;  mclust              6.1.1      2024-04-29 [1] CRAN (R 4.4.0)
+#&gt;  mda                 0.5-4      2023-06-23 [1] CRAN (R 4.4.0)
+#&gt;  memoise             2.0.1      2021-11-26 [1] CRAN (R 4.4.0)
+#&gt;  munsell             0.5.1      2024-04-01 [1] CRAN (R 4.4.0)
+#&gt;  pamr                1.57       2024-07-01 [1] CRAN (R 4.4.0)
+#&gt;  parallelly          1.38.0     2024-07-27 [1] CRAN (R 4.4.0)
+#&gt;  pillar              1.9.0      2023-03-22 [1] CRAN (R 4.4.0)
+#&gt;  pkgconfig           2.0.3      2019-09-22 [1] CRAN (R 4.4.0)
+#&gt;  png                 0.1-8      2022-11-29 [1] CRAN (R 4.4.0)
+#&gt;  prettyunits         1.2.0      2023-09-24 [1] CRAN (R 4.4.0)
+#&gt;  prodlim           * 2024.06.25 2024-06-24 [1] CRAN (R 4.4.0)
+#&gt;  progress            1.2.3      2023-12-06 [1] CRAN (R 4.4.0)
+#&gt;  proxy               0.4-27     2022-06-09 [1] CRAN (R 4.4.0)
+#&gt;  purrr             * 1.0.2      2023-08-10 [1] CRAN (R 4.4.0)
+#&gt;  R6                  2.5.1      2021-08-19 [1] CRAN (R 4.4.0)
+#&gt;  rappdirs            0.3.3      2021-01-31 [1] CRAN (R 4.4.0)
+#&gt;  Rcpp                1.0.13     2024-07-17 [1] CRAN (R 4.4.0)
+#&gt;  readr             * 2.1.5      2024-01-10 [1] CRAN (R 4.4.0)
+#&gt;  rlang               1.1.4      2024-06-04 [1] CRAN (R 4.4.0)
+#&gt;  rmarkdown           2.28       2024-08-17 [1] CRAN (R 4.4.0)
+#&gt;  rmeta               3.0        2018-03-20 [1] CRAN (R 4.4.0)
+#&gt;  RSQLite             2.3.7      2024-05-27 [1] CRAN (R 4.4.0)
+#&gt;  rstudioapi          0.16.0     2024-03-24 [1] CRAN (R 4.4.0)
+#&gt;  S4Vectors           0.42.1     2024-07-03 [1] Bioconductor 3.19 (R 4.4.1)
+#&gt;  sass                0.4.9      2024-03-15 [1] CRAN (R 4.4.0)
+#&gt;  scales              1.3.0      2023-11-28 [1] CRAN (R 4.4.0)
+#&gt;  sessioninfo         1.2.2      2021-12-06 [1] CRAN (R 4.4.0)
+#&gt;  sparseLDA         * 0.1-9      2016-09-22 [1] CRAN (R 4.4.0)
+#&gt;  statmod             1.5.0      2023-01-06 [1] CRAN (R 4.4.0)
+#&gt;  stringi             1.8.4      2024-05-06 [1] CRAN (R 4.4.0)
+#&gt;  stringr           * 1.5.1      2023-11-14 [1] CRAN (R 4.4.0)
+#&gt;  SuppDists           1.1-9.8    2024-09-03 [1] CRAN (R 4.4.1)
+#&gt;  survcomp          * 1.54.0     2024-04-30 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  survival          * 3.7-0      2024-06-05 [1] CRAN (R 4.4.0)
+#&gt;  survivalROC         1.0.3.1    2022-12-05 [1] CRAN (R 4.4.0)
+#&gt;  tibble            * 3.2.1      2023-03-20 [1] CRAN (R 4.4.0)
+#&gt;  tidyr             * 1.3.1      2024-01-24 [1] CRAN (R 4.4.0)
+#&gt;  tidyselect          1.2.1      2024-03-11 [1] CRAN (R 4.4.0)
+#&gt;  tidyverse         * 2.0.0      2023-02-22 [1] CRAN (R 4.4.0)
+#&gt;  timechange          0.3.0      2024-01-18 [1] CRAN (R 4.4.0)
+#&gt;  tzdb                0.4.0      2023-05-12 [1] CRAN (R 4.4.0)
+#&gt;  UCSC.utils          1.0.0      2024-05-06 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  utf8                1.2.4      2023-10-22 [1] CRAN (R 4.4.0)
+#&gt;  vctrs               0.6.5      2023-12-01 [1] CRAN (R 4.4.0)
+#&gt;  withr               3.0.1      2024-07-31 [1] CRAN (R 4.4.0)
+#&gt;  xfun                0.47       2024-08-17 [1] CRAN (R 4.4.0)
+#&gt;  xml2                1.3.6      2023-12-04 [1] CRAN (R 4.4.0)
+#&gt;  XVector             0.44.0     2024-04-30 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt;  yaml                2.3.10     2024-07-26 [1] CRAN (R 4.4.0)
+#&gt;  zlibbioc            1.50.0     2024-04-30 [1] Bioconductor 3.19 (R 4.4.0)
+#&gt; 
+#&gt;  [1] /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library
+#&gt; 
+#&gt; ──────────────────────────────────────────────────────────────────────────────</code></pre>
+</details>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTGluZWFyIERpc2NyaW1pbmFudCBBbmFseXNpcyAoTERBKSIKYXV0aG9yOiAiTGlldmVuIENsZW1lbnQiCmRhdGU6ICJzdGF0T21pY3MsIEdoZW50IFVuaXZlcnNpdHkgKGh0dHBzOi8vc3RhdG9taWNzLmdpdGh1Yi5pbykiCm91dHB1dDoKICBib29rZG93bjo6cGRmX2RvY3VtZW50MjoKICAgIHRvYzogdHJ1ZQogICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlCiAgICBsYXRleF9lbmdpbmU6IHhlbGF0ZXgKLS0tCgpgYGB7ciwgY2hpbGQ9Il9zZXR1cC5SbWQifQpgYGAKCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShncmlkRXh0cmEpCmBgYAoKIyBCcmVhc3QgY2FuY2VyIGV4YW1wbGUKCi0gU2NobWlkdCAqZXQgYWwuKiwgMjAwOCwgQ2FuY2VyIFJlc2VhcmNoLCAqKjY4KiosIDU0MDUtNTQxMwoKLSBHZW5lIGV4cHJlc3Npb24gcGF0dGVybnMgaW4gbj0yMDAgYnJlYXN0IHR1bW9ycyB3ZXJlIGludmVzdGlnYXRlZCAocD0yMjI4MyBnZW5lcykKCi0gQWZ0ZXIgc3VyZ2VyeSB0aGUgdHVtb3JzIHdlcmUgZ3JhZGVkIGJ5IGEgcGF0aG9sb2dpc3QgKHN0YWdlIDEsMiwzKQoKCiMjIERhdGEKCmBgYHtyLCBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQojQmlvY01hbmFnZXI6Omluc3RhbGwoImdlbmVmdSIpCiNCaW9jTWFuYWdlcjo6aW5zdGFsbCgiYnJlYXN0Q2FuY2VyTUFJTloiKQoKbGlicmFyeShnZW5lZnUpCmxpYnJhcnkoYnJlYXN0Q2FuY2VyTUFJTlopCmRhdGEobWFpbnopCgpYIDwtIHQoZXhwcnMobWFpbnopKSAjIGdlbmUgZXhwcmVzc2lvbnMKbiA8LSBucm93KFgpCkggPC0gZGlhZyhuKS0xL24qbWF0cml4KDEsbmNvbD1uLG5yb3c9bikKWCA8LSBIJSolWApZIDwtIHBEYXRhKG1haW56KSRncmFkZQp0YWJsZShZKQoKc3ZkWCA8LSBzdmQoWCkKayA8LSAyClprIDwtIHN2ZFgkdVssMTprXSAlKiUgZGlhZyhzdmRYJGRbMTprXSkKY29sbmFtZXMoWmspIDwtIHBhc3RlMCgiWiIsMTprKQoKWmsgJT4lCiAgYXMuZGF0YS5mcmFtZSAlPiUKICBtdXRhdGUoZ3JhZGUgPSBZICU+JSBhcy5mYWN0b3IpICU+JQogIGdncGxvdChhZXMoeD0gWjEsIHkgPSBaMiwgY29sb3IgPSBncmFkZSkpICsKICBnZW9tX3BvaW50KHNpemUgPSAzKQpgYGAKCiMgTGluZWFyIGRpc2NyaW1pbmFudCBhbmFseXNpcwoKRmlzaGVyJ3MgY29uc3RydWN0aW9uIG9mIExEQSBpcyBzaW1wbGU6IGl0IGFsbG93cyBmb3IgY2xhc3NpZmljYXRpb24gaW4gYSBkaW1lbnNpb24tcmVkdWNlZCBzdWJzcGFjZSBvZiAkXG1hdGhiYntSfV5wJC4KCiAgRmlyc3Qgd2UgYXNzdW1lIHRoYXQgJFkkIGNhbiBvbmx5IHRha2UgdHdvIHZhbHVlcyAoMC8xKS4KCiAgRmlzaGVyIGFpbWVkIGZvciBhIGRpcmVjdGlvbiwgc2F5ICRcbWF0aGJme2F9JCwgaW4gdGhlICRwJC1kaW1lbnNpb25hbCBwcmVkaWN0b3Igc3BhY2Ugc3VjaCB0aGF0IHRoZSBvcnRob2dvbmFsIHByb2plY3Rpb25zIG9mIHRoZSBwcmVkaWN0b3JzLCAkXG1hdGhiZnt4fV50XG1hdGhiZnthfSQsIHNob3cgbWF4aW1hbCByYXRpbyBiZXR3ZWVuIHRoZSBiZXR3ZWVuIGFuZCB3aXRoaW4gc3VtcyBvZiBzcXVhcmVzOgogIFxbCiAgXG1hdGhiZnt2fSA9IFx0ZXh0e0FyZ01heH1fYSBcZnJhY3tcbWF0aGJme2F9XnRcbWF0aGJme0J9XG1hdGhiZnthfX17XG1hdGhiZnthfV50XG1hdGhiZntXfVxtYXRoYmZ7YX19IFx0ZXh0eyBzdWJqZWN0IHRvIH0ge1xtYXRoYmZ7YX1edFxtYXRoYmZ7V31cbWF0aGJme2F9fT0xLAogXF0KIHdoZXJlICRcbWF0aGJme1d9JCBhbmQgJFxtYXRoYmZ7Qn0kIGFyZSB0aGUgd2l0aGluIGFuZCBiZXR3ZWVuIGNvdmFyaWFuY2UgbWF0cmljZXMgb2YgJFxtYXRoYmZ7eH0kLgogVGhlIHJlc3RyaWN0aW9uIGlzIGludHJvZHVjZWQgdG8gb2J0YWluIGEgKGNvbnZlbmllbnQpIHVuaXF1ZSBzb2x1dGlvbi4KCi0tLQoKIyMgQmV0d2VlbiBhbmQgd2l0aGluIHN1bXMgb2Ygc3F1YXJlcwoKCi0gSW4gdGhlIHRyYWluaW5nIGRhdGFzZXQsIGxldCAkXG1hdGhiZnt4fV97aWt9JCBkZW5vdGUgdGhlICRpJHRoICRwJC1kaW1lbnNpb25hbCBvYnNlcnZhdGlvbiBpbiB0aGUgJGskdGggZ3JvdXAgKCRrPTAsMSQgcmVmZXJyaW5nIHRvICRZPTAkIGFuZCAkWT0xJCwgcmVzcC4pLCAkaT0xLFxsZG90cywgbl9rJC4KCi0gTGV0ICR6X3tpa309XG1hdGhiZnthfV50XG1hdGhiZnt4fV97aWt9JCBkZW5vdGUgdGhlIG9ydGhvZ29uYWwgcHJvamVjdGlvbiBvZiAkXG1hdGhiZnt4fV97aWt9JCBvbnRvICRcbWF0aGJme2F9JAoKLSBGb3IgdGhlIG9uZS1kaW1lbnNpb25hbCAkeiQtb2JzZXJ2YXRpb25zLCBjb25zaWRlciB0aGUgZm9sbG93aW5nIHN1bSBvZiBzcXVhcmVzOgogIFxbCiAgICBcdGV4dHtTU0V9PVx0ZXh0e3dpdGhpbiBzdW0gb2Ygc3F1YXJlc30gPSBcc3VtX3trPTAsMX1cc3VtX3tpPTF9XntuX2t9ICh6X3tpa30tXGJhcnt6fV9rKV4yCiAgXF0KICBcWwogICAgXHRleHR7U1NCfT1cdGV4dHtiZXR3ZWVuIHN1bSBvZiBzcXVhcmVzfSA9IFxzdW1fe2s9MCwxfVxzdW1fe2k9MX1ee25fa30gKFxiYXJ7en1fe2t9LVxiYXJ7en0pXjIgPSBcc3VtX3trPTAsMX0gbl9rIChcYmFye3p9X3trfS1cYmFye3p9KV4yCiAgXF0KICB3aXRoICRcYmFye3p9X2skIHRoZSBzYW1wbGUgbWVhbiBvZiAkel97aWt9JCB3aXRoaW4gZ3JvdXAgJGskLCBhbmQgJFxiYXJ7en0kIHRoZSBzYW1wbGUgbWVhbiBvZiBhbGwgJHpfe2lrfSQuCgotIFRvIHJlZm9ybXVsYXRlIFNTRSBhbmQgU1NCIGluIHRlcm1zIG9mIHRoZSAkcCQtZGltZW5zaW9uYWwgJFxtYXRoYmZ7eH1fe2lrfSQsIHdlIG5lZWQgdGhlIHNhbXBsZSBtZWFucwogIFxbCiAgICBcYmFye3p9X2sgPSBcZnJhY3sxfXtuX2t9IFxzdW1fe2k9MX1ee25fa30gel97aWt9ID0gXGZyYWN7MX17bl9rfSBcc3VtX3tpPTF9XntuX2t9IFxtYXRoYmZ7YX1edFxtYXRoYmZ7eH1fe2lrfSA9IFxtYXRoYmZ7YX1edCBcZnJhY3sxfXtuX2t9IFxzdW1fe2k9MX1ee25fa30gXG1hdGhiZnt4fV97aWt9ID0gXG1hdGhiZnthfV50IFxiYXJ7XG1hdGhiZnt4fX1fawogIFxdCiAgXFsKICAgIFxiYXJ7en0gPSBcZnJhY3sxfXtufVxzdW1fe2s9MCwxfVxzdW1fe2k9MX1ee25fa30gel97aWt9ID0gXGNkb3RzID0gXG1hdGhiZnthfV50XGJhcntcbWF0aGJme3h9fS4KICBcXQoKLSBTU0UgYmVjb21lcwogIFxbCiAgICBcdGV4dHtTU0V9ID0gXHN1bV97az0wLDF9XHN1bV97aT0xfV57bl9rfSAoel97aWt9LVxiYXJ7en1fayleMiA9IFxtYXRoYmZ7YX1edCBcbGVmdChcc3VtX3trPTAsMX1cc3VtX3tpPTF9XntuX2t9IChcbWF0aGJme3h9X3tpa30tXGJhcntcbWF0aGJme3h9fV9rKShcbWF0aGJme3h9X3tpa30tXGJhcntcbWF0aGJme3h9fV9rKV50XHJpZ2h0KVxtYXRoYmZ7YX0KICBcXQoKLSBTU0IgYmVjb21lcwogIFxbCiAgICBcdGV4dHtTU0J9ID0gXHN1bV97az0wLDF9IG5fayAoXGJhcnt6fV97a30tXGJhcnt6fSleMiA9IFxtYXRoYmZ7YX1edCBcbGVmdChcc3VtX3trPTAsMX0gbl9rIChcYmFye1xtYXRoYmZ7eH1fe2t9fS1cYmFye1xtYXRoYmZ7eH19KShcYmFye1xtYXRoYmZ7eH1fe2t9fS1cYmFye1xtYXRoYmZ7eH19KV50IFxyaWdodClcbWF0aGJme2F9CiAgXF0KCi0tLQoKLSBUaGUgJHAgXHRpbWVzIHAkIG1hdHJpeAogICBcWwogICAgXG1hdGhiZntXfT1cc3VtX3trPTAsMX1cc3VtX3tpPTF9XntuX2t9IChcbWF0aGJme3h9X3tpa30tXGJhcntcbWF0aGJme3h9fV9rKShcbWF0aGJme3h9X3tpa30tXGJhcntcbWF0aGJme3h9fV9rKV50CiAgIFxdCiAgIGlzIHJlZmVycmVkIHRvIGFzIHRoZSBtYXRyaXggb2YgKip3aXRoaW4qKiBzdW0gb2Ygc3F1YXJlcyBhbmQgY3Jvc3MgcHJvZHVjdHMuCgotIFRoZSAkcCBcdGltZXMgcCQgbWF0cml4CiAgIFxbCiAgICBcbWF0aGJme0J9PVxzdW1fe2s9MCwxfSBuX2sgKFxiYXJ7XG1hdGhiZnt4fV97a319LVxiYXJ7XG1hdGhiZnt4fX0pKFxiYXJ7XG1hdGhiZnt4fV97a319LVxiYXJ7XG1hdGhiZnt4fX0pXnQKICAgXF0KICAgaXMgcmVmZXJyZWQgdG8gYXMgdGhlIG1hdHJpeCBvZiAqKmJldHdlZW4qKiBzdW0gb2Ygc3F1YXJlcyBhbmQgY3Jvc3MgcHJvZHVjdHMuCgotIE5vdGUgdGhhdCBvbiB0aGUgZGlhZ29uYWwgb2YgJFxtYXRoYmZ7V30kIGFuZCAkXG1hdGhiZntCfSQgeW91IGZpbmQgdGhlIG9yZGluYXJ5IHVuaXZhcmlhdGUgd2l0aGluIGFuZCBiZXR3ZWVuIHN1bXMgb2Ygc3F1YXJlcyBvZiB0aGUgaW5kaXZpZHVhbCBjb21wb25lbnRzIG9mICRcbWF0aGJme3h9JC4KCiMjIE9idGFpbiBwcm9qZWN0aW9ucwoKQW4gZXF1aXZhbGVudCBmb3JtdWxhdGlvbjoKICBcWwogIFxtYXRoYmZ7dn0gPSBcdGV4dHtBcmdNYXh9X2EgXG1hdGhiZnthfV50XG1hdGhiZntCfVxtYXRoYmZ7YX0gXHRleHR7IHN1YmplY3QgdG8gfSBcbWF0aGJme2F9XnRcbWF0aGJme1d9XG1hdGhiZnthfT0xLgogXF0KCiBUaGlzIGNhbiBiZSBzb2x2ZWQgYnkgaW50cm9kdWNpbmcgYSBMYW5ncmFuZ2UgbXVsdGlwbGllcjoKICBcWwogIFxtYXRoYmZ7dn0gPSBcdGV4dHtBcmdNYXh9X2EgXG1hdGhiZnthfV50XG1hdGhiZntCfVxtYXRoYmZ7YX0gLVxsYW1iZGEoXG1hdGhiZnthfV50XG1hdGhiZntXfVxtYXRoYmZ7YX0tMSkuCiBcXQoKIENhbGN1bGF0aW5nIHRoZSBwYXJ0aWFsIGRlcml2YXRpdmUgdy5yLnQuICRcbWF0aGJme2F9JCBhbmQgc2V0dGluZyBpdCB0byB6ZXJvIGdpdmVzCiBcYmVnaW57ZXFuYXJyYXkqfQogICAyXG1hdGhiZntCfVxtYXRoYmZ7YX0gLTJcbGFtYmRhIFxtYXRoYmZ7V31cbWF0aGJme2F9ICY9JiAwXFwKICAgXG1hdGhiZntCfVxtYXRoYmZ7YX0gICY9JiBcbGFtYmRhIFxtYXRoYmZ7V31cbWF0aGJme2F9IFxcCiAgIFxtYXRoYmZ7V31eey0xfVxtYXRoYmZ7Qn1cbWF0aGJme2F9ICY9JiBcbGFtYmRhXG1hdGhiZnthfS4KIFxlbmR7ZXFuYXJyYXkqfQoKIEZyb20gdGhlIGZpbmFsIGVxdWF0aW9uIHdlIHJlY29nbmlzZSB0aGF0ICRcbWF0aGJme3Z9PVxtYXRoYmZ7YX0kIGlzIGFuICoqZWlnZW52ZWN0b3IqKiBvZiAkXG1hdGhiZntXfV57LTF9XG1hdGhiZntCfSQsIGFuZCAkXGxhbWJkYSQgaXMgdGhlIGNvcnJlc3BvbmRpbmcgKiplaWdlbnZhbHVlKiouCgogVGhlIGVxdWF0aW9uIGhhcyBpbiBnZW5lcmFsICRcdGV4dHtyYW5rfShcbWF0aGJme1d9XnstMX1cbWF0aGJme0J9KSQgc29sdXRpb25zLiBJbiB0aGUgY2FzZSBvZiB0d28gY2xhc3NlcywgdGhlIHJhbmsgZXF1YWxzIDEgYW5kIHRodXMgb25seSBvbmUgc29sdXRpb24gZXhpc3RzLgoKLS0tCgotIEEgdHJhaW5pbmcgZGF0YSBzZXQgaXMgdXNlZCBmb3IgdGhlIGNhbGN1bGF0aW9uIG9mICRcbWF0aGJme1d9JCBhbmQgJFxtYXRoYmZ7Qn0kLiAkXGxvbmdyaWdodGFycm93JCBUaGlzIGdpdmVzIHRoZSBlaWdlbnZlY3RvciAkXG1hdGhiZnt2fSQKCi0gVGhlIHRyYWluaW5nIGRhdGEgaXMgYWxzbyB1c2VkIGZvciB0aGUgY2FsY3VsYXRpb24gb2YgdGhlIGNlbnRyb2lkcyBvZiB0aGUgY2xhc3NlcyAoZS5nLiB0aGUgc2FtcGxlIG1lYW5zLCBzYXkgJFxiYXJ7XG1hdGhiZnt4fX1fMSQgYW5kICRcYmFye1xtYXRoYmZ7eH19XzIkKS4gJFxsb25ncmlnaHRhcnJvdyQgVGhlIHByb2plY3RlZCBjZW50cm9pZHMgYXJlIGdpdmVuIGJ5ICRcYmFye1xtYXRoYmZ7eH19XzFedFxtYXRoYmZ7dn0kIGFuZCAkXGJhcntcbWF0aGJme3h9fV8yXnRcbWF0aGJme3Z9JC4KCi0gQSBuZXcgb2JzZXJ2YXRpb24gd2l0aCBwcmVkaWN0b3IgJFxtYXRoYmZ7eH0kIGlzIGNsYXNzaWZpZWQgaW4gdGhlIGNsYXNzIGZvciB3aGljaCB0aGUgcHJvamVjdGVkIGNlbnRyb2lkIGlzIGNsb3Nlc3QgdG8gdGhlIHByb2plY3RlZCBwcmVkaWN0b3IgJHo9XG1hdGhiZnt4fV50XG1hdGhiZnt2fSQuCgpBbiBhZHZhbnRhZ2Ugb2YgdGhpcyBhcHByb2FjaCBpcyB0aGF0ICRcbWF0aGJme3Z9JCBjYW4gYmUgaW50ZXJwcmV0ZWQgKHNpbWlsYXIgYXMgdGhlIGxvYWRpbmdzIGluIGEgUENBKSBpbiB0ZXJtcyBvZiB3aGljaCBwcmVkaWN0b3JzICR4X2okIGFyZSBpbXBvcnRhbnQgdG8gZGlzY3JpbWluYXRlIGJldHdlZW4gY2xhc3NlcyAwIGFuZCAxLgoKLS0tCgojIyBNb3JlIHRoYW4gdHdvIGNsYXNzZXMKCldoZW4gdGhlIG91dGNvbWUgJFkkIHJlZmVycyB0byBtb3JlIHRoYW4gdHdvIGNsYXNzZXMsIHNheSAkbSQgY2xhc3NlcywgdGhlbiBGaXNoZXIncyBtZXRob2QgaXMgY29uc3RydWN0ZWQgaW4gZXhhY3RseSB0aGUgc2FtZSB3YXkuIE5vdwpcWwogIFxtYXRoYmZ7V31eey0xfVxtYXRoYmZ7Qn1cbWF0aGJme2F9ID0gXGxhbWJkYVxtYXRoYmZ7YX0KXF0Kd2lsbCBoYXZlICRyPVx0ZXh0e3Jhbmt9KFxtYXRoYmZ7V31eey0xfVxtYXRoYmZ7Qn0pID0gXG1pbihtLTEscCxuKSQgc29sdXRpb25zIChlaWdlbnZlY3RvcnMgYW5kIGVpZ2VudmFsdWVzKS4gKCRuJDogc2FtcGxlIHNpemUgb2YgdHJhaW5pbmcgZGF0YSkKCkxldCAkXG1hdGhiZnt2fV9qJCBhbmQgJFxsYW1iZGFfaiQgZGVub3RlIHRoZSAkciQgc29sdXRpb25zLCBhbmQgZGVmaW5lCgotICRcbWF0aGJme1Z9JDogJHBcdGltZXMgciQgbWF0cml4IHdpdGggY29sbHVtcyAkXG1hdGhiZnt2fSQKCi0gJFxtYXRoYmZ7TH0kOiAkciBcdGltZXMgciQgZGlhZ29uYWwgbWF0cml4IHdpdGggZWxlbWVudHMgJFxsYW1iZGFfMSA+IFxsYW1iZGFfMiA+IFxjZG90cyA+IFxsYW1iZGFfciQKClRoZSAkcCQtZGltZW5zaW9uYWwgcHJlZGljdG9yIGRhdGEgaW4gJFxtYXRoYmZ7WH0kIG1heSB0aGVuIGJlIHRyYW5zZm9ybWVkIHRvIHRoZSAkciQtZGltZW5zaW9uYWwgc2NvcmVzClxbCiAgXG1hdGhiZntafSA9IFxtYXRoYmZ7WH1cbWF0aGJme1Z9LgpcXQoKLS0tCgpGb3IgZWlnZW52ZWN0b3JzICRcbWF0aGJme3Z9X2kkIGFuZCAkXG1hdGhiZnt2fV9qJCwgaXQgaG9sZHMgdGhhdApcWwogXHRleHR7Y292fVxsZWZ0W1pfaSxaX2pccmlnaHRdID0gXHRleHR7Y292fVxsZWZ0W1xtYXRoYmZ7WH1cbWF0aGJme3Z9X2ksXG1hdGhiZntYfVxtYXRoYmZ7dn1falxyaWdodF09IFxtYXRoYmZ7dn1faV50IFxtYXRoYmZ7V30gXG1hdGhiZnt2fV9qID0gXGRlbHRhX3tpan0gLApcXQppbiB3aGljaCB0aGUgY292YXJpYW5jZXMgYXJlIGRlZmluZWQgd2l0aGluIGdyb3Vwcy4gSGVuY2UsIHdpdGhpbiB0aGUgZ3JvdXBzIChjbGFzc2VzKSB0aGUgc2NvcmVzIGFyZSB1bmNvcnJlbGF0ZWQuCgojIEhpZ2ggZGltZW5zaW9uYWwgcHJlZGljdG9ycwoKV2l0aCBoaWdoLWRpbWVuc2lvbmFsIHByZWRpY3RvcnMKCi0gUmVwbGFjZSB0aGUgJHBcdGltZXMgcCQgbWF0cmljZXMgJFxtYXRoYmZ7V30kIGFuZCAkXG1hdGhiZntCfSQgYnkgdGhlaXIgZGlhZ29uYWwgbWF0cmljZXMgKGkuZS4gcHV0IHplcm9lcyBvbiB0aGUgb2ZmLWRpYWdvbmFsIHBvc2l0aW9ucykKCi0gICoqU3BhcnNlIExEQSoqIGJ5IGltcG9zaW5nIGFuICRMXzEkLXBlbmFsdHkgb24gJFxtYXRoYmZ7dn0kLgoKVHdvIGFwcHJvYWNoZXM6IFpob3UgKmV0IGFsLiogKDIwMDYpLCBKb3VybmFsIG9mIENvbXB1dGF0aW9uYWwgYW5kIEdyYXBoaWNhbCBTdGF0aXN0aWNzICwgKioxNSoqLCAyNjUtMjg2LCBhbmQgW0NsZW1tZW5zZW4gKmV0IGFsLiogKDIwMTEpLCBUZWNobm9tZXRyaWNzLCAqKjUzKipdKGh0dHBzOi8vd2ViLnN0YW5mb3JkLmVkdS9+aGFzdGllL1BhcGVycy9zZGFfcmVzdWJtX2RhbmllbGEtZmluYWwucGRmKS4KCiMgQnJlYXN0IGNhbmNlciBleGFtcGxlCgojIyBBbGwgZ2VuZXMKCiMjIyBMREEKCi0gRmlzaGVyJ3MgTERBIGlzIGlsbHVzdHJhdGVkIG9uIHRoZSBicmVhc3QgY2FuY2VyIGRhdGEgd2l0aCBhbGwgdGhyZWUgdHVtb3Igc3RhZ2VzIGFzIG91dGNvbWUuCgotIFdlIHRyeSB0byBkaXNjcmltaW5hdGUgYmV0d2VlbiB0aGUgZGlmZmVyZW50IHN0YWdlcyBhY2NvcmRpbmcgdG8gdGhlIGdlbmUgZXhwcmVzc2lvbiBkYXRhIG9mIGFsbCBnZW5lcy4KCi0gV2UgY2FjaGUgdGhlIHJlc3VsdCBiZWNhdXNlIHRoZSBjYWxjdWxhdGlvbiB0YWtlcyAxMCBtaW51dGVzLgoKYGBge3IgcnVuLWxkYSwgY2FjaGU9VFJVRX0KYnJlYXN0LmxkYSA8LSBNQVNTOjpsZGEoeCA9IFgsIGdyb3VwaW5nID0gWSkKYGBgCgpgYGB7cn0KVmxkYSA8LSBicmVhc3QubGRhJHNjYWxpbmcKY29sbmFtZXMoVmxkYSkgPC0gcGFzdGUwKCJWIiwxOm5jb2woVmxkYSkpCgpabGRhIDwtIFglKiVWbGRhCmNvbG5hbWVzKFpsZGEpIDwtIHBhc3RlMCgiWiIsMTpuY29sKFpsZGEpKQoKZ3JpZC5hcnJhbmdlKAogIFpsZGEgJT4lCiAgICBhcy5kYXRhLmZyYW1lICU+JQogICAgbXV0YXRlKGdyYWRlID0gWSAlPiUgYXMuZmFjdG9yKSAlPiUKICAgIGdncGxvdChhZXMoeD0gWjEsIHkgPSBaMiwgY29sb3IgPSBncmFkZSkpICsKICAgIGdlb21fcG9pbnQoc2l6ZSA9IDMpICsKICAgIGNvb3JkX2ZpeGVkKCksCiAgZ2dwbG90KCkgKwogICAgZ2VvbV9iYXIoYWVzKHggPSBjKCJ6MSIsInoyIiksIHkgPSBicmVhc3QubGRhJHN2ZCksIHN0YXQgPSAiaWRlbnRpdHkiKSArCiAgICB4bGFiKCJEaXNjcmltaW5hbnQiKSArCiAgICB5bGFiKCJFaWdlbiBWYWx1ZXMiKSwKICBsYXlvdXRfbWF0cml4ID0gbWF0cml4KAogICAgYygxLDEsMiksCiAgICBucm93PTEpCiAgKQpgYGAKCi0tLQoKLSBUaGUgY29sdW1ucyBvZiB0aGUgbWF0cml4ICRcbWF0aGJme1Z9JCBjb250YWluIHRoZSBlaWdlbnZlY3RvcnMuIFRoZXJlIGFyZSAkXG1pbigzLTIsMjIyODMsMjAwKT0yJCBlaWdlbnZlY3RvcnMuIFRoZSAkMjAwXHRpbWVzIDIkIG1hdHJpeCAkXG1hdGhiZntafSQgY29udGFpbnMgdGhlIHNjb3JlcyBvbiB0aGUgdHdvIEZpc2hlciBkaXNjcmltaW5hbnRzLgoKLSBUaGUgZWlnZW52YWx1ZSAkXGxhbWJkYV9qJCBjYW4gYmUgaW50ZXJwcmV0ZWQgYXMgdGhlIHJhdGlvClxbCiAgXGZyYWN7XG1hdGhiZnt2fV9qXnRcbWF0aGJme0J9XG1hdGhiZnt2fV9qfXtcbWF0aGJme3Z9X2pedFxtYXRoYmZ7V31cbWF0aGJme3Z9X2p9ICwKXF0Kb3IgKHVwb24gdXNpbmcgJFxtYXRoYmZ7dn1fal50XG1hdGhiZntXfVxtYXRoYmZ7dn1faj0xJCkgdGhlIGJldHdlZW4tY2VudHJvaWQgc3VtIG9mIHNxdWFyZXMgKGluIHRoZSByZWR1Y2VkIGRpbWVuc2lvbiBzcGFjZSBvZiB0aGUgRmlzaGVyIGRpc2NyaW1pbmFudHMpClxbCiAgXG1hdGhiZnt2fV9qXnRcbWF0aGJme0J9XG1hdGhiZnt2fV9qLgpcXQoKLSBGcm9tIHRoZSBzY3JlZXBsb3Qgb2YgdGhlIGVpZ2VudmFsdWVzIHdlIHNlZSB0aGF0IHRoZSBmaXJzdCBkaW1lbnNpb24gaXMgbW9yZSBpbXBvcnRhbnQgdGhhbiB0aGUgc2Vjb25kIChub3QgaHVnZWx5KSBpbiB0ZXJtcyBvZiBkaXNjcmltaW5hdGluZyBiZXR3ZWVuIHRoZSBncm91cHMuCgotIEZyb20gdGhlIHNjYXR0ZXJwbG90IHdlIGNhbiBzZWUgdGhhdCB0aGVyZSBpcyBubyBwZXJmZWN0IHNlcGFyYXRpb24gKGRpc2NyaW1pbmF0aW9uKSBiZXR3ZWVuIHRoZSB0aHJlZSB0dW1vciBzdGFnZXMgKHF1aXRlIHNvbWUgb3ZlcmxhcCkuCgotIFRvIHNvbWUgZXh0ZW50IHRoZSBmaXJzdCBGaXNoZXIgZGlzY3JpbWluYW50IGRpbWVuc2lvbiBkaXNjcmltaW5hdGVzIHN0YWdlIDMgKGdyZWVuIGRvdHMpIGZyb20gdGhlIG90aGVyIHR3byBzdGFnZXMsIGFuZCB0aGUgc2Vjb25kIGRpbWVuc2lvbiBzZXBhcmF0ZXMgc3RhZ2UgMSAoYmxhY2sgZG90cykgZnJvbSB0aGUgdHdvIG90aGVycy4KCiMjIyBJbnRlcnByZXRhdGlvbiBvZiBsb2FkaW5ncwoKYGBge3J9CmdyaWQuYXJyYW5nZSgKICBWbGRhICU+JQogICAgYXMuZGF0YS5mcmFtZSAlPiUKICAgIG11dGF0ZShnZW5lSUQgPSAxOm5yb3coVmxkYSkpICU+JQogICAgZ2dwbG90KGFlcyh4ID0gZ2VuZUlELCB5ID0gVjEpKSArCiAgICBnZW9tX3BvaW50KHBjaD0yMSkgKwogICAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gYygtMiwwLDIpKnNkKFZsZGFbLDFdKSwgY29sID0gInJlZCIpLAoKICBWbGRhICU+JQogICAgYXMuZGF0YS5mcmFtZSAlPiUKICAgIG11dGF0ZShnZW5lSUQgPSAxOm5yb3coVmxkYSkpICU+JQogICAgZ2dwbG90KGFlcyh4ID0gZ2VuZUlELCB5ID0gVjIpKSArCiAgICBnZW9tX3BvaW50KHBjaD0yMSkgKwogICAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gYygtMiwwLDIpKnNkKFZsZGFbLDJdKSwgY29sID0gInJlZCIpLAogIG5jb2wgPSAyKQpgYGAKClRoZSBsb2FkaW5ncyBvZiB0aGUgRmlzaGVyIGRpc2NyaW1pbmFudHMgYXJlIHdpdGhpbiB0aGUgY29sdW1ucyBvZiB0aGUgJFxtYXRoYmZ7Vn0kIG1hdHJpeC4KCi0gU2luY2Ugd2UgaGF2ZSAyMjI4MyBnZW5lcywgZWFjaCBkaXNjcmltaW5hbnQgaXMgYSBsaW5lYXIgY29tYmluYXRpb24gb2YgMjIyODMgZ2VuZSBleHByZXNzaW9uLiBJbnN0ZWFkIG9mIGxvb2tpbmcgYXQgdGhlIGxpc3Rpbmcgb2YgMjIyODMgbG9hZGluZ3MsIHdlIG1hZGUgYW4gaW5kZXggcGxvdCAobm8gcGFydGljdWxhciBvcmRlcmluZyBvZiBnZW5lcyBvbiBob3Jpem9udGFsIGF4aXMpLgoKLSBUaGUgcmVkIGhvcml6b250YWwgcmVmZXJlbmNlIGxpbmVzIGNvcnJlc3BvbmQgdG8gdGhlIGF2ZXJhZ2Ugb2YgdGhlIGxvYWRpbmcgKGNsb3NlIHRvIHplcm8pIGFuZCB0aGUgYXZlcmFnZSBwbHVzIGFuZCBtaW51cyB0d2ljZSB0aGUgc3RhbmRhcmQgZGV2aWF0aW9uIG9mIHRoZSBsb2FkaW5ncy4KCi0gSWYgbm8gZ2VuZXMgaGFkIGFueSAic2lnbmlmaWNhbnQiIGRpc2NyaW1pbmF0aW5nIHBvd2VyLCB0aGVuIHdlIHdvdWxkIGV4cGVjdCBhcHByb3hpbWF0ZWx5ICQ5NVwlJCBvZiBhbGwgbG9hZGluZ3Mgd2l0aGluIHRoZSBiYW5kLiBUaHVzIGxvYWRpbmdzIG91dHNpZGUgb2YgdGhlIGJhbmQgYXJlIG9mIHBvdGVudGlhbCBpbnRlcmVzdCBhbmQgbWF5IHBlcmhhcHMgYmUgZGlzY3JpbWluYXRpbmcgYmV0d2VlbiB0aGUgdGhyZWUgdHVtb3Igc3RhZ2VzLgoKLSBJbiB0aGUgZ3JhcGhzIHByZXNlbnRlZCBoZXJlIHdlIHNlZSBtYW55IGxvYWRpbmdzIHdpdGhpbiB0aGUgYmFuZHMsIGJ1dCBhbHNvIG1hbnkgb3V0c2lkZSBvZiB0aGUgYmFuZC4KCldlIHJlcGVhdCB0aGUgYW5hbHlzaXMsIGJ1dCBub3cgd2l0aCB0aGUgc3BhcnNlIExEQSBtZXRob2Qgb2YgQ2xlbW1lbnNlbiBldCBhbC4gKDIwMTEpLgoKLS0tCgojIyBTcGFyc2UgTERBIGJhc2VkIG9uIDE1MCByYW5kb20gZ2VuZXMKCi0gV2Ugb25seSBwcmVzZW50IHRoZSByZXN1bHRzIG9mIHRoZSBzcGFyc2UgTERBIGJhc2VkIG9uIGEgcmFuZG9tIHN1YnNldCBvZiAxNTAgZ2VuZXMgKG9yZGVyaW5nIG9mIGdlbmVzIGluIGRhdGFtYXRyaXggaXMgcmFuZG9tKS4KCi0gVGhlIGRpc2NyaW1pbmF0aW9uIHNlZW1zIGJldHRlciB0aGFuIHdpdGggY2xhc3NpY2FsIExEQSBiYXNlZCBvbiBhbGwgZ2VuZXMuIFRoaXMgaXMgdmVyeSBsaWtlbHkgY2F1c2VkIGJ5IHRvbyBtdWNoIG5vaXNlIGluIHRoZSBmdWxsIGRhdGEgbWF0cml4IHdpdGggb3ZlciAyMDAwMCBwcmVkaWN0b3JzLgoKYGBge3J9CiMgQmlvY01hbmFnZXI6Omluc3RhbGwoInNwYXJzZUxEQSIpCgpsaWJyYXJ5KHNwYXJzZUxEQSkKCllEdW1teSA8LSBkYXRhLmZyYW1lKAogIFkxID0gaWZlbHNlKFkgPT0gMSwgMSwgMCksCiAgWTIgPSBpZmVsc2UoWSA9PSAyLCAxLCAwKSwKICBZMyA9IGlmZWxzZShZID09IDMsIDEsIDApCiAgKQoKWDIgPC0gWFssMToxNTBdCgpicmVhc3Quc2xkYSA8LSBzZGEoeCA9IFgyLAogIHkgPSBhcy5tYXRyaXgoWUR1bW15KSwKICBsYW1iZGEgPSAxZS02LAogIHN0b3AgPSAtNTAsCiAgbWF4SXRlID0gMjUsCiAgdHJhY2UgPSBUUlVFKQoKVnNkYSA8LSBtYXRyaXgoMCwgbnJvdz1uY29sKFgyKSwgbmNvbD0yKQpWc2RhW2JyZWFzdC5zbGRhJHZhckluZGV4LF0gPC0gYnJlYXN0LnNsZGEkYmV0YQpjb2xuYW1lcyhWc2RhKSA8LSBwYXN0ZTAoIlYiLDE6bmNvbChWc2RhKSkKClpzZGEgPC0gWDIlKiVWc2RhCmNvbG5hbWVzKFpzZGEpIDwtIHBhc3RlMCgiWiIsMTpuY29sKFpzZGEpKQoKWnNkYSAlPiUKIGFzLmRhdGEuZnJhbWUgJT4lCiBtdXRhdGUoZ3JhZGUgPSBZICU+JSBhcy5mYWN0b3IpICU+JQogZ2dwbG90KGFlcyh4PSBaMSwgeSA9IFoyLCBjb2xvciA9IGdyYWRlKSkgKwogZ2VvbV9wb2ludChzaXplID0gMykgKwogZ2d0aXRsZSgic3BhcnNlIExEQSBvbiAxNTAgZ2VuZXMiKQoKZ3JpZC5hcnJhbmdlKAogICBWc2RhICU+JQogICAgIGFzLmRhdGEuZnJhbWUgJT4lCiAgICAgbXV0YXRlKGdlbmVJRCA9IDE6bnJvdyhWc2RhKSkgJT4lCiAgICAgZ2dwbG90KGFlcyh4ID0gZ2VuZUlELCB5ID0gVjEpKSArCiAgICAgZ2VvbV9wb2ludChwY2g9MjEpICsKICAgICBnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSBjKC0yLDAsMikqc2QoVnNkYVssMV0pLCBjb2wgPSAicmVkIikgLAoKICAgVnNkYSAlPiUKICAgICBhcy5kYXRhLmZyYW1lICU+JQogICAgIG11dGF0ZShnZW5lSUQgPSAxOm5yb3coVnNkYSkpICU+JQogICAgIGdncGxvdChhZXMoeCA9IGdlbmVJRCwgeSA9IFYyKSkgKwogICAgIGdlb21fcG9pbnQocGNoPTIxKSArCiAgICAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gYygtMiwwLDIpKnNkKFZzZGFbLDJdKSwgY29sID0gInJlZCIpLAogICBuY29sID0gMikKYGBgCgojIyBMREEgYmFzZWQgb24gMTUwIHJhbmRvbSBnZW5lcwoKYGBge3J9CmJyZWFzdC5sZGExNTAgPC0gTUFTUzo6bGRhKHggPSBYMiwgZ3JvdXBpbmcgPSBZKQoKVmxkYSA8LSBicmVhc3QubGRhMTUwJHNjYWxpbmcKY29sbmFtZXMoVmxkYSkgPC0gcGFzdGUwKCJWIiwxOm5jb2woVmxkYSkpCgpabGRhIDwtIFgyJSolVmxkYQpjb2xuYW1lcyhabGRhKSA8LSBwYXN0ZTAoIloiLDE6bmNvbChabGRhKSkKCmdyaWQuYXJyYW5nZSgKICBabGRhICU+JQogICAgYXMuZGF0YS5mcmFtZSAlPiUKICAgIG11dGF0ZShncmFkZSA9IFkgJT4lIGFzLmZhY3RvcikgJT4lCiAgICBnZ3Bsb3QoYWVzKHg9IFoxLCB5ID0gWjIsIGNvbG9yID0gZ3JhZGUpKSArCiAgICBnZW9tX3BvaW50KHNpemUgPSAzKSArCiAgICBjb29yZF9maXhlZCgpLAogIGdncGxvdCgpICsKICAgIGdlb21fYmFyKGFlcyh4ID0gYygiejEiLCJ6MiIpLCB5ID0gYnJlYXN0LmxkYTE1MCRzdmQpLCBzdGF0ID0gImlkZW50aXR5IikgKwogICAgeGxhYigiRGlzY3JpbWluYW50IikgKwogICAgeWxhYigiRWlnZW4gVmFsdWVzIiksCiAgbGF5b3V0X21hdHJpeCA9IG1hdHJpeCgKICAgIGMoMSwxLDIpLAogICAgbnJvdz0xKQogICkKCiAgZ3JpZC5hcnJhbmdlKAogICAgVmxkYSAlPiUKICAgICAgYXMuZGF0YS5mcmFtZSAlPiUKICAgICAgbXV0YXRlKGdlbmVJRCA9IDE6bnJvdyhWbGRhKSkgJT4lCiAgICAgIGdncGxvdChhZXMoeCA9IGdlbmVJRCwgeSA9IFYxKSkgKwogICAgICBnZW9tX3BvaW50KHBjaD0yMSkgKwogICAgICBnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSBjKC0yLDAsMikqc2QoVmxkYVssMV0pLCBjb2wgPSAicmVkIiksCgogICAgVmxkYSAlPiUKICAgICAgYXMuZGF0YS5mcmFtZSAlPiUKICAgICAgbXV0YXRlKGdlbmVJRCA9IDE6bnJvdyhWbGRhKSkgJT4lCiAgICAgIGdncGxvdChhZXMoeCA9IGdlbmVJRCwgeSA9IFYyKSkgKwogICAgICBnZW9tX3BvaW50KHBjaD0yMSkgKwogICAgICBnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSBjKC0yLDAsMikqc2QoVmxkYVssMl0pLCBjb2wgPSAicmVkIiksCiAgICBuY29sID0gMikKCmBgYAoKIyMgV3JhcHVwCgpMREEgb24gYWxsIDIyMjgzIGdlbmVzIGdhdmUgcG9vcmVyIHJlc3VsdCB0aGFuIG9uIDE1MCBnZW5lcy4KVGhpcyBpcyBwcm9iYWJseSBjYXVzZWQgYnkgbnVtZXJpY2FsIGluc3RhYmlsaXR5IHdoZW4gd29ya2luZyB3aXRoIGxhcmdlICRcbWF0aGJme1d9JCBhbmQgJFxtYXRoYmZ7Qn0kIG1hdHJpY2VzCgotIFNwYXJzZSBMREEgZ2F2ZSBzbGlnaHRseSBwb29yZXIgcmVzdWx0IHRoYW4gTERBIG9uIHRoZSBzdWJzZXQgb2YgMTUwIGdlbmVzLiBUaGlzIG1heSBiZSBjYXVzZWQgYnkgb3ZlcmZpdHRpbmcgb2YgdGhlIExEQS4KCi0gV2hlbiAoc3BhcnNlKSBMREEgaXMgdXNlZCB0byBidWlsZCBhIHByZWRpY3Rpb24gbW9kZWwvY2xhc3NpZmllciwgdGhlbiBDViBtZXRob2RzLCBvciBzcGxpdHRpbmcgb2YgZGF0YXNldCBpbnRvIHRyYWluaW5nIGFuZCB0ZXN0IGRhdGFzZXRzIHNob3VsZCBiZSB1c2VkIHRvIGFsbG93IGZvciBhbiBob25lc3QgZXZhbHVhdGlvbiBvZiB0aGUgZmluYWwgcHJlZGljdGlvbiBtb2RlbC4KCi0gVGhlIGdyYXBocyBpbiB0aGUgZmlyc3QgdHdvIEZpc2hlciBkaXNjcmltaW5hbnQgZGltZW5zaW9ucyBzaG93biBvbiB0aGUgcHJldmlvdXMgc2xpZGVzIHNob3VsZCBvbmx5IGJlIHVzZWQgZm9yIGRhdGEgZXhwbG9yYXRpb24uCgotIFdoZW4gdGhlIG9iamVjdGl2ZSBpcyB0byB0cnkgdG8gdW5kZXJzdGFuZCBkaWZmZXJlbmNlcyBiZXR3ZWVuIGdyb3VwcyBpbiBhIGhpZ2ggZGltZW5zaW9uYWwgc3BhY2UsIEZpc2hlciBMREEgaXMgcHJlZmVycmVkIG92ZXIgUENBLgoKCiMgQWNrbm93bGVkZ2VtZW50IHstfQoKLSBPbGl2aWVyIFRoYXMgZm9yIHNoYXJpbmcgaGlzIG1hdGVyaWFscyBvZiBBbmFseXNpcyBvZiBIaWdoIERpbWVuc2lvbmFsIERhdGEgMjAxOS0yMDIwLCB3aGljaCBJIHVzZWQgYXMgdGhlIHN0YXJ0aW5nIHBvaW50IGZvciB0aGlzIGNoYXB0ZXIuCgpgYGB7ciwgY2hpbGQ9Il9zZXNzaW9uLWluZm8uUm1kIn0KYGBgCg==</div>
+<div class="footer">
+    <hr>
+    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
+    CC BY-NC-SA 4.0</a> licence.
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("lda.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
