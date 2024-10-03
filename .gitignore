@@ -5,7 +5,7 @@
 
 # Rmd output
 ./*.html
-*_files/
+./*_files/
 *_cache/
 :w
 # Don't ignore these specific files
