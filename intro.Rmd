@@ -136,9 +136,9 @@ $$
 \left \{
 \begin{array}{lcl}
 y_{ig} &\sim& NB(\mu_{ig}, \phi_{g})\\
-E[y_{ig}] &=& \mu\\
+E[y_{ig}] &=& \mu_{ig}\\
 \log(\mu_{ig}) &=& \eta_{ig}\\
-\eta_{ig} &=& \beta_{0,g} + \sum\limits_{c=1}^C \beta_{c,g} X_{ic} + \beta_{s,g} X_{is} + \sum\limits_{c=1}^C \beta_{c:s,g} X_{ic} X_{is} + \alpha_{ig}
+\eta_{ig} &=& \beta_{0,g} + \sum\limits_{c=2}^C \beta_{c,g} X_{ic} + \beta_{s,g} X_{is} + \sum\limits_{c=2}^C \beta_{c:s,g} X_{ic} X_{is}  + \sum\limits_{e=2}^E \beta_{e,g} X_{ie} + \alpha_{ig}
 \end{array} \right.
 $$
 
@@ -147,6 +147,11 @@ With
 - Cell type $c=2\ldots C$ and $X_{ic}$ is a dummy variable that $X_{ic}=1$ if cell $i$ is of cell type c and $X_{ic}=0$ otherwise. Note that cell type $c=1$ is the reference cell type
 
 - Indicator $X_{is}$ indicates if cell $i$ was stimulated $X_{is}=1$ or not $X_{is}=0$. So the control treatment is the reference treatment.
+
+- Experimental unit $e=2\ldots E$ and $X_{ie}$ a dummy variable that $X_{ie}=1$ if cell $i$ originates of experimental unit (subject) $e$ and $X_{ie}=0$ otherwise. Note that cell type $e=1$ is the reference experimental unit. 
+
+- $\alpha_{ig}$ a cell specific and gene specific normalisation factor
+
 
 Suppose we want to test if the effect of the stimulus (average difference in expression between stimulated and non stimulated cells) is different in cell type c than in the reference cell type 1?
 
@@ -291,11 +296,11 @@ From the linear regression we get
   E[Y \mid \mathbf{x}] = \mathbf{x}^T\boldsymbol{\beta} .
 \]
 
-- Hence, the $\beta$ parameters relate the regressor $\mathbf{x}$ to the mean outcome.
+- Hence, the $\beta$ parameters relate the predictor $\mathbf{x}$ to the mean outcome.
 - If we know the covariate pattern $\mathbf{x}$ we can use the model to
 predict $Y$.
 
-For a model with a single regressor we obtain
+For a model with a single predictor we obtain
 
 \[
 E[Y \mid x] = \beta_0 + \beta_1 x
@@ -317,7 +322,7 @@ and
 
 Note, that the estimator for $\beta_1$ will be exactly same when estimated based on the models with/or without centering.
 
-- The parameter  $\beta_1$ has an interpretation as the average difference in the outcome between subjects that differ with one unit for the regressor.
+- The parameter  $\beta_1$ has an interpretation as the average difference in the outcome between subjects that differ with one unit for the predictor.
 
 - The parameter  $\beta_1$  does not say much about individual outcomes. The residual variance $\sigma^2$ determines how much individual outcomes vary about the mean outcome.
 
@@ -1078,7 +1083,7 @@ the error can be expressed as
     &=& \text{var}[\hat{Y}] +\text{var}[Y^*] +\text{bias}^2
 \end{eqnarray*}
 
- The term $\text{var}[Y]$ (irreducible error) does not depend on the model and may therefore be ignored when $\text{Err}$ is used for comparing prediction models.
+ The term $\text{var}[Y^*]$ (irreducible error) does not depend on the model and may therefore be ignored when $\text{Err}$ is used for comparing prediction models.
 
  ---
 
