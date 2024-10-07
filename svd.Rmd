@@ -1127,7 +1127,7 @@ This follows from (w.l.g. rank($\mathbf{X}$)=$r$)
 
 \begin{eqnarray*}
   \mathbf{X}\mathbf{V}_k
-      &=& \mathbf{UDV}^T\mathbf{V}_k = \mathbf{UD}\begin{pmatrix}
+      &=& \mathbf{U}\boldsymbol{\Delta}\mathbf{V}^T\mathbf{V}_k = \mathbf{U}\boldsymbol{\Delta}\begin{pmatrix}
               \mathbf{v}_1^T \\
         \vdots \\
         \mathbf{v}_r^T
@@ -1135,7 +1135,7 @@ This follows from (w.l.g. rank($\mathbf{X}$)=$r$)
               \begin{pmatrix}
                 \mathbf{v}_1 \ldots \mathbf{v}_k
               \end{pmatrix} \\
-      &=& \mathbf{UDV}^T\mathbf{V}_k = \mathbf{UD}\begin{pmatrix}
+      &=& \mathbf{U}\boldsymbol{\Delta}\mathbf{V}^T\mathbf{V}_k  = \mathbf{U}\boldsymbol{\Delta}\begin{pmatrix}
               1 & 0 & \ldots & 0 \\
               0 & 1 & \ldots & 0 \\
               \vdots & \vdots & \ddots & 0 \\
@@ -1777,7 +1777,6 @@ The objective of Multidimensional Scaling (MDS) is to find a low-dimensional rep
 
 - The squared distance matrix $\mathbf{D}_X$ may be given without knowledge of the original observations (not even the dimensionality), or it may be computed from a given set of $n$ $p$-dimensional data points.
 
-- Note that the distances between points in a $k$-dimensional subspace coincide with the distances between these points in the larger $p$-dimensional space.
 
 Use of MDS:
 
@@ -1932,7 +1931,7 @@ From the geometric interpretation of the SVD we know that
 $\mathbf{Z}_2$ is the orthogonal projection of $\mathbf{X}$ on $\mathbf{V}_2$ the basis spanned by the first two singular values.
 Thus for the $i^\text{th}$ individual we get
 \[
-\mathbf{z}_{2,i}= \mathbf{x}_i \left[\begin{array}{cc}\mathbf{v}_1&\mathbf{v}_2\end{array}\right]
+\mathbf{z}_{2,i}^T= \mathbf{x}_i^T \left[\begin{array}{cc}\mathbf{v}_1&\mathbf{v}_2\end{array}\right]
 \]
 
 We also know that we can approximate $\mathbf{X}$ by $\mathbf{X}_2$ which equals:
@@ -1947,10 +1946,10 @@ We also know that we can approximate $\mathbf{X}$ by $\mathbf{X}_2$ which equals
     \right]
 \end{align}
 
-with $\mathbf{v}_1$ and $\mathbf{v}_2$ the first two right singular vector and $\tilde{\mathbf{v}}_j$ the j$^\text{th}$ column of the matrix $\mathbf{V}_2^T$.
+with $\mathbf{v}_1$ and $\mathbf{v}_2$ the first two right singular vector and $\tilde{\mathbf{v}}_{2,j}$ the j$^\text{th}$ column of the matrix $\mathbf{V}_2^T$.
 
 - This basically shows us that the orthogonal projection of $\mathbf{z}_{2,i}$ for subject/experimental unit i on $\tilde{\mathbf{v}}_{2,j}$ gives us the approximation of the value for  j$^\text{th}$ variable that was observed for the $i^\text{th}$ experimental unit, i.e. $x_{2,ij}$.
-\[x_{2,ij}=\mathbf{z}_{2,i}^T\tilde{\mathbf{v}}_{2,j}\]
+\[x_{2,ij}^T=\mathbf{z}_{2,i}^T\tilde{\mathbf{v}}_{2,j}\]
 
 ### UK  example
 
@@ -2484,14 +2483,14 @@ pIris <- pIris +
     aes(
       x = -irisSvd$v[1,1]*irisSvd$d[1]/sqrt(nIris-1),
       y = -irisSvd$v[2,1]*irisSvd$d[1]/sqrt(nIris-1)+.1,
-      label=paste0("\u03BB","1e1")
+      label=paste0("\u03b4","1e1")
       )
     ) +
   geom_text(
     aes(
       x = irisSvd$v[1,2]*irisSvd$d[2]/sqrt(nIris-1),
       y = irisSvd$v[2,2]*irisSvd$d[2]/sqrt(nIris-1)+.1,
-      label=paste0("\u03BB","2e2")
+      label=paste0("\u03b4","2e2")
       )
     ) +
   xlim(-1, 1) +
@@ -2583,14 +2582,14 @@ pIris2 <- pIris2 +
     aes(
       x = irisSvd2$v[1,1]*irisSvd2$d[1]/sqrt(nIris-1)*1.2,
       y = irisSvd2$v[2,1]*irisSvd2$d[1]/sqrt(nIris-1)*1.2,
-      label=paste0("\u03BB","1e1")
+      label=paste0("\u03b4","1e1")
       )
     ) +
   geom_text(
     aes(
       x = irisSvd2$v[1,2]*irisSvd2$d[2]/sqrt(nIris-1)*1.2,
       y = irisSvd2$v[2,2]*irisSvd2$d[2]/sqrt(nIris-1)*1.2,
-      label=paste0("\u03BB","2e2")
+      label=paste0("\u03b4","2e2")
       )
     ) +
   xlim(-10, 10) +
@@ -2609,9 +2608,9 @@ Directions of maximal variability are affected by the units of the variables.
 
 When to use correlation and when covariance?
 
-- use correlation when columns of $\mathbf{X}$ are expressed in different units
+- Use correlation when columns of $\mathbf{X}$ are expressed in different units
 
-- use covariance when columns of $\mathbf{X}$ are expressed in the same units.
+- Use covariance when columns of $\mathbf{X}$ are expressed in the same units.
 
 There may be exceptions.
 

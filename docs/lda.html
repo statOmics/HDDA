@@ -802,32 +802,30 @@ or (upon using <span class="math inline">\(\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j=
 <span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>  <span class="at">stop =</span> <span class="sc">-</span><span class="dv">50</span>,</span>
 <span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>  <span class="at">maxIte =</span> <span class="dv">25</span>,</span>
 <span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>  <span class="at">trace =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>#&gt; ite:  1  ridge cost:  127.6749  |b|_1:  5.906065 
-#&gt; ite:  2  ridge cost:  120.3439  |b|_1:  5.783807 
-#&gt; ite:  3  ridge cost:  105.8252  |b|_1:  6.121234 
-#&gt; ite:  4  ridge cost:  98.82439  |b|_1:  5.52498 
-#&gt; ite:  5  ridge cost:  92.1252  |b|_1:  5.688817 
-#&gt; ite:  6  ridge cost:  91.60224  |b|_1:  5.437972 
-#&gt; ite:  7  ridge cost:  90.21394  |b|_1:  5.547137 
-#&gt; ite:  8  ridge cost:  88.65835  |b|_1:  5.767928 
-#&gt; ite:  9  ridge cost:  88.45896  |b|_1:  5.783885 
-#&gt; ite:  10  ridge cost:  88.25336  |b|_1:  5.815185 
-#&gt; ite:  11  ridge cost:  88.00995  |b|_1:  5.85882 
-#&gt; ite:  12  ridge cost:  87.89314  |b|_1:  5.880321 
-#&gt; ite:  13  ridge cost:  87.83636  |b|_1:  5.890917 
-#&gt; ite:  14  ridge cost:  87.80856  |b|_1:  5.896139 
-#&gt; ite:  15  ridge cost:  87.79491  |b|_1:  5.898713 
-#&gt; ite:  16  ridge cost:  87.78819  |b|_1:  5.899982 
-#&gt; ite:  17  ridge cost:  87.78488  |b|_1:  5.900607 
-#&gt; ite:  18  ridge cost:  87.78325  |b|_1:  5.900916 
-#&gt; ite:  19  ridge cost:  87.78244  |b|_1:  5.901068 
-#&gt; ite:  20  ridge cost:  87.78205  |b|_1:  5.901142 
-#&gt; ite:  21  ridge cost:  87.78185  |b|_1:  5.901179 
-#&gt; ite:  22  ridge cost:  87.78176  |b|_1:  5.901198 
-#&gt; ite:  23  ridge cost:  87.78171  |b|_1:  5.901207 
-#&gt; ite:  1  ridge cost:  134.7777  |b|_1:  5.379259 
-#&gt; ite:  2  ridge cost:  134.7777  |b|_1:  5.379259 
-#&gt; final update, total ridge cost:  222.5595  |b|_1:  11.28047</code></pre>
+<pre><code>#&gt; ite:  1  ridge cost:  120.1428  |b|_1:  5.426917 
+#&gt; ite:  2  ridge cost:  101.1562  |b|_1:  6.442645 
+#&gt; ite:  3  ridge cost:  96.94273  |b|_1:  5.56823 
+#&gt; ite:  4  ridge cost:  92.28404  |b|_1:  5.556535 
+#&gt; ite:  5  ridge cost:  91.88235  |b|_1:  5.349282 
+#&gt; ite:  6  ridge cost:  89.78352  |b|_1:  5.602199 
+#&gt; ite:  7  ridge cost:  88.65038  |b|_1:  5.761576 
+#&gt; ite:  8  ridge cost:  88.41188  |b|_1:  5.789868 
+#&gt; ite:  9  ridge cost:  88.16565  |b|_1:  5.830735 
+#&gt; ite:  10  ridge cost:  87.96808  |b|_1:  5.866482 
+#&gt; ite:  11  ridge cost:  87.87285  |b|_1:  5.884096 
+#&gt; ite:  12  ridge cost:  87.82644  |b|_1:  5.892778 
+#&gt; ite:  13  ridge cost:  87.80369  |b|_1:  5.897056 
+#&gt; ite:  14  ridge cost:  87.79251  |b|_1:  5.899165 
+#&gt; ite:  15  ridge cost:  87.78701  |b|_1:  5.900205 
+#&gt; ite:  16  ridge cost:  87.7843  |b|_1:  5.900717 
+#&gt; ite:  17  ridge cost:  87.78296  |b|_1:  5.90097 
+#&gt; ite:  18  ridge cost:  87.7823  |b|_1:  5.901094 
+#&gt; ite:  19  ridge cost:  87.78198  |b|_1:  5.901156 
+#&gt; ite:  20  ridge cost:  87.78182  |b|_1:  5.901186 
+#&gt; ite:  21  ridge cost:  87.78174  |b|_1:  5.901201 
+#&gt; ite:  1  ridge cost:  134.7778  |b|_1:  5.379259 
+#&gt; ite:  2  ridge cost:  134.7778  |b|_1:  5.379259 
+#&gt; final update, total ridge cost:  222.5595  |b|_1:  11.28046</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>Vsda <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow=</span><span class="fu">ncol</span>(X2), <span class="at">ncol=</span><span class="dv">2</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>Vsda[breast.slda<span class="sc">$</span>varIndex,] <span class="ot">&lt;-</span> breast.slda<span class="sc">$</span>beta</span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">colnames</span>(Vsda) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Vsda))</span>
@@ -926,7 +924,7 @@ This is probably caused by numerical instability when working with large <span c
 <summary>
 Session info
 </summary>
-<pre><code>#&gt; [1] &quot;2024-10-02 16:19:42 CEST&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;2024-10-07 12:44:41 CEST&quot;</code></pre>
 <pre><code>#&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
 #&gt;  version  R version 4.4.0 RC (2024-04-16 r86468)
@@ -937,7 +935,7 @@ Session info
 #&gt;  collate  en_US.UTF-8
 #&gt;  ctype    en_US.UTF-8
 #&gt;  tz       Europe/Brussels
-#&gt;  date     2024-10-02
+#&gt;  date     2024-10-07
 #&gt;  pandoc   3.1.1 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/ (via rmarkdown)
 #&gt; 
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
