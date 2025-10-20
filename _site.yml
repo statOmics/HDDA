@@ -53,6 +53,7 @@ output_dir: "docs"
 
 output:
   bookdown::html_document2:
+      math_method: mathml
       code_download: true
       df_print: paged
       theme: flatly

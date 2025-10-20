@@ -376,9 +376,9 @@ Feature selection is key, because we don't want to have as many regressors as th
 
 ---
 
-To keep the exposition general so that we allow for a feature selection to have taken place, I use the notation $\mathbf{U}_S$ to denote a matrix with left-singular column vectors $\mathbf{u}_i$, with $i \in {\cal{S}}$ (${\cal{S}}$ an index set referring to the PCs to be included in the regression model).
+To keep the exposition general so that we allow for a feature selection to have taken place, I use the notation $\mathbf{U}_S$ to denote a matrix with left-singular column vectors $\mathbf{u}_i$, with $i \in {\mathcal{S}}$ (${\mathcal{S}}$ an index set referring to the PCs to be included in the regression model).
 
-For example, suppose that a feature selection method has resulted in the selection of PCs 1, 3 and 12 for inclusion in the prediction model, then ${\cal{S}}=\{1,3,12\}$ and
+For example, suppose that a feature selection method has resulted in the selection of PCs 1, 3 and 12 for inclusion in the prediction model, then ${\mathcal{S}}=\{1,3,12\}$ and
 \[
  \mathbf{U}_S = \begin{pmatrix}
   \mathbf{u}_1 & \mathbf{u}_3 & \mathbf{u}_{12}
@@ -652,7 +652,7 @@ with
 
 - $\Vert \mathbf\beta\Vert_1 = \sum\limits_{j=1}^p \vert \beta_j \vert$
 
-- Despite strong similarity between ridge and lasso regression ($L_2$ versus $L_1$ norm in penalty term), there is no analytical solution of the lasso parameter estimate of $\mathbf\beta$.
+- Despite strong similarity between ridge and lasso regression ($L_2$ versus $L_1$ norm in penalty term), there is no analytical solution of the lasso parameter estimator of $\mathbf\beta$.
 
 - Fortunately, computational efficient algorithms have been implemented in statistical software
 
@@ -874,7 +874,7 @@ Prediction is typically used to predict an outcome before it is observed.
 
 Here we provide definitions and we show how the prediction performance of a prediction model can be evaluated from data.
 
-Let ${\cal{T}}=(\mathbf{Y},\mathbf{X})$ denote the training data, from which the prediction model $\hat{Y}(\cdot)$ is build. This building process typically involves feature selection and parameter estimation.
+Let ${\mathcal{T}}=(\mathbf{Y},\mathbf{X})$ denote the training data, from which the prediction model $\hat{Y}(\cdot)$ is build. This building process typically involves feature selection and parameter estimation.
 
  We will use a more general notation for the prediction model: $\hat{m}(\mathbf{x})=\hat{Y}(\mathbf{x})$.
 
@@ -884,13 +884,13 @@ Let ${\cal{T}}=(\mathbf{Y},\mathbf{X})$ denote the training data, from which the
 
  The test or generalisation error for prediction model $\hat{m}(\cdot)$ is given by
   \[
-    \text{Err}_{\cal{T}} = \text{E}_{Y^*,X^*}\left[(\hat{m}(\mathbf{X}^*) - Y^*)^2\mid {\cal{T}}\right]
+    \text{Err}_{\mathcal{T}} = \text{E}_{Y^*,X^*}\left[(\hat{m}(\mathbf{X}^*) - Y^*)^2\mid {\mathcal{T}}\right]
   \]
   where $(Y^*,X^*)$ is independent of the training data.
 
 ---
 
-- Note that the test error is conditional on the training data ${\cal{T}}$.
+- Note that the test error is conditional on the training data ${\mathcal{T}}$.
 - Hence, the test error evaluates the performance of the single model build from the observed training data.
 - This is the ultimate target of the model assessment, because it is exactly this prediction model that will be used in practice and applied to future predictors $\mathbf{X}^*$ to predict $Y^*$.
 - The test error is defined as an average over all such future observations $(Y^*,\mathbf{X}^*)$.
@@ -903,13 +903,13 @@ Sometimes the conditional test error is used:
 
 The conditional test error in $\mathbf{x}$ for prediction model $\hat{m}(\mathbf{x})$ is given by
  \[
-   \text{Err}_{\cal{T}}(\mathbf{x}) = \text{E}_{Y^*}\left[(\hat{m}(\mathbf{x}) - Y^*)^2\mid {\cal{T}}, \mathbf{x}\right]
+   \text{Err}_{\mathcal{T}}(\mathbf{x}) = \text{E}_{Y^*}\left[(\hat{m}(\mathbf{x}) - Y^*)^2\mid {\mathcal{T}}, \mathbf{x}\right]
  \]
  where $Y^*$ is an outcome at predictor $\mathbf{x}$, independent of the training data.
 
  Hence,
  \[
-   \text{Err}_{\cal{T}} = \text{E}_{X^*}\left[\text{Err}_{\cal{T}}(\mathbf{X}^*)\right].
+   \text{Err}_{\mathcal{T}} = \text{E}_{X^*}\left[\text{Err}_{\mathcal{T}}(\mathbf{X}^*)\right].
  \]
 
 A closely related error is the **insample error**.
@@ -920,12 +920,12 @@ A closely related error is the **insample error**.
 
 The insample error for prediction model $\hat{m}(\mathbf{x})$ is given by
  \[
-   \text{Err}_{\text{in} \cal{T}} = \frac{1}{n}\sum_{i=1}^n \text{Err}_{\cal{T}}(\mathbf{x}_i),
+   \text{Err}_{\text{in} \mathcal{T}} = \frac{1}{n}\sum_{i=1}^n \text{Err}_{\mathcal{T}}(\mathbf{x}_i),
  \]
 
 i.e. the insample error is the sample average of the conditional test errors evaluated in the $n$ training dataset predictors $\mathbf{x}_i$.
 
-Since $\text{Err}_{\cal{T}}$ is an average over all $\mathbf{X}$, even over those predictors not observed in the training dataset, it is sometimes referred to as the **outsample error**.
+Since $\text{Err}_{\mathcal{T}}$ is an average over all $\mathbf{X}$, even over those predictors not observed in the training dataset, it is sometimes referred to as the **outsample error**.
 
 ---
 
@@ -941,14 +941,14 @@ We start with introducing the training error rate, which is closely related to t
  \]
  where the $(Y_i,\mathbf{x}_i)$ from the training dataset which is also used for the calculation of $\hat{m}$.
 
-- The training error is an overly optimistic estimate of the test error $\text{Err}_{\cal{T}}$.
+- The training error is an overly optimistic estimate of the test error $\text{Err}_{\mathcal{T}}$.
 
 - The training error will never increases when the model becomes more complex. $\longrightarrow$ cannot be used directly as a model selection criterion.
 
 Indeed, model parameters are often estimated by minimising the training error (cfr. SSE).
 
 - Hence the fitted model adapts to the training data, and
-- training error will be an overly optimistic estimate of the test error $\text{Err}_{\cal{T}}$.
+- training error will be an overly optimistic estimate of the test error $\text{Err}_{\mathcal{T}}$.
 
 ---
 
@@ -956,7 +956,7 @@ It can be shown that the training error is related to the insample test error vi
 
 \[
 \text{E}_\mathbf{Y}
-\left[\text{Err}_{\text{in}{\cal{T}}}\right] = \text{E}_\mathbf{Y}\left[\overline{\text{err}}\right] + \frac{2}{n}\sum_{i=1}^n \text{cov}_\mathbf{Y}\left[\hat{m}(\mathbf{x}_i),Y_i\right],
+\left[\text{Err}_{\text{in}{\mathcal{T}}}\right] = \text{E}_\mathbf{Y}\left[\overline{\text{err}}\right] + \frac{2}{n}\sum_{i=1}^n \text{cov}_\mathbf{Y}\left[\hat{m}(\mathbf{x}_i),Y_i\right],
 \]
 
 Note, that for linear models
@@ -1001,9 +1001,9 @@ with $L_0$ norm $\Vert \boldsymbol{\beta} \Vert_0 = \sum_{j=1}^p \beta_p^0 = p$.
 The test or generalisation error was defined conditionally on the training data. By averaging over the distribution of training datasets, the expected test error arises.
 
 \begin{eqnarray*}
-   \text{E}_{\cal{T}}\left[\text{Err}_{{\cal{T}}}\right]
-     &=& \text{E}_{\cal{T}}\left[\text{E}_{Y^*,X^*}\left[(\hat{m}(\mathbf{X}^*) - Y^*)^2\mid {\cal{T}}\right]\right] \\
-     &=& \text{E}_{Y^*,X^*,{\cal{T}}}\left[(\hat{m}(\mathbf{X}^*) - Y^*)^2\right].
+   \text{E}_{\mathcal{T}}\left[\text{Err}_{{\mathcal{T}}}\right]
+     &=& \text{E}_{\mathcal{T}}\left[\text{E}_{Y^*,X^*}\left[(\hat{m}(\mathbf{X}^*) - Y^*)^2\mid {\mathcal{T}}\right]\right] \\
+     &=& \text{E}_{Y^*,X^*,{\mathcal{T}}}\left[(\hat{m}(\mathbf{X}^*) - Y^*)^2\right].
  \end{eqnarray*}
 
  - The expected test error may not be of direct interest when the goal is to assess the prediction performance of a single prediction model $\hat{m}(\cdot)$.
@@ -1072,8 +1072,8 @@ Since CV and CV$_k$ are estimators, they also show sampling variability. Standar
 
 For the expected conditional test error in $\mathbf{x}$, it holds that
 \begin{eqnarray*}
-  \text{E}_{\cal{T}}\left[\text{Err}_{\cal{T}}(\mathbf{x})\right]
-    &=& \text{E}_{Y^*,{\cal{T}}}\left[(\hat{m}(\mathbf{x})-Y^*)^2 \mid \mathbf{x}\right] \\
+  \text{E}_{\mathcal{T}}\left[\text{Err}_{\mathcal{T}}(\mathbf{x})\right]
+    &=& \text{E}_{Y^*,{\mathcal{T}}}\left[(\hat{m}(\mathbf{x})-Y^*)^2 \mid \mathbf{x}\right] \\
     &=&  \text{var}_{\mathbf{Y}}\left[\hat{Y}(\mathbf{x})\mid \mathbf{x}\right] +(\mu(\mathbf{x})-\mu^*(\mathbf{x}))^2+\text{var}_{Y^*}\left[Y^*\mid \mathbf{x}\right]
 \end{eqnarray*}
 where $\mu(\mathbf{x}) = \text{E}_{\mathbf{Y}}\left[\hat{Y}(\mathbf{x})\mid \mathbf{x}\right] \text{ and } \mu^*(\mathbf{x})=\text{E}_{Y^*}\left[Y^*\mid \mathbf{x}\right]$.
@@ -1296,7 +1296,7 @@ Some examples for continuous $Y$:
   L(Y^*,\hat{m}(\mathbf{x}))
     &=& \vert\hat{m}(\mathbf{x})-Y^*\vert \;\;\text{(absolute error)} \\
    L(Y^*,\hat{m}(\mathbf{x}))
-    &=& 2 \int_{\cal{Y}} f_y(y) \log\frac{f_y(y)}{f_{\hat{m}}(y)} dy \;\;\text{(deviance)}.
+    &=& 2 \int_{\mathcal{Y}} f_y(y) \log\frac{f_y(y)}{f_{\hat{m}}(y)} dy \;\;\text{(deviance)}.
 \end{eqnarray*}
 
 
@@ -1310,7 +1310,7 @@ In the expression of the deviance
 With a given loss function, the errors are defined as follows:
 - Test or generalisation or outsample error
     \[
-      \text{Err}_{\cal{T}} = \text{E}_{Y^*,X^*}\left[L(Y^*,\hat{m}(\mathbf{X}^*))\right]
+      \text{Err}_{\mathcal{T}} = \text{E}_{Y^*,X^*}\left[L(Y^*,\hat{m}(\mathbf{X}^*))\right]
     \]
 
 - Training error
@@ -1456,7 +1456,7 @@ The parameters are typically estimated by maximising the log-likelihood, which i
 
 ## Penalized maximum likelihood
 
-Penalised estimation methods (e.g. lasso and ridge) can als be applied to maximum likelihood, resulting in the **penalised maximum likelihood estimate**.
+Penalised estimation methods (e.g. lasso and ridge) can als be applied to maximum likelihood, resulting in the **penalised maximum likelihood estimator**.
 
 Lasso:
 \[
@@ -1499,7 +1499,7 @@ These criteria can again be estimated via cross validation or via splitting of t
 
 Sensitivity is the probability to correctly predict a positive outcome:
 \[
-\text{sens}(\pi,c)=\text{P}_{X^*}\left[\hat\pi(\mathbf{X}^*)>c \mid Y^*=1 \mid {\cal{T}}\right].
+\text{sens}(\pi,c)=\text{P}_{X^*}\left[\hat\pi(\mathbf{X}^*)>c \mid Y^*=1 \mid {\mathcal{T}}\right].
 \]
 
 It is also known as the true positive rate (TPR).
@@ -1508,7 +1508,7 @@ It is also known as the true positive rate (TPR).
 
 Specificity is the probability to correctly predict a negative outcome:
 \[
-\text{spec}(\pi,c)=\text{P}_{X^*}\left[\hat\pi(\mathbf{X}^*)\leq c \mid Y^*=0 \mid {\cal{T}}\right].
+\text{spec}(\pi,c)=\text{P}_{X^*}\left[\hat\pi(\mathbf{X}^*)\leq c \mid Y^*=0 \mid {\mathcal{T}}\right].
 \]
 
 It is also known as the true negative rate (TNR).
@@ -1519,8 +1519,8 @@ It is also known as the true negative rate (TNR).
 
 The misclassification error is the probability to incorrectly predict an outcome:
 \begin{eqnarray*}
-\text{mce}(\pi,c) &=&\text{P}_{X^*,Y^*}\left[\hat\pi(\mathbf{X})\leq c \text{ and } Y^*=1 \mid {\cal{T}}\right] \\
-&  & + \text{P}_{X^*,Y^*}\left[\hat\pi(\mathbf{X})> c \text{ and } Y^*=0 \mid {\cal{T}}\right].
+\text{mce}(\pi,c) &=&\text{P}_{X^*,Y^*}\left[\hat\pi(\mathbf{X})\leq c \text{ and } Y^*=1 \mid {\mathcal{T}}\right] \\
+&  & + \text{P}_{X^*,Y^*}\left[\hat\pi(\mathbf{X})> c \text{ and } Y^*=0 \mid {\mathcal{T}}\right].
 \end{eqnarray*}
 
 Note that in the definitions of sensitivity, specificity and the misclassification error, the probabilities refer to the distribution of the  $(\mathbf{X}^*,Y^*)$, which is independent of the training data, conditional on the training data. This is in line with the test or generalisation error. The misclassification error is actually the test error when a 0/1 loss function is used. Just as before, the sensitivity, specificity and the misclassification error can also be averaged over the distribution of the training data set, which is in line with the expected test error which has been discussed earlier.
