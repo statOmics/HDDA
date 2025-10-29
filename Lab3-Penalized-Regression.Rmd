@@ -2,7 +2,7 @@
 title: "Lab 3: Penalized regression techniques for high-dimensional data"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait"
-date: "04 Nov 2021 <br/> (Last updated: 2021-11-26)"
+date: "04 Nov 2021 <br/> (Last updated: 2025-10-29)"
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -208,28 +208,28 @@ the estimating function so $({\mathbf{X}}^T{\mathbf{X}})$
 becomes full rank again and is invertible. Two different penalty
 terms or regularization methods can be used:
 
-1. L1 regularization: this regularization adds a term ${\lambda_1\|\boldsymbol{\beta}\|_{1}}$ to the estimating equation.
+1. L1 regularization: this regularization adds a term ${\lambda\|\boldsymbol{\beta}\|_{1}}$ to the least squares criterion.
 The term will add a penalty based on the *absolute value* of the
-magnitude of the coefficients. This is used by the __lasso regression__
+magnitude of the coefficients. This is used by __lasso regression__.
 
 $$
- \hat{\boldsymbol{\beta}}^{\text{lasso}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_1\|\boldsymbol{\beta}\|_{1}}}\displaystyle)
+ \hat{\boldsymbol{\beta}}^{\text{lasso}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda\|\boldsymbol{\beta}\|_{1}}}\displaystyle)
 $$
 
-2. L2 regularization: this regularization adds a term ${\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}$ to the estimating equation.
+2. L2 regularization: this regularization adds a term ${\lambda\|\boldsymbol{\beta}\|_{2}^{2}}$ to the least squares criterion.
 The penalty term is based on the square of the magnitude of the
 coefficients. This is used by __ridge regression__.
 
 $$
- \hat{\boldsymbol{\beta}}^{\text{ridge}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
+ \hat{\boldsymbol{\beta}}^{\text{ridge}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
 $$
 
-Elastic nets combine both types of regularizations. It does so by
-introducing a $\alpha$ mixing parameter that essentially combines
+Elastic net regression combines both types of regularization. It does so by
+introducing a mixing parameter $\alpha \in [0, 1]$ that essentially combines
 the L1 and L2 norms in a weighted average.
 
 $$
- \hat{\boldsymbol{\beta}}^{\text{el.net}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^{T}(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\alpha \lambda_1\|\boldsymbol{\beta}\|_{1}}+ {(1 - \alpha)\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
+ \hat{\boldsymbol{\beta}}^{\text{el.net}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^{T}(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\alpha \lambda\|\boldsymbol{\beta}\|_{1}}+ {(1 - \alpha)\lambda\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
 $$
 
 
@@ -375,7 +375,7 @@ Note that for higher values $\lambda$, the coefficient estimates become closer t
 showing the *shrinkage* effect of the ridge penalty.
 
 Similar to the PC regression example, we chose $\lambda=2$ and the grid rather
-arbitrarily. We will see subsequently, how to choose $\lambda$ that minimizes the
+arbitrarily. We will see subsequently how to choose the $\lambda$ that minimizes the
 prediction error.
 
 
