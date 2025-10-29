@@ -350,7 +350,7 @@ models with the same input data but different hyperparameters. For computational
 efficieny, it is recommended to specify the grid as a decreasing sequence.
 
 ```{r ridge-regression-grid-search}
-grid <- seq(1000, 1, by = -10) # 1000 to 1 with steps of 10
+grid <- seq(1000, 1, by = -9) # 1000 to 1 with steps of 9
 ridge_mod_grid <- glmnet(X, Y, alpha = 0, lambda = grid)
 
 # Plot the coefficients against the (natural) LOG lambda sequence!
