@@ -350,7 +350,7 @@ models with the same input data but different hyperparameters. For computational
 efficieny, it is recommended to specify the grid as a decreasing sequence.
 
 ```{r ridge-regression-grid-search}
-grid <- seq(1000, 1, by = 10) # 1000 to 1 with steps of 10
+grid <- seq(1000, 1, by = -10) # 1000 to 1 with steps of 10
 ridge_mod_grid <- glmnet(X, Y, alpha = 0, lambda = grid)
 
 # Plot the coefficients against the (natural) LOG lambda sequence!
@@ -551,8 +551,11 @@ The function also allows plotting the result by specifying `plot = TRUE`.
 optimal_ncomp <- selectNcomp(pcr_cv, method = "onesigma", plot = TRUE)
 ```
 
-This outcome shows us that the optimal number of components for our model is
-`r optimal_ncomp`.
+The optimal number of components for our model is `r optimal_ncomp`.
+
+```{r pcr-optimal-ncomp-print}
+optimal_ncomp
+```
 
 
 ## Validation on test data
@@ -629,7 +632,7 @@ lasso_cv$lambda.min
 lasso_cv$lambda.1se
 ```
 
-We will (rather arbitrarily) use `lambda.min` here to fit the final model and generate predictions on the test data.
+We will use `lambda.min` here to fit the final model and generate predictions on the test data.
 Note that we don't actually have to redo the fitting, we can just use our existing
 `lasso_cv` object, which already contains the fitted models for a range of `lambda` values.
 We can use the `predict` function and specify the `s` argument (which confusingly sets `lambda` in this case)  to make predictions on the test data.
@@ -654,6 +657,20 @@ ridge_cv
 plot(ridge_cv)
 ```
 
+Since the MSE is minimized at the smallest considered $\lambda =$ `r ridge_cv$lambda.min`,
+we should extend the grid to include smaller values than those that were chosen by the
+default setting of `cv.glmnet()`. Intuitively, this is because the MSE might continue to
+decrease beyond the left boundary of the plot.
+
+```{r ridge-cv-alt}
+set.seed(123)
+ridge_cv <- cv.glmnet(trainX, trainY, alpha = 0,
+                      nfolds = K, type.measure = "mse",
+                      lambda = exp(seq(7, -2, by = -0.1)))
+ridge_cv
+plot(ridge_cv)
+```
+
 Note that we can extract the fitted ridge regression object from the CV result
 and make the coefficient profile plot as before.
 
@@ -673,7 +690,7 @@ ridge_cv$lambda.min
 ridge_cv$lambda.1se
 ```
 
-We will (rather arbitrarily) use `lambda.min` here to fit the final model and generate predictions on the test data.
+We will use `lambda.min` here to fit the final model and generate predictions on the test data.
 Note that we don't actually have to redo the fitting, we can just use our existing
 `ridge_cv` object, which already contains the fitted models for a range of `lambda` values.
 We can use the `predict` function and specify the `s` argument (which confusingly sets `lambda` in this case)  to make predictions on the test data.
