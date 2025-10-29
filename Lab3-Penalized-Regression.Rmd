@@ -2,7 +2,7 @@
 title: "Lab 3: Penalized regression techniques for high-dimensional data"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait"
-date: "04 Nov 2021 <br/> (Last updated: 2021-11-26)"
+date: "04 Nov 2021 <br/> (Last updated: 2025-10-29)"
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -208,28 +208,28 @@ the estimating function so $({\mathbf{X}}^T{\mathbf{X}})$
 becomes full rank again and is invertible. Two different penalty
 terms or regularization methods can be used:
 
-1. L1 regularization: this regularization adds a term ${\lambda_1\|\boldsymbol{\beta}\|_{1}}$ to the estimating equation.
+1. L1 regularization: this regularization adds a term ${\lambda\|\boldsymbol{\beta}\|_{1}}$ to the least squares criterion.
 The term will add a penalty based on the *absolute value* of the
-magnitude of the coefficients. This is used by the __lasso regression__
+magnitude of the coefficients. This is used by __lasso regression__.
 
 $$
- \hat{\boldsymbol{\beta}}^{\text{lasso}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_1\|\boldsymbol{\beta}\|_{1}}}\displaystyle)
+ \hat{\boldsymbol{\beta}}^{\text{lasso}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda\|\boldsymbol{\beta}\|_{1}}}\displaystyle)
 $$
 
-2. L2 regularization: this regularization adds a term ${\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}$ to the estimating equation.
+2. L2 regularization: this regularization adds a term ${\lambda\|\boldsymbol{\beta}\|_{2}^{2}}$ to the least squares criterion.
 The penalty term is based on the square of the magnitude of the
 coefficients. This is used by __ridge regression__.
 
 $$
- \hat{\boldsymbol{\beta}}^{\text{ridge}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
+ \hat{\boldsymbol{\beta}}^{\text{ridge}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\lambda\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
 $$
 
-Elastic nets combine both types of regularizations. It does so by
-introducing a $\alpha$ mixing parameter that essentially combines
+Elastic net regression combines both types of regularization. It does so by
+introducing a mixing parameter $\alpha \in [0, 1]$ that essentially combines
 the L1 and L2 norms in a weighted average.
 
 $$
- \hat{\boldsymbol{\beta}}^{\text{el.net}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^{T}(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\alpha \lambda_1\|\boldsymbol{\beta}\|_{1}}+ {(1 - \alpha)\lambda_2\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
+ \hat{\boldsymbol{\beta}}^{\text{el.net}} = \text{argmin}_{\boldsymbol{\beta}}\displaystyle({(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})^{T}(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})+{\alpha \lambda\|\boldsymbol{\beta}\|_{1}}+ {(1 - \alpha)\lambda\|\boldsymbol{\beta}\|_{2}^{2}}}\displaystyle)
 $$
 
 
@@ -346,10 +346,11 @@ the coefficients change with different values for $\lambda$.
 We will create a *grid* of $\lambda$ values, i.e. a range of values that will be
 used as input for the `glmnet` function. Note that this function can take a
 vector of values as input for the `lambda` argument, allowing to fit multiple
-models with the same input data but different hyperparameters.
+models with the same input data but different hyperparameters. For computational
+efficieny, it is recommended to specify the grid as a decreasing sequence.
 
 ```{r ridge-regression-grid-search}
-grid <- seq(1, 1000, by = 10)  # 1 to 1000 with steps of 10
+grid <- seq(1000, 1, by = -9) # 1000 to 1 with steps of 9
 ridge_mod_grid <- glmnet(X, Y, alpha = 0, lambda = grid)
 
 # Plot the coefficients against the (natural) LOG lambda sequence!
@@ -375,7 +376,7 @@ Note that for higher values $\lambda$, the coefficient estimates become closer t
 showing the *shrinkage* effect of the ridge penalty.
 
 Similar to the PC regression example, we chose $\lambda=2$ and the grid rather
-arbitrarily. We will see subsequently, how to choose $\lambda$ that minimizes the
+arbitrarily. We will see subsequently how to choose the $\lambda$ that minimizes the
 prediction error.
 
 
@@ -390,14 +391,11 @@ the `glmnet()` function. However, this time we use the argument
 
 ## Tasks {-}
 
-#### 1. Verify that setting `alpha = 1` indeed corresponds to lasso regression using the equations from [Section 3](#elnet-theory). {-}
+#### 1. Perform a lasso regression with the `glmnet` function with `Y` the response and `X` the predictors. {-}
 
-
-#### 2. Perform a lasso regression with the `glmnet` function with `Y` the response and `X` the predictors. {-}
-
-You do not have to provide a custom sequence of $\lambda$ (`lambda`) values here
-but can instead rely on `glmnet`'s default behaviour of choosing the grid of
-$\lambda$ values based on the data (see `?glmnet` for more details).
+You can either provide a custom descending sequence of $\lambda$ (`lambda`)
+values or instead rely on `glmnet`'s default behaviour of choosing the grid 
+of $\lambda$ values based on the data (see `?glmnet` for more details).
 
 <details><summary>Solution</summary>
 ```{r glmnet-lasso-regression}
@@ -408,7 +406,7 @@ lasso_model <- glmnet(X, Y, alpha = 1)
 </details>
 
 
-#### 3. Make the coefficient profile plot and interpret. {-}
+#### 2. Make the coefficient profile plot and interpret. {-}
 
 <details><summary>Solution</summary>
 
@@ -553,8 +551,11 @@ The function also allows plotting the result by specifying `plot = TRUE`.
 optimal_ncomp <- selectNcomp(pcr_cv, method = "onesigma", plot = TRUE)
 ```
 
-This outcome shows us that the optimal number of components for our model is
-`r optimal_ncomp`.
+The optimal number of components for our model is `r optimal_ncomp`.
+
+```{r pcr-optimal-ncomp-print}
+optimal_ncomp
+```
 
 
 ## Validation on test data
@@ -631,7 +632,7 @@ lasso_cv$lambda.min
 lasso_cv$lambda.1se
 ```
 
-We will (rather arbitrarily) use `lambda.min` here to fit the final model and generate predictions on the test data.
+We will use `lambda.min` here to fit the final model and generate predictions on the test data.
 Note that we don't actually have to redo the fitting, we can just use our existing
 `lasso_cv` object, which already contains the fitted models for a range of `lambda` values.
 We can use the `predict` function and specify the `s` argument (which confusingly sets `lambda` in this case)  to make predictions on the test data.
@@ -656,6 +657,20 @@ ridge_cv
 plot(ridge_cv)
 ```
 
+Since the MSE is minimized at the smallest considered $\lambda =$ `r ridge_cv$lambda.min`,
+we should extend the grid to include smaller values than those that were chosen by the
+default setting of `cv.glmnet()`. Intuitively, this is because the MSE might continue to
+decrease beyond the left boundary of the plot.
+
+```{r ridge-cv-alt}
+set.seed(123)
+ridge_cv <- cv.glmnet(trainX, trainY, alpha = 0,
+                      nfolds = K, type.measure = "mse",
+                      lambda = exp(seq(7, -2, by = -0.1)))
+ridge_cv
+plot(ridge_cv)
+```
+
 Note that we can extract the fitted ridge regression object from the CV result
 and make the coefficient profile plot as before.
 
@@ -675,7 +690,7 @@ ridge_cv$lambda.min
 ridge_cv$lambda.1se
 ```
 
-We will (rather arbitrarily) use `lambda.min` here to fit the final model and generate predictions on the test data.
+We will use `lambda.min` here to fit the final model and generate predictions on the test data.
 Note that we don't actually have to redo the fitting, we can just use our existing
 `ridge_cv` object, which already contains the fitted models for a range of `lambda` values.
 We can use the `predict` function and specify the `s` argument (which confusingly sets `lambda` in this case)  to make predictions on the test data.
