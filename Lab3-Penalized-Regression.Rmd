@@ -536,7 +536,14 @@ summary(pcr_cv)
 ```
 
 We can plot the *root mean squared error of prediction* (RMSEP) for each number
-of components as follows.
+of components as follows.^[Note: The solid black line indicates the cross-validated RMSEP,
+while the dashed red line adjusts the RMSEP estimate downwards to account for the fact
+that the PCR is trained on only $\frac{k-1}{k} n_{\text{train}} = 76$ instead of the full
+$n_{\text{train}} = 80$ observations. See Equation (5) of
+[*Mevik and Cederkvist, 2005*](https://analyticalsciencejournals.onlinelibrary.wiley.com/doi/abs/10.1002/cem.887)
+for the definition of the adjustment. If $k$ is relatively large, such as our $k = 20$,
+the adjustment does not have a large impact and the solid and dashed lines are quite
+similar.]
 
 ```{r pcr_cv-plot}
 plot(pcr_cv, plottype = "validation")
