@@ -1,8 +1,8 @@
 ---
 title: "Lab 3: Penalized regression techniques for high-dimensional data"
 subtitle: "High Dimensional Data Analysis practicals"
-author: "Adapted by Milan Malfait"
-date: "04 Nov 2021 <br/> (Last updated: 2025-10-29)"
+author: "Adapted by Milan Malfait and Leo Fuhrhop"
+date: "04 Nov 2021 <br/> (Last updated: 2025-10-30)"
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -38,10 +38,10 @@ library(boot)
 
 **In this lab session we will look at the following topics**
 
-  - Demonstrate why low dimensional prediction modeling fails in high dimension.
-  - Carry out Principal Component Regression (PCR)
-  - Use `glmnet()` to carry out ridge regression, lasso and elastic net
-  - Evaluation of these prediction models
+  - Demonstrate why low-dimensional prediction modeling fails in high-dimensional settings.
+  - Carry out Principal Component Regression (PCR).
+  - Use `glmnet()` to carry out ridge regression, lasso and elastic net.
+  - Evaluate these trained prediction models.
 
 
 ## The dataset
@@ -93,10 +93,10 @@ We begin by assuming that the predictors and the outcome have been
 centered so that the intercept is 0.
 We are presented with the usual regression model:
 
-$$
-Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
-\text{ Or } \mathbf{Y}={\mathbf{X}}{\boldsymbol{\beta}} +{\boldsymbol{\epsilon}}
-$$
+\begin{align*}
+&Y_i=\beta_i X_{i1}+\dots+\beta_pX_{ip}+\epsilon_i \\
+&\text{ Or } \mathbf{Y}={\mathbf{X}}{\boldsymbol{\beta}} +{\boldsymbol{\epsilon}}
+\end{align*}
 
 Our goal is to get the least squares estimator of
 ${\boldsymbol{\beta}}$, given by
