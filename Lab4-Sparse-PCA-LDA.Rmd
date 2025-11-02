@@ -106,7 +106,7 @@ Y <- as.factor(Alon1999[, 1])
 
 Use these objects to solve the following exercises.
 
-## Exercises {-}
+## Tasks {-}
 
 ##### 1. Perform a SVD on `X` and store the scores of the PCs. {-}
 
@@ -217,7 +217,7 @@ __Interpretation:__ using only the first 2 PCs does not seem to separate the tum
 </details>
 
 
-#### 4. Plot histograms of the loadings of the first and second PCs. Interpret. {-}
+##### 4. Plot histograms of the loadings of the first and second PCs. Interpret. {-}
 
 <details><summary>Solution</summary>
 
@@ -278,100 +278,70 @@ From these histograms it should be clear that only a minor fraction of the genes
 
 </details>
 
+We know that the first PC $\mathbf{Z_1}$ is given by
+$$
+\mathbf{Z_1}=\mathbf{X} \mathbf{V_1} \, ,
+$$
 
-#### 5. We know that the first PC $\mathbf{Z_1}$, is given by {-}
+where $\mathbf{V_1}$ are the loadings of the first PC. By setting $\boldsymbol{\beta} = \mathbf{V_1}$ and $Y = Z_1$, we can express this as the regression
 
-  $$
-  \mathbf{Z_1}=\mathbf{X} \mathbf{V_1}
-  $$
+$$
+\mathbf{Y}=\mathbf{X}\boldsymbol{\beta} \, .
+$$
 
-  Where $\mathbf{V_1}$ are the loadings of the first PC. If we put this in regression notation, we get
+Recall that the ridge regression solution for $\boldsymbol{\beta}$ is given by
 
-  $$
-  \mathbf{Y}=\mathbf{X}\boldsymbol{\beta}
-  $$
+$$
+\boldsymbol{\beta}_{\text{ridge}} = (\mathbf{X^TX}+\lambda\mathbf{I})^{-1}\mathbf{X}^T\mathbf Y \, .
+$$
 
-  where $\boldsymbol{\beta}$ now represent the $\mathbf{V_1}$ loadings, and
-  $\mathbf{Y}$ is $\mathbf{Z_1}$.
-
-  Recall that the ridge regression solution for $\boldsymbol{\beta}$ is given by
-
-  $$
-  \boldsymbol{\beta}_{\text{ridge}}
-    = (\mathbf{X^TX}+\lambda\mathbf{I})^{-1}\mathbf{X}^T\mathbf Y
-  $$
-
-  __Question:__ Replace $\mathbf{Y}$ with $\mathbf{Z_1}$ and verify in
-  `R` that
-
+##### 5. Replace $\mathbf{Y}$ with $\mathbf{Z_1}$ and verify numerically in `R` that  {-}
   $$
   \mathbf V_1 =
-    \frac{\boldsymbol\beta_{\text{ridge}}}{\|\boldsymbol\beta_{\text{ridge}}\|_2}
+    \frac{\boldsymbol\beta_{\text{ridge}}}{\|\boldsymbol\beta_{\text{ridge}}\|_2} \, .
   $$
 
-  for any $\lambda > 0$ of your choice.
-  Remember that
-  $\|\boldsymbol\beta_{\text{ridge}}\|_2 = \sqrt{\sum_{j=1}^p \beta_j^2}$
+You may use any $\lambda > 0$ of your choice. Remember that $\|\boldsymbol\beta_{\text{ridge}}\|_2 = \sqrt{\boldsymbol\beta_{\text{ridge}}^T \boldsymbol\beta_{\text{ridge}}} = \sqrt{\sum_{j=1}^p \beta_j^2}$.
 
 <details><summary>Solution</summary>
 
 ```{r, cache=TRUE}
 p <- dim(X)[2]
-
-# Let's take a ridiculously large lambda: 200
-tXX_lambda_I <- t(X) %*% X + 200 * diag(p)
-
-## This might take a while to calculate
+tXX_lambda_I <- t(X) %*% X + 2 * diag(p)
+# This might take a while to calculate
 beta_ridge <- solve(tXX_lambda_I) %*% t(X) %*% Z[, 1]
-
-#||beta_ridge||_2
 mag_beta_ridge <- sqrt(sum(beta_ridge^2))
+max(abs(V[, 1] - beta_ridge / mag_beta_ridge))
+# alternative for V[, 1]: pca_x$rotation[, 1]
 ```
 
-For comparison, let's plot
+For a visual comparison, we can also plot
 $\boldsymbol\beta_{\text{ridge}} / \|\boldsymbol\beta_{\text{ridge}}\|_2$
-against the PC1 loadings $\mathbf V_1$.
+against the loadings $\mathbf V_1$.
 
 ```{r beta_ridge-vs-V1-plot}
 par(mfrow = c(1, 1))
 
-# Plot against the loadings
-plot(svd_X$v[, 1], beta_ridge / mag_beta_ridge,
+plot(V[, 1], beta_ridge / mag_beta_ridge,
   xlab = expression("V"[1]),
   ylab = expression(beta["ridge"] / paste("||", beta, "||")[2]),
   pch = 19
 )
-# Or just simply take the difference between them
-max(abs(svd_X$v[, 1] - beta_ridge / mag_beta_ridge))
 ```
 
 </details>
 
-  Then you've proven that the loadings of the PCs can be computed from the
-  ridge regression coefficients.
+You have now seen that the loadings of the PCs can be computed from ridge regression coefficients.
 
-  We can now move on to sparse PCA, where we use penalised regression to set some of the loadings ($\boldsymbol{\beta}$s) to zero.
+If we introduce an additional $L_1$ penalty on the $\boldsymbol \beta$ coefficients, we move from ridge regression to elastic net regression. Recall that elastic net regression minimizes the criterion
+$$
+\|\mathbf Y-\mathbf{X}\boldsymbol \beta\|^2_2 +  \alpha \lambda\|\boldsymbol \beta\|_1 + (1 - \alpha) \lambda\|\boldsymbol \beta\|^2_2
+$$
+for $\alpha \in [0,1]$. Whenever $\alpha > 0$, a sufficiently large $\lambda$ forces some of the coefficients in $\boldsymbol\beta$ to become zero.
 
-#### 6. We have seen elastic net type penalties. If we call the loadings of the first PC as $\boldsymbol{\beta}$ and denote PC1 as $\mathbf{Y}$, we saw that $\boldsymbol{\beta}$ can be derived by minimising the SSE: {-}
+Regressing the principal component $Z_1$ on $X$ therefore sets some of the loadings $V_1$ to zero. This means that elastic net can be used to implement sparse PCA. 
 
-  $$
-  \text{SSE}=\|\mathbf Y-\mathbf{X}\boldsymbol \beta\|^2_2+\lambda\|\boldsymbol \beta\|^2_2 (\text{ for any } \lambda>0).
-  $$
-
-  Note that this equality holds for any positive $\lambda$. So we can't penalise the $\boldsymbol\beta$s not being zero by choosing a different $\lambda$.
-  Remember that for ridge regression, the $\beta$'s only become 0 for $\lambda = \infty$.
-  Fortunately we have other tools.
-
-  In addition to the $L_2$ penalization, we can use the $L_1$ penalization of Lasso. This allows us to force some of the $\boldsymbol\beta$s to become zero. The new SSE will be of the form:
-
-  $$
-  \text{SSE}=\|\mathbf Y-\mathbf{X}\boldsymbol \beta\|^2_2+\lambda_2\|\boldsymbol \beta\|^2_2 +\lambda_1\|\boldsymbol \beta\|_1.
-  $$
-
-  This is exactly the elastic net SSE, and $\lambda_1$ is the Lasso type penalty that sets loadings to zero.
-
-  Now use the `glmnet` and `cv.glmnet` functions to select an appropriate number of non-zero loadings for the first and second PCs.
-  Use `alpha = 0.5` in your elastic net models and use `Z1` and `Z2` as the response variables (you should fit 2 separate models).
+##### 6. Fit two elastic net models: one for $Z_1$ and one for $Z_2$. Use `alpha = 0.5`. Select an appropriate number of non-zero loadings through a sensible choice of $\lambda$.
 
 <details><summary>Solution</summary>
 
@@ -379,14 +349,12 @@ max(abs(svd_X$v[, 1] - beta_ridge / mag_beta_ridge))
 par(mfrow = c(1, 2))
 # For PC1
 set.seed(45)
-fit_loadings1 <- cv.glmnet(X, Z[, 1],
-  alpha = 0.5, nfolds = 5
-)
+fit_loadings1 <- cv.glmnet(X, Z[, 1], alpha = 0.5)
 plot(fit_loadings1, main = "PC1")
 
 # For PC2
 set.seed(45)
-fit_loadings2 <- cv.glmnet(X, Z[, 2], alpha = 0.5, nfolds = 5)
+fit_loadings2 <- cv.glmnet(X, Z[, 2], alpha = 0.5)
 plot(fit_loadings2, main = "PC2")
 ```
 
