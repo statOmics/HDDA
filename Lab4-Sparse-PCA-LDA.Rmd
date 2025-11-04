@@ -60,6 +60,7 @@ library(MASS)
 library(HDDAData)
 library(ggplot2)
 library(gridExtra)
+library(ggpubr)
 ```
 
 
@@ -341,97 +342,136 @@ for $\alpha \in [0,1]$. Whenever $\alpha > 0$, a sufficiently large $\lambda$ fo
 
 Regressing the principal component $Z_1$ on $X$ therefore sets some of the loadings $V_1$ to zero. This means that elastic net can be used to implement sparse PCA. 
 
-##### 6. Fit two elastic net models: one for $Z_1$ and one for $Z_2$. Use `alpha = 0.5`. Select an appropriate number of non-zero loadings through a sensible choice of $\lambda$.
+##### 6. Fit an elastic net model for $Z_1$. Use `alpha = 0.5` and `lambda = c(11, 1.75, 0.3)`. Determine the number of non-zero loadings for each choice of `lambda`. Repeat the same steps for $Z_2$, but use `lambda = c(5, 1.5, 0.15)`. {-}
 
 <details><summary>Solution</summary>
 
-```{r PC-cv_glmnet}
-par(mfrow = c(1, 2))
-# For PC1
-set.seed(45)
-fit_loadings1 <- cv.glmnet(X, Z[, 1], alpha = 0.5)
-plot(fit_loadings1, main = "PC1")
+```{r PC-glmnet}
+# Helper function to determine number of non-zero loadings
+num_loadings <- function(fit) {
+  lambdas <- fit$lambda
+  num_nonzero <- NULL
+  for (lambda in lambdas) {
+    num_nonzero <- c(
+      num_nonzero, sum(as.vector(coef(fit, s = lambda))[-1] != 0)
+    )
+  }
+  return(data.frame(lambdas, num_nonzero))
+}
 
-# For PC2
-set.seed(45)
-fit_loadings2 <- cv.glmnet(X, Z[, 2], alpha = 0.5)
-plot(fit_loadings2, main = "PC2")
+# Elastic net for Z_1
+fit_loadings1 <- glmnet(X, Z[, 1], alpha = 0.5, lambda = c(11, 1.75, 0.3))
+num_loadings(fit_loadings1)
+
+# Elastic net for Z_2
+fit_loadings2 <- glmnet(X, Z[, 2], alpha = 0.5, lambda = c(5, 1.5, 0.15))
+num_loadings(fit_loadings2)
 ```
-
-To see how many features are important for each fit, we can make coefficient profile plots.
-Note that the actual `glmnet` fit objects are included in the `cv.glmnet` objects under `$glmnet.fit`.
-
-I added vertical dashed lines at `lambda.min` and `lambda.1se`.
-
-```{r PC-glmnet-coefficient-plots, fig.asp = 1.2}
-par(mfrow = c(2, 1))
-plot(fit_loadings1$glmnet.fit, main = "PC1", xvar = "lambda")
-abline(v = log(fit_loadings1$lambda.min), lty = 3)
-abline(v = log(fit_loadings1$lambda.1se), lty = 3)
-plot(fit_loadings2$glmnet.fit, main = "PC2", xvar = "lambda")
-abline(v = log(fit_loadings2$lambda.min), lty = 3)
-abline(v = log(fit_loadings2$lambda.1se), lty = 3)
-```
-
-To get the exact number of non-zero coefficients for `lambda.min` and `lambda.1se`, just print the `cv.glmnet` objects.
-```{r}
-fit_loadings1
-fit_loadings2
-```
-
-__Interpretation:__ for PC1, we see that around 90 to 100 genes are most important, based on the range of $\lambda$ (`lambda`) values between `lambda.min` and `lambda.1se`.
-Similarly, for PC2 we get around 65 - 80 genes.
-With this information, we can now choose one of the `lambda` values and construct PCs that will have non-zero loadings for only a few genes.
 
 </details>
 
+##### 7. Plot the resulting sparse first and second PCs and use different colors for tumor / normal tissue. How well do these new PCs separate the response classes? {-}
 
-#### 7. Plot your newly derived first and second PCs and use different colors for the tumor and normal tissues. How well do these new PCs separate the response classes? Compare this to the plot in exercise 3. Formulate a conclusion based on the two graphs. {-}
-
-Use `lambda.1se` as your choice for $\lambda$.
-You can extract the coefficients ($\beta$'s) from the `cv.glmnet` objects using the `coef` function, set the `s` argument to the chosen $\lambda$.
-This will return a *sparse matrix* by default, so you might want to use `as.vector` to convert to a more friendly format.
+You may reuse the code from task 3 to produce 3 new plots: one plot for $(\lambda_{\text{PC1}} = 11, \lambda_{\text{PC2}} = 5)$, one for $(\lambda_{\text{PC1}} = 1.75, \lambda_{\text{PC2}} = 1.5)$, and one for $(\lambda_{\text{PC1}} = 0.3, \lambda_{\text{PC2}} = 0.15)$. Compare this to the plot for the original PCs from task 3 and interpret.
 
 <details><summary>Solution</summary>
 
+Using base `R` plotting:
+
 ```{r sparse-PCA-plots, fig.width = 9}
-sparse_loadings1 <- as.vector(coef(fit_loadings1, s = fit_loadings1$lambda.1se))
-sparse_loadings2 <- as.vector(coef(fit_loadings2, s = fit_loadings2$lambda.1se))
+# Helper function for scatterplot between two sparse PCs
+plot_sparse_PCA <- function(loadings1, loadings2) {
+  nonzero1 <- sum(loadings1[-1] != 0)
+  nonzero2 <- sum(loadings2[-1] != 0)
 
-## How many non-zero loadings do we have (excluding the intercept)?
-(non_zero1 <- sum(abs(sparse_loadings1[-1]) > 0))
-(non_zero2 <- sum(abs(sparse_loadings2[-1]) > 0))
+  SPC1 <- X %*% loadings1[-1]
+  SPC2 <- X %*% loadings2[-1]
 
-SPC1 <- X %*% sparse_loadings1[-1] # without the intercept
-SPC2 <- X %*% sparse_loadings2[-1] # without the intercept
+  plot(
+    SPC1, SPC2, col = cols[Y], xlab = "SPC1", ylab = "SPC2", pch = 16,
+    ylim = c(-35, 32), xlim = c(-50, 85),
+    main = paste(nonzero1, "genes for SPC1 \n and", nonzero2, "genes for SPC2")
+  )
+  legend(-45, -25,
+    legend = c("Normal tissue", "Tumor tissue"), bty = "n",
+    col = cols, pch = c(16, 16), cex = 1
+  )
+}
 
-par(mfrow = c(1, 2))
+par(mfrow = c(2, 2))
 plot(Z[, 1], Z[, 2],
   col = cols[Y], xlab = "PC1", ylab = "PC2", pch = 16,
+  ylim = c(-35, 32), xlim = c(-50, 85),
   main = "All 2000 genes \nfor PC1 and PC2"
 )
 legend(-45, -25,
   legend = c("Normal tissue", "Tumor tissue"), bty = "n",
-  col = c("red", "blue"), pch = c(16, 16), cex = 1
+  col = cols, pch = c(16, 16), cex = 1
 )
-plot(SPC1, SPC2,
-  col = cols[Y], xlab = "SPC1", ylab = "SPC2", pch = 16,
-  main = paste(non_zero1, "genes for SPC1 \n and", non_zero2, "genes for SPC2")
+plot_sparse_PCA(
+  as.vector(coef(fit_loadings1, s = 0.3)),
+  as.vector(coef(fit_loadings2, s = 0.15))
 )
-legend(-45, -25,
-  legend = c("Normal tissue", "Tumor tissue"), bty = "n",
-  col = c("red", "blue"), pch = c(16, 16), cex = 1
+plot_sparse_PCA(
+  as.vector(coef(fit_loadings1, s = 1.75)),
+  as.vector(coef(fit_loadings2, s = 1.5))
+)
+plot_sparse_PCA(
+  as.vector(coef(fit_loadings1, s = 11)),
+  as.vector(coef(fit_loadings2, s = 6))
 )
 ```
 
-__Conclusion:__ Only about
-`r sprintf("%.2f", 100 * non_zero1 / length(sparse_loadings1))`% (`r non_zero1`) of the genes are useful for PC1 and only about
-`r sprintf("%.2f", 100 * non_zero2 / length(sparse_loadings2))`% (`r non_zero2`) of the genes are useful for PC2 .
-Sparse PCA has succeeded in setting the uninformative genes/loadings to zero.
-In seperating normal and tumour tissues, SPCA performs vitually the same as PCA.
+Alternatively, using `ggplot`:
+
+```{r ggplot-spc}
+# Helper function for scatterplot between two sparse PCs
+plot_sparse_PCA <- function(loadings1, loadings2) {
+  nonzero1 <- sum(loadings1[-1] != 0)
+  nonzero2 <- sum(loadings2[-1] != 0)
+
+  SPC1 <- X %*% loadings1[-1]
+  SPC2 <- X %*% loadings2[-1]
+
+  ggplot(data.frame(SPC1, SPC2, Tissue = Y), aes(SPC1, SPC2)) +
+    geom_point(aes(col = Tissue), size = 2) +
+    scale_color_manual(values = c("deepskyblue2", "coral1")) +
+    labs(title = paste(nonzero1, "genes for SPC1 and", nonzero2, "genes for SPC2")) +
+    xlim(-50, 85) +
+    ylim(-35, 32) +
+    theme_minimal()
+}
+
+plot1 <- ggplot(scores_1_2, aes(PC1, PC2)) +
+  geom_point(aes(col = Tissue), size = 2) +
+  scale_color_manual(values = c("deepskyblue2", "coral1")) +
+  labs(title = "All 2000 genes for PC1 and PC2") +
+  theme_minimal()
+plot2 <- plot_sparse_PCA(
+  as.vector(coef(fit_loadings1, s = 0.3)),
+  as.vector(coef(fit_loadings2, s = 0.15))
+)
+plot3 <- plot_sparse_PCA(
+  as.vector(coef(fit_loadings1, s = 1.75)),
+  as.vector(coef(fit_loadings2, s = 1.5))
+)
+plot4 <- plot_sparse_PCA(
+  as.vector(coef(fit_loadings1, s = 11)),
+  as.vector(coef(fit_loadings2, s = 6))
+)
+
+ggarrange(plot1, plot2, plot3, plot4)
+```
+
+__Conclusion:__ Sparse PCA has succeeded in setting the uninformative genes / loadings to zero. 
+In seperating normal and tumour tissues, SPCA performs vitually the same as PCA. By increasing $\lambda$, more sparsity is induced in the loadings, while the overall visual impression remains comparable. 
 The key point here is that SPCA uses only a minor proportion of the original features to achieve the same results, suggesting that the largest variability of the data is only driven by a minority of features.
 
 </details>
+
+__Remark:_ Oftentimes, $\lambda$ is chosen in such a way that a particular number or range of nonzero loadings is obtained. This is how we proceeded above, where we considered a sequence of $\lambda$'s resulting in different levels of sparsity.
+Alternatively, if you want to select $\lambda$ in a data-driven manner, you *cannot* rely on cross-validation with the predictive MSE as used in [Lab 3](https://statomics.github.io/HDDA/Lab3-Penalized-Regression.html#9_Exercise:_evaluate_and_compare_prediction_models). The reason for this is that the minimal cross-validated MSE will be achieved for $\lambda = 0$ (or the smallest positive value that can be evaluated without numerical problems).
+Instead, you can take a look at the proportion of variance that is explained by the sparse PCs to select a sensible number of nonzero loadings or a sensible $\lambda$. 
 
 
 # LDA
@@ -462,9 +502,9 @@ $$
 $$
 
 
-## Exercises {-}
+## Tasks {-}
 
-#### 1. The function `lda()` in the `MASS` package performs LDA. Similar to the `glmnet()` function, you will need to supply an `x` argument. The argument `grouping` is the vector with the response, and this has to be a factor variable. You have that stored as `Y`. Fit an LDA on `X` with grouping `Y`. {-}
+##### 1. The function `lda()` in the `MASS` package performs LDA. Similar to the `glmnet()` function, you will need to supply an `x` argument. The argument `grouping` is the vector with the response, and this has to be a factor variable. You have that stored as `Y`. Fit an LDA on `X` with grouping `Y`. {-}
 
 <details><summary>Solution</summary>
 
@@ -477,7 +517,7 @@ Note the warning regarding collinearity.
 
 </details>
 
-#### 2. $\mathbf v$ can be extracted from the object as the element `scaling`. Extract this and call it `V1`. {-}
+##### 2. $\mathbf v$ can be extracted from the object as the element `scaling`. Extract this and call it `V1`. {-}
 
 <details><summary>Solution</summary>
 
@@ -487,7 +527,7 @@ V1 <- alon_lda$scaling
 
 </details>
 
-#### 3. Compute $\mathbf Z$ and call it `Z1`. {-}
+##### 3. Compute $\mathbf Z$ and call it `Z1`. {-}
 
 <details><summary>Solution</summary>
 
@@ -497,7 +537,7 @@ Z1 <- X %*% V1
 
 </details>
 
-#### 4. Now check to see how well your single LDA/`Z1` separates the tumour and normal tissues groups. Compare it to the plot in (3) of the previous exercise, and observe whether LDA performs better in separating the two groups. {-}
+##### 4. Now check to see how well your single LDA/`Z1` separates the tumour and normal tissues groups. Compare it to the plot in (3) of the previous exercise, and observe whether LDA performs better in separating the two groups. {-}
 
 You could use a boxplot for visualization, but feel free to be creative!
 
@@ -511,7 +551,7 @@ boxplot(Z1 ~ Y, col = cols, ylab = expression("Z"[1]),
 
 </details>
 
-#### 5. As was the case with the first and second PC, `Z1` is a linear combination determined by the loadings $\mathbf v$. These are non-zero for all genes. To get a few interesting genes, you can use a sparse LDA. Note that you can use the package `sparseLDA` with the function `sda()` to perform this analysis, but let's do this as we did for sparse PCA. {-}
+##### 5. As was the case with the first and second PC, `Z1` is a linear combination determined by the loadings $\mathbf v$. These are non-zero for all genes. To get a few interesting genes, you can use a sparse LDA. Note that you can use the package `sparseLDA` with the function `sda()` to perform this analysis, but let's do this as we did for sparse PCA. {-}
 
 a. Use the `cv.glmnet` function with `x=X`, `y=Z1` and `alpha=0.5` to select an appropriate number of non-zero genes for the LDA.
 
