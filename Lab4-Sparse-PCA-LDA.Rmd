@@ -2,7 +2,7 @@
 title: "Lab 4: Sparse PCA and LDA"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait and Leo Fuhrhop"
-date: "18 Nov 2021 <br/> (Last updated: 2025-10-31)"
+date: "18 Nov 2021 <br/> (Last updated: 2025-11-04)"
 references:
 - id: alon1999broad
   type: article-journal
@@ -30,6 +30,20 @@ references:
   page: 6745-6750
   volume: '96'
   issue: '12'
+- id: esl-book
+  type: book
+  author:
+  - family: Hastie
+    given: Trevor
+  - family: Tibshirani
+    given: Robert
+  - family: Friedman
+    given: Jerome
+  issued:
+  - year: 2009
+  title: The Elements of Statistical Learning
+  publisher: Springer
+  edition: 2nd
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -49,7 +63,7 @@ knitr::opts_chunk$set(
 
 ```{r libraries, warning=FALSE, message=FALSE}
 ## install packages with:
-# install.packages(c("glmnet", "MASS"))
+# install.packages(c("glmnet", "MASS", "ggplot2", "gridExtra", "ggpubr"))
 # if (!requireNamespace("remotes", quietly = TRUE)) {
 #     install.packages("remotes")
 # }
@@ -372,7 +386,7 @@ num_loadings(fit_loadings2)
 
 ##### 7. Plot the resulting sparse first and second PCs and use different colors for tumor / normal tissue. How well do these new PCs separate the response classes? {-}
 
-You may reuse the code from task 3 to produce 3 new plots: one plot for $(\lambda_{\text{PC1}} = 11, \lambda_{\text{PC2}} = 5)$, one for $(\lambda_{\text{PC1}} = 1.75, \lambda_{\text{PC2}} = 1.5)$, and one for $(\lambda_{\text{PC1}} = 0.3, \lambda_{\text{PC2}} = 0.15)$. Compare this to the plot for the original PCs from task 3 and interpret.
+You may reuse the code from task 3 to produce 3 new plots for $(\lambda_{\text{PC1}} = 11, \lambda_{\text{PC2}} = 5)$, $(\lambda_{\text{PC1}} = 1.75, \lambda_{\text{PC2}} = 1.5)$ and $(\lambda_{\text{PC1}} = 0.3, \lambda_{\text{PC2}} = 0.15)$. Compare this to the plot for the original PCs from task 3 and interpret.
 
 <details><summary>Solution</summary>
 
@@ -464,19 +478,19 @@ ggarrange(plot1, plot2, plot3, plot4)
 ```
 
 __Conclusion:__ Sparse PCA has succeeded in setting the uninformative genes / loadings to zero. 
-In seperating normal and tumour tissues, SPCA performs vitually the same as PCA. By increasing $\lambda$, more sparsity is induced in the loadings, while the overall visual impression remains comparable. 
+In separating normal and tumour tissues, SPCA performs vitually the same as PCA. By increasing $\lambda$, more sparsity is induced in the loadings, while the overall visual impression remains comparable. 
 The key point here is that SPCA uses only a minor proportion of the original features to achieve the same results, suggesting that the largest variability of the data is only driven by a minority of features.
 
 </details>
 
-__Remark:_ Oftentimes, $\lambda$ is chosen in such a way that a particular number or range of nonzero loadings is obtained. This is how we proceeded above, where we considered a sequence of $\lambda$'s resulting in different levels of sparsity.
+__Remark:__ Oftentimes, $\lambda$ is chosen in such a way that a particular number or range of nonzero loadings is obtained. This is how we proceeded above, where we considered a sequence of $\lambda$'s resulting in different levels of sparsity.
 Alternatively, if you want to select $\lambda$ in a data-driven manner, you *cannot* rely on cross-validation with the predictive MSE as used in [Lab 3](https://statomics.github.io/HDDA/Lab3-Penalized-Regression.html#9_Exercise:_evaluate_and_compare_prediction_models). The reason for this is that the minimal cross-validated MSE will be achieved for $\lambda = 0$ (or the smallest positive value that can be evaluated without numerical problems).
 Instead, you can take a look at the proportion of variance that is explained by the sparse PCs to select a sensible number of nonzero loadings or a sensible $\lambda$. 
 
 
 # LDA
 
-In this section, we will perform LDA on the gene data to get a clear understanding on the genes responsible for separating the tumor and normal tissue groups.
+In this section, we will perform LDA on the data by @alon1999broad to get a clear understanding on the genes responsible for separating the tumor and normal tissue groups.
 
 Remember that the LDA problem can be stated as
 
@@ -484,128 +498,261 @@ $$
 \mathbf{v}
   = \text{ArgMax}_a \frac{\mathbf{a^T B a}}{\mathbf{a^T W a}}
     \text{ subject to }
-    \mathbf{a^T W a} = 1
+    \mathbf{a^T W a} = 1 \, ,
 $$
 
-Which is equivalent to the eigenvalue/eigenvector problem
+which is equivalent to the eigenvalue / eigenvector problem
 
 $$
-\mathbf W^{-1} \mathbf B \mathbf a=\lambda \mathbf a
+\mathbf W^{-1} \mathbf B \mathbf a=\lambda \mathbf a \, .
 $$
 
 In our case, where we only have two groups, only one solution exists.
-This is the eigenvector $\mathbf v$ and its eigenvalue.
-We can then write the PC-scores as
+This is the eigenvector $a = \mathbf v$ and its eigenvalue.
+$\mathbf v$ can can be interpreted in terms of which predictors are important to discriminate between the two classes.
+We can then write the scores as
 
 $$
-\mathbf Z=\mathbf X \mathbf v
+\mathbf Z=\mathbf X \mathbf v \, .
 $$
 
 
 ## Tasks {-}
 
-##### 1. The function `lda()` in the `MASS` package performs LDA. Similar to the `glmnet()` function, you will need to supply an `x` argument. The argument `grouping` is the vector with the response, and this has to be a factor variable. You have that stored as `Y`. Fit an LDA on `X` with grouping `Y`. {-}
+##### 1. Use the `lda()` function from the `MASS` package to fit an LDA on `X` with grouping `Y`. {-}
+
+Note that the `grouping` has to be a factor variable.
 
 <details><summary>Solution</summary>
 
-```{r}
-## Perform LDA
+```{r LDA}
 alon_lda <- lda(x = X, grouping = Y)
+
+# alternative: Y ~ X
 ```
 
 Note the warning regarding collinearity.
 
 </details>
 
-##### 2. $\mathbf v$ can be extracted from the object as the element `scaling`. Extract this and call it `V1`. {-}
+##### 2. Extract $\mathbf v$ from the `lda` object. {-}
+
+Hint: Have a look at the "Value" section of `?lda`.
 
 <details><summary>Solution</summary>
 
-```{r}
+```{r LDA-eigenvector}
 V1 <- alon_lda$scaling
 ```
 
 </details>
 
-##### 3. Compute $\mathbf Z$ and call it `Z1`. {-}
+##### 3. Compute $\mathbf Z$. {-}
 
 <details><summary>Solution</summary>
 
-```{r}
+```{r LDA-scores}
 Z1 <- X %*% V1
 ```
 
 </details>
 
-##### 4. Now check to see how well your single LDA/`Z1` separates the tumour and normal tissues groups. Compare it to the plot in (3) of the previous exercise, and observe whether LDA performs better in separating the two groups. {-}
+##### 4. Plot the scores $\mathbf Z$ against the response to see how well the LDA separates the tumour and normal tissues groups. Interpret your plot.{-}
 
-You could use a boxplot for visualization, but feel free to be creative!
+Hint: A boxplot would be an appropriate visualization, but feel free to be creative.
 
 <details><summary>Solution</summary>
 
-```{r}
+Using `ggplot`:
+
+```{r LDA-ggboxplot}
+ggplot(data.frame(Z1, Y), aes(x = Y, y = Z1, fill = as.factor(Y))) +
+  geom_boxplot() +
+  scale_fill_manual(values = cols) +
+  labs(x = "Y", y = "Z",
+    title = "Separation of normal and tumour samples by LDA"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
+```
+
+Alternatively, using base `R` plotting:
+
+```{r LDA-boxplot}
 par(mfrow = c(1, 1))
-boxplot(Z1 ~ Y, col = cols, ylab = expression("Z"[1]),
-        main = "Separation of normal and tumour samples by LDA")
+boxplot(
+  Z1 ~ Y, col = cols, ylab = "Z",
+  main = "Separation of normal and tumour samples by LDA"
+)
 ```
+
+__Interpretation__: The LDA can separate the tumour and normal tissue samples very well. In comparison, the first and second components of the (sparse) PCA (an unsupervised method) in the first part of this Lab did not discriminate the two groups nearly as well.
 
 </details>
 
-##### 5. As was the case with the first and second PC, `Z1` is a linear combination determined by the loadings $\mathbf v$. These are non-zero for all genes. To get a few interesting genes, you can use a sparse LDA. Note that you can use the package `sparseLDA` with the function `sda()` to perform this analysis, but let's do this as we did for sparse PCA. {-}
+We can view
+$$
+\mathbf Z = \mathbf X \mathbf v
+$$
+as a regression of $\mathbf Z$ on $\mathbf X$ with coefficient vector $\mathbf v$. The entries of $\mathbf v$ are non-zero for all genes.
+To implement a sparse LDA, where some of the entries of $\mathbf v$ are set to zero, we can introduce an $L_1$ penalty on $\mathbf v$ and fit a Lasso regression.
+The resulting $\mathbf v$ will only be determined by a few interesting genes instead of all 2000.
 
-a. Use the `cv.glmnet` function with `x=X`, `y=Z1` and `alpha=0.5` to select an appropriate number of non-zero genes for the LDA.
+##### 5. Fit a Lasso model for $\mathbf Z$ with `lambda = c(0.1, 0.01, 0.001)`. Determine the number of non-zero loadings for each choice of `lambda`. {-}
 
 <details><summary>Solution</summary>
 
-```{r}
-set.seed(45)
-lda_loadings <- cv.glmnet(X, Z1, alpha = 0.5, nfolds = 5)
-plot(lda_loadings)
+```{r sparse-LDA}
+lda_loadings <- glmnet(X, Z1, alpha = 1, lambda = c(0.2, 0.02, 0.002))
+num_loadings(lda_loadings)
 ```
 
 </details>
 
-b. Check to see how well this subset of genes does in separating the tumour and normal tissue groups. Are they as effective as the entire set of genes?
+##### 6. Plot the resulting sparse scores against the response. Are the smaller subsets of genes as effective in separating the tumour and normal tissue groups as the entire set of genes? {-}
+
+You may reuse the code from task 4 to produce 3 new plots, one for each choice of $\lambda$. Compare this to the plot for the original LDA from task 4 and interpret.
 
 <details><summary>Solution</summary>
 
-```{r}
-sparse_lda_loadings <- as.vector(
-  coef(lda_loadings, s = lda_loadings$lambda.1se)
-)
+Using base `R` plotting:
 
-# See the genes involved
-plot(sparse_lda_loadings[sparse_lda_loadings != 0],
-  pch = 16, type = "n", xlim = c(0, 20)
-)
-text(
-  sparse_lda_loadings[sparse_lda_loadings != 0],
-  colnames(X)[sparse_lda_loadings != 0]
-)
-abline(h = 0, lwd = 3)
+```{r sparse-LDA-plots, fig.width = 9}
+# Helper function for scatterplot between two sparse PCs
+plot_sparse_LDA <- function(loadings) {
+  n_nonzero <- sum(loadings[-1] != 0)
+  SLDA <- X %*% loadings[-1]
 
-# without the intercept
-SLDA <- X %*% sparse_lda_loadings[-1]
+  boxplot(
+    SLDA ~ Y, col = cols, ylab = "Z",
+    main = sprintf("Subset of %d genes", n_nonzero),
+    ylim = c(-4, 4)
+  )
+}
 
-# number of non-zero loadings
-n_nonzero <- sum(sparse_lda_loadings != 0)
-
-# boxplots
-par(mfrow = c(1, 2))
-boxplot(Z1 ~ Y,
-  col = cols, ylab = "LDA",
-  main = "Entire set of 2000 genes"
+par(mfrow = c(2, 2))
+boxplot(
+  Z1 ~ Y, col = cols, ylab = "Z",
+  main = "Entire set of 2000 genes",
+  ylim = c(-4, 4)
 )
-boxplot(SLDA ~ Y,
-  col = cols, ylab = "SLDA",
-  main = sprintf("Subset of %d genes", n_nonzero)
+plot_sparse_LDA(
+  as.vector(coef(lda_loadings, s = 0.002))
+)
+plot_sparse_LDA(
+  as.vector(coef(lda_loadings, s = 0.02))
+)
+plot_sparse_LDA(
+  as.vector(coef(lda_loadings, s = 0.2))
 )
 ```
 
+Alternatively, using `ggplot`:
+
+```{r sparse-LDA-ggplots}
+# Helper function for scatterplot between two sparse PCs
+plot_sparse_LDA <- function(loadings) {
+  n_nonzero <- sum(loadings[-1] != 0)
+  SLDA <- X %*% loadings[-1]
+
+  ggplot(data.frame(SLDA, Y), aes(x = Y, y = SLDA, fill = as.factor(Y))) +
+    geom_boxplot() +
+    scale_fill_manual(values = cols) +
+    labs(x = "Y", y = "Z",
+      title = sprintf("Subset of %d genes", n_nonzero)
+    ) +
+    ylim(-4, 4) +
+    theme_minimal() +
+    theme(legend.position = "none", plot.title = element_text(hjust = 0.5))  
+}
+
+plot1 <- ggplot(data.frame(Z1, Y), aes(x = Y, y = Z1, fill = as.factor(Y))) +
+  geom_boxplot() +
+  scale_fill_manual(values = cols) +
+  labs(x = "Y", y = "Z",
+    title = "Entire set of 2000 genes"
+  ) +
+  ylim(-4, 4) +
+  theme_minimal() +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
+plot2 <- plot_sparse_LDA(
+  as.vector(coef(lda_loadings, s = 0.002))
+)
+plot3 <- plot_sparse_LDA(
+  as.vector(coef(lda_loadings, s = 0.02))
+)
+plot4 <- plot_sparse_LDA(
+  as.vector(coef(lda_loadings, s = 0.2))
+)
+
+ggarrange(plot1, plot2, plot3, plot4)
+```
+
+__Conclusion:__ Sparse LDA performs almost identically to the original LDA in separating normal and tumour tissues. Even with only the 18 most important genes, the sparse LDA is mostly able to discriminate the two classes well.
+Therefore, the separation between normal and tumour tissues is mainly driven by only a small proportion of genes.
+
 </details>
 
+## Bonus: Evaluation of LDA as a predictive classifier {-}
 
-For a simple explanation of the concept and interpretation of LDA (and other statistical methods), have a look at <https://www.youtube.com/watch?v=azXCzI57Yfc>
+We use 10-fold cross-validation to evaluate the predictive accuracy of classifications from the original LDA on all 2000 genes and the SLDA on the three smaller subsets of genes.
+
+```{r LDA-CV}
+set.seed(914751)
+
+# Helper function to compute accuracy given v, X, and Y
+lda_accuracy <- function(v, X, Y) {
+  preds <- (X %*% v) > 0
+  obs <- Y == "t"
+  return(1 - mean(abs(preds - obs)))
+}
+
+acc_full <- acc_small <- acc_smaller <- acc_smallest <- NULL
+
+# Randomly split the data into k folds
+folds <- sample(rep(1:10, length.out = length(Y)))
+
+for (k in 1:10) {
+  # Assign the train and validation set for this fold
+  val_idx <- which(folds == k)
+  train_idx <- setdiff(seq_len(length(Y)), val_idx)
+  X_train <- X[train_idx, , drop = FALSE]
+  Y_train <- Y[train_idx]
+  X_val <- X[val_idx, , drop = FALSE]
+  Y_val <- Y[val_idx]
+
+  # Fit the LDA
+  lda_fold <- lda(x = X_train, grouping = Y_train)
+  # Fit the SLDA with three levels of sparsity
+  Z_fold <- X_train %*% lda_fold$scaling
+  lasso_fold <- glmnet(X_train, Z_fold, alpha = 1, lambda = c(0.2, 0.02, 0.002))
+  # Evaluate the accuracy of all four models on the validation set
+  acc_full <- c(acc_full, lda_accuracy(lda_fold$scaling, X_val, Y_val))
+  acc_small <- c(
+    acc_small,
+    lda_accuracy(as.vector(coef(lasso_fold, s = 0.002))[-1], X_val, Y_val)
+  )
+  acc_smaller <- c(
+    acc_smaller,
+    lda_accuracy(as.vector(coef(lasso_fold, s = 0.02))[-1], X_val, Y_val)
+  )
+  acc_smallest <- c(
+    acc_smallest,
+    lda_accuracy(as.vector(coef(lasso_fold, s = 0.2))[-1], X_val, Y_val)
+  )
+}
+
+data.frame(
+  LDA = c("original", "sparse", "sparser", "sparsest"),
+  accuracy = c(
+    mean(acc_full), mean(acc_small), mean(acc_smaller), mean(acc_smallest)
+  )
+)
+```
+
+# Additional resources {-}
+- Section 4.3 (LDA) and 14.5.5 (SPCA) of @esl-book
+- For a simple explanation of the concept and interpretation of LDA (and other statistical methods), have a look at <https://www.youtube.com/watch?v=azXCzI57Yfc>
 
 ```{r, child="_session-info.Rmd"}
 ```
