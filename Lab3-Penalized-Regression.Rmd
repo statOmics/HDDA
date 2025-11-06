@@ -2,7 +2,7 @@
 title: "Lab 3: Penalized regression techniques for high-dimensional data"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait and Leo Fuhrhop"
-date: "04 Nov 2021 <br/> (Last updated: 2025-10-30)"
+date: "04 Nov 2021 <br/> (Last updated: 2025-11-06)"
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -26,7 +26,7 @@ options(
 ```{r libraries, warning=FALSE, message=FALSE}
 ## install packages with:
 # install.packages(c("glmnet", "pls", "boot"))
-# remotes::install_github("HDDAData")
+# remotes::install_github("statOmics/HDDAData")
 library(HDDAData)
 library(glmnet)
 library(pls)
