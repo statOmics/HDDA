@@ -2,7 +2,7 @@
 title: "Lab 4: Sparse PCA and LDA"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait and Leo Fuhrhop"
-date: "18 Nov 2021 <br/> (Last updated: 2025-11-04)"
+date: "18 Nov 2021 <br/> (Last updated: 2025-11-06)"
 references:
 - id: alon1999broad
   type: article-journal
@@ -221,7 +221,7 @@ cols <- c("n" = "deepskyblue2", "t" = "coral1")
 plot(scores_1_2$PC1, scores_1_2$PC2,
   col = cols[Y],
   xlab = "PC1", ylab = "PC2", pch = 19
-)>
+)
 legend("topleft", c("Normal", "Tumor"),
   col = cols,
   pch = 19, title = "Tissue"
