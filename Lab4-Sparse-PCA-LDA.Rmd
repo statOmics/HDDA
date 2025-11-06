@@ -603,7 +603,7 @@ as a regression of $\mathbf Z$ on $\mathbf X$ with coefficient vector $\mathbf v
 To implement a sparse LDA, where some of the entries of $\mathbf v$ are set to zero, we can introduce an $L_1$ penalty on $\mathbf v$ and fit a Lasso regression.
 The resulting $\mathbf v$ will only be determined by a few interesting genes instead of all 2000.
 
-##### 5. Fit a Lasso model for $\mathbf Z$ with `lambda = c(0.1, 0.01, 0.001)`. Determine the number of non-zero loadings for each choice of `lambda`. {-}
+##### 5. Fit a Lasso model for $\mathbf Z$ with `lambda = c(0.2, 0.02, 0.002)`. Determine the number of non-zero loadings for each choice of `lambda`. {-}
 
 <details><summary>Solution</summary>
 
@@ -668,7 +668,7 @@ plot_sparse_LDA <- function(loadings) {
     ) +
     ylim(-4, 4) +
     theme_minimal() +
-    theme(legend.position = "none", plot.title = element_text(hjust = 0.5))  
+    theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
 }
 
 plot1 <- ggplot(data.frame(Z1, Y), aes(x = Y, y = Z1, fill = as.factor(Y))) +
