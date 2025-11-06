@@ -210,7 +210,8 @@ scores_1_2 <- data.frame(PC1 = pca_x$x[, 1], PC2 = pca_x$x[, 2], Tissue = Y)
 ggplot(scores_1_2, aes(PC1, PC2)) +
   geom_point(aes(col = Tissue), size = 2) +
   scale_color_manual(values = c("deepskyblue2", "coral1")) +
-  theme_minimal()
+  theme_minimal() +
+  theme(aspect.ratio = 0.8, legend.position = "top")
 ```
 
 Alternatively, using base `R` plotting:
@@ -403,24 +404,24 @@ plot_sparse_PCA <- function(loadings1, loadings2) {
 
   plot(
     SPC1, SPC2, col = cols[Y], xlab = "SPC1", ylab = "SPC2", pch = 16,
-    ylim = c(-35, 32), xlim = c(-50, 85),
-    main = paste(nonzero1, "genes for SPC1 \n and", nonzero2, "genes for SPC2")
+    ylim = c(-40, 40), xlim = c(-60, 95),
+    main = paste(nonzero1, "genes for SPC1,", nonzero2, "for SPC2")
   )
-  legend(-45, -25,
-    legend = c("Normal tissue", "Tumor tissue"), bty = "n",
-    col = cols, pch = c(16, 16), cex = 1
+  legend(
+    "topleft", legend = c("Normal tissue", "Tumor tissue"),
+    bty = "n", col = cols, pch = c(16, 16), cex = 1
   )
 }
 
 par(mfrow = c(2, 2))
 plot(Z[, 1], Z[, 2],
   col = cols[Y], xlab = "PC1", ylab = "PC2", pch = 16,
-  ylim = c(-35, 32), xlim = c(-50, 85),
+  ylim = c(-40, 40), xlim = c(-60, 95),
   main = "All 2000 genes \nfor PC1 and PC2"
 )
-legend(-45, -25,
-  legend = c("Normal tissue", "Tumor tissue"), bty = "n",
-  col = cols, pch = c(16, 16), cex = 1
+legend(
+  "topleft", legend = c("Normal tissue", "Tumor tissue"),
+  bty = "n", col = cols, pch = c(16, 16), cex = 1
 )
 plot_sparse_PCA(
   as.vector(coef(fit_loadings1, s = 0.3)),
@@ -450,17 +451,21 @@ plot_sparse_PCA <- function(loadings1, loadings2) {
   ggplot(data.frame(SPC1, SPC2, Tissue = Y), aes(SPC1, SPC2)) +
     geom_point(aes(col = Tissue), size = 2) +
     scale_color_manual(values = c("deepskyblue2", "coral1")) +
-    labs(title = paste(nonzero1, "genes for SPC1 and", nonzero2, "genes for SPC2")) +
-    xlim(-50, 85) +
-    ylim(-35, 32) +
-    theme_minimal()
+    labs(title = paste(nonzero1, "genes for SPC1,", nonzero2, "for SPC2")) +
+    xlim(-60, 95) +
+    ylim(-40, 40) +
+    theme_minimal() +
+    theme(legend.position = "bottom", text = element_text(size = 8))
 }
 
 plot1 <- ggplot(scores_1_2, aes(PC1, PC2)) +
   geom_point(aes(col = Tissue), size = 2) +
   scale_color_manual(values = c("deepskyblue2", "coral1")) +
   labs(title = "All 2000 genes for PC1 and PC2") +
-  theme_minimal()
+  xlim(-60, 95) +
+  ylim(-40, 40) +
+  theme_minimal() +
+  theme(legend.position = "bottom", text = element_text(size = 8))
 plot2 <- plot_sparse_PCA(
   as.vector(coef(fit_loadings1, s = 0.3)),
   as.vector(coef(fit_loadings2, s = 0.15))
