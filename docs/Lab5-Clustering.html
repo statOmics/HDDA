@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Milan Malfait" />
+<meta name="author" content="Milan Malfait and Leo Fuhrhop" />
 
 
 <title>Lab 5: Clustering</title>
@@ -37,8 +37,8 @@
 <script src="site_libs/navigation-1.1/sourceembed.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -60,6 +60,7 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -169,6 +170,29 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 }
 </style>
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
@@ -539,8 +563,8 @@ div.tocify {
 
 <h1 class="title toc-ignore">Lab 5: Clustering</h1>
 <h3 class="subtitle">High Dimensional Data Analysis practicals</h3>
-<h4 class="author">Milan Malfait</h4>
-<h4 class="date">24 Feb 2022 <br/> (Last updated: 2022-02-22)</h4>
+<h4 class="author">Milan Malfait and Leo Fuhrhop</h4>
+<h4 class="date">24 Feb 2022 <br/> (Last updated: 2025-11-09)</h4>
 
 </div>
 
@@ -550,7 +574,7 @@ div.tocify {
 <hr />
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">## Install necessary packages with:</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># install.packages(c(&quot;mclust&quot;, &quot;gclus&quot;, &quot;GGally&quot;, &quot;tidyverse&quot;))</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># install.packages(c(&quot;mclust&quot;, &quot;gclus&quot;, &quot;tidyverse&quot;, &quot;gridExtra&quot;))</span></span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co"># if (!requireNamespace(&quot;remotes&quot;, quietly = TRUE)) {</span></span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#     install.packages(&quot;remotes&quot;)</span></span>
@@ -560,8 +584,8 @@ div.tocify {
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="fu">library</span>(mclust)</span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">library</span>(gclus)  <span class="co"># contains the &#39;wine&#39; data</span></span>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="fu">library</span>(ggbiplot)</span>
-<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a></span>
 <span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span></code></pre></div>
 </div>
@@ -612,50 +636,147 @@ well the clusters capture the original classes.</p>
 <span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt;  Mean   : 746.9  </span></span>
 <span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.: 985.0  </span></span>
 <span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt;  Max.   :1680.0</span></span></code></pre></div>
+<p>We will use a PCA to visualize the data, along with the class labels, in a low-dimensional space.
+This will allow us to interpret the results of the clustering algorithms more easily.</p>
+<div id="tasks" class="section level3 unnumbered">
+<h3>Tasks</h3>
+<div id="perform-a-pca-of-the-scaled-wine-data." class="section level4 unnumbered">
+<h4>1. Perform a PCA of the scaled <code>wine</code> data.</h4>
+<details>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>wine_pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(X, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</details>
+</div>
+<div id="create-a-biplot-of-the-first-two-pcs.-color-each-observation-by-its-class-label.-interpret-the-pcs.-how-distinguishable-are-the-classes-with-respect-to-the-pcs" class="section level4 unnumbered">
+<h4>2. Create a biplot of the first two PCs. Color each observation by its class label. Interpret the PCs. How distinguishable are the classes with respect to the PCs?</h4>
+<details>
+<summary>
+Solution
+</summary>
+<p>Using <code>ggbiplot</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Barolo&quot;</span> <span class="ot">=</span> <span class="st">&quot;#28a028&quot;</span>, <span class="st">&quot;Grignolino&quot;</span> <span class="ot">=</span> <span class="st">&quot;#da6852&quot;</span>, <span class="st">&quot;Barbera&quot;</span> <span class="ot">=</span> <span class="st">&quot;#0078cd&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> class) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> cols) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;True labels&quot;</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Alternatively, using base <code>R</code> plotting:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>Zk <span class="ot">&lt;-</span> wine_pca<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>Vk <span class="ot">&lt;-</span> wine_pca<span class="sc">$</span>rotation[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="fu">plot</span>(Zk, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="at">col =</span> cols[class],</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;PC2&quot;</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>)</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">levels</span>(class),</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="at">col =</span> cols,</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>)</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># rescaling</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>) {</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>  <span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="at">length =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>  <span class="fu">text</span>(alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="fu">rownames</span>(Vk)[i], <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><strong>Interpretation</strong>: Low values on PC1 correspond to heavier, aged, more structured wines, while high values indicate fresher, less heavy, younger wines.
+High values on PC2 correspond to lighter-colored wines with lower alcohol content.
+Importantly, the three classes are quite clearly visually separated with little overlap between them. We can thus rely on the biplot to visually investigate how well a clustering algorithm recovers the true classes.</p>
+</details>
+</div>
+</div>
 </div>
 <div id="hierarchical-clustering" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Hierarchical clustering</h1>
-<div id="tasks" class="section level3 unnumbered">
+<div id="tasks-1" class="section level3 unnumbered">
 <h3>Tasks</h3>
-<div id="perform-hierarhical-clustering-of-the-wine-data-using-a-euclidean-distance-matrix-and-the-complete-linkage-algorithm-see-hclust.-plot-the-clustering-dendrogram." class="section level4 unnumbered">
-<h4>1. Perform hierarhical clustering of the wine data, using a Euclidean distance matrix and the complete-linkage algorithm (see <code>?hclust</code>). Plot the clustering <em>dendrogram</em>.</h4>
+<div id="perform-hierarchical-clustering-of-the-wine-data-using-a-euclidean-distance-matrix-and-the-complete-linkage-algorithm-see-hclust." class="section level4 unnumbered">
+<h4>1. Perform hierarchical clustering of the wine data, using a Euclidean distance matrix and the complete-linkage algorithm (see <code>?hclust</code>).</h4>
 <details>
 <summary>
 Solution
 </summary>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="do">## Calculate distance matrix and perform hierarchical clustering</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>wine_dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(X, <span class="at">method =</span> <span class="st">&quot;euclidean&quot;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>hc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(wine_dist, <span class="at">method =</span> <span class="st">&quot;complete&quot;</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="fu">plot</span>(hc, <span class="at">labels =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Calculate distance matrix and perform hierarchical clustering</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>wine_dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(X, <span class="at">method =</span> <span class="st">&quot;euclidean&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>hc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(wine_dist, <span class="at">method =</span> <span class="st">&quot;complete&quot;</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="select-an-appropriate-number-of-clusters-from-the-hierarchical-clustering-see-cutree.-visualize-the-clusters-on-a-pca-biplot-and-compare-with-the-original-labels." class="section level4 unnumbered">
-<h4>2. Select an appropriate number of clusters from the hierarchical clustering (see <code>?cutree</code>). Visualize the clusters on a PCA biplot and compare with the original labels.</h4>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>hc_clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc, <span class="at">k =</span> <span class="dv">3</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">table</span>(class, hc_clusters)</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;             hc_clusters</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; class         1  2  3</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;   Barolo     43 16  0</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;   Grignolino  0 15 56</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;   Barbera     0 21 27</span></span></code></pre></div>
+<div id="plot-the-clustering-dendrogram." class="section level4 unnumbered">
+<h4>2. Plot the clustering <em>dendrogram</em>.</h4>
 <details>
 <summary>
 Solution
 </summary>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>wine_pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(X, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> class) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;Original labels&quot;</span>) <span class="sc">+</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> <span class="fu">factor</span>(hc_clusters)) <span class="sc">+</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;HC clusters&quot;</span>) <span class="sc">+</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
-<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">plot</span>(hc, <span class="at">labels =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</details>
+</div>
+<div id="use-cutree-to-select-three-clusters-from-the-hierarchical-clustering.-recreate-the-pca-biplot-from-section-1-but-color-each-observation-according-to-its-cluster.-compare-the-resulting-biplot-to-the-earlier-one-from-section-1." class="section level4 unnumbered">
+<h4>3. Use <code>cutree</code> to select three clusters from the hierarchical clustering. Recreate the PCA biplot from Section 1, but color each observation according to its cluster. Compare the resulting biplot to the earlier one from Section 1.</h4>
+<details>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Select three clusters</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>hc_clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc, <span class="at">k =</span> <span class="dv">3</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># Tabulate clusters against true classes</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">table</span>(class, hc_clusters)</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;             hc_clusters</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; class         1  2  3</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;   Barolo     43 16  0</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt;   Grignolino  0 15 56</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt;   Barbera     0 21 27</span></span></code></pre></div>
+<p>Biplot with <code>ggbiplot</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> class) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> cols) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;True labels&quot;</span>) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> <span class="fu">factor</span>(hc_clusters)) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#9d05f4&quot;</span>, <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;#f4dc00&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;HC clusters&quot;</span>) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, <span class="fu">nullGrob</span>(), plot2, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Alternatively, using base <code>R</code> plotting:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co"># True class labels</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="fu">plot</span>(Zk, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="at">col =</span> cols[class],</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;PC2&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>)</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">levels</span>(class),</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>  <span class="at">col =</span> cols,</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>)</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># rescaling</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>) {</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>  <span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="at">length =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>  <span class="fu">text</span>(alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="fu">rownames</span>(Vk)[i], <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>}</span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a>cluster_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;#9d05f4&quot;</span>, <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;#f4dc00&quot;</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co"># Clusters</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="fu">plot</span>(Zk, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols[<span class="fu">factor</span>(hc_clusters)],</span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;PC2&quot;</span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a>)</span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">levels</span>(<span class="fu">factor</span>(hc_clusters)),</span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols,</span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a>)</span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># rescaling</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>) {</span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a>  <span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="at">length =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a>  <span class="fu">text</span>(alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="fu">rownames</span>(Vk)[i], <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><strong>Interpretation</strong>: The first cluster corresponds to most of the Barolo class, but the second cluster overlaps with all three classes, and the third cluster captures wines from both the Grignolino and the Barbera class.
+Overall, the three clusters do not recover the true class labels.</p>
 </details>
 </div>
 <div id="bonus-can-you-improve-the-results-by-using-different-distance-metrics-or-linkages" class="section level4 unnumbered">
@@ -665,171 +786,231 @@ Solution
 </div>
 <div id="model-based-clustering" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Model-based clustering</h1>
-<div id="tasks-1" class="section level3 unnumbered">
+<div id="tasks-2" class="section level3 unnumbered">
 <h3>Tasks</h3>
-<div id="perform-model-based-clustering-on-the-wine-data-use-mclustmclustmclust.-plot-the-bic-values-and-interpret-the-results.-compare-the-identified-clusters-with-the-original-true-labels." class="section level4 unnumbered">
-<h4>1. Perform model-based clustering on the <code>wine</code> data (use <a href="https://rdrr.io/cran/mclust/man/Mclust.html"><code>mclust::Mclust()</code></a>). Plot the BIC values and interpret the results. Compare the identified clusters with the original (true) labels.</h4>
+<div id="use-mclustmclust-to-perform-model-based-clustering-on-the-wine-data." class="section level4 unnumbered">
+<h4>1. Use <code>mclust::Mclust()</code> to perform model-based clustering on the <code>wine</code> data.</h4>
 <details>
 <summary>
 Solution
 </summary>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">Mclust</span>(X)</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">summary</span>(mod)</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------- </span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; Gaussian finite mixture model fitted by EM algorithm </span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------- </span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; Mclust VVE (ellipsoidal, equal orientation) model with 3 components: </span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt;  log-likelihood   n  df       BIC       ICL</span></span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt;       -3015.335 178 158 -6849.391 -6850.734</span></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; Clustering table:</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt;  1  2  3 </span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; 59 69 50</span></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="fu">summary</span>(mod<span class="sc">$</span>BIC)</span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; Best BIC values:</span></span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt;              VVE,3       EVE,4       VVE,4</span></span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; BIC      -6849.391 -6873.61648 -6885.47222</span></span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; BIC diff     0.000   -24.22499   -36.08073</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">table</span>(class, mod<span class="sc">$</span>classification)</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt;             </span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; class         1  2  3</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;   Barolo     59  0  0</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;   Grignolino  0 69  2</span></span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;   Barbera     0  0 48</span></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="do">## Annotate clusters</span></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>mc_clusters <span class="ot">&lt;-</span> <span class="fu">factor</span>(mod<span class="sc">$</span>classification)</span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">what =</span> <span class="st">&quot;BIC&quot;</span>, <span class="at">ylim =</span> <span class="fu">range</span>(mod<span class="sc">$</span>BIC[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="at">legendArgs =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&quot;bottomleft&quot;</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>)</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">what =</span> <span class="st">&quot;classification&quot;</span>)</span></code></pre></div>
-<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" /><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
-<p>There is a clear indication of a three-component mixture with covariances having
-different shapes and volumes but the same orientation (VVE). See
-<code>?mclustModelNames</code> for a description of the different <code>mclust</code> models.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>mc <span class="ot">&lt;-</span> <span class="fu">Mclust</span>(X)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">summary</span>(mc)</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------- </span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; Gaussian finite mixture model fitted by EM algorithm </span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------- </span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; Mclust VVE (ellipsoidal, equal orientation) model with 3 components: </span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt;  log-likelihood   n  df       BIC       ICL</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt;       -3015.335 178 158 -6849.391 -6850.734</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt; Clustering table:</span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt;  1  2  3 </span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; 59 69 50</span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="fu">summary</span>(mc<span class="sc">$</span>BIC)</span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt; Best BIC values:</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt;              VVE,3       EVE,4       VVE,4</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt; BIC      -6849.391 -6873.61648 -6885.47222</span></span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt; BIC diff     0.000   -24.22499   -36.08073</span></span></code></pre></div>
 </details>
 </div>
-<div id="visualize-the-clusters-found-by-mclust-on-the-pca-biplot.-compare-with-the-original-labels." class="section level4 unnumbered">
-<h4>2. Visualize the clusters found by <code>Mclust()</code> on the PCA biplot. Compare with the original labels.</h4>
+<div id="visualize-the-clustering-via-pairwise-plots.-plot-the-bic-bayesian-information-criterion-values-and-interpret-the-results." class="section level4 unnumbered">
+<h4>2. Visualize the clustering via pairwise plots. Plot the BIC (Bayesian information criterion) values and interpret the results.</h4>
+<p>Hint: Check <code>?plot.Mclust</code>.</p>
 <details>
 <summary>
 Solution
 </summary>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> class) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;Original labels&quot;</span>) <span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="do">## PCA plot annotated with clusters</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> mc_clusters) <span class="sc">+</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;mclust clusters&quot;</span>) <span class="sc">+</span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
-<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-8-1.png" width="672" /><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Pairwise clustering plots</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">plot</span>(mc, <span class="at">what =</span> <span class="st">&quot;classification&quot;</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># BIC plot; exclude two models with very low BIC</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="fu">plot</span>(mc, <span class="at">what =</span> <span class="st">&quot;BIC&quot;</span>, <span class="at">ylim =</span> <span class="fu">range</span>(mc<span class="sc">$</span>BIC[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>  <span class="at">legendArgs =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&quot;bottomleft&quot;</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-11-1.png" width="672" /><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
+<p><strong>Interpretation</strong>: A three-component mixture with covariances having
+different shapes and volumes but the same orientation (VVE) results in the
+highest BIC.</p>
 </details>
 </div>
-<div id="perform-a-dimensionality-reduction-of-the-wine-data-using-the-pca.-select-an-appropriate-number-of-pcs.-redo-the-clustering-on-this-reduced-dimension-representation-and-make-the-same-figures-as-before.-how-do-the-results-differ" class="section level4 unnumbered">
-<h4>3. Perform a dimensionality reduction of the wine data using the PCA. Select an appropriate number of PC’s. Redo the clustering on this reduced dimension representation and make the same figures as before. How do the results differ?</h4>
+<div id="recreate-the-pca-biplot-from-section-1-but-color-each-observation-according-to-its-cluster.-compare-the-resulting-biplot-to-the-earlier-ones." class="section level4 unnumbered">
+<h4>3. Recreate the PCA biplot from Section 1, but color each observation according to its cluster. Compare the resulting biplot to the earlier ones.</h4>
 <details>
 <summary>
 Solution
 </summary>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="do">## Calculate total variance by summing the PC variances (sdev&#39;s squared)</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>tot_var <span class="ot">&lt;-</span> <span class="fu">sum</span>(wine_pca<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="do">## Create data.frame of the proportion of variance explained by each PC</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>wine_prop_var <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">PC =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(wine_pca<span class="sc">$</span>x),</span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="at">var =</span> wine_pca<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>  <span class="do">## Using `mutate` to calculate prop. var and cum. prop. var</span></span>
-<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>    <span class="at">prop_var =</span> var <span class="sc">/</span> tot_var,</span>
-<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>    <span class="at">cum_prop_var =</span> <span class="fu">cumsum</span>(var <span class="sc">/</span> tot_var)</span>
-<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>  )</span>
-<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a></span>
-<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>wine_prop_var</span></code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["PC"],"name":[1],"type":["int"],"align":["right"]},{"label":["var"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["prop_var"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["cum_prop_var"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4.7057761","3":"0.361982781","4":"0.3619828"},{"1":"2","2":"2.4970309","3":"0.192079302","4":"0.5540621"},{"1":"3","2":"1.4460619","3":"0.111235528","4":"0.6652976"},{"1":"4","2":"0.9190803","3":"0.070698485","4":"0.7359961"},{"1":"5","2":"0.8531963","3":"0.065630484","4":"0.8016266"},{"1":"6","2":"0.6416517","3":"0.049357825","4":"0.8509844"},{"1":"7","2":"0.5510366","3":"0.042387429","4":"0.8933718"},{"1":"8","2":"0.3485625","3":"0.026812501","4":"0.9201843"},{"1":"9","2":"0.2888617","3":"0.022220130","4":"0.9424045"},{"1":"10","2":"0.2508366","3":"0.019295127","4":"0.9616996"},{"1":"11","2":"0.2257865","3":"0.017368191","4":"0.9790678"},{"1":"12","2":"0.1687476","3":"0.012980583","4":"0.9920484"},{"1":"13","2":"0.1033712","3":"0.007951634","4":"1.0000000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="do">## Plot the proportion of variance explained by each PC</span></span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(wine_prop_var, <span class="fu">aes</span>(PC, prop_var)) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">6.5</span>, <span class="at">col =</span> <span class="st">&quot;firebrick&quot;</span>) <span class="sc">+</span></span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(wine_pca<span class="sc">$</span>x)) <span class="sc">+</span></span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Proportion of variance&quot;</span>)</span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="do">## Plot the cumulative proportion of variance explained by each PC</span></span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(wine_prop_var, <span class="fu">aes</span>(PC, cum_prop_var)) <span class="sc">+</span></span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">6.5</span>, <span class="at">col =</span> <span class="st">&quot;firebrick&quot;</span>) <span class="sc">+</span></span>
-<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(wine_pca<span class="sc">$</span>x)) <span class="sc">+</span></span>
-<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Cumulative proportion of variance&quot;</span>)</span>
-<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a></span>
-<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a>gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
-<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>Selecting first 6 PC’s, keeping 85% of the variance.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">6</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>pca_X <span class="ot">&lt;-</span> wine_pca<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span>k]</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">head</span>(pca_X)</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt;         PC1        PC2        PC3        PC4        PC5        PC6</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt; 1 -3.307408 -1.4394177 -0.1652440 -0.2152179 -0.6910307 -0.2231956</span></span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt; 2 -2.203240  0.3324370 -2.0207491 -0.2902412  0.2569609 -0.9245244</span></span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt; 3 -2.509638 -1.0282909  0.9800836  0.7227336  0.2502287  0.5476659</span></span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt; 4 -3.746485 -2.7487002 -0.1756584  0.5665219  0.3109223  0.1140307</span></span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt; 5 -1.006024 -0.8674094  2.0209708 -0.4087227 -0.2975062 -0.4053395</span></span>
-<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt; 6 -3.041653 -2.1164278 -0.6276464 -0.5140695  0.6304008  0.1230408</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">Mclust</span>(pca_X)</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">summary</span>(mod2)</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------- </span></span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt; Gaussian finite mixture model fitted by EM algorithm </span></span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------- </span></span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; Mclust VII (spherical, varying volume) model with 4 components: </span></span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt;  log-likelihood   n df       BIC       ICL</span></span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt;       -1567.031 178 31 -3294.696 -3324.244</span></span>
-<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; Clustering table:</span></span>
-<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt;  1  2  3  4 </span></span>
-<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; 54 51 46 27</span></span>
-<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="fu">summary</span>(mod2<span class="sc">$</span>BIC)</span>
-<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt; Best BIC values:</span></span>
-<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt;              VII,4        VEI,4        VVE,4</span></span>
-<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; BIC      -3294.696 -3298.353891 -3301.319438</span></span>
-<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt; BIC diff     0.000    -3.657574    -6.623122</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">table</span>(class, mod2<span class="sc">$</span>classification)</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="co">#&gt;             </span></span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt; class         1  2  3  4</span></span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt;   Barolo     54  0  0  5</span></span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt;   Grignolino  0 51  1 19</span></span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt;   Barbera     0  0 45  3</span></span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="do">## Annotate clusters</span></span>
-<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>mc_pca_clusters <span class="ot">&lt;-</span> <span class="fu">factor</span>(mod2<span class="sc">$</span>classification)</span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">plot</span>(mod2, <span class="at">what =</span> <span class="st">&quot;BIC&quot;</span>, <span class="at">ylim =</span> <span class="fu">range</span>(mod2<span class="sc">$</span>BIC[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="at">legendArgs =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&quot;bottomleft&quot;</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># Tabulate clusters against true classes</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">table</span>(class, mc<span class="sc">$</span>classification)</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt;             </span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt; class         1  2  3</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt;   Barolo     59  0  0</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt;   Grignolino  0 69  2</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt;   Barbera     0  0 48</span></span></code></pre></div>
+<p>Biplot with <code>ggbiplot</code>:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> class) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> cols) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;True labels&quot;</span>) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> <span class="fu">factor</span>(mc<span class="sc">$</span>classification)) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#9d05f4&quot;</span>, <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;#f4dc00&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;Mclust clusters&quot;</span>) <span class="sc">+</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, <span class="fu">nullGrob</span>(), plot2, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.1</span>, <span class="dv">1</span>))</span></code></pre></div>
 <p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(pca_X)</span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>df<span class="sc">$</span>clusters <span class="ot">&lt;-</span> mc_pca_clusters</span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="do">## Using ggscatmat() from GGally package to plot all pairwise PCs</span></span>
-<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="fu">ggscatmat</span>(df, <span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span>k, <span class="at">color =</span> <span class="st">&quot;clusters&quot;</span>) <span class="sc">+</span></span>
-<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>, <span class="at">aspect.ratio =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>, <span class="at">name =</span> <span class="st">&quot;mclust-PCA clusters&quot;</span>)</span></code></pre></div>
+<p>Alternatively, using base <code>R</code> plotting:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co"># True class labels</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="fu">plot</span>(Zk, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="at">col =</span> cols[class],</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;PC2&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>)</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">levels</span>(class),</span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>  <span class="at">col =</span> cols,</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>)</span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># rescaling</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>) {</span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a>  <span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="at">length =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a>  <span class="fu">text</span>(alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="fu">rownames</span>(Vk)[i], <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a>}</span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a>cluster_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;#9d05f4&quot;</span>, <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;#f4dc00&quot;</span>)</span>
+<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a><span class="co"># Clusters</span></span>
+<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a><span class="fu">plot</span>(Zk, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols[<span class="fu">factor</span>(mc<span class="sc">$</span>classification)],</span>
+<span id="cb15-22"><a href="#cb15-22" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;PC2&quot;</span></span>
+<span id="cb15-23"><a href="#cb15-23" tabindex="-1"></a>)</span>
+<span id="cb15-24"><a href="#cb15-24" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">levels</span>(<span class="fu">factor</span>(mc<span class="sc">$</span>classification)),</span>
+<span id="cb15-25"><a href="#cb15-25" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols,</span>
+<span id="cb15-26"><a href="#cb15-26" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb15-27"><a href="#cb15-27" tabindex="-1"></a>)</span>
+<span id="cb15-28"><a href="#cb15-28" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># rescaling</span></span>
+<span id="cb15-29"><a href="#cb15-29" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>) {</span>
+<span id="cb15-30"><a href="#cb15-30" tabindex="-1"></a>  <span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="at">length =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb15-31"><a href="#cb15-31" tabindex="-1"></a>  <span class="fu">text</span>(alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="fu">rownames</span>(Vk)[i], <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb15-32"><a href="#cb15-32" tabindex="-1"></a>}</span></code></pre></div>
 <p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<p><em>Note: you can ignore the upper-right panels of this figure. These give the correlations between each pair of variables (PC’s here) for each group, but are not relevant here.</em></p>
+<p><strong>Interpretation</strong>: The first cluster corresponds to the Barolo class, the second cluster to the Grignolino class and the third cluster to Barbera.
+Overall, the three clusters recover the true class labels very well, with only two Grignolino wines falsely assigned to the third cluster (Barbera).</p>
+</details>
+</div>
+<div id="select-an-appropriate-number-of-pcs-from-the-pca.-repeat-the-model-based-clustering-on-the-pcs.-how-do-the-results-compare-to-those-on-the-full-data" class="section level4 unnumbered">
+<h4>4. Select an appropriate number of PCs from the PCA. Repeat the model-based clustering on the PCs. How do the results compare to those on the full data?</h4>
+<details>
+<summary>
+Solution
+</summary>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># Proportion of variance explained by each PC</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>wine_prop_var <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="at">PC =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(wine_pca<span class="sc">$</span>x),</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>  <span class="at">var =</span> wine_pca<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(wine_pca<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>)</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="fu">ggplot</span>(wine_prop_var, <span class="fu">aes</span>(PC, var)) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">7.5</span>, <span class="at">col =</span> <span class="st">&quot;firebrick&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(wine_pca<span class="sc">$</span>x)) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Proportion of variance&quot;</span>)</span></code></pre></div>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>The first 7 PCs explain about 92% of the variance in the <code>wine</code> data.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># Select the first k PCs</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>pca_X <span class="ot">&lt;-</span> wine_pca<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span>k]</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co"># Refit the model-based clustering</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>mc2 <span class="ot">&lt;-</span> <span class="fu">Mclust</span>(pca_X)</span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="fu">summary</span>(mc2)</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------- </span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co">#&gt; Gaussian finite mixture model fitted by EM algorithm </span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------- </span></span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a><span class="co">#&gt; Mclust VEI (diagonal, equal shape) model with 5 components: </span></span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a><span class="co">#&gt;  log-likelihood   n df       BIC       ICL</span></span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a><span class="co">#&gt;       -1719.764 178 50 -3698.617 -3725.317</span></span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a><span class="co">#&gt; Clustering table:</span></span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a><span class="co">#&gt;  1  2  3  4  5 </span></span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a><span class="co">#&gt; 53 25 19 34 47</span></span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a><span class="fu">summary</span>(mc2<span class="sc">$</span>BIC)</span>
+<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a><span class="co">#&gt; Best BIC values:</span></span>
+<span id="cb17-22"><a href="#cb17-22" tabindex="-1"></a><span class="co">#&gt;              VEI,5        VEI,4        VEI,6</span></span>
+<span id="cb17-23"><a href="#cb17-23" tabindex="-1"></a><span class="co">#&gt; BIC      -3698.617 -3700.939851 -3704.927637</span></span>
+<span id="cb17-24"><a href="#cb17-24" tabindex="-1"></a><span class="co">#&gt; BIC diff     0.000    -2.322571    -6.310357</span></span></code></pre></div>
+<p>A five-component mixture with diagonal covariances having equal shape, but
+varying volume (VEI), results in the highest BIC.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># Tabulate clusters against true classes</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">table</span>(class, mc2<span class="sc">$</span>classification)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="co">#&gt;             </span></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="co">#&gt; class         1  2  3  4  5</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="co">#&gt;   Barolo     53  6  0  0  0</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="co">#&gt;   Grignolino  0 16 18 34  3</span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="co">#&gt;   Barbera     0  3  1  0 44</span></span></code></pre></div>
+<p>Biplot with <code>ggbiplot</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> class) <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> cols) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;True labels&quot;</span>) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">ggbiplot</span>(wine_pca, <span class="at">groups =</span> <span class="fu">factor</span>(mc2<span class="sc">$</span>classification)) <span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#9d05f4&quot;</span>, <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;#f4dc00&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;Mclust clusters&quot;</span>) <span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.8</span>, <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, <span class="fu">nullGrob</span>(), plot2, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Alternatively, using base <code>R</code> plotting:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="co"># True class labels</span></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="fu">plot</span>(Zk, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>  <span class="at">col =</span> cols[class],</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;PC2&quot;</span></span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>)</span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">levels</span>(class),</span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>  <span class="at">col =</span> cols,</span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>)</span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># rescaling</span></span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>) {</span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>  <span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="at">length =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a>  <span class="fu">text</span>(alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="fu">rownames</span>(Vk)[i], <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a>}</span>
+<span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a></span>
+<span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a>cluster_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;#9d05f4&quot;</span>, <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;#01d9d9&quot;</span>, <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;#f4dc00&quot;</span>)</span>
+<span id="cb20-19"><a href="#cb20-19" tabindex="-1"></a><span class="co"># Clusters</span></span>
+<span id="cb20-20"><a href="#cb20-20" tabindex="-1"></a><span class="fu">plot</span>(Zk, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb20-21"><a href="#cb20-21" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols[<span class="fu">factor</span>(mc2<span class="sc">$</span>classification)],</span>
+<span id="cb20-22"><a href="#cb20-22" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;PC2&quot;</span></span>
+<span id="cb20-23"><a href="#cb20-23" tabindex="-1"></a>)</span>
+<span id="cb20-24"><a href="#cb20-24" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">levels</span>(<span class="fu">factor</span>(mc2<span class="sc">$</span>classification)),</span>
+<span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols,</span>
+<span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a>)</span>
+<span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># rescaling</span></span>
+<span id="cb20-29"><a href="#cb20-29" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>) {</span>
+<span id="cb20-30"><a href="#cb20-30" tabindex="-1"></a>  <span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="at">length =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb20-31"><a href="#cb20-31" tabindex="-1"></a>  <span class="fu">text</span>(alpha <span class="sc">*</span> Vk[i, <span class="dv">1</span>], alpha <span class="sc">*</span> Vk[i, <span class="dv">2</span>], <span class="fu">rownames</span>(Vk)[i], <span class="at">col =</span> <span class="st">&quot;#8f4040&quot;</span>)</span>
+<span id="cb20-32"><a href="#cb20-32" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="Lab5-Clustering_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><strong>Interpretation</strong>: The first cluster corresponds to most of the Barolo class. The fifth color mainly corresponds to the Barbera class, while containing a few Grignolino wines.
+Combining the second, third and fourth cluster recovers most of the Grignolino class, with some overlap with the remaining classes.
+Overall, after combining the three smaller clusters, the clustering recovers the true class labels fairly well, though not quite as closely as the clustering on the original data.</p>
 </details>
 </div>
 </div>
+</div>
+<div id="additional-resources" class="section level1 unnumbered">
+<h1>Additional resources</h1>
+<ul>
+<li>Section 14.3 of <span class="citation">Hastie, Tibshirani, and Friedman (2009)</span></li>
+</ul>
 </div>
 <div id="session-info" class="section level1 unnumbered">
 <h1>Session info</h1>
@@ -837,91 +1018,95 @@ Solution
 <summary>
 Session info
 </summary>
-<pre><code>#&gt; [1] &quot;2024-10-07 12:42:37 CEST&quot;
+<pre><code>#&gt; [1] &quot;2025-11-09 16:06:01 CET&quot;
 #&gt; ─ Session info ───────────────────────────────────────────────────────────────
 #&gt;  setting  value
-#&gt;  version  R version 4.4.0 RC (2024-04-16 r86468)
-#&gt;  os       macOS Big Sur 11.6
+#&gt;  version  R version 4.5.2 (2025-10-31)
+#&gt;  os       macOS Sequoia 15.6
 #&gt;  system   aarch64, darwin20
 #&gt;  ui       X11
 #&gt;  language (EN)
 #&gt;  collate  en_US.UTF-8
 #&gt;  ctype    en_US.UTF-8
 #&gt;  tz       Europe/Brussels
-#&gt;  date     2024-10-07
-#&gt;  pandoc   3.1.1 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/ (via rmarkdown)
+#&gt;  date     2025-11-09
+#&gt;  pandoc   3.6.3 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/aarch64/ (via rmarkdown)
+#&gt;  quarto   1.7.32 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto
 #&gt; 
 #&gt; ─ Packages ───────────────────────────────────────────────────────────────────
 #&gt;  package      * version date (UTC) lib source
-#&gt;  bookdown       0.40    2024-07-02 [1] CRAN (R 4.4.0)
-#&gt;  bslib          0.8.0   2024-07-29 [1] CRAN (R 4.4.0)
-#&gt;  cachem         1.1.0   2024-05-16 [1] CRAN (R 4.4.0)
-#&gt;  cli            3.6.3   2024-06-21 [1] CRAN (R 4.4.0)
-#&gt;  cluster      * 2.1.6   2023-12-01 [1] CRAN (R 4.4.0)
-#&gt;  colorspace     2.1-1   2024-07-26 [1] CRAN (R 4.4.0)
-#&gt;  digest         0.6.37  2024-08-19 [1] CRAN (R 4.4.1)
-#&gt;  dplyr        * 1.1.4   2023-11-17 [1] CRAN (R 4.4.0)
-#&gt;  evaluate       1.0.0   2024-09-17 [1] CRAN (R 4.4.1)
-#&gt;  fansi          1.0.6   2023-12-08 [1] CRAN (R 4.4.0)
-#&gt;  farver         2.1.2   2024-05-13 [1] CRAN (R 4.4.0)
-#&gt;  fastmap        1.2.0   2024-05-15 [1] CRAN (R 4.4.0)
-#&gt;  forcats      * 1.0.0   2023-01-29 [1] CRAN (R 4.4.0)
-#&gt;  gclus        * 1.3.2   2019-01-07 [1] CRAN (R 4.4.0)
-#&gt;  generics       0.1.3   2022-07-05 [1] CRAN (R 4.4.0)
-#&gt;  GGally       * 2.2.1   2024-02-14 [1] CRAN (R 4.4.0)
-#&gt;  ggbiplot     * 0.55    2024-10-02 [1] Github (vqv/ggbiplot@f7ea76d)
-#&gt;  ggplot2      * 3.5.1   2024-04-23 [1] CRAN (R 4.4.0)
-#&gt;  ggstats        0.7.0   2024-09-22 [1] CRAN (R 4.4.1)
-#&gt;  glue           1.8.0   2024-09-30 [1] CRAN (R 4.4.1)
-#&gt;  gridExtra      2.3     2017-09-09 [1] CRAN (R 4.4.0)
-#&gt;  gtable         0.3.5   2024-04-22 [1] CRAN (R 4.4.0)
-#&gt;  highr          0.11    2024-05-26 [1] CRAN (R 4.4.0)
-#&gt;  hms            1.1.3   2023-03-21 [1] CRAN (R 4.4.0)
-#&gt;  htmltools      0.5.8.1 2024-04-04 [1] CRAN (R 4.4.0)
-#&gt;  jquerylib      0.1.4   2021-04-26 [1] CRAN (R 4.4.0)
-#&gt;  jsonlite       1.8.9   2024-09-20 [1] CRAN (R 4.4.1)
-#&gt;  knitr          1.48    2024-07-07 [1] CRAN (R 4.4.0)
-#&gt;  labeling       0.4.3   2023-08-29 [1] CRAN (R 4.4.0)
-#&gt;  lifecycle      1.0.4   2023-11-07 [1] CRAN (R 4.4.0)
-#&gt;  lubridate    * 1.9.3   2023-09-27 [1] CRAN (R 4.4.0)
-#&gt;  magrittr       2.0.3   2022-03-30 [1] CRAN (R 4.4.0)
-#&gt;  mclust       * 6.1.1   2024-04-29 [1] CRAN (R 4.4.0)
-#&gt;  munsell        0.5.1   2024-04-01 [1] CRAN (R 4.4.0)
-#&gt;  pillar         1.9.0   2023-03-22 [1] CRAN (R 4.4.0)
-#&gt;  pkgconfig      2.0.3   2019-09-22 [1] CRAN (R 4.4.0)
-#&gt;  plyr         * 1.8.9   2023-10-02 [1] CRAN (R 4.4.0)
-#&gt;  purrr        * 1.0.2   2023-08-10 [1] CRAN (R 4.4.0)
-#&gt;  R6             2.5.1   2021-08-19 [1] CRAN (R 4.4.0)
-#&gt;  RColorBrewer   1.1-3   2022-04-03 [1] CRAN (R 4.4.0)
-#&gt;  Rcpp           1.0.13  2024-07-17 [1] CRAN (R 4.4.0)
-#&gt;  readr        * 2.1.5   2024-01-10 [1] CRAN (R 4.4.0)
-#&gt;  rlang          1.1.4   2024-06-04 [1] CRAN (R 4.4.0)
-#&gt;  rmarkdown      2.28    2024-08-17 [1] CRAN (R 4.4.0)
-#&gt;  rstudioapi     0.16.0  2024-03-24 [1] CRAN (R 4.4.0)
-#&gt;  sass           0.4.9   2024-03-15 [1] CRAN (R 4.4.0)
-#&gt;  scales       * 1.3.0   2023-11-28 [1] CRAN (R 4.4.0)
-#&gt;  sessioninfo    1.2.2   2021-12-06 [1] CRAN (R 4.4.0)
-#&gt;  stringi        1.8.4   2024-05-06 [1] CRAN (R 4.4.0)
-#&gt;  stringr      * 1.5.1   2023-11-14 [1] CRAN (R 4.4.0)
-#&gt;  tibble       * 3.2.1   2023-03-20 [1] CRAN (R 4.4.0)
-#&gt;  tidyr        * 1.3.1   2024-01-24 [1] CRAN (R 4.4.0)
-#&gt;  tidyselect     1.2.1   2024-03-11 [1] CRAN (R 4.4.0)
-#&gt;  tidyverse    * 2.0.0   2023-02-22 [1] CRAN (R 4.4.0)
-#&gt;  timechange     0.3.0   2024-01-18 [1] CRAN (R 4.4.0)
-#&gt;  tzdb           0.4.0   2023-05-12 [1] CRAN (R 4.4.0)
-#&gt;  utf8           1.2.4   2023-10-22 [1] CRAN (R 4.4.0)
-#&gt;  vctrs          0.6.5   2023-12-01 [1] CRAN (R 4.4.0)
-#&gt;  withr          3.0.1   2024-07-31 [1] CRAN (R 4.4.0)
-#&gt;  xfun           0.47    2024-08-17 [1] CRAN (R 4.4.0)
-#&gt;  yaml           2.3.10  2024-07-26 [1] CRAN (R 4.4.0)
+#&gt;  bookdown       0.45    2025-10-03 [1] CRAN (R 4.5.0)
+#&gt;  bslib          0.9.0   2025-01-30 [1] CRAN (R 4.5.0)
+#&gt;  cachem         1.1.0   2024-05-16 [1] CRAN (R 4.5.0)
+#&gt;  cli            3.6.5   2025-04-23 [1] CRAN (R 4.5.0)
+#&gt;  cluster      * 2.1.8.1 2025-03-12 [1] CRAN (R 4.5.2)
+#&gt;  digest         0.6.37  2024-08-19 [1] CRAN (R 4.5.0)
+#&gt;  dplyr        * 1.1.4   2023-11-17 [1] CRAN (R 4.5.0)
+#&gt;  evaluate       1.0.5   2025-08-27 [1] CRAN (R 4.5.0)
+#&gt;  farver         2.1.2   2024-05-13 [1] CRAN (R 4.5.0)
+#&gt;  fastmap        1.2.0   2024-05-15 [1] CRAN (R 4.5.0)
+#&gt;  forcats      * 1.0.1   2025-09-25 [1] CRAN (R 4.5.0)
+#&gt;  gclus        * 1.3.3   2025-03-28 [1] CRAN (R 4.5.0)
+#&gt;  generics       0.1.4   2025-05-09 [1] CRAN (R 4.5.0)
+#&gt;  ggbiplot     * 0.55    2025-11-05 [1] Github (vqv/ggbiplot@f7ea76d)
+#&gt;  ggplot2      * 4.0.0   2025-09-11 [1] CRAN (R 4.5.0)
+#&gt;  glue           1.8.0   2024-09-30 [1] CRAN (R 4.5.0)
+#&gt;  gridExtra    * 2.3     2017-09-09 [1] CRAN (R 4.5.0)
+#&gt;  gtable         0.3.6   2024-10-25 [1] CRAN (R 4.5.0)
+#&gt;  hms            1.1.4   2025-10-17 [1] CRAN (R 4.5.0)
+#&gt;  htmltools      0.5.8.1 2024-04-04 [1] CRAN (R 4.5.0)
+#&gt;  jquerylib      0.1.4   2021-04-26 [1] CRAN (R 4.5.0)
+#&gt;  jsonlite       2.0.0   2025-03-27 [1] CRAN (R 4.5.0)
+#&gt;  knitr          1.50    2025-03-16 [1] CRAN (R 4.5.0)
+#&gt;  labeling       0.4.3   2023-08-29 [1] CRAN (R 4.5.0)
+#&gt;  lifecycle      1.0.4   2023-11-07 [1] CRAN (R 4.5.0)
+#&gt;  lubridate    * 1.9.4   2024-12-08 [1] CRAN (R 4.5.0)
+#&gt;  magrittr       2.0.4   2025-09-12 [1] CRAN (R 4.5.0)
+#&gt;  mclust       * 6.1.2   2025-10-31 [1] CRAN (R 4.5.0)
+#&gt;  pillar         1.11.1  2025-09-17 [1] CRAN (R 4.5.0)
+#&gt;  pkgconfig      2.0.3   2019-09-22 [1] CRAN (R 4.5.0)
+#&gt;  plyr         * 1.8.9   2023-10-02 [1] CRAN (R 4.5.0)
+#&gt;  purrr        * 1.2.0   2025-11-04 [1] CRAN (R 4.5.0)
+#&gt;  R6             2.6.1   2025-02-15 [1] CRAN (R 4.5.0)
+#&gt;  RColorBrewer   1.1-3   2022-04-03 [1] CRAN (R 4.5.0)
+#&gt;  Rcpp           1.1.0   2025-07-02 [1] CRAN (R 4.5.0)
+#&gt;  readr        * 2.1.5   2024-01-10 [1] CRAN (R 4.5.0)
+#&gt;  rlang          1.1.6   2025-04-11 [1] CRAN (R 4.5.0)
+#&gt;  rmarkdown      2.30    2025-09-28 [1] CRAN (R 4.5.0)
+#&gt;  rstudioapi     0.17.1  2024-10-22 [1] CRAN (R 4.5.0)
+#&gt;  S7             0.2.0   2024-11-07 [1] CRAN (R 4.5.0)
+#&gt;  sass           0.4.10  2025-04-11 [1] CRAN (R 4.5.0)
+#&gt;  scales       * 1.4.0   2025-04-24 [1] CRAN (R 4.5.0)
+#&gt;  sessioninfo    1.2.3   2025-02-05 [1] CRAN (R 4.5.0)
+#&gt;  stringi        1.8.7   2025-03-27 [1] CRAN (R 4.5.0)
+#&gt;  stringr      * 1.6.0   2025-11-04 [1] CRAN (R 4.5.0)
+#&gt;  tibble       * 3.3.0   2025-06-08 [1] CRAN (R 4.5.0)
+#&gt;  tidyr        * 1.3.1   2024-01-24 [1] CRAN (R 4.5.0)
+#&gt;  tidyselect     1.2.1   2024-03-11 [1] CRAN (R 4.5.0)
+#&gt;  tidyverse    * 2.0.0   2023-02-22 [1] CRAN (R 4.5.0)
+#&gt;  timechange     0.3.0   2024-01-18 [1] CRAN (R 4.5.0)
+#&gt;  tzdb           0.5.0   2025-03-15 [1] CRAN (R 4.5.0)
+#&gt;  vctrs          0.6.5   2023-12-01 [1] CRAN (R 4.5.0)
+#&gt;  withr          3.0.2   2024-10-28 [1] CRAN (R 4.5.0)
+#&gt;  xfun           0.54    2025-10-30 [1] CRAN (R 4.5.0)
+#&gt;  yaml           2.3.10  2024-07-26 [1] CRAN (R 4.5.0)
 #&gt; 
-#&gt;  [1] /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library
+#&gt;  [1] /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library
+#&gt;  * ── Packages attached to the search path.
 #&gt; 
 #&gt; ──────────────────────────────────────────────────────────────────────────────</code></pre>
 </details>
 </div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-esl-book" class="csl-entry">
+Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. <em>The Elements of Statistical Learning</em>. 2nd ed. Springer.
+</div>
+</div>
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTGFiIDU6IENsdXN0ZXJpbmciCnN1YnRpdGxlOiAiSGlnaCBEaW1lbnNpb25hbCBEYXRhIEFuYWx5c2lzIHByYWN0aWNhbHMiCmF1dGhvcjogIk1pbGFuIE1hbGZhaXQiCmRhdGU6ICIyNCBGZWIgMjAyMiA8YnIvPiAoTGFzdCB1cGRhdGVkOiAyMDIyLTAyLTIyKSIKLS0tCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRSwgY2FjaGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldCgKICBjb2xsYXBzZSA9IFRSVUUsCiAgY29tbWVudCA9ICIjPiIsCiAgZmlnLnNob3cgPSAiaG9sZCIKKQoKb3B0aW9ucyh3aWR0aCA9IDgwKQpgYGAKCiMjIyBbQ2hhbmdlIGxvZ10oaHR0cHM6Ly9naXRodWIuY29tL3N0YXRPbWljcy9IRERBL2NvbW1pdHMvbWFzdGVyL0xhYjYtQ2x1c3RlcmluZy5SbWQpIHstfQoKKioqCgpgYGB7ciBsaWJyYXJpZXMsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CiMjIEluc3RhbGwgbmVjZXNzYXJ5IHBhY2thZ2VzIHdpdGg6CgojIGluc3RhbGwucGFja2FnZXMoYygibWNsdXN0IiwgImdjbHVzIiwgIkdHYWxseSIsICJ0aWR5dmVyc2UiKSkKCiMgaWYgKCFyZXF1aXJlTmFtZXNwYWNlKCJyZW1vdGVzIiwgcXVpZXRseSA9IFRSVUUpKSB7CiMgICAgIGluc3RhbGwucGFja2FnZXMoInJlbW90ZXMiKQojIH0KIyByZW1vdGVzOjppbnN0YWxsX2dpdGh1YigidnF2L2dnYmlwbG90IikKCmxpYnJhcnkobWNsdXN0KQpsaWJyYXJ5KGdjbHVzKSAgIyBjb250YWlucyB0aGUgJ3dpbmUnIGRhdGEKbGlicmFyeShnZ2JpcGxvdCkKbGlicmFyeShHR2FsbHkpCmxpYnJhcnkodGlkeXZlcnNlKQoKdGhlbWVfc2V0KHRoZW1lX21pbmltYWwoKSkKYGBgCgoKIyBUaGUgd2luZSBkYXRhCgpJbiB0aGlzIGxhYiBzZXNzaW9uLCB3ZSB3aWxsIGV4cGxvcmUgdGhlIFtgd2luZWBdW3dpbmVdIGRhdGEsIGZvbGxvd2luZyB0aGUKZXhhbXBsZSBhbmFseXNpcyBmcm9tIFtTY3J1Y2NhICpldCBhbC4qICgyMDE2KV1bc2NydWNjYTIwMTZdLgoKVGhpcyBkYXRhc2V0IHByb3ZpZGVzIDEzIG1lYXN1cmVtZW50cyBvYnRhaW5lZCBmcm9tIGEgY2hlbWljYWwgYW5hbHlzaXMgb2YgMTc4CndpbmVzIGdyb3duIGluIHRoZSBzYW1lIHJlZ2lvbiBpbiBJdGFseSBidXQgZGVyaXZlZCBmcm9tIHRocmVlIGRpZmZlcmVudApjdWx0aXZhcnMgKEJhcm9sbywgR3JpZ25vbGlubywgQmFyYmVyYSkuIFRoZSBvcmlnaW5hbCBjdWx0aXZhciBsYWJlbHMgYXJlCnByb3ZpZGVkIGluIHRoZSBkYXRhc2V0LgoKV2Ugd2lsbCBhcHBseSBkaWZmZXJlbnQgY2x1c3RlcmluZyBhbGdvcml0aG1zIGFuZCB2YWxpZGF0ZSB0aGVtIGJ5IGNvbXBhcmluZyBob3cKd2VsbCB0aGUgY2x1c3RlcnMgY2FwdHVyZSB0aGUgb3JpZ2luYWwgY2xhc3Nlcy4KCmBgYHtyfQpkYXRhKCJ3aW5lIiwgcGFja2FnZSA9ICJnY2x1cyIpCmNsYXNzIDwtIGZhY3Rvcih3aW5lJENsYXNzLCBsZXZlbHMgPSAxOjMsIGxhYmVscyA9IGMoIkJhcm9sbyIsICJHcmlnbm9saW5vIiwgIkJhcmJlcmEiKSkKdGFibGUoY2xhc3MpCgpYIDwtIGFzLm1hdHJpeCh3aW5lWywgLTFdKQpzdW1tYXJ5KFgpCmBgYAoKCiMgSGllcmFyY2hpY2FsIGNsdXN0ZXJpbmcKCiMjIyBUYXNrcyB7LX0KCiMjIyMgMS4gUGVyZm9ybSBoaWVyYXJoaWNhbCBjbHVzdGVyaW5nIG9mIHRoZSB3aW5lIGRhdGEsIHVzaW5nIGEgRXVjbGlkZWFuIGRpc3RhbmNlIG1hdHJpeCBhbmQgdGhlIGNvbXBsZXRlLWxpbmthZ2UgYWxnb3JpdGhtIChzZWUgYD9oY2x1c3RgKS4gUGxvdCB0aGUgY2x1c3RlcmluZyAqZGVuZHJvZ3JhbSouIHstfQoKPGRldGFpbHM+PHN1bW1hcnk+U29sdXRpb248L3N1bW1hcnk+CgpgYGB7cn0KIyMgQ2FsY3VsYXRlIGRpc3RhbmNlIG1hdHJpeCBhbmQgcGVyZm9ybSBoaWVyYXJjaGljYWwgY2x1c3RlcmluZwp3aW5lX2Rpc3QgPC0gZGlzdChYLCBtZXRob2QgPSAiZXVjbGlkZWFuIikKaGMgPC0gaGNsdXN0KHdpbmVfZGlzdCwgbWV0aG9kID0gImNvbXBsZXRlIikKCnBsb3QoaGMsIGxhYmVscyA9IEZBTFNFKQpgYGAKCjwvZGV0YWlscz4KCiMjIyMgMi4gU2VsZWN0IGFuIGFwcHJvcHJpYXRlIG51bWJlciBvZiBjbHVzdGVycyBmcm9tIHRoZSBoaWVyYXJjaGljYWwgY2x1c3RlcmluZyAoc2VlIGA/Y3V0cmVlYCkuIFZpc3VhbGl6ZSB0aGUgY2x1c3RlcnMgb24gYSBQQ0EgYmlwbG90IGFuZCBjb21wYXJlIHdpdGggdGhlIG9yaWdpbmFsIGxhYmVscy4gey19CgpgYGB7cn0KaGNfY2x1c3RlcnMgPC0gY3V0cmVlKGhjLCBrID0gMykKdGFibGUoY2xhc3MsIGhjX2NsdXN0ZXJzKQpgYGAKCjxkZXRhaWxzPjxzdW1tYXJ5PlNvbHV0aW9uPC9zdW1tYXJ5PgoKYGBge3IsIGZpZy5hc3A9MX0Kd2luZV9wY2EgPC0gcHJjb21wKFgsIHNjYWxlLiA9IFRSVUUpCgpnZ2JpcGxvdCh3aW5lX3BjYSwgZ3JvdXBzID0gY2xhc3MpICsKICBzY2FsZV9jb2xvcl9icmV3ZXIocGFsZXR0ZSA9ICJTZXQyIikgKwogIGxhYnMoY29sb3IgPSAiT3JpZ2luYWwgbGFiZWxzIikgKwogIHRoZW1lKGFzcGVjdC5yYXRpbyA9IDAuOCwgbGVnZW5kLnBvc2l0aW9uID0gInRvcCIpCgpnZ2JpcGxvdCh3aW5lX3BjYSwgZ3JvdXBzID0gZmFjdG9yKGhjX2NsdXN0ZXJzKSkgKwogIHNjYWxlX2NvbG9yX2JyZXdlcihwYWxldHRlID0gIlNldDIiKSArCiAgbGFicyhjb2xvciA9ICJIQyBjbHVzdGVycyIpICsKICB0aGVtZShhc3BlY3QucmF0aW8gPSAwLjgsIGxlZ2VuZC5wb3NpdGlvbiA9ICJ0b3AiKQpgYGAKCjwvZGV0YWlscz4KCiMjIyMgQm9udXM6IGNhbiB5b3UgaW1wcm92ZSB0aGUgcmVzdWx0cyBieSB1c2luZyBkaWZmZXJlbnQgZGlzdGFuY2UgbWV0cmljcyBvciBsaW5rYWdlcz8gey19CgoKIyBNb2RlbC1iYXNlZCBjbHVzdGVyaW5nCgojIyMgVGFza3Mgey19CgojIyMjIDEuIFBlcmZvcm0gbW9kZWwtYmFzZWQgY2x1c3RlcmluZyBvbiB0aGUgYHdpbmVgIGRhdGEgKHVzZSBbYG1jbHVzdDo6TWNsdXN0KClgXVttY2x1c3RdKS4gUGxvdCB0aGUgQklDIHZhbHVlcyBhbmQgaW50ZXJwcmV0IHRoZSByZXN1bHRzLiBDb21wYXJlIHRoZSBpZGVudGlmaWVkIGNsdXN0ZXJzIHdpdGggdGhlIG9yaWdpbmFsICh0cnVlKSBsYWJlbHMuIHstfQoKPGRldGFpbHM+PHN1bW1hcnk+U29sdXRpb248L3N1bW1hcnk+CgpgYGB7cn0KbW9kIDwtIE1jbHVzdChYKQpzdW1tYXJ5KG1vZCkKc3VtbWFyeShtb2QkQklDKQpgYGAKCmBgYHtyfQp0YWJsZShjbGFzcywgbW9kJGNsYXNzaWZpY2F0aW9uKQoKIyMgQW5ub3RhdGUgY2x1c3RlcnMKbWNfY2x1c3RlcnMgPC0gZmFjdG9yKG1vZCRjbGFzc2lmaWNhdGlvbikKYGBgCgpgYGB7cn0KcGxvdChtb2QsIHdoYXQgPSAiQklDIiwgeWxpbSA9IHJhbmdlKG1vZCRCSUNbLCAtKDE6MildLCBuYS5ybSA9IFRSVUUpLAogIGxlZ2VuZEFyZ3MgPSBsaXN0KHggPSAiYm90dG9tbGVmdCIpCikKcGxvdChtb2QsIHdoYXQgPSAiY2xhc3NpZmljYXRpb24iKQpgYGAKClRoZXJlIGlzIGEgY2xlYXIgaW5kaWNhdGlvbiBvZiBhIHRocmVlLWNvbXBvbmVudCBtaXh0dXJlIHdpdGggY292YXJpYW5jZXMgaGF2aW5nCmRpZmZlcmVudCBzaGFwZXMgYW5kIHZvbHVtZXMgYnV0IHRoZSBzYW1lIG9yaWVudGF0aW9uIChWVkUpLiBTZWUKYD9tY2x1c3RNb2RlbE5hbWVzYCBmb3IgYSBkZXNjcmlwdGlvbiBvZiB0aGUgZGlmZmVyZW50IGBtY2x1c3RgIG1vZGVscy4KCjwvZGV0YWlscz4KCiMjIyMgMi4gVmlzdWFsaXplIHRoZSBjbHVzdGVycyBmb3VuZCBieSBgTWNsdXN0KClgIG9uIHRoZSBQQ0EgYmlwbG90LiBDb21wYXJlIHdpdGggdGhlIG9yaWdpbmFsIGxhYmVscy4gey19Cgo8ZGV0YWlscz48c3VtbWFyeT5Tb2x1dGlvbjwvc3VtbWFyeT4KCmBgYHtyLCBmaWcuYXNwPTF9CmdnYmlwbG90KHdpbmVfcGNhLCBncm91cHMgPSBjbGFzcykgKwogIHNjYWxlX2NvbG9yX2JyZXdlcihwYWxldHRlID0gIlNldDIiKSArCiAgbGFicyhjb2xvciA9ICJPcmlnaW5hbCBsYWJlbHMiKSArCiAgdGhlbWUoYXNwZWN0LnJhdGlvID0gMC44LCBsZWdlbmQucG9zaXRpb24gPSAidG9wIikKCiMjIFBDQSBwbG90IGFubm90YXRlZCB3aXRoIGNsdXN0ZXJzCmdnYmlwbG90KHdpbmVfcGNhLCBncm91cHMgPSBtY19jbHVzdGVycykgKwogIGxhYnMoY29sb3IgPSAibWNsdXN0IGNsdXN0ZXJzIikgKwogIHNjYWxlX2NvbG9yX2JyZXdlcihwYWxldHRlID0gIlNldDIiKSArCiAgdGhlbWUoYXNwZWN0LnJhdGlvID0gMC44LCBsZWdlbmQucG9zaXRpb24gPSAidG9wIikKYGBgCgo8L2RldGFpbHM+CgojIyMjIDMuIFBlcmZvcm0gYSBkaW1lbnNpb25hbGl0eSByZWR1Y3Rpb24gb2YgdGhlIHdpbmUgZGF0YSB1c2luZyB0aGUgUENBLiBTZWxlY3QgYW4gYXBwcm9wcmlhdGUgbnVtYmVyIG9mIFBDJ3MuIFJlZG8gdGhlIGNsdXN0ZXJpbmcgb24gdGhpcyByZWR1Y2VkIGRpbWVuc2lvbiByZXByZXNlbnRhdGlvbiBhbmQgbWFrZSB0aGUgc2FtZSBmaWd1cmVzIGFzIGJlZm9yZS4gSG93IGRvIHRoZSByZXN1bHRzIGRpZmZlcj8gey19Cgo8ZGV0YWlscz48c3VtbWFyeT5Tb2x1dGlvbjwvc3VtbWFyeT4KCmBgYHtyfQojIyBDYWxjdWxhdGUgdG90YWwgdmFyaWFuY2UgYnkgc3VtbWluZyB0aGUgUEMgdmFyaWFuY2VzIChzZGV2J3Mgc3F1YXJlZCkKdG90X3ZhciA8LSBzdW0od2luZV9wY2Ekc2Rldl4yKQoKIyMgQ3JlYXRlIGRhdGEuZnJhbWUgb2YgdGhlIHByb3BvcnRpb24gb2YgdmFyaWFuY2UgZXhwbGFpbmVkIGJ5IGVhY2ggUEMKd2luZV9wcm9wX3ZhciA8LSBkYXRhLmZyYW1lKAogIFBDID0gMTpuY29sKHdpbmVfcGNhJHgpLAogIHZhciA9IHdpbmVfcGNhJHNkZXZeMgopICU+JQogICMjIFVzaW5nIGBtdXRhdGVgIHRvIGNhbGN1bGF0ZSBwcm9wLiB2YXIgYW5kIGN1bS4gcHJvcC4gdmFyCiAgbXV0YXRlKAogICAgcHJvcF92YXIgPSB2YXIgLyB0b3RfdmFyLAogICAgY3VtX3Byb3BfdmFyID0gY3Vtc3VtKHZhciAvIHRvdF92YXIpCiAgKQoKd2luZV9wcm9wX3ZhcgoKIyMgUGxvdCB0aGUgcHJvcG9ydGlvbiBvZiB2YXJpYW5jZSBleHBsYWluZWQgYnkgZWFjaCBQQwpwMSA8LSBnZ3Bsb3Qod2luZV9wcm9wX3ZhciwgYWVzKFBDLCBwcm9wX3ZhcikpICsKICBnZW9tX3BvaW50KCkgKwogIGdlb21fbGluZSgpICsKICBnZW9tX3ZsaW5lKHhpbnRlcmNlcHQgPSA2LjUsIGNvbCA9ICJmaXJlYnJpY2siKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcyA9IDE6bmNvbCh3aW5lX3BjYSR4KSkgKwogIGxhYnMoeSA9ICJQcm9wb3J0aW9uIG9mIHZhcmlhbmNlIikKCiMjIFBsb3QgdGhlIGN1bXVsYXRpdmUgcHJvcG9ydGlvbiBvZiB2YXJpYW5jZSBleHBsYWluZWQgYnkgZWFjaCBQQwpwMiA8LSBnZ3Bsb3Qod2luZV9wcm9wX3ZhciwgYWVzKFBDLCBjdW1fcHJvcF92YXIpKSArCiAgZ2VvbV9wb2ludCgpICsKICBnZW9tX2xpbmUoKSArCiAgZ2VvbV92bGluZSh4aW50ZXJjZXB0ID0gNi41LCBjb2wgPSAiZmlyZWJyaWNrIikgKwogIHNjYWxlX3hfY29udGludW91cyhicmVha3MgPSAxOm5jb2wod2luZV9wY2EkeCkpICsKICBsYWJzKHkgPSAiQ3VtdWxhdGl2ZSBwcm9wb3J0aW9uIG9mIHZhcmlhbmNlIikKCmdyaWRFeHRyYTo6Z3JpZC5hcnJhbmdlKHAxLCBwMiwgbmNvbCA9IDIpCmBgYAoKU2VsZWN0aW5nIGZpcnN0IDYgUEMncywga2VlcGluZyA4NSUgb2YgdGhlIHZhcmlhbmNlLgoKYGBge3J9CmsgPC0gNgpwY2FfWCA8LSB3aW5lX3BjYSR4WywgMTprXQpoZWFkKHBjYV9YKQpgYGAKCmBgYHtyfQptb2QyIDwtIE1jbHVzdChwY2FfWCkKc3VtbWFyeShtb2QyKQpzdW1tYXJ5KG1vZDIkQklDKQpgYGAKCmBgYHtyfQp0YWJsZShjbGFzcywgbW9kMiRjbGFzc2lmaWNhdGlvbikKCiMjIEFubm90YXRlIGNsdXN0ZXJzCm1jX3BjYV9jbHVzdGVycyA8LSBmYWN0b3IobW9kMiRjbGFzc2lmaWNhdGlvbikKYGBgCgpgYGB7ciwgZmlnLmFzcD0wLjh9CnBsb3QobW9kMiwgd2hhdCA9ICJCSUMiLCB5bGltID0gcmFuZ2UobW9kMiRCSUNbLCAtKDE6MildLCBuYS5ybSA9IFRSVUUpLAogIGxlZ2VuZEFyZ3MgPSBsaXN0KHggPSAiYm90dG9tbGVmdCIpCikKYGBgCgpgYGB7ciwgZmlnLmFzcD0xfQpkZiA8LSBhcy5kYXRhLmZyYW1lKHBjYV9YKQpkZiRjbHVzdGVycyA8LSBtY19wY2FfY2x1c3RlcnMKCiMjIFVzaW5nIGdnc2NhdG1hdCgpIGZyb20gR0dhbGx5IHBhY2thZ2UgdG8gcGxvdCBhbGwgcGFpcndpc2UgUENzCmdnc2NhdG1hdChkZiwgY29sdW1ucyA9IDE6aywgY29sb3IgPSAiY2x1c3RlcnMiKSArCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gImJvdHRvbSIsIGFzcGVjdC5yYXRpbyA9IDAuNikgKwogIHNjYWxlX2NvbG9yX2JyZXdlcihwYWxldHRlID0gIlNldDIiLCBuYW1lID0gIm1jbHVzdC1QQ0EgY2x1c3RlcnMiKQpgYGAKCipOb3RlOiB5b3UgY2FuIGlnbm9yZSB0aGUgdXBwZXItcmlnaHQgcGFuZWxzIG9mIHRoaXMgZmlndXJlLiBUaGVzZSBnaXZlIHRoZSBjb3JyZWxhdGlvbnMgYmV0d2VlbiBlYWNoIHBhaXIgb2YgdmFyaWFibGVzIChQQydzIGhlcmUpIGZvciBlYWNoIGdyb3VwLCBidXQgYXJlIG5vdCByZWxldmFudCBoZXJlLioKCjwvZGV0YWlscz4KCgoKYGBge3IsIGNoaWxkPSJfc2Vzc2lvbi1pbmZvLlJtZCJ9CmBgYAoKW3dpbmVdOiBodHRwczovL3JkcnIuaW8vY3Jhbi9nY2x1cy9tYW4vd2luZS5odG1sCltzY3J1Y2NhMjAxNl06IGh0dHBzOi8vc3ZuLnItcHJvamVjdC5vcmcvUmpvdXJuYWwvaHRtbC9hcmNoaXZlLzIwMTYvUkotMjAxNi0wMjEvUkotMjAxNi0wMjEucGRmClttY2x1c3RdOiBodHRwczovL3JkcnIuaW8vY3Jhbi9tY2x1c3QvbWFuL01jbHVzdC5odG1sCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTGFiIDU6IENsdXN0ZXJpbmciCnN1YnRpdGxlOiAiSGlnaCBEaW1lbnNpb25hbCBEYXRhIEFuYWx5c2lzIHByYWN0aWNhbHMiCmF1dGhvcjogIk1pbGFuIE1hbGZhaXQgYW5kIExlbyBGdWhyaG9wIgpkYXRlOiAiMjQgRmViIDIwMjIgPGJyLz4gKExhc3QgdXBkYXRlZDogMjAyNS0xMS0wOSkiCnJlZmVyZW5jZXM6Ci0gaWQ6IGVzbC1ib29rCiAgdHlwZTogYm9vawogIGF1dGhvcjoKICAtIGZhbWlseTogSGFzdGllCiAgICBnaXZlbjogVHJldm9yCiAgLSBmYW1pbHk6IFRpYnNoaXJhbmkKICAgIGdpdmVuOiBSb2JlcnQKICAtIGZhbWlseTogRnJpZWRtYW4KICAgIGdpdmVuOiBKZXJvbWUKICBpc3N1ZWQ6CiAgLSB5ZWFyOiAyMDA5CiAgdGl0bGU6IFRoZSBFbGVtZW50cyBvZiBTdGF0aXN0aWNhbCBMZWFybmluZwogIHB1Ymxpc2hlcjogU3ByaW5nZXIKICBlZGl0aW9uOiAybmQKLS0tCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRSwgY2FjaGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldCgKICBjb2xsYXBzZSA9IFRSVUUsCiAgY29tbWVudCA9ICIjPiIsCiAgZmlnLnNob3cgPSAiaG9sZCIKKQoKb3B0aW9ucyh3aWR0aCA9IDgwKQpgYGAKCiMjIyBbQ2hhbmdlIGxvZ10oaHR0cHM6Ly9naXRodWIuY29tL3N0YXRPbWljcy9IRERBL2NvbW1pdHMvbWFzdGVyL0xhYjYtQ2x1c3RlcmluZy5SbWQpIHstfQoKKioqCgpgYGB7ciBsaWJyYXJpZXMsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CiMjIEluc3RhbGwgbmVjZXNzYXJ5IHBhY2thZ2VzIHdpdGg6CgojIGluc3RhbGwucGFja2FnZXMoYygibWNsdXN0IiwgImdjbHVzIiwgInRpZHl2ZXJzZSIsICJncmlkRXh0cmEiKSkKCiMgaWYgKCFyZXF1aXJlTmFtZXNwYWNlKCJyZW1vdGVzIiwgcXVpZXRseSA9IFRSVUUpKSB7CiMgICAgIGluc3RhbGwucGFja2FnZXMoInJlbW90ZXMiKQojIH0KIyByZW1vdGVzOjppbnN0YWxsX2dpdGh1YigidnF2L2dnYmlwbG90IikKCmxpYnJhcnkobWNsdXN0KQpsaWJyYXJ5KGdjbHVzKSAgIyBjb250YWlucyB0aGUgJ3dpbmUnIGRhdGEKbGlicmFyeShnZ2JpcGxvdCkKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZ3JpZEV4dHJhKQoKdGhlbWVfc2V0KHRoZW1lX21pbmltYWwoKSkKYGBgCgoKIyBUaGUgd2luZSBkYXRhCgpJbiB0aGlzIGxhYiBzZXNzaW9uLCB3ZSB3aWxsIGV4cGxvcmUgdGhlIFtgd2luZWBdW3dpbmVdIGRhdGEsIGZvbGxvd2luZyB0aGUKZXhhbXBsZSBhbmFseXNpcyBmcm9tIFtTY3J1Y2NhICpldCBhbC4qICgyMDE2KV1bc2NydWNjYTIwMTZdLgoKVGhpcyBkYXRhc2V0IHByb3ZpZGVzIDEzIG1lYXN1cmVtZW50cyBvYnRhaW5lZCBmcm9tIGEgY2hlbWljYWwgYW5hbHlzaXMgb2YgMTc4CndpbmVzIGdyb3duIGluIHRoZSBzYW1lIHJlZ2lvbiBpbiBJdGFseSBidXQgZGVyaXZlZCBmcm9tIHRocmVlIGRpZmZlcmVudApjdWx0aXZhcnMgKEJhcm9sbywgR3JpZ25vbGlubywgQmFyYmVyYSkuIFRoZSBvcmlnaW5hbCBjdWx0aXZhciBsYWJlbHMgYXJlCnByb3ZpZGVkIGluIHRoZSBkYXRhc2V0LgoKV2Ugd2lsbCBhcHBseSBkaWZmZXJlbnQgY2x1c3RlcmluZyBhbGdvcml0aG1zIGFuZCB2YWxpZGF0ZSB0aGVtIGJ5IGNvbXBhcmluZyBob3cKd2VsbCB0aGUgY2x1c3RlcnMgY2FwdHVyZSB0aGUgb3JpZ2luYWwgY2xhc3Nlcy4KCmBgYHtyfQpkYXRhKCJ3aW5lIiwgcGFja2FnZSA9ICJnY2x1cyIpCmNsYXNzIDwtIGZhY3Rvcih3aW5lJENsYXNzLCBsZXZlbHMgPSAxOjMsIGxhYmVscyA9IGMoIkJhcm9sbyIsICJHcmlnbm9saW5vIiwgIkJhcmJlcmEiKSkKdGFibGUoY2xhc3MpCgpYIDwtIGFzLm1hdHJpeCh3aW5lWywgLTFdKQpzdW1tYXJ5KFgpCmBgYAoKV2Ugd2lsbCB1c2UgYSBQQ0EgdG8gdmlzdWFsaXplIHRoZSBkYXRhLCBhbG9uZyB3aXRoIHRoZSBjbGFzcyBsYWJlbHMsIGluIGEgbG93LWRpbWVuc2lvbmFsIHNwYWNlLgpUaGlzIHdpbGwgYWxsb3cgdXMgdG8gaW50ZXJwcmV0IHRoZSByZXN1bHRzIG9mIHRoZSBjbHVzdGVyaW5nIGFsZ29yaXRobXMgbW9yZSBlYXNpbHkuCgojIyMgVGFza3Mgey19CgojIyMjIDEuIFBlcmZvcm0gYSBQQ0Egb2YgdGhlIHNjYWxlZCBgd2luZWAgZGF0YS4gey19Cgo8ZGV0YWlscz48c3VtbWFyeT5Tb2x1dGlvbjwvc3VtbWFyeT4KCmBgYHtyfQp3aW5lX3BjYSA8LSBwcmNvbXAoWCwgc2NhbGUuID0gVFJVRSkKYGBgCgo8L2RldGFpbHM+CgojIyMjIDIuIENyZWF0ZSBhIGJpcGxvdCBvZiB0aGUgZmlyc3QgdHdvIFBDcy4gQ29sb3IgZWFjaCBvYnNlcnZhdGlvbiBieSBpdHMgY2xhc3MgbGFiZWwuIEludGVycHJldCB0aGUgUENzLiBIb3cgZGlzdGluZ3Vpc2hhYmxlIGFyZSB0aGUgY2xhc3NlcyB3aXRoIHJlc3BlY3QgdG8gdGhlIFBDcz8gey19Cgo8ZGV0YWlscz48c3VtbWFyeT5Tb2x1dGlvbjwvc3VtbWFyeT4KClVzaW5nIGBnZ2JpcGxvdGA6CgpgYGB7cn0KY29scyA8LSBjKCJCYXJvbG8iID0gIiMyOGEwMjgiLCAiR3JpZ25vbGlubyIgPSAiI2RhNjg1MiIsICJCYXJiZXJhIiA9ICIjMDA3OGNkIikKCmdnYmlwbG90KHdpbmVfcGNhLCBncm91cHMgPSBjbGFzcykgKwogIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXMgPSBjb2xzKSArCiAgbGFicyhjb2xvciA9ICJUcnVlIGxhYmVscyIpICsKICB0aGVtZShhc3BlY3QucmF0aW8gPSAwLjgsIGxlZ2VuZC5wb3NpdGlvbiA9ICJ0b3AiKQpgYGAKCkFsdGVybmF0aXZlbHksIHVzaW5nIGJhc2UgYFJgIHBsb3R0aW5nOgoKYGBge3J9ClprIDwtIHdpbmVfcGNhJHhbLCAxOjJdClZrIDwtIHdpbmVfcGNhJHJvdGF0aW9uWywgMToyXQoKcGxvdChaaywgcGNoID0gMjAsCiAgY29sID0gY29sc1tjbGFzc10sCiAgeGxhYiA9ICJQQzEiLCB5bGFiID0gIlBDMiIKKQpsZWdlbmQoInRvcGxlZnQiLCBsZXZlbHMoY2xhc3MpLAogIGNvbCA9IGNvbHMsCiAgcGNoID0gMTkKKQphbHBoYSA8LSA1ICMgcmVzY2FsaW5nCmZvciAoaSBpbiAxOjEzKSB7CiAgYXJyb3dzKDAsIDAsIGFscGhhICogVmtbaSwgMV0sIGFscGhhICogVmtbaSwgMl0sIGxlbmd0aCA9IDAuMiwgY29sID0gIiM4ZjQwNDAiKQogIHRleHQoYWxwaGEgKiBWa1tpLCAxXSwgYWxwaGEgKiBWa1tpLCAyXSwgcm93bmFtZXMoVmspW2ldLCBjb2wgPSAiIzhmNDA0MCIpCn0KYGBgCgpfX0ludGVycHJldGF0aW9uX186IExvdyB2YWx1ZXMgb24gUEMxIGNvcnJlc3BvbmQgdG8gaGVhdmllciwgYWdlZCwgbW9yZSBzdHJ1Y3R1cmVkIHdpbmVzLCB3aGlsZSBoaWdoIHZhbHVlcyBpbmRpY2F0ZSBmcmVzaGVyLCBsZXNzIGhlYXZ5LCB5b3VuZ2VyIHdpbmVzLiAKSGlnaCB2YWx1ZXMgb24gUEMyIGNvcnJlc3BvbmQgdG8gbGlnaHRlci1jb2xvcmVkIHdpbmVzIHdpdGggbG93ZXIgYWxjb2hvbCBjb250ZW50LgpJbXBvcnRhbnRseSwgdGhlIHRocmVlIGNsYXNzZXMgYXJlIHF1aXRlIGNsZWFybHkgdmlzdWFsbHkgc2VwYXJhdGVkIHdpdGggbGl0dGxlIG92ZXJsYXAgYmV0d2VlbiB0aGVtLiBXZSBjYW4gdGh1cyByZWx5IG9uIHRoZSBiaXBsb3QgdG8gdmlzdWFsbHkgaW52ZXN0aWdhdGUgaG93IHdlbGwgYSBjbHVzdGVyaW5nIGFsZ29yaXRobSByZWNvdmVycyB0aGUgdHJ1ZSBjbGFzc2VzLiAKCjwvZGV0YWlscz4KCiMgSGllcmFyY2hpY2FsIGNsdXN0ZXJpbmcKCiMjIyBUYXNrcyB7LX0KCiMjIyMgMS4gUGVyZm9ybSBoaWVyYXJjaGljYWwgY2x1c3RlcmluZyBvZiB0aGUgd2luZSBkYXRhLCB1c2luZyBhIEV1Y2xpZGVhbiBkaXN0YW5jZSBtYXRyaXggYW5kIHRoZSBjb21wbGV0ZS1saW5rYWdlIGFsZ29yaXRobSAoc2VlIGA/aGNsdXN0YCkuIHstfQoKPGRldGFpbHM+PHN1bW1hcnk+U29sdXRpb248L3N1bW1hcnk+CgpgYGB7cn0KIyBDYWxjdWxhdGUgZGlzdGFuY2UgbWF0cml4IGFuZCBwZXJmb3JtIGhpZXJhcmNoaWNhbCBjbHVzdGVyaW5nCndpbmVfZGlzdCA8LSBkaXN0KFgsIG1ldGhvZCA9ICJldWNsaWRlYW4iKQpoYyA8LSBoY2x1c3Qod2luZV9kaXN0LCBtZXRob2QgPSAiY29tcGxldGUiKQpgYGAKCjwvZGV0YWlscz4KCiMjIyMgMi4gUGxvdCB0aGUgY2x1c3RlcmluZyAqZGVuZHJvZ3JhbSouIHstfQoKPGRldGFpbHM+PHN1bW1hcnk+U29sdXRpb248L3N1bW1hcnk+CgpgYGB7cn0KcGxvdChoYywgbGFiZWxzID0gRkFMU0UpCmBgYAoKPC9kZXRhaWxzPgoKIyMjIyAzLiBVc2UgYGN1dHJlZWAgdG8gc2VsZWN0IHRocmVlIGNsdXN0ZXJzIGZyb20gdGhlIGhpZXJhcmNoaWNhbCBjbHVzdGVyaW5nLiBSZWNyZWF0ZSB0aGUgUENBIGJpcGxvdCBmcm9tIFNlY3Rpb24gMSwgYnV0IGNvbG9yIGVhY2ggb2JzZXJ2YXRpb24gYWNjb3JkaW5nIHRvIGl0cyBjbHVzdGVyLiBDb21wYXJlIHRoZSByZXN1bHRpbmcgYmlwbG90IHRvIHRoZSBlYXJsaWVyIG9uZSBmcm9tIFNlY3Rpb24gMS4gey19Cgo8ZGV0YWlscz48c3VtbWFyeT5Tb2x1dGlvbjwvc3VtbWFyeT4KCmBgYHtyfQojIFNlbGVjdCB0aHJlZSBjbHVzdGVycwpoY19jbHVzdGVycyA8LSBjdXRyZWUoaGMsIGsgPSAzKQojIFRhYnVsYXRlIGNsdXN0ZXJzIGFnYWluc3QgdHJ1ZSBjbGFzc2VzCnRhYmxlKGNsYXNzLCBoY19jbHVzdGVycykKYGBgCgpCaXBsb3Qgd2l0aCBgZ2diaXBsb3RgOgoKYGBge3J9CnBsb3QxIDwtIGdnYmlwbG90KHdpbmVfcGNhLCBncm91cHMgPSBjbGFzcykgKwogIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXMgPSBjb2xzKSArCiAgbGFicyhjb2xvciA9ICJUcnVlIGxhYmVscyIpICsKICB0aGVtZShhc3BlY3QucmF0aW8gPSAwLjgsIGxlZ2VuZC5wb3NpdGlvbiA9ICJ0b3AiKQoKcGxvdDIgPC0gZ2diaXBsb3Qod2luZV9wY2EsIGdyb3VwcyA9IGZhY3RvcihoY19jbHVzdGVycykpICsKICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gYygiIzlkMDVmNCIsICIjMDFkOWQ5IiwgIiNmNGRjMDAiKSkgKwogIGxhYnMoY29sb3IgPSAiSEMgY2x1c3RlcnMiKSArCiAgdGhlbWUoYXNwZWN0LnJhdGlvID0gMC44LCBsZWdlbmQucG9zaXRpb24gPSAidG9wIikKCmdyaWQuYXJyYW5nZShwbG90MSwgbnVsbEdyb2IoKSwgcGxvdDIsIG5jb2wgPSAzLCB3aWR0aHMgPSBjKDEsIDAuMSwgMSkpCmBgYAoKQWx0ZXJuYXRpdmVseSwgdXNpbmcgYmFzZSBgUmAgcGxvdHRpbmc6CgpgYGB7cn0KcGFyKG1mcm93ID0gYygxLCAyKSkKCiMgVHJ1ZSBjbGFzcyBsYWJlbHMKcGxvdChaaywgcGNoID0gMjAsCiAgY29sID0gY29sc1tjbGFzc10sCiAgeGxhYiA9ICJQQzEiLCB5bGFiID0gIlBDMiIKKQpsZWdlbmQoInRvcGxlZnQiLCBsZXZlbHMoY2xhc3MpLAogIGNvbCA9IGNvbHMsCiAgcGNoID0gMTkKKQphbHBoYSA8LSA1ICMgcmVzY2FsaW5nCmZvciAoaSBpbiAxOjEzKSB7CiAgYXJyb3dzKDAsIDAsIGFscGhhICogVmtbaSwgMV0sIGFscGhhICogVmtbaSwgMl0sIGxlbmd0aCA9IDAuMiwgY29sID0gIiM4ZjQwNDAiKQogIHRleHQoYWxwaGEgKiBWa1tpLCAxXSwgYWxwaGEgKiBWa1tpLCAyXSwgcm93bmFtZXMoVmspW2ldLCBjb2wgPSAiIzhmNDA0MCIpCn0KCmNsdXN0ZXJfY29scyA8LSBjKCIxIiA9ICIjOWQwNWY0IiwgIjIiID0gIiMwMWQ5ZDkiLCAiMyIgPSAiI2Y0ZGMwMCIpCiMgQ2x1c3RlcnMKcGxvdChaaywgcGNoID0gMjAsCiAgY29sID0gY2x1c3Rlcl9jb2xzW2ZhY3RvcihoY19jbHVzdGVycyldLAogIHhsYWIgPSAiUEMxIiwgeWxhYiA9ICJQQzIiCikKbGVnZW5kKCJ0b3BsZWZ0IiwgbGV2ZWxzKGZhY3RvcihoY19jbHVzdGVycykpLAogIGNvbCA9IGNsdXN0ZXJfY29scywKICBwY2ggPSAxOQopCmFscGhhIDwtIDUgIyByZXNjYWxpbmcKZm9yIChpIGluIDE6MTMpIHsKICBhcnJvd3MoMCwgMCwgYWxwaGEgKiBWa1tpLCAxXSwgYWxwaGEgKiBWa1tpLCAyXSwgbGVuZ3RoID0gMC4yLCBjb2wgPSAiIzhmNDA0MCIpCiAgdGV4dChhbHBoYSAqIFZrW2ksIDFdLCBhbHBoYSAqIFZrW2ksIDJdLCByb3duYW1lcyhWaylbaV0sIGNvbCA9ICIjOGY0MDQwIikKfQpgYGAKCl9fSW50ZXJwcmV0YXRpb25fXzogVGhlIGZpcnN0IGNsdXN0ZXIgY29ycmVzcG9uZHMgdG8gbW9zdCBvZiB0aGUgQmFyb2xvIGNsYXNzLCBidXQgdGhlIHNlY29uZCBjbHVzdGVyIG92ZXJsYXBzIHdpdGggYWxsIHRocmVlIGNsYXNzZXMsIGFuZCB0aGUgdGhpcmQgY2x1c3RlciBjYXB0dXJlcyB3aW5lcyBmcm9tIGJvdGggdGhlIEdyaWdub2xpbm8gYW5kIHRoZSBCYXJiZXJhIGNsYXNzLgpPdmVyYWxsLCB0aGUgdGhyZWUgY2x1c3RlcnMgZG8gbm90IHJlY292ZXIgdGhlIHRydWUgY2xhc3MgbGFiZWxzLgoKPC9kZXRhaWxzPgoKIyMjIyBCb251czogY2FuIHlvdSBpbXByb3ZlIHRoZSByZXN1bHRzIGJ5IHVzaW5nIGRpZmZlcmVudCBkaXN0YW5jZSBtZXRyaWNzIG9yIGxpbmthZ2VzPyB7LX0KCgojIE1vZGVsLWJhc2VkIGNsdXN0ZXJpbmcKCiMjIyBUYXNrcyB7LX0KCiMjIyMgMS4gVXNlIGBtY2x1c3Q6Ok1jbHVzdCgpYCB0byBwZXJmb3JtIG1vZGVsLWJhc2VkIGNsdXN0ZXJpbmcgb24gdGhlIGB3aW5lYCBkYXRhLiB7LX0KCjxkZXRhaWxzPjxzdW1tYXJ5PlNvbHV0aW9uPC9zdW1tYXJ5PgoKYGBge3J9Cm1jIDwtIE1jbHVzdChYKQpzdW1tYXJ5KG1jKQpzdW1tYXJ5KG1jJEJJQykKYGBgCgo8L2RldGFpbHM+CgojIyMjIDIuIFZpc3VhbGl6ZSB0aGUgY2x1c3RlcmluZyB2aWEgcGFpcndpc2UgcGxvdHMuIFBsb3QgdGhlIEJJQyAoQmF5ZXNpYW4gaW5mb3JtYXRpb24gY3JpdGVyaW9uKSB2YWx1ZXMgYW5kIGludGVycHJldCB0aGUgcmVzdWx0cy4gey19CgpIaW50OiBDaGVjayBgP3Bsb3QuTWNsdXN0YC4KCjxkZXRhaWxzPjxzdW1tYXJ5PlNvbHV0aW9uPC9zdW1tYXJ5PgoKYGBge3J9CiMgUGFpcndpc2UgY2x1c3RlcmluZyBwbG90cwpwbG90KG1jLCB3aGF0ID0gImNsYXNzaWZpY2F0aW9uIikKCiMgQklDIHBsb3Q7IGV4Y2x1ZGUgdHdvIG1vZGVscyB3aXRoIHZlcnkgbG93IEJJQwpwbG90KG1jLCB3aGF0ID0gIkJJQyIsIHlsaW0gPSByYW5nZShtYyRCSUNbLCAtKDE6MildLCBuYS5ybSA9IFRSVUUpLAogIGxlZ2VuZEFyZ3MgPSBsaXN0KHggPSAiYm90dG9tbGVmdCIpCikKYGBgCgpfX0ludGVycHJldGF0aW9uX186IEEgdGhyZWUtY29tcG9uZW50IG1peHR1cmUgd2l0aCBjb3ZhcmlhbmNlcyBoYXZpbmcKZGlmZmVyZW50IHNoYXBlcyBhbmQgdm9sdW1lcyBidXQgdGhlIHNhbWUgb3JpZW50YXRpb24gKFZWRSkgcmVzdWx0cyBpbiB0aGUKaGlnaGVzdCBCSUMuIAoKPC9kZXRhaWxzPgoKIyMjIyAzLiBSZWNyZWF0ZSB0aGUgUENBIGJpcGxvdCBmcm9tIFNlY3Rpb24gMSwgYnV0IGNvbG9yIGVhY2ggb2JzZXJ2YXRpb24gYWNjb3JkaW5nIHRvIGl0cyBjbHVzdGVyLiBDb21wYXJlIHRoZSByZXN1bHRpbmcgYmlwbG90IHRvIHRoZSBlYXJsaWVyIG9uZXMuIHstfQoKPGRldGFpbHM+PHN1bW1hcnk+U29sdXRpb248L3N1bW1hcnk+CgpgYGB7cn0KIyBUYWJ1bGF0ZSBjbHVzdGVycyBhZ2FpbnN0IHRydWUgY2xhc3Nlcwp0YWJsZShjbGFzcywgbWMkY2xhc3NpZmljYXRpb24pCmBgYAoKQmlwbG90IHdpdGggYGdnYmlwbG90YDoKCmBgYHtyfQpwbG90MSA8LSBnZ2JpcGxvdCh3aW5lX3BjYSwgZ3JvdXBzID0gY2xhc3MpICsKICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gY29scykgKwogIGxhYnMoY29sb3IgPSAiVHJ1ZSBsYWJlbHMiKSArCiAgdGhlbWUoYXNwZWN0LnJhdGlvID0gMC44LCBsZWdlbmQucG9zaXRpb24gPSAidG9wIikKCnBsb3QyIDwtIGdnYmlwbG90KHdpbmVfcGNhLCBncm91cHMgPSBmYWN0b3IobWMkY2xhc3NpZmljYXRpb24pKSArCiAgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcyA9IGMoIiM5ZDA1ZjQiLCAiIzAxZDlkOSIsICIjZjRkYzAwIikpICsKICBsYWJzKGNvbG9yID0gIk1jbHVzdCBjbHVzdGVycyIpICsKICB0aGVtZShhc3BlY3QucmF0aW8gPSAwLjgsIGxlZ2VuZC5wb3NpdGlvbiA9ICJ0b3AiKQoKZ3JpZC5hcnJhbmdlKHBsb3QxLCBudWxsR3JvYigpLCBwbG90MiwgbmNvbCA9IDMsIHdpZHRocyA9IGMoMSwgMC4xLCAxKSkKYGBgCgpBbHRlcm5hdGl2ZWx5LCB1c2luZyBiYXNlIGBSYCBwbG90dGluZzoKCmBgYHtyfQpwYXIobWZyb3cgPSBjKDEsIDIpKQoKIyBUcnVlIGNsYXNzIGxhYmVscwpwbG90KFprLCBwY2ggPSAyMCwKICBjb2wgPSBjb2xzW2NsYXNzXSwKICB4bGFiID0gIlBDMSIsIHlsYWIgPSAiUEMyIgopCmxlZ2VuZCgidG9wbGVmdCIsIGxldmVscyhjbGFzcyksCiAgY29sID0gY29scywKICBwY2ggPSAxOQopCmFscGhhIDwtIDUgIyByZXNjYWxpbmcKZm9yIChpIGluIDE6MTMpIHsKICBhcnJvd3MoMCwgMCwgYWxwaGEgKiBWa1tpLCAxXSwgYWxwaGEgKiBWa1tpLCAyXSwgbGVuZ3RoID0gMC4yLCBjb2wgPSAiIzhmNDA0MCIpCiAgdGV4dChhbHBoYSAqIFZrW2ksIDFdLCBhbHBoYSAqIFZrW2ksIDJdLCByb3duYW1lcyhWaylbaV0sIGNvbCA9ICIjOGY0MDQwIikKfQoKY2x1c3Rlcl9jb2xzIDwtIGMoIjEiID0gIiM5ZDA1ZjQiLCAiMiIgPSAiIzAxZDlkOSIsICIzIiA9ICIjZjRkYzAwIikKIyBDbHVzdGVycwpwbG90KFprLCBwY2ggPSAyMCwKICBjb2wgPSBjbHVzdGVyX2NvbHNbZmFjdG9yKG1jJGNsYXNzaWZpY2F0aW9uKV0sCiAgeGxhYiA9ICJQQzEiLCB5bGFiID0gIlBDMiIKKQpsZWdlbmQoInRvcGxlZnQiLCBsZXZlbHMoZmFjdG9yKG1jJGNsYXNzaWZpY2F0aW9uKSksCiAgY29sID0gY2x1c3Rlcl9jb2xzLAogIHBjaCA9IDE5CikKYWxwaGEgPC0gNSAjIHJlc2NhbGluZwpmb3IgKGkgaW4gMToxMykgewogIGFycm93cygwLCAwLCBhbHBoYSAqIFZrW2ksIDFdLCBhbHBoYSAqIFZrW2ksIDJdLCBsZW5ndGggPSAwLjIsIGNvbCA9ICIjOGY0MDQwIikKICB0ZXh0KGFscGhhICogVmtbaSwgMV0sIGFscGhhICogVmtbaSwgMl0sIHJvd25hbWVzKFZrKVtpXSwgY29sID0gIiM4ZjQwNDAiKQp9CmBgYAoKX19JbnRlcnByZXRhdGlvbl9fOiBUaGUgZmlyc3QgY2x1c3RlciBjb3JyZXNwb25kcyB0byB0aGUgQmFyb2xvIGNsYXNzLCB0aGUgc2Vjb25kIGNsdXN0ZXIgdG8gdGhlIEdyaWdub2xpbm8gY2xhc3MgYW5kIHRoZSB0aGlyZCBjbHVzdGVyIHRvIEJhcmJlcmEuIApPdmVyYWxsLCB0aGUgdGhyZWUgY2x1c3RlcnMgcmVjb3ZlciB0aGUgdHJ1ZSBjbGFzcyBsYWJlbHMgdmVyeSB3ZWxsLCB3aXRoIG9ubHkgdHdvIEdyaWdub2xpbm8gd2luZXMgZmFsc2VseSBhc3NpZ25lZCB0byB0aGUgdGhpcmQgY2x1c3RlciAoQmFyYmVyYSkuCgo8L2RldGFpbHM+CgoKIyMjIyA0LiBTZWxlY3QgYW4gYXBwcm9wcmlhdGUgbnVtYmVyIG9mIFBDcyBmcm9tIHRoZSBQQ0EuIFJlcGVhdCB0aGUgbW9kZWwtYmFzZWQgY2x1c3RlcmluZyBvbiB0aGUgUENzLiBIb3cgZG8gdGhlIHJlc3VsdHMgY29tcGFyZSB0byB0aG9zZSBvbiB0aGUgZnVsbCBkYXRhPyB7LX0KCjxkZXRhaWxzPjxzdW1tYXJ5PlNvbHV0aW9uPC9zdW1tYXJ5PgpgYGB7cn0KIyBQcm9wb3J0aW9uIG9mIHZhcmlhbmNlIGV4cGxhaW5lZCBieSBlYWNoIFBDCndpbmVfcHJvcF92YXIgPC0gZGF0YS5mcmFtZSgKICBQQyA9IDE6bmNvbCh3aW5lX3BjYSR4KSwKICB2YXIgPSB3aW5lX3BjYSRzZGV2XjIgLyBzdW0od2luZV9wY2Ekc2Rldl4yKQopCgpnZ3Bsb3Qod2luZV9wcm9wX3ZhciwgYWVzKFBDLCB2YXIpKSArCiAgZ2VvbV9wb2ludCgpICsKICBnZW9tX2xpbmUoKSArCiAgZ2VvbV92bGluZSh4aW50ZXJjZXB0ID0gNy41LCBjb2wgPSAiZmlyZWJyaWNrIikgKwogIHNjYWxlX3hfY29udGludW91cyhicmVha3MgPSAxOm5jb2wod2luZV9wY2EkeCkpICsKICBsYWJzKHkgPSAiUHJvcG9ydGlvbiBvZiB2YXJpYW5jZSIpCmBgYAoKVGhlIGZpcnN0IDcgUENzIGV4cGxhaW4gYWJvdXQgOTIlIG9mIHRoZSB2YXJpYW5jZSBpbiB0aGUgYHdpbmVgIGRhdGEuCgpgYGB7cn0KIyBTZWxlY3QgdGhlIGZpcnN0IGsgUENzCmsgPC0gNwpwY2FfWCA8LSB3aW5lX3BjYSR4WywgMTprXQoKIyBSZWZpdCB0aGUgbW9kZWwtYmFzZWQgY2x1c3RlcmluZwptYzIgPC0gTWNsdXN0KHBjYV9YKQpzdW1tYXJ5KG1jMikKc3VtbWFyeShtYzIkQklDKQpgYGAKCkEgZml2ZS1jb21wb25lbnQgbWl4dHVyZSB3aXRoIGRpYWdvbmFsIGNvdmFyaWFuY2VzIGhhdmluZyBlcXVhbCBzaGFwZSwgYnV0CnZhcnlpbmcgdm9sdW1lIChWRUkpLCByZXN1bHRzIGluIHRoZSBoaWdoZXN0IEJJQy4gCgpgYGB7cn0KIyBUYWJ1bGF0ZSBjbHVzdGVycyBhZ2FpbnN0IHRydWUgY2xhc3Nlcwp0YWJsZShjbGFzcywgbWMyJGNsYXNzaWZpY2F0aW9uKQpgYGAKCkJpcGxvdCB3aXRoIGBnZ2JpcGxvdGA6CgpgYGB7cn0KcGxvdDEgPC0gZ2diaXBsb3Qod2luZV9wY2EsIGdyb3VwcyA9IGNsYXNzKSArCiAgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcyA9IGNvbHMpICsKICBsYWJzKGNvbG9yID0gIlRydWUgbGFiZWxzIikgKwogIHRoZW1lKGFzcGVjdC5yYXRpbyA9IDAuOCwgbGVnZW5kLnBvc2l0aW9uID0gInRvcCIpCgpwbG90MiA8LSBnZ2JpcGxvdCh3aW5lX3BjYSwgZ3JvdXBzID0gZmFjdG9yKG1jMiRjbGFzc2lmaWNhdGlvbikpICsKICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gYygiIzlkMDVmNCIsICIjMDFkOWQ5IiwgIiMwMWQ5ZDkiLCAiIzAxZDlkOSIsICIjZjRkYzAwIikpICsKICBsYWJzKGNvbG9yID0gIk1jbHVzdCBjbHVzdGVycyIpICsKICB0aGVtZShhc3BlY3QucmF0aW8gPSAwLjgsIGxlZ2VuZC5wb3NpdGlvbiA9ICJ0b3AiKQoKZ3JpZC5hcnJhbmdlKHBsb3QxLCBudWxsR3JvYigpLCBwbG90MiwgbmNvbCA9IDMsIHdpZHRocyA9IGMoMSwgMC4xLCAxKSkKYGBgCgpBbHRlcm5hdGl2ZWx5LCB1c2luZyBiYXNlIGBSYCBwbG90dGluZzoKCmBgYHtyfQpwYXIobWZyb3cgPSBjKDEsIDIpKQoKIyBUcnVlIGNsYXNzIGxhYmVscwpwbG90KFprLCBwY2ggPSAyMCwKICBjb2wgPSBjb2xzW2NsYXNzXSwKICB4bGFiID0gIlBDMSIsIHlsYWIgPSAiUEMyIgopCmxlZ2VuZCgidG9wbGVmdCIsIGxldmVscyhjbGFzcyksCiAgY29sID0gY29scywKICBwY2ggPSAxOQopCmFscGhhIDwtIDUgIyByZXNjYWxpbmcKZm9yIChpIGluIDE6MTMpIHsKICBhcnJvd3MoMCwgMCwgYWxwaGEgKiBWa1tpLCAxXSwgYWxwaGEgKiBWa1tpLCAyXSwgbGVuZ3RoID0gMC4yLCBjb2wgPSAiIzhmNDA0MCIpCiAgdGV4dChhbHBoYSAqIFZrW2ksIDFdLCBhbHBoYSAqIFZrW2ksIDJdLCByb3duYW1lcyhWaylbaV0sIGNvbCA9ICIjOGY0MDQwIikKfQoKY2x1c3Rlcl9jb2xzIDwtIGMoIjEiID0gIiM5ZDA1ZjQiLCAiMiIgPSAiIzAxZDlkOSIsICIzIiA9ICIjMDFkOWQ5IiwgIjQiID0gIiMwMWQ5ZDkiLCAiNSIgPSAiI2Y0ZGMwMCIpCiMgQ2x1c3RlcnMKcGxvdChaaywgcGNoID0gMjAsCiAgY29sID0gY2x1c3Rlcl9jb2xzW2ZhY3RvcihtYzIkY2xhc3NpZmljYXRpb24pXSwKICB4bGFiID0gIlBDMSIsIHlsYWIgPSAiUEMyIgopCmxlZ2VuZCgidG9wbGVmdCIsIGxldmVscyhmYWN0b3IobWMyJGNsYXNzaWZpY2F0aW9uKSksCiAgY29sID0gY2x1c3Rlcl9jb2xzLAogIHBjaCA9IDE5CikKYWxwaGEgPC0gNSAjIHJlc2NhbGluZwpmb3IgKGkgaW4gMToxMykgewogIGFycm93cygwLCAwLCBhbHBoYSAqIFZrW2ksIDFdLCBhbHBoYSAqIFZrW2ksIDJdLCBsZW5ndGggPSAwLjIsIGNvbCA9ICIjOGY0MDQwIikKICB0ZXh0KGFscGhhICogVmtbaSwgMV0sIGFscGhhICogVmtbaSwgMl0sIHJvd25hbWVzKFZrKVtpXSwgY29sID0gIiM4ZjQwNDAiKQp9CmBgYAoKX19JbnRlcnByZXRhdGlvbl9fOiBUaGUgZmlyc3QgY2x1c3RlciBjb3JyZXNwb25kcyB0byBtb3N0IG9mIHRoZSBCYXJvbG8gY2xhc3MuIFRoZSBmaWZ0aCBjb2xvciBtYWlubHkgY29ycmVzcG9uZHMgdG8gdGhlIEJhcmJlcmEgY2xhc3MsIHdoaWxlIGNvbnRhaW5pbmcgYSBmZXcgR3JpZ25vbGlubyB3aW5lcy4KQ29tYmluaW5nIHRoZSBzZWNvbmQsIHRoaXJkIGFuZCBmb3VydGggY2x1c3RlciByZWNvdmVycyBtb3N0IG9mIHRoZSBHcmlnbm9saW5vIGNsYXNzLCB3aXRoIHNvbWUgb3ZlcmxhcCB3aXRoIHRoZSByZW1haW5pbmcgY2xhc3Nlcy4KT3ZlcmFsbCwgYWZ0ZXIgY29tYmluaW5nIHRoZSB0aHJlZSBzbWFsbGVyIGNsdXN0ZXJzLCB0aGUgY2x1c3RlcmluZyByZWNvdmVycyB0aGUgdHJ1ZSBjbGFzcyBsYWJlbHMgZmFpcmx5IHdlbGwsIHRob3VnaCBub3QgcXVpdGUgYXMgY2xvc2VseSBhcyB0aGUgY2x1c3RlcmluZyBvbiB0aGUgb3JpZ2luYWwgZGF0YS4KCjwvZGV0YWlscz4KCiMgQWRkaXRpb25hbCByZXNvdXJjZXMgey19Ci0gU2VjdGlvbiAxNC4zIG9mIEBlc2wtYm9vawoKCmBgYHtyLCBjaGlsZD0iX3Nlc3Npb24taW5mby5SbWQifQpgYGAKClt3aW5lXTogaHR0cHM6Ly9yZHJyLmlvL2NyYW4vZ2NsdXMvbWFuL3dpbmUuaHRtbApbc2NydWNjYTIwMTZdOiBodHRwczovL3N2bi5yLXByb2plY3Qub3JnL1Jqb3VybmFsL2h0bWwvYXJjaGl2ZS8yMDE2L1JKLTIwMTYtMDIxL1JKLTIwMTYtMDIxLnBkZgoKIyBSZWZlcmVuY2VzIHstfQ==</div>
 <div class="footer">
     <hr>
     This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
@@ -999,15 +1184,6 @@ $(document).ready(function ()  {
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
 </body>
 </html>

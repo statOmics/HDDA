@@ -2,7 +2,22 @@
 title: "Lab 5: Clustering"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Milan Malfait and Leo Fuhrhop"
-date: "24 Feb 2022 <br/> (Last updated: 2025-11-06)"
+date: "24 Feb 2022 <br/> (Last updated: 2025-11-09)"
+references:
+- id: esl-book
+  type: book
+  author:
+  - family: Hastie
+    given: Trevor
+  - family: Tibshirani
+    given: Robert
+  - family: Friedman
+    given: Jerome
+  issued:
+  - year: 2009
+  title: The Elements of Statistical Learning
+  publisher: Springer
+  edition: 2nd
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -22,7 +37,7 @@ options(width = 80)
 ```{r libraries, message=FALSE, warning=FALSE}
 ## Install necessary packages with:
 
-# install.packages(c("mclust", "gclus", "GGally", "tidyverse", "gridExtra"))
+# install.packages(c("mclust", "gclus", "tidyverse", "gridExtra"))
 
 # if (!requireNamespace("remotes", quietly = TRUE)) {
 #     install.packages("remotes")
@@ -32,7 +47,6 @@ options(width = 80)
 library(mclust)
 library(gclus)  # contains the 'wine' data
 library(ggbiplot)
-library(GGally)
 library(tidyverse)
 library(gridExtra)
 
@@ -137,9 +151,13 @@ hc <- hclust(wine_dist, method = "complete")
 
 #### 2. Plot the clustering *dendrogram*. {-}
 
+<details><summary>Solution</summary>
+
 ```{r}
 plot(hc, labels = FALSE)
 ```
+
+</details>
 
 #### 3. Use `cutree` to select three clusters from the hierarchical clustering. Recreate the PCA biplot from Section 1, but color each observation according to its cluster. Compare the resulting biplot to the earlier one from Section 1. {-}
 
@@ -165,7 +183,7 @@ plot2 <- ggbiplot(wine_pca, groups = factor(hc_clusters)) +
   labs(color = "HC clusters") +
   theme(aspect.ratio = 0.8, legend.position = "top")
 
-grid.arrange(plot1, plot2, ncol = 2)
+grid.arrange(plot1, nullGrob(), plot2, ncol = 3, widths = c(1, 0.1, 1))
 ```
 
 Alternatively, using base `R` plotting:
@@ -217,136 +235,208 @@ Overall, the three clusters do not recover the true class labels.
 
 ### Tasks {-}
 
-#### 1. Perform model-based clustering on the `wine` data (use [`mclust::Mclust()`][mclust]). Plot the BIC values and interpret the results. Compare the identified clusters with the original (true) labels. {-}
+#### 1. Use `mclust::Mclust()` to perform model-based clustering on the `wine` data. {-}
 
 <details><summary>Solution</summary>
 
 ```{r}
-mod <- Mclust(X)
-summary(mod)
-summary(mod$BIC)
+mc <- Mclust(X)
+summary(mc)
+summary(mc$BIC)
 ```
 
-```{r}
-table(class, mod$classification)
+</details>
 
-## Annotate clusters
-mc_clusters <- factor(mod$classification)
-```
+#### 2. Visualize the clustering via pairwise plots. Plot the BIC (Bayesian information criterion) values and interpret the results. {-}
+
+Hint: Check `?plot.Mclust`.
+
+<details><summary>Solution</summary>
 
 ```{r}
-plot(mod, what = "BIC", ylim = range(mod$BIC[, -(1:2)], na.rm = TRUE),
+# Pairwise clustering plots
+plot(mc, what = "classification")
+
+# BIC plot; exclude two models with very low BIC
+plot(mc, what = "BIC", ylim = range(mc$BIC[, -(1:2)], na.rm = TRUE),
   legendArgs = list(x = "bottomleft")
 )
-plot(mod, what = "classification")
 ```
 
-There is a clear indication of a three-component mixture with covariances having
-different shapes and volumes but the same orientation (VVE). See
-`?mclustModelNames` for a description of the different `mclust` models.
+__Interpretation__: A three-component mixture with covariances having
+different shapes and volumes but the same orientation (VVE) results in the
+highest BIC. 
 
 </details>
 
-#### 2. Visualize the clusters found by `Mclust()` on the PCA biplot. Compare with the original labels. {-}
-
-<details><summary>Solution</summary>
-
-```{r, fig.asp=1}
-ggbiplot(wine_pca, groups = class) +
-  scale_color_brewer(palette = "Set2") +
-  labs(color = "Original labels") +
-  theme(aspect.ratio = 0.8, legend.position = "top")
-
-## PCA plot annotated with clusters
-ggbiplot(wine_pca, groups = mc_clusters) +
-  labs(color = "mclust clusters") +
-  scale_color_brewer(palette = "Set2") +
-  theme(aspect.ratio = 0.8, legend.position = "top")
-```
-
-</details>
-
-#### 3. Perform a dimensionality reduction of the wine data using the PCA. Select an appropriate number of PC's. Redo the clustering on this reduced dimension representation and make the same figures as before. How do the results differ? {-}
+#### 3. Recreate the PCA biplot from Section 1, but color each observation according to its cluster. Compare the resulting biplot to the earlier ones. {-}
 
 <details><summary>Solution</summary>
 
 ```{r}
-## Calculate total variance by summing the PC variances (sdev's squared)
-tot_var <- sum(wine_pca$sdev^2)
+# Tabulate clusters against true classes
+table(class, mc$classification)
+```
 
-## Create data.frame of the proportion of variance explained by each PC
+Biplot with `ggbiplot`:
+
+```{r}
+plot1 <- ggbiplot(wine_pca, groups = class) +
+  scale_color_manual(values = cols) +
+  labs(color = "True labels") +
+  theme(aspect.ratio = 0.8, legend.position = "top")
+
+plot2 <- ggbiplot(wine_pca, groups = factor(mc$classification)) +
+  scale_color_manual(values = c("#9d05f4", "#01d9d9", "#f4dc00")) +
+  labs(color = "Mclust clusters") +
+  theme(aspect.ratio = 0.8, legend.position = "top")
+
+grid.arrange(plot1, nullGrob(), plot2, ncol = 3, widths = c(1, 0.1, 1))
+```
+
+Alternatively, using base `R` plotting:
+
+```{r}
+par(mfrow = c(1, 2))
+
+# True class labels
+plot(Zk, pch = 20,
+  col = cols[class],
+  xlab = "PC1", ylab = "PC2"
+)
+legend("topleft", levels(class),
+  col = cols,
+  pch = 19
+)
+alpha <- 5 # rescaling
+for (i in 1:13) {
+  arrows(0, 0, alpha * Vk[i, 1], alpha * Vk[i, 2], length = 0.2, col = "#8f4040")
+  text(alpha * Vk[i, 1], alpha * Vk[i, 2], rownames(Vk)[i], col = "#8f4040")
+}
+
+cluster_cols <- c("1" = "#9d05f4", "2" = "#01d9d9", "3" = "#f4dc00")
+# Clusters
+plot(Zk, pch = 20,
+  col = cluster_cols[factor(mc$classification)],
+  xlab = "PC1", ylab = "PC2"
+)
+legend("topleft", levels(factor(mc$classification)),
+  col = cluster_cols,
+  pch = 19
+)
+alpha <- 5 # rescaling
+for (i in 1:13) {
+  arrows(0, 0, alpha * Vk[i, 1], alpha * Vk[i, 2], length = 0.2, col = "#8f4040")
+  text(alpha * Vk[i, 1], alpha * Vk[i, 2], rownames(Vk)[i], col = "#8f4040")
+}
+```
+
+__Interpretation__: The first cluster corresponds to the Barolo class, the second cluster to the Grignolino class and the third cluster to Barbera. 
+Overall, the three clusters recover the true class labels very well, with only two Grignolino wines falsely assigned to the third cluster (Barbera).
+
+</details>
+
+
+#### 4. Select an appropriate number of PCs from the PCA. Repeat the model-based clustering on the PCs. How do the results compare to those on the full data? {-}
+
+<details><summary>Solution</summary>
+```{r}
+# Proportion of variance explained by each PC
 wine_prop_var <- data.frame(
   PC = 1:ncol(wine_pca$x),
-  var = wine_pca$sdev^2
-) %>%
-  ## Using `mutate` to calculate prop. var and cum. prop. var
-  mutate(
-    prop_var = var / tot_var,
-    cum_prop_var = cumsum(var / tot_var)
-  )
+  var = wine_pca$sdev^2 / sum(wine_pca$sdev^2)
+)
 
-wine_prop_var
-
-## Plot the proportion of variance explained by each PC
-p1 <- ggplot(wine_prop_var, aes(PC, prop_var)) +
+ggplot(wine_prop_var, aes(PC, var)) +
   geom_point() +
   geom_line() +
-  geom_vline(xintercept = 6.5, col = "firebrick") +
+  geom_vline(xintercept = 7.5, col = "firebrick") +
   scale_x_continuous(breaks = 1:ncol(wine_pca$x)) +
   labs(y = "Proportion of variance")
-
-## Plot the cumulative proportion of variance explained by each PC
-p2 <- ggplot(wine_prop_var, aes(PC, cum_prop_var)) +
-  geom_point() +
-  geom_line() +
-  geom_vline(xintercept = 6.5, col = "firebrick") +
-  scale_x_continuous(breaks = 1:ncol(wine_pca$x)) +
-  labs(y = "Cumulative proportion of variance")
-
-grid.arrange(p1, p2, ncol = 2)
 ```
 
-Selecting first 6 PC's, keeping 85% of the variance.
+The first 7 PCs explain about 92% of the variance in the `wine` data.
 
 ```{r}
-k <- 6
+# Select the first k PCs
+k <- 7
 pca_X <- wine_pca$x[, 1:k]
-head(pca_X)
+
+# Refit the model-based clustering
+mc2 <- Mclust(pca_X)
+summary(mc2)
+summary(mc2$BIC)
 ```
+
+A five-component mixture with diagonal covariances having equal shape, but
+varying volume (VEI), results in the highest BIC. 
 
 ```{r}
-mod2 <- Mclust(pca_X)
-summary(mod2)
-summary(mod2$BIC)
+# Tabulate clusters against true classes
+table(class, mc2$classification)
 ```
+
+Biplot with `ggbiplot`:
 
 ```{r}
-table(class, mod2$classification)
+plot1 <- ggbiplot(wine_pca, groups = class) +
+  scale_color_manual(values = cols) +
+  labs(color = "True labels") +
+  theme(aspect.ratio = 0.8, legend.position = "top")
 
-## Annotate clusters
-mc_pca_clusters <- factor(mod2$classification)
+plot2 <- ggbiplot(wine_pca, groups = factor(mc2$classification)) +
+  scale_color_manual(values = c("#9d05f4", "#01d9d9", "#01d9d9", "#01d9d9", "#f4dc00")) +
+  labs(color = "Mclust clusters") +
+  theme(aspect.ratio = 0.8, legend.position = "top")
+
+grid.arrange(plot1, nullGrob(), plot2, ncol = 3, widths = c(1, 0.1, 1))
 ```
 
-```{r, fig.asp=0.8}
-plot(mod2, what = "BIC", ylim = range(mod2$BIC[, -(1:2)], na.rm = TRUE),
-  legendArgs = list(x = "bottomleft")
+Alternatively, using base `R` plotting:
+
+```{r}
+par(mfrow = c(1, 2))
+
+# True class labels
+plot(Zk, pch = 20,
+  col = cols[class],
+  xlab = "PC1", ylab = "PC2"
 )
+legend("topleft", levels(class),
+  col = cols,
+  pch = 19
+)
+alpha <- 5 # rescaling
+for (i in 1:13) {
+  arrows(0, 0, alpha * Vk[i, 1], alpha * Vk[i, 2], length = 0.2, col = "#8f4040")
+  text(alpha * Vk[i, 1], alpha * Vk[i, 2], rownames(Vk)[i], col = "#8f4040")
+}
+
+cluster_cols <- c("1" = "#9d05f4", "2" = "#01d9d9", "3" = "#01d9d9", "4" = "#01d9d9", "5" = "#f4dc00")
+# Clusters
+plot(Zk, pch = 20,
+  col = cluster_cols[factor(mc2$classification)],
+  xlab = "PC1", ylab = "PC2"
+)
+legend("topleft", levels(factor(mc2$classification)),
+  col = cluster_cols,
+  pch = 19
+)
+alpha <- 5 # rescaling
+for (i in 1:13) {
+  arrows(0, 0, alpha * Vk[i, 1], alpha * Vk[i, 2], length = 0.2, col = "#8f4040")
+  text(alpha * Vk[i, 1], alpha * Vk[i, 2], rownames(Vk)[i], col = "#8f4040")
+}
 ```
 
-```{r, fig.asp=1}
-df <- as.data.frame(pca_X)
-df$clusters <- mc_pca_clusters
-
-## Using ggscatmat() from GGally package to plot all pairwise PCs
-ggscatmat(df, columns = 1:k, color = "clusters") +
-  theme(legend.position = "bottom", aspect.ratio = 0.6) +
-  scale_color_brewer(palette = "Set2", name = "mclust-PCA clusters")
-```
-
-*Note: you can ignore the upper-right panels of this figure. These give the correlations between each pair of variables (PC's here) for each group, but are not relevant here.*
+__Interpretation__: The first cluster corresponds to most of the Barolo class. The fifth color mainly corresponds to the Barbera class, while containing a few Grignolino wines.
+Combining the second, third and fourth cluster recovers most of the Grignolino class, with some overlap with the remaining classes.
+Overall, after combining the three smaller clusters, the clustering recovers the true class labels fairly well, though not quite as closely as the clustering on the original data.
 
 </details>
 
+# Additional resources {-}
+- Section 14.3 of @esl-book
 
 
 ```{r, child="_session-info.Rmd"}
@@ -354,4 +444,5 @@ ggscatmat(df, columns = 1:k, color = "clusters") +
 
 [wine]: https://rdrr.io/cran/gclus/man/wine.html
 [scrucca2016]: https://svn.r-project.org/Rjournal/html/archive/2016/RJ-2016-021/RJ-2016-021.pdf
-[mclust]: https://rdrr.io/cran/mclust/man/Mclust.html
+
+# References {-}
