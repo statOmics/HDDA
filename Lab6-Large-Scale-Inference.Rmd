@@ -1,8 +1,8 @@
 ---
 title: "Lab 6: Large Scale Inference"
 subtitle: "High Dimensional Data Analysis practicals"
-author: "Adapted by Milan Malfait"
-date: "21 Feb 2022 <br/> (Last updated: 2022-02-21)"
+author: "Adapted by Milan Malfait and Leo Fuhrhop"
+date: "21 Feb 2022 <br/> (Last updated: 2025-11-13)"
 references:
 - id: alon1999broad
   type: article-journal
@@ -43,7 +43,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-### [Change log](https://github.com/statOmics/HDDA/commits/master/Lab5-Large-Scale-Inference.Rmd) {-}
+### [Change log](https://github.com/statOmics/HDDA/commits/master/Lab6-Large-Scale-Inference.Rmd) {-}
 
 ***
 
@@ -74,17 +74,17 @@ exactly what the underlying "true" distribution is (sometimes also called the "g
 However, keep in mind that this is an unlikely representation of real-world data.
 
 In particular, we will simulate data for multiple hypothesis tests where
-__the null hypothesis is always true__. I.e. for the $i$th test, we assume that
+__the null hypothesis is always true__. This means that for the $i$-th test, if we let
 $\mu_{1i}$ and $\mu_{2i}$ represent the means of the two populations of interest,
 the null hypothesis for comparing the two means is
 $H_{0i} : \mu_{1i} = \mu_{2i}$. Let the alternative hypothesis of this test be
-$H_{1i} : \mu_{1i} \neq \mu_{2i}$, i.e. we perform a *two-tailed* test.
+$H_{1i} : \mu_{1i} \neq \mu_{2i}$, i.e., we perform a *two-tailed* test.
 Suppose we have data collected from both populations, given by $X_{1i}$ and $X_{2i}$
 of size $n_{1i}$ and $n_{2i}$, respectively, and assume that both populations
-have the same known variance $\sigma_i^2$. Then we can test this hypothesis by using
-__Z-scores__, given by
+have the same known variance $\sigma_i^2$. Then we can test this hypothesis by using a
+__Z-test statistic__, given by
 
-$$ Z_i=\frac{\bar X_{1i}-\bar X_{2i}}{\sigma_i\sqrt{1/n_{1i}+1/n_{2i}}} $$
+$$ Z_i=\frac{\bar X_{1i}-\bar X_{2i}}{\sigma_i\sqrt{1/n_{1i}+1/n_{2i}}} \, .$$
 
 Under the null hypothesis, the scores will be distributed as a *standard normal*
 $Z_i\sim N(0,1)$. The null hypothesis is rejected in favor of the alternative if
@@ -110,11 +110,14 @@ outcomes as in the table below:
 
 ```{r, echo=FALSE}
 knitr::kable(
-  data.frame(
-    "Accept H_0" = c("U (True Negative)", ""),
-    "Reject H_0" = c("V (False Positive)", ""),
-    "Total" = c("m_0", ""),
-    row.names = c("Null True", "")
+  structure(list(
+    `Accept H_0` = "U (True Negative)",
+    `Reject H_0` = "V (False Positive)",
+    `Total` = "m_0"
+  ),
+  .Names = c("Accept H_0", "Reject H_0", "Total"),
+  row.names = c("H_0 True"),
+  class = "data.frame"
   )
 )
 ```
@@ -127,45 +130,41 @@ As an example, let's simulate the scenario above. In the code below, the `replic
 function is used to repeat the same procedure a number of times.
 Essentially, the following steps are performed :
 
-1. Sample $N = 12$ observations for 2 hypothetical groups from normal distributions
-   with the same mean and known variance
-2. Calculate Z-scores based on the 2 group means
-3. Repeat steps 1 to 2 `m0` times
+1. Sample $N = 50$ observations for 2 hypothetical groups from normal distributions
+   with the same mean and known variance.
+2. Calculate Z-test statistics based on the 2 group means.
+3. Repeat steps 1 to 2 `m0` times.
 
 This mimics performing `m0` hypothesis tests on data for which we know the null
 hypothesis is true.
 
-For simplicity we assume the variance to be known and equal to 1 for both groups.
-We simulate 10 observations for each group and calculate the denominator for the
-Z-scores since it's the same for each test.
-
 ```{r}
-## Set parameters for the simulation
-N <- 10 # samples per group
+# Set parameters for the simulation
+N <- 50 # samples per group
 m0 <- 1000 # number of hypothesis tests
 mu_1 <- 3 # true mean group 1
 mu_2 <- 3 # true mean group 2
 sigma <- 1 # known variance
 denom <- sigma * sqrt(2 / N) # denominator for Z-scores
 
-set.seed(123) # seed for reproducibility
-null_z_scores <- replicate(m0, {
+set.seed(987654321) # seed for reproducibility
+z_stats <- replicate(m0, {
   group1 <- rnorm(N, mean = mu_1, sd = sqrt(sigma))
   group2 <- rnorm(N, mean = mu_2, sd = sqrt(sigma))
 
-  ## Calculate Z-score
+  # Calculate Z-test statistic
   (mean(group2) - mean(group1)) / denom
 })
 
-## Visualize Z-scores
-hist(null_z_scores, breaks = 50, freq = FALSE)
-## Overlay theoretical standard normal
+# Visualize Z-test statistics
+hist(z_stats, breaks = 50, freq = FALSE, main = "Z-test statistics under H_0")
+# Overlay theoretical standard normal
 lines(x <- seq(-5, 5, length.out = 100), dnorm(x), col = "dodgerblue", lwd = 3)
-## Draw vertical lines at 2.5 and 97.5th percentiles
+# Draw vertical lines at 2.5 and 97.5th percentiles
 abline(v = qnorm(c(0.025, 0.975)), col = "firebrick", lty = 2, lwd = 3)
 ```
 
-We see that the Z-scores are nicely distributed as a standard normal.
+We see that the Z-test statistics nicely follow a standard normal distribution.
 The vertical dashed lines indicate the 2.5th and 97.5th percentiles of the standard
 normal. The regions outside these lines indicate the Z-scores that we would call
 significant if we used a cut-off of $\alpha = 0.05$ for a *two-tailed* test.
@@ -180,23 +179,22 @@ argument in `pnorm` to `FALSE` (by default it's `TRUE`), so that we get
 `pnorm(abs(x), lower.tail = FALSE)` = $P(Z > |x|)$ and multiply this value by 2.
 
 ```{r}
-null_pvals <- 2 * pnorm(abs(null_z_scores), lower.tail = FALSE)
-
-alpha <- 0.05 # significance cutoff
+null_pvals <- 2 * pnorm(abs(z_stats), lower.tail = FALSE)
+alpha <- 0.05
 
 hist(null_pvals, breaks = seq(0, 1, by = 0.05))
 abline(v = alpha, col = "firebrick", lwd = 3)
 
 called <- (null_pvals < alpha)
 
-## V = number of false positives, in this case: all significant tests
+# V = number of false positives, in this case: all significant tests
 (V <- sum(called))
 mean(called) # V / m0
 ```
 
-So we get 48 significant tests (false positives) out of a total of 1000, which is,
+So we get 51 significant tests (false positives) out of a total of 1000, which is,
 unsurprisingly, approximately equal to our significance cutoff $\alpha$.
-Note also that the p-values are uniformly distibuted under the null hypothesis.
+Note also that the p-values are uniformly distibuted under the null hypothesis by definition.
 
 If we had carried out only a few tests (say 10) it would be very unlikely to observe
 a false positive (on average: 0.05 * 10 = 0.5 false positives) at $\alpha = 0.05$,
@@ -204,7 +202,7 @@ but since now we're carrying out so many, we're almost guaranteed to get false p
 This is what is known as the __multiple hypothesis testing problem__.
 
 Note that in real-world data the quantities $U$ and $V$ are *unknown* (because
-we don't know the truth! If we did, we wouldn't have to carry out any hypothesis
+we don't know the truth; if we did, we wouldn't have to carry out any hypothesis
 tests in the first place). However, by using simulated data, we do know the truth
 and so we can explore these quantities.
 
@@ -236,69 +234,52 @@ In the following exercises, we will explore this idea on some synthetic data.
 We will simulate performing hypothesis tests for which the null distribution is
 always true for different values of `m0`.
 
-To make the code more simple, we will directly sample the Z-score statistics from
+To simplify the code, we will directly sample the Z-test statistics from
 a standard normal (instead of sampling the individual groups and then performing
 the test on them, as shown above). We can also skip the p-value calculation and
-compare our Z-scores directly to the $(1 - \alpha) / 2$th quantile of the standard
+compare our Z-test statistics directly to the $(1 - \alpha) / 2$th quantile of the standard
 normal distribution (using the `qnorm()` function).
 
 
 ### Tasks {-}
 
-#### 1. Set `m0 = 5` and generate `m0` Z-score statistics by sampling from the standard normal distribution. Check which ones are significant using a cutoff `alpha = 0.05` {-}
+#### 1. Set `m0 = 5` and generate `m0` Z-test statistics by sampling from the standard normal distribution. Check which ones are significant using a cutoff `alpha = 0.05` {-}
 
 To check significance you can use `abs(z_score) > qnorm(1 - alpha / 2)`
 
-
 #### 2. Calculate $V$, the number of significant tests. {-}
 
-Note that to count a logical vector, you can just use `sum` on it, since `TRUE`
-is numerically interpreted as 1 and `FALSE` as 0.
-
-
-#### 3. Check that `V > 0` (at least one significant) and store the result in a variable (e.g. `at_least_one_signif <- V > 0`). {-}
-
+#### 3. Check whether `V > 0` (at least one significant) and store the result in a variable. {-}
 
 #### 4. Repeat steps 1-3 1000 times and keep track of the result in step 3 by storing it in a vector. {-}
 
-You can either use a `for` loop or `replicate`. If using a `for` loop, make sure to
-create an empty vector of the desired length first! Growing a vector is technically
-possible but is very inefficient. You can initialize an empty (logical) vector of
-a certain length with `vec <- logical(length = x)`
-
-
 #### 5. Now compute the FWER as the proportion of times $V$ was greater than 0. {-}
 
-
 #### 6. Repeat the same procedure for `m0 = 50` and `m0 = 1000`. Interpret the results. {-}
-
 
 ### Solutions {-}
 
 <details><summary>Solution</summary>
 
-I combined the exercises above into one code block, to avoid repeated code.
-Essentially, I wrapped the simulation in a `for` loop that goes over the different
-values of `m0`.
+To avoid repeated code, the simulations over the different values of `m_0` are combined into one code block. 
 
 ```{r}
-## Repeat 1000 times for m0 = 5, 50 and 1000, directly simulate test statistic
-## record minimal p-value and check if smaller than alpha
-set.seed(1)
+# Repeat 1000 times for m0 = 5, 50 and 1000
+set.seed(987654321)
 B <- 1000 # number of simulations
 m0_vec <- c(5, 50, 1000)
 alpha <- 0.05
-## Initialize empty vector to store FWER results
+# Initialize empty vector to store FWER results
 fwer <- numeric(length = length(m0_vec))
 names(fwer) <- paste("m0 =", m0_vec)
 
-## Loop over m0 values and simulate test statistics
+# Loop over m0 values and simulate test statistics
 for (i in seq_along(m0_vec)) {
-  ## Simulate B times, each time recording V > 0
+  # Simulate B times, each time recording V > 0
   at_least_one_signif <- replicate(B, {
-    null_stats <- rnorm(m0_vec[i], mean = 0, sd = 1) # z-score distribution
-    tests <- abs(null_stats) > qnorm(1 - alpha / 2)
-    sum(tests) > 0
+    null_stats <- rnorm(m0_vec[i], mean = 0, sd = 1) # simulate z-test
+    significant_tests <- abs(null_stats) > qnorm(1 - alpha / 2)
+    sum(significant_tests) > 0
   })
   fwer[i] <- mean(at_least_one_signif) # proportion of V >= 1
 }
@@ -358,8 +339,8 @@ for (i in seq_along(m0_vec)) {
   ## Simulate B times, each time recording V > 0
   at_least_one_signif <- replicate(B, {
     null_stats <- rnorm(m0_vec[i], mean = 0, sd = 1) # z-score distribution
-    tests <- abs(null_stats) > qnorm(1 - alpha_vec[i] / 2)
-    sum(tests) > 0
+    significant_tests <- abs(null_stats) > qnorm(1 - alpha_vec[i] / 2)
+    sum(significant_tests) > 0
   })
   fwer[i] <- mean(at_least_one_signif) # proportion of V >= 1
 }
