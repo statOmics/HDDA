@@ -2,7 +2,7 @@
 title: "Lab 6: Large Scale Inference"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait and Leo Fuhrhop"
-date: "21 Feb 2022 <br/> (Last updated: 2025-11-13)"
+date: "21 Feb 2022 <br/> (Last updated: 2025-11-26)"
 references:
 - id: alon1999broad
   type: article-journal
@@ -290,49 +290,63 @@ We saw in the previous exercises that when conducting a large number of hypothes
 tests the FWER becomes unacceptably large. So what can we do to lower it?
 The most straightforward way would be to just lower $\alpha$ (so we get less false positives).
 
-Note that we can write the FWER under the null hypothesis (so the p-values are uniformly distributed) as
+Under the null hypothesis (so the p-values are uniformly distributed), we can write the FWER
+for $m$ independent tests as
 
 $$
 \begin{align}
 \text{FWER} = P(\text{at least one rejection}) &= 1 - P(\text{no rejections}) \\
   &= 1 - \prod_{i=1}^{m} P(p_i > \alpha) \\
   &= 1 - \prod_{i=1}^{m} (1 - \alpha) \\
-  &= 1 - (1 - \alpha)^{m}
+  &= 1 - (1 - \alpha)^{m} \, ,
 \end{align}
 $$
 
-where $p_i$ is the p-value for the $i$th test.
+where $p_i$ is the p-value for the $i$-th test.
 
-If we wanted to control the FWER at a certain level (e.g. 0.05), we can simply solve
-the equation above for $\alpha$ and get, for a given FWER:
+\v{S}id\'ak's correction solves the above equation at a given FWER level (e.g., 0.05)
+for $\alpha$ to control the FWER using 
 
-$$ \alpha = 1 - (1 - \text{FWER})^{1/m} $$
+$$ \alpha = 1 - (1 - \text{FWER})^{1/m} \, .$$
 
+Without assuming independent tests, the Bonferroni correction uses that
 
-## Exercise {-}
+$$
+\begin{align}
+\text{FWER} &= P(\text{at least one rejection}) \\
+  &= P(\cup_{i=1}^m \{ p_i \le \alpha \}) \\
+  &\le \sum_{i=1}^{m} P(p_i \le \alpha) \\
+  &= m \alpha \, ,
+\end{align}
+$$
 
-Using your simulation code from before, confirm that when setting; `alpha = 0.0102`
-and `m0 = 5`, `alpha = 0.00102` and `m0 = 50`, and finally `alpha = 0.000051292`
-and `m0 = 1000` all result in an FWER of approximately 0.05.
+where the inequality follows from the union bound, and solves the equation
+at a given FWER level (e.g., 0.05) for $\alpha$ to control the FWER with 
+
+$$ \alpha = \frac{\text{FWER}}{m} \, .$$
+
+### Tasks {-}
+
+#### 1. Determine the `alpha` for \v{S}id\'ak's correction at `m0 = 5`, `m0 = 50` and `m0 = 1000`. Use these values to repeat the simulation from the previous exercise, and confirm that the FWER is controlled at 0.05. {-}
 
 <details><summary>Solution</summary>
 
 ```{r}
-## Repeat 1000 times for m0 = 5, 50 and 1000, directly simulate test statistic
-## record minimal p-value and check if smaller than alpha
-set.seed(1)
+# Repeat 1000 times for m0 = 5, 50 and 1000
+set.seed(987654321)
 B <- 1000 # number of simulations
 m0_vec <- c(5, 50, 1000)
-alpha_vec <- c(0.0102, 0.00102, 0.000051292)
-## Initialize empty vector to store FWER results
+alpha_vec <- 1 - (1 - 0.05)^(1 / m0_vec)
+alpha_vec
+# Initialize empty vector to store FWER results
 fwer <- numeric(length = length(m0_vec))
 names(fwer) <- paste("m0 =", m0_vec)
 
-## Loop over m0 values and simulate test statistics
+# Loop over m0 values and simulate test statistics
 for (i in seq_along(m0_vec)) {
-  ## Simulate B times, each time recording V > 0
+  # Simulate B times, each time recording V > 0
   at_least_one_signif <- replicate(B, {
-    null_stats <- rnorm(m0_vec[i], mean = 0, sd = 1) # z-score distribution
+    null_stats <- rnorm(m0_vec[i], mean = 0, sd = 1) # simulate z-test
     significant_tests <- abs(null_stats) > qnorm(1 - alpha_vec[i] / 2)
     sum(significant_tests) > 0
   })
@@ -343,10 +357,39 @@ fwer
 
 </details>
 
-The procedure described above is also known as Sidak's procedure.
-Another widely used technique to control the FWER is the Bonferroni correction.
-Note, however that in general, controlling the FWER at levels such as 0.05 is very
-conservative, i.e. if there were ture alternative cases we might miss them.
+#### 2. Determine the `alpha` for the Bonferroni correction and repeat the simulation one more time. How do the results compare to \v{S}id\'ak's correction? {-}
+
+<details><summary>Solution</summary>
+
+```{r}
+# Repeat 1000 times for m0 = 5, 50 and 1000
+set.seed(987654321)
+B <- 1000 # number of simulations
+m0_vec <- c(5, 50, 1000)
+alpha_vec <- 0.05 / m0_vec
+alpha_vec
+# Initialize empty vector to store FWER results
+fwer <- numeric(length = length(m0_vec))
+names(fwer) <- paste("m0 =", m0_vec)
+
+# Loop over m0 values and simulate test statistics
+for (i in seq_along(m0_vec)) {
+  # Simulate B times, each time recording V > 0
+  at_least_one_signif <- replicate(B, {
+    null_stats <- rnorm(m0_vec[i], mean = 0, sd = 1) # simulate z-test
+    significant_tests <- abs(null_stats) > qnorm(1 - alpha_vec[i] / 2)
+    sum(significant_tests) > 0
+  })
+  fwer[i] <- mean(at_least_one_signif) # proportion of V >= 1
+}
+fwer
+```
+
+</details>
+
+In general, controlling the FWER at levels such as 0.05 with \v{S}id\'ak's correction
+or the Bonferroni correction is very conservative, i.e., if there were true alternatives
+(which we did not consider in the simulations), we might miss them.
 
 
 # The False Discovery Rate (FDR)
