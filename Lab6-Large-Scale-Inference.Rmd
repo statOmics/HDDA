@@ -2,7 +2,7 @@
 title: "Lab 6: Large Scale Inference"
 subtitle: "High Dimensional Data Analysis practicals"
 author: "Adapted by Milan Malfait and Leo Fuhrhop"
-date: "21 Feb 2022 <br/> (Last updated: 2025-11-13)"
+date: "21 Feb 2022 <br/> (Last updated: 2025-11-26)"
 references:
 - id: alon1999broad
   type: article-journal
@@ -225,14 +225,9 @@ So instead of choosing $\alpha$ to control the probability of getting a false po
 in each test, we try to control the FWER, i.e. the probability of getting
 *at least* one false positive in our *set* of hypothesis tests.
 
-In the following exercises, we will explore this idea on some synthetic data.
-
-
-
-# Exercises: FWER null data simulation {-}
-
-We will simulate performing hypothesis tests for which the null distribution is
-always true for different values of `m0`.
+In the following exercises, we will explore this idea on some synthetic data. We will
+simulate performing hypothesis tests for which the null distribution is always true
+for different values of `m0`.
 
 To simplify the code, we will directly sample the Z-test statistics from
 a standard normal (instead of sampling the individual groups and then performing
@@ -290,49 +285,63 @@ We saw in the previous exercises that when conducting a large number of hypothes
 tests the FWER becomes unacceptably large. So what can we do to lower it?
 The most straightforward way would be to just lower $\alpha$ (so we get less false positives).
 
-Note that we can write the FWER under the null hypothesis (so the p-values are uniformly distributed) as
+Under the null hypothesis (so the p-values are uniformly distributed), we can write the FWER
+for $m$ independent tests as
 
 $$
 \begin{align}
 \text{FWER} = P(\text{at least one rejection}) &= 1 - P(\text{no rejections}) \\
   &= 1 - \prod_{i=1}^{m} P(p_i > \alpha) \\
   &= 1 - \prod_{i=1}^{m} (1 - \alpha) \\
-  &= 1 - (1 - \alpha)^{m}
+  &= 1 - (1 - \alpha)^{m} \, ,
 \end{align}
 $$
 
-where $p_i$ is the p-value for the $i$th test.
+where $p_i$ is the p-value for the $i$-th test.
 
-If we wanted to control the FWER at a certain level (e.g. 0.05), we can simply solve
-the equation above for $\alpha$ and get, for a given FWER:
+Šidák's correction solves the above equation at a given FWER level (e.g., 0.05)
+for $\alpha$ to control the FWER using 
 
-$$ \alpha = 1 - (1 - \text{FWER})^{1/m} $$
+$$ \alpha = 1 - (1 - \text{FWER})^{1/m} \, .$$
 
+Without assuming independent tests, the Bonferroni correction uses that
 
-## Exercise {-}
+$$
+\begin{align}
+\text{FWER} &= P(\text{at least one rejection}) \\
+  &= P(\cup_{i=1}^m \{ p_i \le \alpha \}) \\
+  &\le \sum_{i=1}^{m} P(p_i \le \alpha) \\
+  &= m \alpha \, ,
+\end{align}
+$$
 
-Using your simulation code from before, confirm that when setting; `alpha = 0.0102`
-and `m0 = 5`, `alpha = 0.00102` and `m0 = 50`, and finally `alpha = 0.000051292`
-and `m0 = 1000` all result in an FWER of approximately 0.05.
+where the inequality follows from the union bound, and solves the equation
+at a given FWER level (e.g., 0.05) for $\alpha$ to control the FWER with 
+
+$$ \alpha = \frac{\text{FWER}}{m} \, .$$
+
+### Tasks {-}
+
+#### 1. Determine the `alpha` for Šidák's correction at `m0 = 5`, `m0 = 50` and `m0 = 1000`. Use these values to repeat the simulation from the previous exercise, and confirm that the FWER is controlled at 0.05. {-}
 
 <details><summary>Solution</summary>
 
 ```{r}
-## Repeat 1000 times for m0 = 5, 50 and 1000, directly simulate test statistic
-## record minimal p-value and check if smaller than alpha
-set.seed(1)
+# Repeat 1000 times for m0 = 5, 50 and 1000
+set.seed(987654321)
 B <- 1000 # number of simulations
 m0_vec <- c(5, 50, 1000)
-alpha_vec <- c(0.0102, 0.00102, 0.000051292)
-## Initialize empty vector to store FWER results
+alpha_vec <- 1 - (1 - 0.05)^(1 / m0_vec)
+alpha_vec
+# Initialize empty vector to store FWER results
 fwer <- numeric(length = length(m0_vec))
 names(fwer) <- paste("m0 =", m0_vec)
 
-## Loop over m0 values and simulate test statistics
+# Loop over m0 values and simulate test statistics
 for (i in seq_along(m0_vec)) {
-  ## Simulate B times, each time recording V > 0
+  # Simulate B times, each time recording V > 0
   at_least_one_signif <- replicate(B, {
-    null_stats <- rnorm(m0_vec[i], mean = 0, sd = 1) # z-score distribution
+    null_stats <- rnorm(m0_vec[i], mean = 0, sd = 1) # simulate z-test
     significant_tests <- abs(null_stats) > qnorm(1 - alpha_vec[i] / 2)
     sum(significant_tests) > 0
   })
@@ -343,10 +352,39 @@ fwer
 
 </details>
 
-The procedure described above is also known as Sidak's procedure.
-Another widely used technique to control the FWER is the Bonferroni correction.
-Note, however that in general, controlling the FWER at levels such as 0.05 is very
-conservative, i.e. if there were ture alternative cases we might miss them.
+#### 2. Determine the `alpha` for the Bonferroni correction and repeat the simulation one more time. How do the results compare to Šidák's correction? {-}
+
+<details><summary>Solution</summary>
+
+```{r}
+# Repeat 1000 times for m0 = 5, 50 and 1000
+set.seed(987654321)
+B <- 1000 # number of simulations
+m0_vec <- c(5, 50, 1000)
+alpha_vec <- 0.05 / m0_vec
+alpha_vec
+# Initialize empty vector to store FWER results
+fwer <- numeric(length = length(m0_vec))
+names(fwer) <- paste("m0 =", m0_vec)
+
+# Loop over m0 values and simulate test statistics
+for (i in seq_along(m0_vec)) {
+  # Simulate B times, each time recording V > 0
+  at_least_one_signif <- replicate(B, {
+    null_stats <- rnorm(m0_vec[i], mean = 0, sd = 1) # simulate z-test
+    significant_tests <- abs(null_stats) > qnorm(1 - alpha_vec[i] / 2)
+    sum(significant_tests) > 0
+  })
+  fwer[i] <- mean(at_least_one_signif) # proportion of V >= 1
+}
+fwer
+```
+
+</details>
+
+In general, controlling the FWER at levels such as 0.05 with Šidák's correction
+or the Bonferroni correction is very conservative, i.e., if there were true alternatives
+(which we did not consider in the simulations), we might miss them.
 
 
 # The False Discovery Rate (FDR)
@@ -360,27 +398,30 @@ We can then extend the table from [before](#testing-hypotheses):
 
 ```{r, echo=FALSE}
 knitr::kable(
-  data.frame(
-    "Accept H_0" = c("U (True Negative)", "T (False Negative)", "W"),
-    "Reject H_0" = c("V (False Positive)", "S (True Positive", "R"),
-    "Total" = c("m_0", "m_1", "m"),
-    row.names = c("Null True", "Alternative True", "Total")
+  structure(list(
+    `Accept H_0` = c("U (True Negative)", "T (False Negative)", "W"),
+    `Reject H_0` = c("V (False Positive)", "S (True Positive)", "R"),
+    `Total` = c("m_0", "m_1", "m")
+  ),
+  .Names = c("Accept H_0", "Reject H_0", "Total"),
+  row.names = c("H_0 True", "H_1 True", "Total"),
+  class = "data.frame"
   )
 )
 ```
 
-In addition to the FWER, another important concept for multiple hypothesis
+In addition to the FWER, another important quantity in multiple hypothesis
 testing is the __False Discovery Rate (FDR)__:
 
 $$
-\text{FDR} = E[V/R]
+\text{FDR} = E[\frac{V}{R}] \, ,
 $$
 
-i.e. the expected proportion of false positives among all positive tests.
+which is the expected proportion of false positives among all positive tests.
 The ratio $V/R$ is also called the False Discovery Proportion (FDP).
 
 However, the only quantities from the table above that are observable
-in real data, are $W$, $R$ and $m$. So to illustrate the concept, we will again
+in real data are $W$, $R$ and $m$. So to illustrate the concept, we will again
 make use of simulated data.
 
 In the code below, 1.000 tests are simulated, for which 90% come from cases
@@ -392,10 +433,10 @@ distribution with mean 3.
 ```{r}
 m <- 1000 # total number of hypotheses
 p0 <- 0.9 # 90% of cases are true null
-m0 <- round(p0 * m) # round to avoid floating point problems
+m0 <- round(p0 * m)
 m1 <- round((1 - p0) * m)
 
-set.seed(1)
+set.seed(987654321)
 alpha <- 0.05
 null_stats <- rnorm(m0)
 alt_stats <- rnorm(m1, mean = 3)
@@ -412,40 +453,33 @@ R <- V + S # total number of positives
 (FDP <- V / R)
 ```
 
-We see that 40% of the positive cases are actually false positives.
+We see that 35.38% of the positive cases are actually false positives.
 To get an idea of the FDR, the expected FDP, we will repeat this procedure a
 number of times in the following exercises.
 
-
-# Exercises: FDR simulations
-
-
 ### Tasks {-}
 
-#### 1. Set `m0 = 90` and `m1 = 10` and generate `m = 100` test statistics, `m0` of them from the standard normal distribution (N(0, 1)) (null distribution) and m1 of them from N(3, 1) (the alternative distribution). {-}
+#### 1. Set `m0 = 90` and `m1 = 10` and generate `m = 100` test statistics, `m0` of them from the standard normal distribution $N(0, 1)$ (null distribution) and m1 of them from $N(3, 1)$ (the alternative distribution). {-}
 
 
 #### 2. Test for significance at `alpha = 0.05` by comparing the test statistics to the standard normal, for both sets of tests. {-}
 
 
-#### 3. Calculate $V$, $S$, $R$ and the FDP. {-}
+#### 3. Calculate the FDP. {-}
 
 
-#### 4. Repeat steps 1-3 1000 times and keep track of the FDP for each iteration. Then compute the FDR as the mean of the FDPs. Interpret the results. {-}
-
-
-### Solutions {-}
+#### 4. Repeat steps 1-3 1000 times and keep track of the FDP for each iteration. Then estimate the FDR as the mean of the FDPs. Interpret the results. {-}
 
 <details><summary>Solution</summary>
 
 ```{r}
-set.seed(1)
+set.seed(987654321)
 B <- 1000 # number of simulations
 m0 <- 90
 m1 <- 10
 alpha <- 0.05
 
-## Simulate B times, each time recording V > 0
+# Simulate B times, each time recording V > 0
 FDP <- replicate(B, {
   null_stats <- rnorm(m0, mean = 0)
   alt_stats <- rnorm(m1, mean = 3)
@@ -454,8 +488,8 @@ FDP <- replicate(B, {
   V <- sum(null_tests) # false positives
   S <- sum(alt_tests) # true positives
   R <- V + S
-  ## Return V / R
-  V / R
+  # Return V / R
+  if (R == 0) 0 else V / R
 })
 
 (FDR <- mean(FDP))
@@ -468,35 +502,87 @@ positives.
 
 As with the FWER, we can now think of methods to control the FDR. A very popular
 method that is widely used in large-scale inference for high-throughput
-sequencing data is the __Benjamini-Hochberg correction__. The details of this
-technique lie outside the scope of this exercise session, but essentially it
-*adjusts* the p-values such that the FDR is controlled at a certain level.
-Note that this is a somewhat different approach then the FWER-controlling
-techniques, where significance cut-off $\alpha$ was adjusted instead of the
-p-values themselves.
-
-The Benjamini-Hochberg (and other techniques) are readily available in base R in
-the `p.adjust()` function (see `?p.adjust` for details). You just supply it a
-vector of p-values and the desired method (for Benjamini-Hochberg, use
-`method = "BH"`).
-
-
-
-# Exercises: real data (Alon *et al.* (1999))
-
-We will take another look at the dataset by @alon1999broad on gene expression
-levels in 40 tumour and 22 normal colon tissue samples.
-We used this data also in [Lab 4](./Lab4-Sparse-PCA-LDA.html).
-However, this time we're interested in finding genes that expressed *significantly*
-different between the tumor and normal samples. In other words, we will perform
-hypothesis tests for each of the __2000 genes__. This is clearly a multiple
-testing problem.
+sequencing data is the __Benjamini-Hochberg correction__. It *adjusts* the
+p-values such that the FDR is controlled at a certain level. Note that this can
+equivalently be formulated as adjusting the significance cut-off $\alpha$, similarly
+to how we defined the FWER-controlling techniques.
 
 ### Tasks {-}
 
-#### 1. Load the data {-}
+#### 1. Adjust the simulation code from the previous task to estimate the FDR under the Benjamini-Hochberg correction. {-}
+Hint: Calculate p-values of the simulated null and alternative test statistics. Concatenate all p-values into a single vector and apply the Benjamini-Hochberg correction using `p.adjust` with `method = "BH"`. Compare the resulting adjusted p-values to $\alpha$ to estimate the FDP and FDR.
 
-Just run the code given below.
+<details><summary>Solution</summary>
+
+```{r}
+set.seed(987654321)
+B <- 1000 # number of simulations
+m0 <- 90
+m1 <- 10
+alpha <- 0.05
+
+# Simulate B times, each time recording V > 0
+FDP <- replicate(B, {
+  null_stats <- rnorm(m0, mean = 0)
+  alt_stats <- rnorm(m1, mean = 3)
+  p_null <- (2 * pnorm(-abs(null_stats)))
+  p_alt <- (2 * pnorm(-abs(alt_stats)))
+  p_adj <- p.adjust(c(p_null, p_alt), method = "BH")
+  V <- sum(p_adj[1:m0] <= alpha) # false positives
+  S <- sum(p_adj[(m0 + 1):(m0 + m1)] <= alpha) # true positives
+  R <- V + S
+  # Return V / R
+  if (R == 0) 0 else V / R
+})
+
+(FDR <- mean(FDP))
+```
+
+</details>
+
+#### 2. Repeat the simulation using `method = "bonferroni"`. Compare the resulting FDR and interpret. {-}
+Note: The Bonferroni correction can either be formulated as adjusting the significance cut-off to $\alpha / m$ or, equivalently, as a p-value correction that multiplies each p-value by $m$. 
+
+<details><summary>Solution</summary>
+
+```{r}
+set.seed(987654321)
+B <- 1000 # number of simulations
+m0 <- 90
+m1 <- 10
+alpha <- 0.05
+
+# Simulate B times, each time recording V > 0
+FDP <- replicate(B, {
+  null_stats <- rnorm(m0, mean = 0)
+  alt_stats <- rnorm(m1, mean = 3)
+  p_null <- (2 * pnorm(-abs(null_stats)))
+  p_alt <- (2 * pnorm(-abs(alt_stats)))
+  p_adj <- p.adjust(c(p_null, p_alt), method = "bonferroni")
+  V <- sum(p_adj[1:m0] <= alpha) # false positives
+  S <- sum(p_adj[(m0 + 1):(m0 + m1)] <= alpha) # true positives
+  R <- V + S
+  # Return V / R
+  if (R == 0) 0 else V / R
+})
+
+(FDR <- mean(FDP))
+```
+
+__Interpretation__: Both the Bonferroni correction and the Benjamini-Hochberg correction control the FDR at the desired level $\alpha$.
+However, the Bonferroni correction is more conservative, resulting in an FDR that is much lower than $\alpha$. This means that the Bonferroni method results in a larger number of false negatives and could possibly lead to us missing interesting discoveries.
+
+</details>
+
+# Multiple testing on the data by Alon *et al.* (1999)
+
+We will take another look at the dataset by @alon1999broad on gene expression
+levels in 40 tumour and 22 normal colon tissue samples.
+We previously used this data in [Lab 4](./Lab4-Sparse-PCA-LDA.html).
+This time, we are interested in finding genes that are expressed *significantly*
+different between the tumor and normal samples. In other words, we will perform
+hypothesis tests for each of the __2000 genes__. This is clearly a multiple
+testing problem.
 
 ```{r load-data}
 data("Alon1999")
@@ -514,59 +600,33 @@ The dataset contains one variable named `Y` with the values `t` and `n`.
 This variable indicates whether the sample came from tumourous (`t`) or
 normal (`n`) tissue.
 
+### Tasks {-}
 
-#### 2. Perform 2-sample t-tests for each gene, comparing the tumor and normal tissue groups {-}
+#### 1. Perform two-sample t-tests for each gene, comparing the tumor and normal tissue groups. Store the p-values and test statistics. {-}
 
-Use the `t.test()` function in base R. By default, this will compute a two-sample
-t-test with *unequal variances* ([Welch's t-test][Welch]).
-You can supply a *formula* (using the `~`) to `t.test()` similar to `lm()`.
-
-Use either a `for` loop to iterate over all genes or the `apply()` function.
-
-Store the test statistic, p-value and degrees of freedom of each test in a
-matrix (each row should be a gene, 1 column containing the test statistcs 1
-column the p-values and 1 for the degrees of freedom). You can find these values
-in the `t.test()` result under the `$p.value`, `$statistic` and `$parameter`
-slots.
+Hint: The `t.test()` function computes a two-sample t-test with *unequal variances* ([Welch's t-test][Welch]) by default. The return object contains the elements `p.value` and `statistic`.
 
 <details><summary>Solution</summary>
 
-In the solution below, I used the `apply` function to loop over the genes, essentially
-this is similar to a `for` loop but is a bit more succinct to write and takes
-care of pre-allocating memory instead of having te set up empty matrices first
-manually. Setting the second argument (`MARGIN`) to 2 tells `apply` to loop over
-the *columns* of the input matrix instead of the *rows*. For details, see `?apply`.
-Briefly, `apply()` takes a matrix, margin and function as input arguments, it then
-applies the function to each column or row (depending on the margin) of the matrix.
-The results are either a vector if each function call returns a single value or
-a matrix if a vector is returned at each call. Note that `apply` will return the
-resulting matrix with the calculated values in the rows. As it makes more sense
-to have these in columns, the matrix is transposed.
-
 ```{r}
-## Split gene data and grouping variable and convert to matrix
+# Split gene data and grouping variable and convert to matrix
 gene_data <- as.matrix(Alon1999[, -1])
 group <- Alon1999$Y
 
-## Use `apply` to loop over columns of gene data and perform t-tests, extracting
-## p-values, test stastistics, and degrees of freedom
-ttest_results <- t(apply(gene_data, 2, function(x) {
+# Use `apply` to perform t-tests over all columns
+t_test_results <- t(apply(gene_data, 2, function(x) {
   t_test <- t.test(x ~ group)
   p_val <- t_test$p.value
   stat <- t_test$statistic
-  df <- t_test$parameter
-  ## Return values in named vector
-  c(stat, "p_val" = p_val, df)
+  c(stat, "p_val" = p_val)
 }))
 
-## Take a look at results
-head(ttest_results)
+head(t_test_results)
 ```
 
 </details>
 
-
-#### 3. Plot a histogram of the p-values and interpret {-}
+#### 2. Plot a histogram of the p-values and interpret. {-}
 
 <details><summary>Solution</summary>
 
@@ -575,7 +635,7 @@ the first bar will then represent the number of p-values smaller than 0.05 (whic
 we often use as cutoff).
 
 ```{r p_val-hist}
-p_vals <- ttest_results[, "p_val"]
+p_vals <- t_test_results[, "p_val"]
 hist(
   p_vals,
   breaks = seq(0, 1, by = 0.05), main = "", xlab = "p-value",
@@ -583,99 +643,119 @@ hist(
 )
 ```
 
+__Interpretation__: The histogram appears close to a uniform distribution for the larger p-values, but has a lot more small p-values than would be expected under a uniform distribution.
+Recall that if the null hypothesis (the gene expression is the same for tumor and normal tissue) were to hold for all genes, the p-values would be uniformly distributed on $[0, 1]$.
+
 </details>
 
-#### 4. How many discoveries / significant genes do you find when using $\alpha = 0.05$? {-}
+#### 3. How many discoveries / significant genes do you find when using $\alpha = 0.05$? {-}
 
 <details><summary>Solution</summary>
 
 ```{r}
 alpha <- 0.05
-sum(p_vals < alpha)
+sum(p_vals <= alpha)
 ```
 
 </details>
 
-#### 5. Correct for the multiplicity problem by controlling the FWER at 5% {-}
-
-- What should we use as $\alpha$?
-
-- How many discoveries are left over when using the FWER-adjusted $\alpha$?
+#### 4. Control the FWER at 5% using Šidák's correction. How many genes are significant after the correction? {-}
 
 <details><summary>Solution</summary>
 
-Remember that $\alpha$ can be calculated for a given FWER as
-
-$$ \alpha = 1 - (1 - \text{FWER})^{1/m} $$
-
 ```{r}
-m <- nrow(ttest_results) # number of tests performed
+m <- nrow(t_test_results)
 fwer <- 0.05
-adj_alpha <- 1 - (1 - fwer)^(1/m)
+adj_alpha <- 1 - (1 - fwer)^(1 / m)
 
-## Number of significant discoveries at FWER 5%
-sum(p_vals < adj_alpha)
+# Number of significant discoveries
+sum(p_vals <= adj_alpha)
 ```
 
-Note that you can also use the *Bonferroni* correction to get a similar result.
-This is also implemented in the `p.adjust` function by using `method = "bonferroni"`.
-Essentially, the Bonferroni correction sets a new $\alpha_m = \alpha / m$ by
-dividing the original with the number of tests performed $m$. So the result is
-slightly different than the procedure given above (which is known as Sidak's
-procedure but is less commonly used). The `p.adjust` function returns adjusted
-p-values, since modifying the cut-off $\alpha$ by dividing with $m$ is the same
-as multiplying the p-values with $m$ and then using the original cut-off.
+By rearranging the equation $$ \alpha = 1 - (1 - \text{FWER})^{1/m} \, ,$$
+we can equivalently adjust the p-values via
+$$1 - (1 - p)^m$$
+and compare them to the cut-off 5\%:
 
 ```{r}
-bonf_pvals <- p.adjust(p_vals, method = "bonferroni")
-sum(bonf_pvals < alpha)
+sidak_p_vals <- 1 - (1 - p_vals)^m
 
-## Note that bonferroni correction is simply multiplying the original p-values
-## with m (and cutting off any values bigger than 1)
-idx <- which(bonf_pvals < 1)
-head(bonf_pvals[idx])
-head(p_vals[idx] * m)
+# Number of significant discoveries
+sum(sidak_p_vals <= fwer)
 ```
 
 </details>
 
-
-#### 6. Use the FDR method to adjust the original p-values {-}
-
-- Use the `p.adjust()` function with `method = "BH"`
-
-- Plot the adjusted p-values against the originals, what is the effect of the adjustment?
-
-- How many discoveries are left when controlling the FDR at 5%?
+#### 5. Control the FWER at 5% using the Bonferroni correction. How many genes are significant after the correction? {-}
 
 <details><summary>Solution</summary>
+
+By adjusting $\alpha$:
+
+```{r}
+adj_alpha <- fwer / m
+
+# Number of significant discoveries
+sum(p_vals <= adj_alpha)
+```
+
+Or equivalently, by adjusting the p-values:
+
+```{r}
+bonferroni_p_vals <- p.adjust(p_vals, method = "bonferroni")
+
+# Number of significant discoveries
+sum(bonferroni_p_vals <= fwer)
+```
+
+</details>
+
+#### 6. Control the FDR at 5% using the Benjamini-Hochberg method. How many genes are significant after the correction? {-}
+
+<details><summary>Solution</summary>
+
+```{r}
+bh_p_vals <- p.adjust(p_vals, method = "BH")
+
+sum(bh_p_vals < 0.05)
+```
+
+</details>
+
+#### 7. Plot the adjusted p-values from the Benjamini-Hochberg method against the original p-values. What is the effect of the adjustment? {-}
+Bonus: Compute the adjusted p-values based on Šidák's correction and the Bonferroni correction. Add them to the plot and compare.
+
+<details><summary>Solution</summary>
+
+Visualize the adjusted p-values for all three methods in the same figure:
 
 ```{r fdr-adjust}
-fdr <- p.adjust(p_vals, method = "BH")
+cols <- c("#9d05f4", "#ecd033", "#01d9d9")
 
 plot(
-  p_vals[order(p_vals)], fdr[order(p_vals)],
-  pch = 19, cex = 0.6, xlab = "p-value", ylab = "Adjusted p-value", col = 4
+  p_vals[order(p_vals)], bh_p_vals[order(p_vals)],
+  pch = 19, cex = 0.6, xlab = "p-value",
+  ylab = "Adjusted p-value", col = cols[1]
 )
 points(
-  p_vals[order(p_vals)], bonf_pvals[order(p_vals)],
-  pch = 19, cex = 0.6, col = 2
+  p_vals[order(p_vals)], bonferroni_p_vals[order(p_vals)],
+  pch = 19, cex = 0.6, col = cols[2]
+)
+points(
+  p_vals[order(p_vals)], sidak_p_vals[order(p_vals)],
+  pch = 19, cex = 0.6, col = cols[3]
 )
 abline(a = 0, b = 1)
 legend("bottomright",
-  c("Benjamini-Hochberg", "Bonferroni"),
-  col = c(4, 2), pch = 19
+  c("Benjamini-Hochberg", "Bonferroni", "Sidak"),
+  col = cols, pch = 19
 )
-
-sum(fdr < 0.05)
 ```
 
+__Interpretation__: All three methods adjust the p-values upwards to account for multiple testing. The adjustment is more pronounced for small p-values, while for higher p-values, the curves of the adjusted p-values flatten out. 
+The Benjamini-Hochberg method at a FDR of 5% is less conservative compared to the other two methods. Both Šidák's correction and the Bonferroni correction at an FWER of 5% adjust the majority of p-values to exactly 1 and only a small proportion of p-values that are originally close to zero remains smaller than 1.
+
 </details>
-
-
-#### 7. Compare the FWER and FDR corrections. Which one is more conservative? {-}
-
-
 
 # Further reading {-}
 
