@@ -1,0 +1,77 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "HDDA"
+  navbar:
+    title: "HDDA"
+    left:
+      - icon: fa-home
+        href: index.qmd
+      - text: "Lectures"
+        icon: fa-chalkboard-teacher
+        menu:
+          - text: "1. Introduction"
+            href: intro.html
+          - text: "2. Singular Value Decomposition"
+            href: svd.html
+          - text: "3. Prediction with High Dimensional Predictors"
+            href: prediction.html
+          - text: "4. Sparse Singular Value Decomposition"
+            href: sparseSvd.html
+          - text: "5. Linear Discriminant Analysis"
+            href: lda.html
+          - text: "6.1. Introduction to Clustering"
+            href: hclust.html
+          - text: "6.2. Paper Model-based Clustering"
+            href: https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf
+          - text: "6.3. EM algorithm"
+            href: em.html
+          - text: "7. Large Scale Inference"
+            href: lsi.html
+      - text: "Labs"
+        icon: fa-laptop
+        menu:
+          - text: "Lab 1: Intro & SVD"
+            href: Lab1-Intro-SVD.html
+          - text: "Lab 2: SVD - PCA"
+            href: Lab2-PCA.html
+          - text: "Lab 3: Prediction"
+            href: Lab3-Penalized-Regression.html
+          - text: "Lab 4: Sparse PCA & LDA"
+            href: Lab4-Sparse-PCA-LDA.html
+          - text: "Lab 5: Clustering"
+            href: Lab5-Clustering.html
+          - text: "Lab 6: LSI"
+            href: Lab6-Large-Scale-Inference.html
+    right:
+      - text: "About"
+        href: about.html
+      - icon: fab fa-github
+        href: https://github.com/statOmics/HDDA
+      - text: "statOmics"
+        href: http://statomics.github.io/
+
+from: markdown+tex_math_single_backslash
+
+format:
+  html:
+    embed-resources: true
+    theme:
+      - cosmo
+      - custom.scss
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    number-depth: 3
+    code-copy: true
+    code-download: true
+  pdf:
+    toc: true
+    number-sections: true
+    pdf-engine: xelatex
+
+execute:
+  freeze: auto

@@ -2,12 +2,11 @@
 .Rhistory
 .RData
 .Ruserdata
+.DS_Store
 
-# Rmd output
-./*.html
-./*_files/
+# Rmd/Quarto output
 *_cache/
 raw-data/
 
-# Don't ignore these specific files
-!footer.html
+/.quarto/
+**/*.quarto_ipynb

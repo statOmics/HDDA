@@ -1,0 +1,100 @@
+/*-- scss:defaults --*/
+
+$brand-green: #4F704F;
+$bg-green-light: #f4f8f4;
+$dot-purple: #948EC0;
+$dot-orange: #E8A87C;
+$text-dark: #333333;
+
+$primary: $brand-green;
+$body-color: $text-dark;
+
+// $font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+// $headings-font-family: Georgia, "Times New Roman", Times, serif;
+
+$headings-font-weight: 700;
+$headings-color: $brand-green;
+
+$sidebar-bg: #ffffff;
+$sidebar-fg: #666666;
+$sidebar-border-color: #666666;
+
+// Modify the HTML page layout
+// https://quarto.org/docs/output-formats/page-layout.html#html-page-layout
+$grid-sidebar-width: 350px !default;
+$grid-margin-width: 0px !default;
+$grid-body-width: 800px;
+$grid-gutter-width: 2em;
+
+/*-- scss:rules --*/
+
+// Customizing the active link in the sidebar to match your Gitbook style
+.sidebar-item-container .active > .sidebar-item-text {
+  color: $brand-green !important;
+  background-color: $bg-green-light;
+  border-left: 4px solid $dot-purple;
+  padding-left: 10px;
+}
+
+// Blockquotes
+blockquote {
+  background: #fff8f4;
+  border-left: 6px solid $dot-orange;
+  padding: 1em;
+  margin: 1.5em 0;
+  font-style: normal;
+  border-radius: 0 4px 4px 0;
+
+  p {
+    color: #444;
+  }
+}
+
+// Code Blocks
+div.sourceCode {
+  background-color: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  border-left: 4px solid $brand-green;
+}
+
+// Tables
+.table {
+  border-bottom: 2px solid $brand-green;
+
+  thead th {
+    background-color: $brand-green;
+    color: white;
+    border-bottom: none;
+  }
+}
+
+// Header numbering
+.header-section-number {
+  color: $brand-green !important;
+  margin-right: 0.5rem; // Add a little space between number and text
+}
+
+// Footnotes
+// Reference in text
+a.footnote-ref {
+  color: $dot-orange !important;
+  font-weight: bold;
+  text-decoration: none;
+}
+// The Footnote container
+.column-margin div[id^="fn"] { // We target ANY div starting with 'fn'
+  border-left: 2px solid $dot-orange;
+  padding-left: 10px;
+  margin-bottom: 1rem;
+  // Text inside the footnote
+  p {
+    color: $dot-purple !important;
+    font-size: 0.9em;
+  }
+  // The Number inside the footnote
+  sup {
+    color: $dot-orange !important;
+    font-weight: bold;
+  }
+}
