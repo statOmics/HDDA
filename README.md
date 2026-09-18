@@ -1,7 +1,5 @@
 # High Dimensional Data Analysis
 
-[![Render and Deploy](https://github.com/statOmics/HDDA/workflows/Render%20and%20Deploy/badge.svg)](https://github.com/statOmics/HDDA/actions)
-
 Course site for the High Dimensional Data Analysis course at Ghent University.
 
 https://statomics.github.io/HDDA/
