@@ -11,7 +11,7 @@ format:
 ## Lectures
 
 - Theory (6-7 x 2.5 hours)
-- Paper reading sessions (1 x 2.5hours)
+- Paper reading sessions (2x 2.5hours)
 - Q&A session (2.5 hours)
 - PC Labs (6 x 2.5 hours)
 - Project work (2 x 2.5 hours)
@@ -19,22 +19,21 @@ format:
 ## Instructors 
 
 - Lectures: Lieven Clement (lieven.clement@ugent.be)
-- Tutorials: Yao Chen (yao.chen@ugent.be)
+- Tutorials: Luca De Corso (Luca.DeCorso@UGent.be)
 
 # Evaluation
 
 ## End-of-term evaluation
 
-- Exam in January: 10/20
-- Written open book exam with open questions
+- Exam in January: 15/20
+- Written exam with open questions
+- Formulary is allowed
 
 ## Non-period evaluation 
 
-- 1 Project (7.5) + 1 homework (2.5): 10/20
+- 1 Project: 5/20
 - Written reports
-- Group work: 
-    - project 4 people, 
-    - homework 2 people
+- Group work: project with 4 people
 
 # Competences
 ## Initial competences
@@ -52,6 +51,5 @@ software R.
 5. The student can comprehensively read scientific papers related to the course content.
 6. The student can take responsibility and initiative in a group effort
 
-![](./figures/scoreMatrix.png)
 
 

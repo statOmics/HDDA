@@ -753,35 +753,35 @@
     "href": "organisationC003549.html",
     "title": "High Dimensional Data Analysis 2026-2027",
     "section": "",
-    "text": "Theory (6-7 x 2.5 hours)\nPaper reading sessions (1 x 2.5hours)\nQ&A session (2.5 hours)\nPC Labs (6 x 2.5 hours)\nProject work (2 x 2.5 hours)\n\n\n\n\n\nLectures: Lieven Clement (lieven.clement@ugent.be)\nTutorials: Yao Chen (yao.chen@ugent.be)"
+    "text": "Theory (6-7 x 2.5 hours)\nPaper reading sessions (2x 2.5hours)\nQ&A session (2.5 hours)\nPC Labs (6 x 2.5 hours)\nProject work (2 x 2.5 hours)\n\n\n\n\n\nLectures: Lieven Clement (lieven.clement@ugent.be)\nTutorials: Luca De Corso (Luca.DeCorso@UGent.be)"
   },
   {
     "objectID": "organisationC003549.html#lectures",
     "href": "organisationC003549.html#lectures",
     "title": "High Dimensional Data Analysis 2026-2027",
     "section": "",
-    "text": "Theory (6-7 x 2.5 hours)\nPaper reading sessions (1 x 2.5hours)\nQ&A session (2.5 hours)\nPC Labs (6 x 2.5 hours)\nProject work (2 x 2.5 hours)"
+    "text": "Theory (6-7 x 2.5 hours)\nPaper reading sessions (2x 2.5hours)\nQ&A session (2.5 hours)\nPC Labs (6 x 2.5 hours)\nProject work (2 x 2.5 hours)"
   },
   {
     "objectID": "organisationC003549.html#instructors",
     "href": "organisationC003549.html#instructors",
     "title": "High Dimensional Data Analysis 2026-2027",
     "section": "",
-    "text": "Lectures: Lieven Clement (lieven.clement@ugent.be)\nTutorials: Yao Chen (yao.chen@ugent.be)"
+    "text": "Lectures: Lieven Clement (lieven.clement@ugent.be)\nTutorials: Luca De Corso (Luca.DeCorso@UGent.be)"
   },
   {
     "objectID": "organisationC003549.html#end-of-term-evaluation",
     "href": "organisationC003549.html#end-of-term-evaluation",
     "title": "High Dimensional Data Analysis 2026-2027",
     "section": "2.1 End-of-term evaluation",
-    "text": "2.1 End-of-term evaluation\n\nExam in January: 10/20\nWritten open book exam with open questions"
+    "text": "2.1 End-of-term evaluation\n\nExam in January: 15/20\nWritten exam with open questions\nFormulary is allowed"
   },
   {
     "objectID": "organisationC003549.html#non-period-evaluation",
     "href": "organisationC003549.html#non-period-evaluation",
     "title": "High Dimensional Data Analysis 2026-2027",
     "section": "2.2 Non-period evaluation",
-    "text": "2.2 Non-period evaluation\n\n1 Project (7.5) + 1 homework (2.5): 10/20\nWritten reports\nGroup work:\n\nproject 4 people,\nhomework 2 people"
+    "text": "2.2 Non-period evaluation\n\n1 Project: 5/20\nWritten reports\nGroup work: project with 4 people"
   },
   {
     "objectID": "organisationC003549.html#initial-competences",
@@ -816,7 +816,7 @@
     "href": "intro.html#example-kang-et-al.-2018s-droplet-based-scrna-seq-data-of-pbmcs-cells-from-8-lupus-patients-measured-before-and-after-6h-treatment-with-inf-beta-16-samples-in-total.",
     "title": "1. Introduction to High Dimensional Data Analysis",
     "section": "2.1 Example: Kang et al. (2018)’s droplet-based scRNA-seq data of PBMCs cells from 8 lupus patients measured before and after 6h-treatment with INF-\\(\\beta\\) (16 samples in total).",
-    "text": "2.1 Example: Kang et al. (2018)’s droplet-based scRNA-seq data of PBMCs cells from 8 lupus patients measured before and after 6h-treatment with INF-\\(\\beta\\) (16 samples in total).\n\nlibrary(tidyverse)\n\n## Packages to load and visualize the single-cell data\nlibrary(ExperimentHub)\nlibrary(scater)\n\n\n## Load Kang single-cell data from ExperimentHub\neh &lt;- ExperimentHub()\nsce &lt;- eh[[\"EH2259\"]]\n\nsce\n\n#&gt; class: SingleCellExperiment \n#&gt; dim: 35635 29065 \n#&gt; metadata(0):\n#&gt; assays(1): counts\n#&gt; rownames(35635): MIR1302-10 FAM138A ... MT-ND6 MT-CYB\n#&gt; rowData names(2): ENSEMBL SYMBOL\n#&gt; colnames(29065): AAACATACAATGCC-1 AAACATACATTTCC-1 ... TTTGCATGGTTTGG-1\n#&gt;   TTTGCATGTCTTAC-1\n#&gt; colData names(5): ind stim cluster cell multiplets\n#&gt; reducedDimNames(1): TSNE\n#&gt; mainExpName: NULL\n#&gt; altExpNames(0):\n\n\n\nData on gene expression of 35635 genes of 29065 cells."
+    "text": "2.1 Example: Kang et al. (2018)’s droplet-based scRNA-seq data of PBMCs cells from 8 lupus patients measured before and after 6h-treatment with INF-\\(\\beta\\) (16 samples in total).\n\nlibrary(tidyverse)\n\n## Packages to load and visualize the single-cell data\nlibrary(ExperimentHub)\nlibrary(scater)\n\n\n## Load Kang single-cell data from ExperimentHub\n## Use the local cache if the data were downloaded before (avoids a slow\n## online metadata check); otherwise connect to the hub and download once\neh &lt;- tryCatch(ExperimentHub(localHub = TRUE), error = function(e) NULL)\nif (is.null(eh) || !\"EH2259\" %in% names(eh)) eh &lt;- ExperimentHub()\nsce &lt;- eh[[\"EH2259\"]]\n\nsce\n\n#&gt; class: SingleCellExperiment \n#&gt; dim: 35635 29065 \n#&gt; metadata(0):\n#&gt; assays(1): counts\n#&gt; rownames(35635): MIR1302-10 FAM138A ... MT-ND6 MT-CYB\n#&gt; rowData names(2): ENSEMBL SYMBOL\n#&gt; colnames(29065): AAACATACAATGCC-1 AAACATACATTTCC-1 ... TTTGCATGGTTTGG-1\n#&gt;   TTTGCATGTCTTAC-1\n#&gt; colData names(5): ind stim cluster cell multiplets\n#&gt; reducedDimNames(1): TSNE\n#&gt; mainExpName: NULL\n#&gt; altExpNames(0):\n\n\n\nData on gene expression of 35635 genes of 29065 cells."
   },
   {
     "objectID": "intro.html#data-exploration-and-dimensionality-reduction",
@@ -879,7 +879,7 @@
     "href": "intro.html#prediction-error",
     "title": "1. Introduction to High Dimensional Data Analysis",
     "section": "3.6 Prediction error",
-    "text": "3.6 Prediction error\nLeast squares estimators are unbiased and consistent, but these properties are not very important for prediction models.\nA prediction model is considered good if it can predict well outcomes.\nThe prediction error for a prediction at predictor \\(\\mathbf{x}\\) is given by\n\\[\n   \\hat{Y}(\\mathbf{x}) - Y^*,\n\\]\nwhere\n\n\\(\\hat{Y}(\\mathbf{x})=\\mathbf{x}^T\\hat{\\boldsymbol{\\beta}}\\) is the prediction at \\(\\mathbf{x}\\)\n\\(Y^*\\) is an outcome at predictor \\(\\mathbf{x}\\)\n\nSince prediction is typically used to predict an outcome before it is observed, the outcome \\(Y^*\\) is not observed yet. Hence, the prediction error cannot be computed.\n\nThe problem of unobservable prediction errors is partly solved by the expected conditional test error (sometimes referred to as the mean squared error, MSE) \\[\n  \\text{Err}(\\mathbf{x})=E[(\\hat{Y}(\\mathbf{x}) - Y^*)^2].\n\\]\nWith (suppressing the dependence on \\(\\mathbf{x}\\)) \\[\n  \\mu = E[\\hat{Y}] \\text{ and } \\mu^*=E[Y^*]\n\\] the error can be expressed as \\[\\begin{eqnarray*}\n  \\text{Err}\n    &=&E\\left\\{\\left[(\\hat{Y} -\\mu)-(Y^*-\\mu^*)-(\\mu^*-\\mu)\\right]^2\\right\\} \\\\\n    &=& E[(\\hat{Y} -\\mu)^2]+E[(Y^*-\\mu^*)^2]+E[(\\mu^*-\\mu)^2] \\\\\n    &=& \\text{var}[\\hat{Y}] +\\text{var}[Y^*] +\\text{bias}^2\n\\end{eqnarray*}\\]\nThe term \\(\\text{var}[Y^*]\\) (irreducible error) does not depend on the model and may therefore be ignored when \\(\\text{Err}\\) is used for comparing prediction models.\n\nIn this introductory chapter we only aim to give a rough discussion on prediction errors. Later definitions will be refined and the notation will be more accurate. Also a more detailed discussion on the bias-variance trade-off will follow. For the moment it is sufficient to vaguely know that:\n\nthe expected conditional test error is introduced to circumvent the problem that the prediction error cannot be observed. In later chapters we will look at estimators of the expected error.\nthe expected conditional test error is in some literature also known as the mean squared error (MSE), but we do not adopt this terminology because MSE is also commonly used to refer to SSE divided by the residual degrees of freedom in a linear regression model.\nThe identity \\(\\text{Err}=\\text{var}[\\hat{Y}] +\\text{var}[Y] +\\text{bias}^2\\) is known as the bias-variance trade-off. It shows that a good prediction model (i.e. a model resulting in a small Err), can be obtained by a model that shows a small bias as long as this bias is compensated with a large reduction of the variance or the predictions. A more detailed discussion will follow in later chapters.\nFor prediction models with a large number of predictors we will therefore introduce penalized regression. This will induce some bias in the estimation, but will allow us to reduce the variance considerably."
+    "text": "3.6 Prediction error\nLeast squares estimators are unbiased and consistent, but these properties are not very important for prediction models.\nA prediction model is considered good if it can predict well outcomes.\nThe prediction error for a prediction at predictor \\(\\mathbf{x}\\) is given by\n\\[\n   Y^* - \\hat{Y}(\\mathbf{x}),\n\\]\nwhere\n\n\\(\\hat{Y}(\\mathbf{x})=\\mathbf{x}^T\\hat{\\boldsymbol{\\beta}}\\) is the prediction at \\(\\mathbf{x}\\)\n\\(Y^*\\) is an outcome at predictor \\(\\mathbf{x}\\)\n\nSince prediction is typically used to predict an outcome before it is observed, the outcome \\(Y^*\\) is not observed yet. Hence, the prediction error cannot be computed.\n\nThe problem of unobservable prediction errors is partly solved by the expected conditional test error (sometimes referred to as the mean squared error, MSE) \\[\n  \\text{Err}(\\mathbf{x})=E\\left[\\left\\{Y^* - \\hat{Y}(\\mathbf{x})\\right\\}^2\\right].\n\\]\nWith (suppressing the dependence on \\(\\mathbf{x}\\)) \\[\n  \\mu = E[\\hat{Y}] \\text{ and } \\mu^*=E[Y^*]\n\\] the error can be expressed as \\[\\begin{eqnarray*}\n  \\text{Err}\n    &=&E\\left[\\left\\{(Y^*-\\mu^*)-(\\hat{Y} -\\mu)+(\\mu^*-\\mu)\\right\\}^2\\right] \\\\\n    &=& E[(Y^*-\\mu^*)^2]+E[(\\hat{Y} -\\mu)^2]+E[(\\mu^*-\\mu)^2] \\\\\n    &=& \\text{var}[Y^*] + \\text{var}[\\hat{Y}] +\\text{bias}^2\n\\end{eqnarray*}\\] with \\[\n  \\text{bias} = \\mu - \\mu^* = E[\\hat{Y}] - E[Y^*],\n\\] the difference between the average prediction and the average outcome at \\(\\mathbf{x}\\).\nThe term \\(\\text{var}[Y^*]\\) (irreducible error) does not depend on the model and may therefore be ignored when \\(\\text{Err}\\) is used for comparing prediction models.\n\nIn this introductory chapter we only aim to give a rough discussion on prediction errors. Later definitions will be refined and the notation will be more accurate. Also a more detailed discussion on the bias-variance trade-off will follow. For the moment it is sufficient to vaguely know that:\n\nthe expected conditional test error is introduced to circumvent the problem that the prediction error cannot be observed. In later chapters we will look at estimators of the expected error.\nthe expected conditional test error is in some literature also known as the mean squared error (MSE), but we do not adopt this terminology because MSE is also commonly used to refer to SSE divided by the residual degrees of freedom in a linear regression model.\nThe identity \\(\\text{Err}=\\text{var}[\\hat{Y}] +\\text{var}[Y^*] +\\text{bias}^2\\) is known as the bias-variance trade-off. It shows that a good prediction model (i.e. a model resulting in a small Err), can be obtained by a model that shows a small bias as long as this bias is compensated with a large reduction of the variance of the predictions. A more detailed discussion will follow in later chapters.\nFor prediction models with a large number of predictors we will therefore introduce penalized regression. This will induce some bias in the estimation, but will allow us to reduce the variance considerably."
   },
   {
     "objectID": "Lab2-PCA.html",

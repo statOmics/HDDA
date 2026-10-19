@@ -10,3 +10,5 @@ raw-data/
 
 /.quarto/
 **/*.quarto_ipynb
+/*_files/
+/file137ef*/

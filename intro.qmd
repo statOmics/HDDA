@@ -69,7 +69,10 @@ library(scater)
 
 ```{r}
 ## Load Kang single-cell data from ExperimentHub
-eh <- ExperimentHub()
+## Use the local cache if the data were downloaded before (avoids a slow
+## online metadata check); otherwise connect to the hub and download once
+eh <- tryCatch(ExperimentHub(localHub = TRUE), error = function(e) NULL)
+if (is.null(eh) || !"EH2259" %in% names(eh)) eh <- ExperimentHub()
 sce <- eh[["EH2259"]]
 
 sce
@@ -1049,7 +1052,7 @@ A prediction model is considered good if it can predict well outcomes.
 The **prediction error** for a prediction at predictor $\mathbf{x}$ is given by
 
 $$
-   \hat{Y}(\mathbf{x}) - Y^*,
+   Y^* - \hat{Y}(\mathbf{x}),
 $$
 
 where
@@ -1064,7 +1067,7 @@ where
 
  The problem of unobservable prediction errors is partly solved by the **expected conditional test error** (sometimes referred to as the mean squared error, MSE)
 \[
-  \text{Err}(\mathbf{x})=E[(\hat{Y}(\mathbf{x}) - Y^*)^2].
+  \text{Err}(\mathbf{x})=E\left[\left\{Y^* - \hat{Y}(\mathbf{x})\right\}^2\right].
 \]
 
 With (suppressing the dependence on $\mathbf{x}$)
@@ -1074,10 +1077,15 @@ With (suppressing the dependence on $\mathbf{x}$)
 the error can be expressed as
 \begin{eqnarray*}
   \text{Err}
-    &=&E\left\{\left[(\hat{Y} -\mu)-(Y^*-\mu^*)-(\mu^*-\mu)\right]^2\right\} \\
-    &=& E[(\hat{Y} -\mu)^2]+E[(Y^*-\mu^*)^2]+E[(\mu^*-\mu)^2] \\
-    &=& \text{var}[\hat{Y}] +\text{var}[Y^*] +\text{bias}^2
+    &=&E\left[\left\{(Y^*-\mu^*)-(\hat{Y} -\mu)+(\mu^*-\mu)\right\}^2\right] \\
+    &=& E[(Y^*-\mu^*)^2]+E[(\hat{Y} -\mu)^2]+E[(\mu^*-\mu)^2] \\
+    &=& \text{var}[Y^*] + \text{var}[\hat{Y}] +\text{bias}^2
 \end{eqnarray*}
+with
+\[
+  \text{bias} = \mu - \mu^* = E[\hat{Y}] - E[Y^*],
+\]
+the difference between the average prediction and the average outcome at $\mathbf{x}$.
 
  The term $\text{var}[Y^*]$ (irreducible error) does not depend on the model and may therefore be ignored when $\text{Err}$ is used for comparing prediction models.
 
@@ -1090,7 +1098,7 @@ In this introductory chapter we only aim to give a rough discussion on predictio
 
 - the expected conditional test error  is in some literature also known as the *mean squared error* (MSE), but we do not adopt this terminology because MSE is also commonly used to refer to SSE divided by the residual degrees of freedom in a linear regression model.
 
-- The identity $\text{Err}=\text{var}[\hat{Y}] +\text{var}[Y] +\text{bias}^2$ is known as the bias-variance trade-off. It shows that a good prediction model (i.e. a model resulting in a small Err), can be obtained by a model that shows a small bias as long as this bias is compensated with a large reduction of the variance or the predictions. A more detailed discussion will follow in later chapters.
+- The identity $\text{Err}=\text{var}[\hat{Y}] +\text{var}[Y^*] +\text{bias}^2$ is known as the bias-variance trade-off. It shows that a good prediction model (i.e. a model resulting in a small Err), can be obtained by a model that shows a small bias as long as this bias is compensated with a large reduction of the variance of the predictions. A more detailed discussion will follow in later chapters.
 
 - For prediction models with a large number of predictors we will therefore introduce penalized regression. This will induce some bias in the estimation, but will allow us to reduce the variance considerably.
 
