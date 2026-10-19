@@ -332,40 +332,42 @@ Note, that
 
 ## Linear Regression for multivariate data vs High Dimensional Data
 
-- $\mathbf{X^TX}$ and $(\mathbf{X^TX})^{-1}$ are $p \times p$ matrices
+- $\mathbf{X}^T\mathbf{X}$ and $(\mathbf{X}^T\mathbf{X})^{-1}$ are $p \times p$ matrices
 
-- $\mathbf{X^TX}$ can only be inverted if it has rank $p$
+- $\mathbf{X}^T\mathbf{X}$ can only be inverted if it has rank $p$
 
-- Rank of a matrix of form $\mathbf{X^TX}$, with $\mathbf{X}$ and $n\times p$ matrix, can never be larger than $\min(n,p)$.
+- Rank of a matrix of form $\mathbf{X}^T\mathbf{X}$, with $\mathbf{X}$ and $n\times p$ matrix, can never be larger than $\min(n,p)$.
 
-- in most regression problems $n>p$ and rank of $(\mathbf{X^TX})$ equals $p$
+- in most regression problems $n>p$ and rank of $(\mathbf{X}^T\mathbf{X})$ equals $p$
 
-- in high dimensional regression problems $p >>> n$ and rank of $(\mathbf{X^TX})$ equals $n<p$
+- in high dimensional regression problems $p >>> n$ and rank of $(\mathbf{X}^T\mathbf{X})$ equals $n<p$
 
-- in the toxicogenomics example $n=30<p=4000$ and $\text{rank}(\mathbf{X^TX})\leq n=30$.
-  $\longrightarrow$ $(\mathbf{X^TX})^{-1}$ does not exist, and neither does $\hat{\boldsymbol{\beta}}$.
+- in the toxicogenomics example $n=30<p=4000$ and the columns of $\mathbf{X}$ are centered, so $\text{rank}(\mathbf{X}^T\mathbf{X})\leq n-1=29$.
+  $\longrightarrow$ $(\mathbf{X}^T\mathbf{X})^{-1}$ does not exist, and neither does $\hat{\boldsymbol{\beta}}$.
 
 ## Can SVD help?
-  - Since the columns of $\mathbf{X}$ are centered, $\mathbf{X^TX} \propto \text{var}\left[\mathbf{X}\right]$.
+  - Since the columns of $\mathbf{X}$ are centered, $\mathbf{X}^T\mathbf{X} \propto \text{var}\left[\mathbf{X}\right]$.
 
-  - if $\text{rank}(\mathbf{X^TX})=n=30$, the PCA will give 30 components, each being a linear combination of $p=4000$ variables. These 30 PCs contain all information present in the original $\mathbf{X}$ data.
+  - Centering the columns of $\mathbf{X}$ reduces the rank by one: the $n$ centered rows sum to zero, so they span at most an $(n-1)$-dimensional subspace. In the toxicogenomics example $\text{rank}(\mathbf{X})=\text{rank}(\mathbf{X}^T\mathbf{X})=r=n-1=29$, and the 30th singular value is zero.
 
-  - if $\text{rank}(\mathbf{X})=n=30$, the SVD of $\mathbf{X}$ is given by
+  - Hence, the PCA will give $r=29$ components, each being a linear combination of $p=4000$ variables. These 29 PCs contain all information present in the original $\mathbf{X}$ data.
+
+  - The SVD of $\mathbf{X}$ is given by
   \[
-   \mathbf{X} = \sum_{i=1}^n \delta_i \mathbf{u}_i \mathbf{v}_i^T = \mathbf{U} \boldsymbol{\Delta} \mathbf{V}^T = \mathbf{ZV}^T,
+   \mathbf{X} = \sum_{k=1}^r \delta_k \mathbf{u}_k \mathbf{v}_k^T = \mathbf{U} \boldsymbol{\Delta} \mathbf{V}^T = \mathbf{ZV}^T,
   \]
-  with $\mathbf{Z}$ the $n\times n$ matrix with the scores on the $n$ PCs.
+  with $\mathbf{U}$ an $n\times r$ matrix, $\boldsymbol{\Delta}$ an $r\times r$ diagonal matrix, $\mathbf{V}$ a $p\times r$ matrix, and $\mathbf{Z}=\mathbf{U}\boldsymbol{\Delta}$ the $n\times r$ matrix with the scores on the $r$ PCs.
 
-  - Still problematic because if we use all PCs $n=p$.
+  - Still problematic: if we use all $r=n-1$ PCs as regressors, the model fits the data perfectly with zero residual degrees of freedom (centering $\mathbf{Y}$ already used one degree of freedom).
 
 
 # Principal Component Regression
 
 A principal component regression (PCR) consists of
 
-1. transforming $p=4000$ dimensional $X$-variable to the $n=30$ dimensional $Z$-variable (PC scores). The $n$ PCs are mutually uncorrelated.
+1. transforming $p=4000$ dimensional $X$-variable to the $r=n-1=29$ dimensional $Z$-variable (PC scores). The $r$ PCs are mutually uncorrelated.
 
-2. using the $n$ PC-variables as regressors in a linear regression model
+2. using the $r$ PC-variables as regressors in a linear regression model
 
 3. performing feature selection to select the most important regressors (PC).
 
@@ -373,7 +375,7 @@ Feature selection is key, because we don't want to have as many regressors as th
 
 ---
 
-To keep the exposition general so that we allow for a feature selection to have taken place, I use the notation $\mathbf{U}_S$ to denote a matrix with left-singular column vectors $\mathbf{u}_i$, with $i \in {\mathcal{S}}$ (${\mathcal{S}}$ an index set referring to the PCs to be included in the regression model).
+To keep the exposition general so that we allow for a feature selection to have taken place, I use the notation $\mathbf{U}_S$ to denote a matrix with left-singular column vectors $\mathbf{u}_k$, with $k \in {\mathcal{S}}$ (${\mathcal{S}}$ an index set referring to the PCs to be included in the regression model).
 
 For example, suppose that a feature selection method has resulted in the selection of PCs 1, 3 and 12 for inclusion in the prediction model, then ${\mathcal{S}}=\{1,3,12\}$ and
 \[
@@ -387,7 +389,7 @@ For example, suppose that a feature selection method has resulted in the selecti
 ### Example model based on first 4 PCs
 
 ```{r}
-k <- 30
+k <- 29 # rank of the centered X: the 30th singular value is zero
 Uk <- svdX$u[,1:k]
 Dk <- diag(svdX$d[1:k])
 Zk <- Uk%*%Dk
@@ -473,15 +475,15 @@ pRidge
 
 The solution is given by
 \[
-  \hat{\boldsymbol{\beta}} = (\mathbf{X^TX}+\lambda \mathbf{I})^{-1} \mathbf{X^T Y}.
+  \hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1} \mathbf{X}^T\mathbf{Y}.
 \]
-It can be shown that $(\mathbf{X^TX}+\lambda \mathbf{I})$ is always of rank $p$ if $\lambda>0$.
+It can be shown that $(\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})$ is always of rank $p$ if $\lambda>0$.
 
-Hence, $(\mathbf{X^TX}+\lambda \mathbf{I})$ is invertible and $\hat{\boldsymbol{\beta}}$ exists even if $p>>>n$.
+Hence, $(\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})$ is invertible and $\hat{\boldsymbol{\beta}}$ exists even if $p>>>n$.
 
 We also find
 \[
-  \text{var}\left[\hat{\mathbf\beta}\right] = (\mathbf{X^TX}+\lambda \mathbf{I})^{-1} \mathbf{X}^T\mathbf{X} (\mathbf{X^TX}+\lambda \mathbf{I})^{-1}\sigma^2
+  \text{var}\left[\hat{\mathbf\beta}\right] = (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1} \mathbf{X}^T\mathbf{X} (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1}\sigma^2
 \]
 
 ### Proof
@@ -500,97 +502,226 @@ The criterion to be minimised is
  \]
  Solving $\frac{\partial}{\partial \boldsymbol{\beta}}\text{SSE}_\text{pen}=0$ gives
  \[
-   \hat{\boldsymbol{\beta}} = (\mathbf{X^TX}+\lambda \mathbf{I})^{-1} \mathbf{X^T Y}.
+   \hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1} \mathbf{X}^T\mathbf{Y}.
  \]
- (assumption: $(\mathbf{X^TX}+\lambda \mathbf{I})$ is of rank $p$. This is always true if $\lambda>0$)
+ (assumption: $(\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})$ is of rank $p$. This is always true if $\lambda>0$)
 
 ## Link with SVD
 
-### SVD and inverse
-Write the SVD of $\mathbf{X}$ ($p>n$) as
-\[
-   \mathbf{X} = \sum_{i=1}^n \delta_i \mathbf{u}_i \mathbf{v}_i^T = \sum_{i=1}^p \delta_i \mathbf{u}_i \mathbf{v}_i^T  = \mathbf{U}\boldsymbol{\Delta} \mathbf{V}^T ,
-\]
+### SVD of X when p > n
+
+Write the SVD of $\mathbf{X}$ ($n\times p$, rank $r$) as
+$$
+   \mathbf{X} = \sum_{k=1}^r \delta_k \mathbf{u}_k \mathbf{v}_k^T = \mathbf{U}\boldsymbol{\Delta} \mathbf{V}^T ,
+$$
 with
 
-- $\delta_{n+1}=\delta_{n+2}= \cdots = \delta_p=0$
+- $\mathbf{U}$ an $n\times r$ matrix with orthonormal columns, $\boldsymbol{\Delta}$ an $r\times r$ diagonal matrix with $\delta_1\geq \ldots \geq \delta_r>0$,
+- $\mathbf{V}$ a $p\times r$ matrix with orthonormal columns: $\mathbf{V}^T\mathbf{V}=\mathbf{I}_r$, but $\mathbf{V}\mathbf{V}^T\neq\mathbf{I}_p$ when $r<p$.
 
-- $\boldsymbol{\Delta}$ a $p\times p$ diagonal matrix of the $\delta_1,\ldots, \delta_p$
+This is the "thin" SVD. 
 
--  $\mathbf{U}$ an $n\times p$ matrix and $\mathbf{V}$ a $p \times p$ matrix. Note that only the first $n$ columns of $\mathbf{U}$ and $\mathbf{V}$ are informative.
+Note, that `svd()` in R returns $\min(n,p)$ singular vectors: the columns with $\delta_k\approx 0$ have to be removed to obtain the rank-$r$ version.
+
+Geometrically: 
+
+- we only have $n$ data points $\mathbf{x}_1,\ldots,\mathbf{x}_n$ in a $p$-dimensional space.
+- $n$ points span at most an $n$-dimensional subspace, just like 2 points (and the origin) span a plane in $\mathbb{R}^3$.
+- Hence, $r\leq \min(n,p)$, and when $p>n$ we have $r\leq n<p$.
+- The columns $\mathbf{v}_1,\ldots,\mathbf{v}_r$ are an orthonormal basis of the subspace spanned by the data: every data point is a linear combination of them, $\mathbf{x}_i^T=\sum_{k=1}^r u_{ik}\delta_k\mathbf{v}_k^T$.
+- $\mathbf{V}\mathbf{V}^T$ projects onto this subspace; these are the directions in which the data contain information.
+
+- The remaining $p-r$ directions are perpendicular to all data points.
+- We collect them in $p-r$ orthonormal columns $\mathbf{V}_\perp$.
+- All data points have coordinate zero in these directions ($\mathbf{X}\mathbf{V}_\perp=\mathbf{0}$): the data contain no information there. Then $\mathbf{V}_\text{full}=[\mathbf{V}\; \mathbf{V}_\perp]$ is a $p\times p$ orthogonal matrix and
+$$
+\mathbf{V}\mathbf{V}^T + \mathbf{V}_\perp\mathbf{V}_\perp^T = \mathbf{I}_p.
+$$
+
+- Note, that centering the columns of $\mathbf{X}$ reduces the rank by one: in the double centered setting of this chapter with $p>n$, $r=n-1$.
+
+### SVD and inverse
 
 With the SVD of $\mathbf{X}$ we write
- \[
-   \mathbf{X}^T\mathbf{X} = \mathbf{V}\boldsymbol{\Delta
-     }^2\mathbf{V}^T.
- \]
- The inverse of $\mathbf{X}^T\mathbf{X}$ is then given by
- \[
-   (\mathbf{X}^T\mathbf{X})^{-1} = \mathbf{V}\boldsymbol{\Delta}^{-2}\mathbf{V}^T.
- \]
- Since $\boldsymbol{\Delta}$ has $\delta_{n+1}=\delta_{n+2}= \cdots = \delta_p=0$, it is not invertible.
+$$
+   \mathbf{X}^T\mathbf{X} = \mathbf{V}\boldsymbol{\Delta}^2\mathbf{V}^T
+   = \mathbf{V}_\text{full}
+   \left[\begin{array}{cc}\boldsymbol{\Delta}^2 & \mathbf{0}\\ \mathbf{0} & \mathbf{0}_{(p-r)\times(p-r)}\end{array}\right]
+   \mathbf{V}_\text{full}^T.
+$$
 
-### SVD of penalised matrix $\mathbf{X^TX}+\lambda \mathbf{I}$
+- $\mathbf{X}^T\mathbf{X}$ is a $p\times p$ matrix with $p-r$ zero eigenvalues. 
+- Hence, when $r<p$ it is singular and $(\mathbf{X}^T\mathbf{X})^{-1}$ does not exist.
 
-It can be shown that
-\[
-  \mathbf{X^TX}+\lambda \mathbf{I} = \mathbf{V} (\boldsymbol{\Delta}^2+\lambda \mathbf{I}) \mathbf{V}^T ,
-\]
-i.e. adding a constant to the diagonal elements does not affect the eigenvectors, and all eigenvalues are increased by this constant.
-$\longrightarrow$ zero eigenvalues become $\lambda$.
+- The matrix $\mathbf{V}\boldsymbol{\Delta}^{-2}\mathbf{V}^T$ is not the inverse. 
+- It only inverts $\mathbf{X}^T\mathbf{X}$ on the span of $\mathbf{V}$:
+$$
+(\mathbf{X}^T\mathbf{X})\,\mathbf{V}\boldsymbol{\Delta}^{-2}\mathbf{V}^T = \mathbf{V}\mathbf{V}^T \neq \mathbf{I}_p .
+$$
+- It is the Moore-Penrose pseudo-inverse $(\mathbf{X}^T\mathbf{X})^+$.
 
-Hence,
-\[
-  (\mathbf{X^TX}+\lambda \mathbf{I})^{-1} = \mathbf{V} (\boldsymbol{\Delta}^2+\lambda \mathbf{I})^{-1} \mathbf{V}^T ,
-\]
-which can be computed even when some eigenvalues in $\boldsymbol{\Delta}^2$ are zero.
+- Note, however, that when $n>p$ and $\mathbf{X}$ has full rank $r=p$, $\mathbf{V}$ is a $p\times p$ orthogonal matrix, and $(\mathbf{X}^T\mathbf{X})^{-1}=\mathbf{V}\boldsymbol{\Delta}^{-2}\mathbf{V}^T$ does hold.
 
-Note, that for high dimensional data ($p>>>n$) many eigenvalues are zero because $\mathbf{X^TX}$ is a $p \times p$ matrix and has rank $n$.
+### SVD of penalised matrix $\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I}$
 
-The identity $\mathbf{X^TX}+\lambda \mathbf{I} = \mathbf{V} (\boldsymbol{\Delta}^2+\lambda \mathbf{I}) \mathbf{V}^T$ is easily checked:
-\[
-  \mathbf{V} (\boldsymbol{\Delta}^2+\lambda \mathbf{I}) \mathbf{V}^T = \mathbf{V}\boldsymbol{\Delta}^2\mathbf{V}^T + \lambda \mathbf{VV}^T  = \mathbf{V}\boldsymbol{\Delta}^2\mathbf{V}^T + \lambda \mathbf{I} = \mathbf{X^TX}+\lambda \mathbf{I}.
-\]
+Adding $\lambda$ to the diagonal does not change the eigenvectors, and increases all eigenvalues by $\lambda$:
+$$
+  \mathbf{X}^T\mathbf{X}+\lambda \mathbf{I}
+  = \mathbf{V}_\text{full}
+   \left[\begin{array}{cc}\boldsymbol{\Delta}^2+\lambda\mathbf{I}_r & \mathbf{0}\\ \mathbf{0} & \lambda\mathbf{I}_{p-r}\end{array}\right]
+   \mathbf{V}_\text{full}^T
+  = \mathbf{V}(\boldsymbol{\Delta}^2+\lambda\mathbf{I})\mathbf{V}^T + \lambda\mathbf{V}_\perp\mathbf{V}_\perp^T .
+$$
+
+Note, that 
+
+- with the thin $\mathbf{V}$ alone,
+$$
+\mathbf{V}(\boldsymbol{\Delta}^2+\lambda\mathbf{I})\mathbf{V}^T = \mathbf{X}^T\mathbf{X}+\lambda\mathbf{V}\mathbf{V}^T \neq \mathbf{X}^T\mathbf{X}+\lambda\mathbf{I}:
+$$
+the penalty in the $\mathbf{V}_\perp$ directions is missing.
+
+- the $p-r$ zero eigenvalues become $\lambda$, so all eigenvalues are strictly positive and the matrix is invertible for every $\lambda>0$.
+- Because $\mathbf{V}_\text{full}$ is orthogonal ($\mathbf{V}_\text{full}^{-1}=\mathbf{V}_\text{full}^T$), the inverse is obtained by inverting the diagonal matrix in the middle:
+$$
+\begin{aligned}
+  (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1}
+  &= \mathbf{V}_\text{full}
+   \left[\begin{array}{cc}\boldsymbol{\Delta}^2+\lambda\mathbf{I}_r & \mathbf{0}\\ \mathbf{0} & \lambda\mathbf{I}_{p-r}\end{array}\right]^{-1}
+   \mathbf{V}_\text{full}^T\\
+  &= \mathbf{V} (\boldsymbol{\Delta}^2+\lambda \mathbf{I})^{-1} \mathbf{V}^T + \frac{1}{\lambda}\mathbf{V}_\perp\mathbf{V}_\perp^T .
+\end{aligned}
+$$
 
 
-## Properties
+$\longrightarrow$  Interestingly, when $n>p$ and $\mathbf{X}$ is full rank $r=p$, $\mathbf{V}$ is a $p\times p$ orthogonal matrix.
 
-- The Ridge estimator is biased! The $\boldsymbol{\beta}$ are shrunken to zero!
-\begin{eqnarray}
- \text{E}[\hat{\boldsymbol{\beta}}] &=& (\mathbf{X^TX}+\lambda \mathbf{I})^{-1} \mathbf{X}^T \text{E}[\mathbf{Y}]\\
-&=& (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1} \mathbf{X}^T \mathbf{X}\boldsymbol{\beta}\\
-\end{eqnarray}
+$\longrightarrow$ Then $\mathbf{V}\mathbf{V}^T=\mathbf{I}_p$, there are no $\mathbf{V}_\perp$ directions, and
+$$
+\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I} = \mathbf{V}(\boldsymbol{\Delta}^2+\lambda\mathbf{I})\mathbf{V}^T,\qquad
+(\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1} = \mathbf{V}(\boldsymbol{\Delta}^2+\lambda\mathbf{I})^{-1}\mathbf{V}^T.
+$$
 
-- Note, that the shrinkage is larger in the direction of the smaller eigenvalues.
+### Ridge estimator in terms of the SVD
 
-\begin{eqnarray}
-\text{E}[\hat{\boldsymbol{\beta}}]&=&\mathbf{V} (\boldsymbol{\Delta}^2+\lambda \mathbf{I})^{-1} \mathbf{V}^T \mathbf{V} \boldsymbol{\Delta}^2 \mathbf{V}^T\boldsymbol{\beta}\\
-&=&\mathbf{V} (\boldsymbol{\Delta}^2+\lambda \mathbf{I})^{-1} \boldsymbol{\Delta}^2 \mathbf{V}^T\boldsymbol{\beta}\\
-&=& \mathbf{V}
+- Fortunately, the $\mathbf{V}_\perp$ term drops out of the ridge estimator. 
+- Indeed $\mathbf{X}^T\mathbf{Y}=\mathbf{V}\boldsymbol{\Delta}\mathbf{U}^T\mathbf{Y}$ lies in the span of $\mathbf{V}$, and $\mathbf{V}_\perp^T\mathbf{V}=\mathbf{0}$. 
+
+- Hence,
+$$
+  \hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1}\mathbf{X}^T\mathbf{Y}
+  = \mathbf{V} (\boldsymbol{\Delta}^2+\lambda \mathbf{I})^{-1}\boldsymbol{\Delta}\mathbf{U}^T\mathbf{Y}
+  = \sum_{k=1}^r \frac{\delta_k}{\delta_k^2+\lambda}\,\mathbf{v}_k\,\mathbf{u}_k^T\mathbf{Y}.
+$$
+- So the ridge estimator can be computed from the thin SVD alone, and it always lies in the span of $\mathbf{V}$.
+
+- And, the ridge estimator is the same for both $p \geq  n$ and $p < n$.
+
+### Numerical check
+
+```{r}
+# local() keeps the simulated objects out of the workspace of this chapter
+local({
+  set.seed(1)
+  n <- 10; p <- 50; lambda <- 2
+  X <- scale(matrix(rnorm(n * p), n, p), scale = FALSE)
+  Y <- rnorm(n); Y <- Y - mean(Y)
+
+  # svd() returns min(n, p) = n singular vectors
+  sv <- svd(X)
+  # last singular value is 0 due to centring
+  print(round(sv$d, 10))
+  r <- n - 1 # rank after centring
+  d <- sv$d[1:r]
+  # thin SVD: V is p x r
+  V <- sv$v[, 1:r]; U <- sv$u[, 1:r]
+  # remaining p - r directions
+  Vperp <- svd(X, nv = p)$v[, (r + 1):p]
+
+  A <- crossprod(X) + lambda * diag(p)
+  B <- V %*% diag(d^2 + lambda) %*% t(V)
+
+  # thin V only: not equal
+  print(max(abs(B - A)))
+
+  # thin V plus Vperp term: equal
+  print(max(abs(B + lambda * tcrossprod(Vperp) - A)))
+
+  # ridge estimator: thin SVD is enough
+  beta_direct <- solve(A, crossprod(X, Y))
+  beta_svd    <- V %*% (d / (d^2 + lambda) * crossprod(U, Y))
+  print(max(abs(beta_direct - beta_svd)))
+})
+```
+
+## Properties {#sec-ridge-properties}
+
+- The ridge estimator is biased! The $\boldsymbol{\beta}$ are shrunken towards zero!
+$$
+\begin{aligned}
+ \text{E}[\hat{\boldsymbol{\beta}}] &= (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1} \mathbf{X}^T \text{E}[\mathbf{Y}]\\
+&= (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1} \mathbf{X}^T \mathbf{X}\boldsymbol{\beta}
+\end{aligned}
+$$
+
+- Note, that the shrinkage is larger in the direction of the smaller eigenvalues. As for $\hat{\boldsymbol{\beta}}$, the $\mathbf{V}_\perp$ term drops out because $\mathbf{X}^T\mathbf{X}=\mathbf{V}\boldsymbol{\Delta}^2\mathbf{V}^T$, so the thin SVD suffices:
+
+$$
+\begin{aligned}
+\text{E}[\hat{\boldsymbol{\beta}}]&=\mathbf{V} (\boldsymbol{\Delta}^2+\lambda \mathbf{I})^{-1} \boldsymbol{\Delta}^2 \mathbf{V}^T\boldsymbol{\beta}\\
+&= \mathbf{V}
 \left[\begin{array}{ccc}
 \frac{\delta_1^2}{\delta_1^2+\lambda}&\ldots&0 \\
-&\vdots&\\
+&\ddots&\\
 0&\ldots&\frac{\delta_r^2}{\delta_r^2+\lambda}
 \end{array}\right]
-\mathbf{V}^T\boldsymbol{\beta}
-\end{eqnarray}
+\mathbf{V}^T\boldsymbol{\beta}\\
+&= \sum_{k=1}^r \frac{\delta_k^2}{\delta_k^2+\lambda}\,\mathbf{v}_k\mathbf{v}_k^T\boldsymbol{\beta}
+\end{aligned}
+$$
 
--  the variance of the prediction $\hat{{Y}}(\mathbf{x})=\mathbf{x}^T\hat\beta$,
-  \[
-    \text{var}\left[\hat{{Y}}(\mathbf{x})\mid \mathbf{x}\right] = \mathbf{x}^T(\mathbf{X^TX}+\lambda \mathbf{I})^{-1}\mathbf{x}
-  \]
-  is smaller than with the least-squares estimator.
+  Compare this with the decomposition of the true parameter vector in the same basis,
+  $$
+  \boldsymbol{\beta} = \mathbf{V}_\text{full}\mathbf{V}_\text{full}^T\boldsymbol{\beta} = \sum_{k=1}^r \mathbf{v}_k\mathbf{v}_k^T\boldsymbol{\beta} + \mathbf{V}_\perp\mathbf{V}_\perp^T\boldsymbol{\beta}.
+  $$
+  Ridge thus shrinks most in the directions where the data say least: by a factor $\delta_k^2/(\delta_k^2+\lambda)$ along $\mathbf{v}_k$, and completely along $\mathbf{V}_\perp$. The component $\mathbf{V}_\perp\mathbf{V}_\perp^T\boldsymbol{\beta}$ is shrunken to zero: the data contain no information on it.
 
--  through the bias-variance trade-off it is hoped that better predictions in terms of expected conditional test error can be obtained, for an appropriate choice of $\lambda$.
+- The variance of the ridge estimator is
+  $$
+    \text{var}\left[\hat{\boldsymbol{\beta}}\right] = (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1} \mathbf{X}^T\mathbf{X} (\mathbf{X}^T\mathbf{X}+\lambda \mathbf{I})^{-1}\sigma^2
+    = \mathbf{V}\,\boldsymbol{\Delta}^2(\boldsymbol{\Delta}^2+\lambda\mathbf{I})^{-2}\,\mathbf{V}^T\sigma^2 ,
+  $$
+  with diagonal elements $\frac{\delta_k^2}{(\delta_k^2+\lambda)^2}$ that decrease with $\lambda$.
 
+- Compare this with the variance of the OLS estimator, which only exists when $\mathbf{X}$ has full rank $r=p$ ($n>p$):
+  $$
+  \begin{aligned}
+    \text{var}\left[\hat{\boldsymbol{\beta}}_\text{OLS}\right] &= (\mathbf{X}^T\mathbf{X})^{-1}\sigma^2 = \sigma^2\sum_{k=1}^r \frac{1}{\delta_k^2}\mathbf{v}_k\mathbf{v}_k^T,\\
+    \text{var}\left[\hat{\boldsymbol{\beta}}\right] &= \sigma^2\sum_{k=1}^r \frac{\delta_k^2}{(\delta_k^2+\lambda)^2}\mathbf{v}_k\mathbf{v}_k^T .
+  \end{aligned}
+  $$
+  - Along each $\mathbf{v}_k$ the variance is reduced by a factor $\left(\frac{\delta_k^2}{\delta_k^2+\lambda}\right)^2$: the square of the shrinkage factor of $\text{E}[\hat{\boldsymbol{\beta}}]$. The same factor that introduces bias reduces the variance.
+  - The OLS variance $1/\delta_k^2$ explodes for small singular values (near collinear predictors), while the ridge variance is bounded: $\frac{\delta_k^2}{(\delta_k^2+\lambda)^2}\leq\frac{1}{4\lambda}$.^[This follows from $(\delta_k^2-\lambda)^2\geq 0 \Leftrightarrow (\delta_k^2+\lambda)^2\geq 4\delta_k^2\lambda$, with equality if and only if $\delta_k^2=\lambda$.]
+  - When $p>n$, $(\mathbf{X}^T\mathbf{X})^{-1}$ and the OLS variance do not exist, while the ridge variance is always finite. For $\lambda\rightarrow 0$ it converges to $\sigma^2\sum_{k=1}^r \mathbf{v}_k\mathbf{v}_k^T/\delta_k^2$, the variance of the minimum-norm least squares solution, which becomes very large when some $\delta_k$ are small.
+
+- The variance of the prediction $\hat{{Y}}(\mathbf{x})=\mathbf{x}^T\hat{\boldsymbol{\beta}}$ is
+  $$
+    \text{var}\left[\hat{{Y}}(\mathbf{x})\mid \mathbf{x}\right] = \mathbf{x}^T\text{var}\left[\hat{\boldsymbol{\beta}}\right]\mathbf{x}
+    = \sigma^2 \sum_{k=1}^r \frac{\delta_k^2}{(\delta_k^2+\lambda)^2}\left(\mathbf{v}_k^T\mathbf{x}\right)^2 ,
+  $$
+  which decreases as $\lambda$ increases.
+
+- Through the bias-variance trade-off, we hope to obtain better predictions in terms of expected conditional test error for an appropriate choice of $\lambda$.
 
 Recall the expression of the expected conditional test error
-\begin{eqnarray}
-  Err(\mathbf{x}) &=& \text{E}\left[(\hat{Y} - Y^*)^2\mid \mathbf{x}\right]\\
-  &=&
+$$
+\begin{aligned}
+  Err(\mathbf{x}) &= \text{E}\left[(Y^* - \hat{Y})^2\mid \mathbf{x}\right]\\
+  &=
   \text{var}\left[\hat{Y}\mid \mathbf{x}\right] + \text{bias}^2(\mathbf{x})+
   \text{var}\left[Y^*\mid \mathbf{x}\right]
-\end{eqnarray}
+\end{aligned}
+$$
 where
 
 - $\hat{Y}=\hat{Y}(\mathbf{x})=\mathbf{x}^T\hat{\boldsymbol{\beta}}$ is the prediction at $\mathbf{x}$
@@ -614,15 +745,17 @@ plot(mRidge, xvar="lambda")
 ```
 
 
-The R function \textsf{glmnet} uses \textsf{lambda} to refer to the penalty parameter. In this course we use $\lambda$, because $\lambda$ is often used as eigenvalues.
+The R function `glmnet` uses `lambda` to refer to the penalty parameter, and so do we in this course. Note, that $\lambda$ is also often used for eigenvalues. To avoid confusion, we write the eigenvalues of $\mathbf{X}^T\mathbf{X}$ as $\delta_k^2$, the squared singular values of $\mathbf{X}$.
 
 The graph shows that with increasing penalty parameter, the parameter estimates are shrunken towards zero. The estimates will only reach zero for $\lambda \rightarrow \infty$. The stronger the shrinkage, the larger the bias (towards zero) and the smaller the variance of the parameter estimators (and hence also smaller variance of the predictions).
 
-Another (informal) viewpoint is the following. By shrinking the estimates towards zero, the estimates loose some of their ``degrees of freedom'' so that the parameters become estimable with only $n<p$ data points. Even with a very small $\lambda>0$, the parameters regain their estimability. However, note that the variance of the estimator is given by
-\[
-  \text{var}\left[\hat{\mathbf\beta}\right] = (\mathbf{X^TX}+\lambda \mathbf{I})^{-1} \mathbf{X}^T\mathbf{X} (\mathbf{X^TX}+\lambda \mathbf{I})^{-1}\sigma^2 = \mathbf{V}\boldsymbol{\Delta}^2(\boldsymbol{\Delta}^2+\lambda\mathbf{I})^{-2}\mathbf{V}^T\sigma^2.
-\]
-Hence, a small $\lambda$ will result in large variances of the parameter estimators. The larger $\lambda$, the smaller the variances become. In the limit, as $\lambda\rightarrow\infty$, the estimates are converged to zero and show no variability any longer.
+Another (informal) viewpoint is the following. By shrinking the estimates towards zero, the estimates lose some of their "degrees of freedom" so that the parameters become estimable with only $n<p$ data points. Even with a very small $\lambda>0$, the parameters regain their estimability.
+However, estimable does not mean precise. Recall from @sec-ridge-properties that
+$$
+  \text{var}\left[\hat{\boldsymbol{\beta}}\right] = \sigma^2\sum_{k=1}^r \frac{\delta_k^2}{(\delta_k^2+\lambda)^2}\mathbf{v}_k\mathbf{v}_k^T .
+$$
+For a small $\lambda$, the variance along directions $\mathbf{v}_k$ with small singular values is close to $\sigma^2/\delta_k^2$, which is very large.
+The variance decreases as $\lambda$ increases, and as $\lambda\rightarrow\infty$ the estimates converge to zero and no longer vary.
 
 # Lasso Regression
 
@@ -839,7 +972,7 @@ Predictions are calculated with the fitted model
 
 The **prediction error** for a prediction at covariate pattern $\mathbf{x}$ is given by
   \[
-     \hat{Y}(\mathbf{x}) - Y^*,
+     Y^* - \hat{Y}(\mathbf{x}),
   \]
 where
 
@@ -875,7 +1008,7 @@ Let ${\mathcal{T}}=(\mathbf{Y},\mathbf{X})$ denote the training data, from which
 
  The test or generalisation error for prediction model $\hat{m}(\cdot)$ is given by
   \[
-    \text{Err}_{\mathcal{T}} = \text{E}_{Y^*,X^*}\left[(\hat{m}(\mathbf{X}^*) - Y^*)^2\mid {\mathcal{T}}\right]
+    \text{Err}_{\mathcal{T}} = \text{E}_{Y^*,X^*}\left[(Y^* - \hat{m}(\mathbf{X}^*))^2\mid {\mathcal{T}}\right]
   \]
   where $(Y^*,X^*)$ is independent of the training data.
 
@@ -894,7 +1027,7 @@ Sometimes the conditional test error is used:
 
 The conditional test error in $\mathbf{x}$ for prediction model $\hat{m}(\mathbf{x})$ is given by
  \[
-   \text{Err}_{\mathcal{T}}(\mathbf{x}) = \text{E}_{Y^*}\left[(\hat{m}(\mathbf{x}) - Y^*)^2\mid {\mathcal{T}}, \mathbf{x}\right]
+   \text{Err}_{\mathcal{T}}(\mathbf{x}) = \text{E}_{Y^*}\left[(Y^* - \hat{m}(\mathbf{x}))^2\mid {\mathcal{T}}, \mathbf{x}\right]
  \]
  where $Y^*$ is an outcome at predictor $\mathbf{x}$, independent of the training data.
 
@@ -916,13 +1049,13 @@ The insample error for prediction model $\hat{m}(\mathbf{x})$ is given by
 
 i.e. the insample error is the sample average of the conditional test errors evaluated in the $n$ training dataset predictors $\mathbf{x}_i$.
 
-Since $\text{Err}_{\mathcal{T}}$ is an average over all $\mathbf{X}$, even over those predictors not observed in the training dataset, it is sometimes referred to as the **outsample error**.
+Since $\text{Err}_{\mathcal{T}}$ is an average over all $\mathbf{X}$, even over those predictor patterns not observed in the training dataset, it is sometimes referred to as the **outsample error**.
 
 ---
 
 ## Estimation of the insample error
 
-We start with introducing the training error rate, which is closely related to the MSE in linear models.
+We start with introducing the training error, which is closely related to the MSE in linear models.
 
 ### Training error
 
@@ -934,7 +1067,7 @@ We start with introducing the training error rate, which is closely related to t
 
 - The training error is an overly optimistic estimate of the test error $\text{Err}_{\mathcal{T}}$.
 
-- The training error will never increases when the model becomes more complex. $\longrightarrow$ cannot be used directly as a model selection criterion.
+- The training error will never increase when the model becomes more complex. $\longrightarrow$ cannot be used directly as a model selection criterion.
 
 Indeed, model parameters are often estimated by minimising the training error (cfr. SSE).
 
@@ -949,6 +1082,38 @@ It can be shown that the training error is related to the insample test error vi
 \text{E}_\mathbf{Y}
 \left[\text{Err}_{\text{in}{\mathcal{T}}}\right] = \text{E}_\mathbf{Y}\left[\overline{\text{err}}\right] + \frac{2}{n}\sum_{i=1}^n \text{cov}_\mathbf{Y}\left[\hat{m}(\mathbf{x}_i),Y_i\right],
 \]
+where $\mathbf{Y}=(Y_1,\ldots,Y_n)^T$ are the outcomes of the training data ${\mathcal{T}}=(\mathbf{Y},\mathbf{X})$.
+
+- $\text{E}_\mathbf{Y}$ averages over repeated training datasets with the same predictors $\mathbf{x}_1,\ldots,\mathbf{x}_n$ (the design is kept fixed), but with new random outcomes $\mathbf{Y}$.
+- This expectation is needed because $\overline{\text{err}}$ and $\text{Err}_{\text{in}{\mathcal{T}}}$ are random variables: they depend on the training data through $\hat{m}$. The identity does not hold for a single training dataset, only on average.
+- Do not confuse the two kinds of outcomes: the training outcomes $Y_i$ are used to fit $\hat{m}$ and are averaged out by $\text{E}_\mathbf{Y}$, while the new outcomes $Y_i^*$ at the same $\mathbf{x}_i$ are independent of the training data and are already averaged out in the definition of $\text{Err}_{\mathcal{T}}(\mathbf{x}_i)$.
+
+---
+
+### Proof
+
+Write $\mu_i=\text{E}[Y_i]=\text{E}[Y_i^*]$, $\text{var}[Y_i]=\text{var}[Y_i^*]=\sigma^2$ and $\hat{m}_i=\hat{m}(\mathbf{x}_i)$. Subtracting and adding $\mu_i$ gives
+$$
+\begin{aligned}
+Y_i^*-\hat{m}_i &= (Y_i^*-\mu_i) - (\hat{m}_i-\mu_i)\\
+Y_i-\hat{m}_i &= (Y_i-\mu_i) - (\hat{m}_i-\mu_i).
+\end{aligned}
+$$
+Squaring and taking expectations gives
+$$
+\begin{aligned}
+\text{E}\left[(Y_i^*-\hat{m}_i)^2\right] &= \sigma^2 + \text{E}\left[(\hat{m}_i-\mu_i)^2\right] - 2\,\text{cov}\left[Y_i^*,\hat{m}_i\right]\\
+\text{E}\left[(Y_i-\hat{m}_i)^2\right] &= \sigma^2 + \text{E}\left[(\hat{m}_i-\mu_i)^2\right] - 2\,\text{cov}\left[Y_i,\hat{m}_i\right].
+\end{aligned}
+$$
+The first two terms are identical. Only the covariance differs:
+
+- $Y_i^*$ is independent of the training data, so $\text{cov}\left[Y_i^*,\hat{m}_i\right]=0$;
+- $Y_i$ is used to fit $\hat{m}$, so $\text{cov}\left[Y_i,\hat{m}_i\right]$ is typically positive.
+
+Subtracting both expressions and averaging over $i=1,\ldots,n$ gives the identity.
+
+---
 
 Note, that for linear models
 \[ \hat{m}(\mathbf{x}_i) = \mathbf{X}\hat{\boldsymbol{\beta}}= \mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y} = \mathbf{HY}
@@ -956,19 +1121,19 @@ Note, that for linear models
 with
 
 - $\mathbf{H}$ the hat matrix and
-- all $Y_i$ are assumed to be independently distributed  $N(\mathbf{X}\boldsymbol{\beta},\sigma^2)$
+- all $Y_i$ are assumed to be independently distributed with mean $\mathbf{x}_i^T\boldsymbol{\beta}$ and variance $\sigma^2$ (normality is not required)
 
 Hence, for linear models with independent observations
 
 \begin{eqnarray}
-\text{cov}_\mathbf{Y}\left[\hat{m}(\mathbf{x}_i),Y_i)\right] &=&
-\text{cov}_\mathbf{Y}\left[\mathbf{H}_{i}^T\mathbf{Y},Y_i)\right]\\
-&=& \text{cov}_\mathbf{Y}\left[h_{ii} Y_i,Y_i\right]\\
+\text{cov}_\mathbf{Y}\left[\hat{m}(\mathbf{x}_i),Y_i\right] &=&
+\text{cov}_\mathbf{Y}\left[\mathbf{H}_{i}^T\mathbf{Y},Y_i\right] = \text{cov}_\mathbf{Y}\left[\sum_{j=1}^n h_{ij} Y_j,Y_i\right]\\
+&=& \text{cov}_\mathbf{Y}\left[h_{ii} Y_i,Y_i\right] \qquad \text{(the } Y_j, j\neq i \text{, are independent of } Y_i\text{)}\\
 &=& h_{ii} \text{cov}_\mathbf{Y}\left[Y_i,Y_i\right]\\
 &=& h_{ii} \sigma^2\\
 \end{eqnarray}
 
-And we can thus estimate the insample error by Mallow's $C_p$
+And we can thus estimate the insample error by Mallows' $C_p$
 
 \begin{eqnarray}
 C_p &=& \overline{\text{err}} + \frac{2\sigma^2}{n}\text{tr}(\mathbf{H})\\
@@ -977,7 +1142,7 @@ C_p &=& \overline{\text{err}} + \frac{2\sigma^2}{n}\text{tr}(\mathbf{H})\\
 
 with $p$ the number of predictors.
 
-- Mallow's $C_p$ is often used for model selection.
+- Mallows' $C_p$ is often used for model selection.
 - Note, that we can also consider it as a kind of penalized least squares:
 
 \[
@@ -993,8 +1158,8 @@ The test or generalisation error was defined conditionally on the training data.
 
 \begin{eqnarray*}
    \text{E}_{\mathcal{T}}\left[\text{Err}_{{\mathcal{T}}}\right]
-     &=& \text{E}_{\mathcal{T}}\left[\text{E}_{Y^*,X^*}\left[(\hat{m}(\mathbf{X}^*) - Y^*)^2\mid {\mathcal{T}}\right]\right] \\
-     &=& \text{E}_{Y^*,X^*,{\mathcal{T}}}\left[(\hat{m}(\mathbf{X}^*) - Y^*)^2\right].
+     &=& \text{E}_{\mathcal{T}}\left[\text{E}_{Y^*,X^*}\left[(Y^* - \hat{m}(\mathbf{X}^*))^2\mid {\mathcal{T}}\right]\right] \\
+     &=& \text{E}_{Y^*,X^*,{\mathcal{T}}}\left[(Y^* - \hat{m}(\mathbf{X}^*))^2\right].
  \end{eqnarray*}
 
  - The expected test error may not be of direct interest when the goal is to assess the prediction performance of a single prediction model $\hat{m}(\cdot)$.
@@ -1064,7 +1229,7 @@ Since CV and CV$_k$ are estimators, they also show sampling variability. Standar
 For the expected conditional test error in $\mathbf{x}$, it holds that
 \begin{eqnarray*}
   \text{E}_{\mathcal{T}}\left[\text{Err}_{\mathcal{T}}(\mathbf{x})\right]
-    &=& \text{E}_{Y^*,{\mathcal{T}}}\left[(\hat{m}(\mathbf{x})-Y^*)^2 \mid \mathbf{x}\right] \\
+    &=& \text{E}_{Y^*,{\mathcal{T}}}\left[(Y^*-\hat{m}(\mathbf{x}))^2 \mid \mathbf{x}\right] \\
     &=&  \text{var}_{\mathbf{Y}}\left[\hat{Y}(\mathbf{x})\mid \mathbf{x}\right] +(\mu(\mathbf{x})-\mu^*(\mathbf{x}))^2+\text{var}_{Y^*}\left[Y^*\mid \mathbf{x}\right]
 \end{eqnarray*}
 where $\mu(\mathbf{x}) = \text{E}_{\mathbf{Y}}\left[\hat{Y}(\mathbf{x})\mid \mathbf{x}\right] \text{ and } \mu^*(\mathbf{x})=\text{E}_{Y^*}\left[Y^*\mid \mathbf{x}\right]$.
@@ -1107,7 +1272,7 @@ mCvLasso <- cv.glmnet(
 plot(mCvLasso)
 ```
 
-Default CV procedure in \textsf{cv.glmnet} is $k=10$-fold CV.
+Default CV procedure in `cv.glmnet` is $k=10$-fold CV.
 
 The Graphs shows
 
@@ -1275,7 +1440,7 @@ pLidar +
 
 ## More general error definitions
 
-So far we only looked at continuous outcomes $Y$ and errors defined in terms of the squared loss $(\hat{m}(\mathbf{x})-Y^*)^2$.
+So far we only looked at continuous outcomes $Y$ and errors defined in terms of the squared loss $(Y^*-\hat{m}(\mathbf{x}))^2$.
 
 More generally, a **loss function** measures an discrepancy between the prediction $\hat{m}(\mathbf{x})$ and an independent outcome $Y^*$ that corresponds to $\mathbf{x}$.
 
@@ -1283,22 +1448,24 @@ More generally, a **loss function** measures an discrepancy between the predicti
 Some examples for continuous $Y$:
 \begin{eqnarray*}
   L(Y^*,\hat{m}(\mathbf{x}))
-    &=& (\hat{m}(\mathbf{x})-Y^*)^2 \;\;\text{(squared error)} \\
+    &=& (Y^*-\hat{m}(\mathbf{x}))^2 \;\;\text{(squared error)} \\
   L(Y^*,\hat{m}(\mathbf{x}))
-    &=& \vert\hat{m}(\mathbf{x})-Y^*\vert \;\;\text{(absolute error)} \\
+    &=& \vert Y^*-\hat{m}(\mathbf{x})\vert \;\;\text{(absolute error)} \\
    L(Y^*,\hat{m}(\mathbf{x}))
-    &=& 2 \int_{\mathcal{Y}} f_y(y) \log\frac{f_y(y)}{f_{\hat{m}}(y)} dy \;\;\text{(deviance)}.
+    &=& 2 \left[\log f(Y^*;Y^*) - \log f(Y^*;\hat{m}(\mathbf{x}))\right] \;\;\text{(deviance)}.
 \end{eqnarray*}
 
 
 In the expression of the deviance
 
-- $f_y$ denotes the density function of a distribution with mean set to $y$ (cfr. perfect fit), and
-- $f_{\hat{m}}$ is the density function of the same distribution but with mean set to the predicted outcome $\hat{m}(\mathbf{x})$.
+- $f(y;\mu)$ denotes the density function of the assumed outcome distribution with mean $\mu$,
+- $f(Y^*;Y^*)$ is the density evaluated with the mean set to the outcome itself (cfr. perfect fit, saturated model), and
+- $f(Y^*;\hat{m}(\mathbf{x}))$ is the density of the same distribution but with mean set to the predicted outcome $\hat{m}(\mathbf{x})$.
 
 ---
 
 With a given loss function, the errors are defined as follows:
+
 - Test or generalisation or outsample error
     \[
       \text{Err}_{\mathcal{T}} = \text{E}_{Y^*,X^*}\left[L(Y^*,\hat{m}(\mathbf{X}^*))\right]
@@ -1313,41 +1480,98 @@ With a given loss function, the errors are defined as follows:
 
 ---
 
-When an exponential family distribution is assumed for the outcome distribution, and when the deviance loss is used, the insample error can be estimated by means of the AIC and BIC.
+When an exponential family distribution is assumed for the outcome distribution, and when the deviance loss is used, the insample error can be estimated by means of the AIC.
 
 ### Akaike's Information Criterion (AIC)
 
 The AIC for a model $m$ is given by
 \[
-\text{AIC} = -2 \ln \hat{L}(m) +2p
+\text{AIC} = -2 \log \hat{L}(m) +2p
 \]
 where $\hat{L}(m)$ is the maximised likelihood for model $m$.
 
-When assuming normally distributed error terms and homoscedasticity, the AIC becomes
-\[
-\text{AIC} = n\ln \text{SSE}(m) +2p = n\ln(n\overline{\text{err}}(m)) + 2p
-\]
-with $\text{SSE}(m)$ the residual sum of squares of model $m$.
+The AIC is an estimate of $n$ times the insample error under the deviance loss. As for Mallows' $C_p$, the insample error is estimated as the training error plus a correction for its optimism.
 
-In linear models with normal error terms, Mallow's $C_p$ criterion (statistic) is a linearised version of AIC and it is an unbiased estimator of the in-sample error.
+- **Training error.** With the deviance loss
+$$
+n\,\overline{\text{err}} = \sum_{i=1}^n 2\left[\log f(Y_i;Y_i) - \log f(Y_i;\hat{m}(\mathbf{x}_i))\right] = -2\log \hat{L}(m) + \text{constant},
+$$
+where the constant comes from the saturated model and does not depend on model $m$. The training error is too optimistic because the $p$ parameters are estimated by maximising exactly this likelihood.
+
+- It can be shown that the gap is approximately $2p$ on the $-2\log L$ scale, so
+$$
+n\,\text{E}_\mathbf{Y}\left[\text{Err}_{\text{in}{\mathcal{T}}}\right] \approx \text{E}_\mathbf{Y}\left[-2\log \hat{L}(m)\right] + 2p + \text{constant} = \text{E}_\mathbf{Y}\left[\text{AIC}\right] + \text{constant}.
+$$
 
 ---
 
-### Bayesian Information Criterion (BIC)}
+When assuming normally distributed error terms and homoscedasticity,
+$$
+-2\log L(\boldsymbol{\beta},\sigma^2) = n\log(2\pi\sigma^2) + \frac{\text{SSE}(m)}{\sigma^2},
+$$
+with $\text{SSE}(m)$ the residual sum of squares of model $m$.
+
+- **$\sigma^2$ known**: the first term is a constant and $-2\log\hat{L}(m) = \text{SSE}(m)/\sigma^2 + \text{constant}$, so
+$$
+\text{AIC} = \frac{\text{SSE}(m)}{\sigma^2} + 2p + \text{constant} = \frac{n}{\sigma^2}\left[\overline{\text{err}}(m) + \frac{2\sigma^2 p}{n}\right] + \text{constant} = \frac{n}{\sigma^2}\, C_p + \text{constant},
+$$
+  i.e. AIC and $C_p$ select the same model.
+
+- **$\sigma^2$ unknown**: plugging in its maximum likelihood estimator $\hat{\sigma}^2=\text{SSE}(m)/n$ gives
+$$
+-2\log\hat{L}(m) = n\log\left(2\pi\frac{\text{SSE}(m)}{n}\right) + n = n\log\text{SSE}(m) + \text{constant},
+$$
+  so the log of the SSE originates from the estimation of $\sigma^2$, and the AIC becomes
+$$
+\text{AIC} = n\log \text{SSE}(m) +2p = n\log(n\overline{\text{err}}(m)) + 2p,
+$$
+  up to a constant. Strictly, $\sigma^2$ is an additional parameter and the penalty should be $2(p+1)$, but this extra term is the same for all models and does not affect model selection.
+
+Note, that for unknown $\sigma^2$, Mallows' $C_p$ also arises as a linearised version of the AIC. A first order Taylor expansion of $\log\overline{\text{err}}$ around $\sigma^2$, $\log\overline{\text{err}}\approx\log\sigma^2 + (\overline{\text{err}}-\sigma^2)/\sigma^2$, gives, with $n\log n$ the same for all models,
+$$
+\begin{aligned}
+\text{AIC} &= n\log(n\overline{\text{err}}(m)) + 2p = n\log n + n\log\overline{\text{err}}(m) + 2p\\
+&\approx \frac{n}{\sigma^2}\left[\overline{\text{err}}(m) + \frac{2\sigma^2 p}{n}\right] + \text{constant}\\
+&= \frac{n}{\sigma^2}\,C_p + \text{constant}.
+\end{aligned}
+$$
+In linear models with normal error terms, $C_p$ is an unbiased estimator of the insample error.
+
+In summary, both criteria estimate the insample error as the training error plus a correction for its optimism:
+
+| Model | Loss | $n\times$ training error | $n\times$ optimism | Criterion |
+|---|---|---|---|---|
+| Linear model | squared error | $\text{SSE}$ | $2\sigma^2\,\text{tr}(\mathbf{H})=2\sigma^2 p$ | Mallows' $C_p$ |
+| Likelihood model | deviance | $-2\log\hat{L}(m)+\text{constant}$ | $2p$ | AIC |
+
+---
+
+### Bayesian Information Criterion (BIC)
 
 The BIC for a model $m$ is given by
 \[
-\text{BIC} = -2 \ln \hat{L}(m) +p\ln(n)
+\text{BIC} = -2 \log \hat{L}(m) +p\log(n)
 \]
 where $\hat{L}(m)$ is the maximised likelihood for model $m$.
 
+The BIC has a similar form as the AIC, but a different origin: it is derived from Bayesian model selection and approximates the posterior probability of model $m$. It is therefore not an estimator of the insample error. We will not elaborate further on its derivation in this course.
+
 When assuming normally distributed error terms and homoscedasticity, the BIC becomes
 \[
-\text{BIC} = n\ln \text{SSE}(m) +p\ln(n) = n\ln(n\overline{\text{err}}(m)) + p\ln(n)
+\text{BIC} = n\log \text{SSE}(m) +p\log(n) = n\log(n\overline{\text{err}}(m)) + p\log(n)
 \]
-with $\text{SSE}(m)$ the residual sum of squares of model $m$.
+with $\text{SSE}(m)$ the residual sum of squares of model $m$. As for the AIC, the $n\log\text{SSE}(m)$ term originates from plugging in the maximum likelihood estimator $\hat{\sigma}^2=\text{SSE}(m)/n$.
 
-When large datasets are used, the BIC will favour smaller models than the AIC.
+When large datasets are used, the BIC will favour smaller models than the AIC: its penalty $\log(n)$ per parameter exceeds the AIC penalty $2$ as soon as $n\geq 8$, and grows with $n$.
+
+The two criteria have different goals:
+
+| | AIC | BIC |
+|---|---|---|
+| Origin | insample error (optimism $2p$) | Bayesian model selection |
+| Penalty per parameter | $2$ | $\log(n)$ |
+| Goal | good predictions | identifying the true model |
+| As $n\rightarrow\infty$ | tends to select too large models | selects the true model, if it is among the candidate models (consistent) |
 
 ---
 
@@ -1370,7 +1594,7 @@ Sometimes, when a large (training) dataset is available, one may decide the spli
 
 ---
 
-Note that the training dataset is used for model building or feature selection. This also requires the evaluation of models. For these evaluations the methods from the previous slides can be used (e.g. cross validation, $k$-fold CV, Mallow's $C_p$). The test dataset is only used for the  evaluation of the final model (estimated and build from using only the training data). The estimate of the outsample error based on the test dataset is the best possible estimate in the sense that it is unbiased. The observations used for this estimation are independent of the observations in the training data.
+Note that the training dataset is used for model building or feature selection. This also requires the evaluation of models. For these evaluations the methods from the previous slides can be used (e.g. cross validation, $k$-fold CV, Mallows' $C_p$). The test dataset is only used for the  evaluation of the final model (estimated and build from using only the training data). The estimate of the outsample error based on the test dataset is the best possible estimate in the sense that it is unbiased. The observations used for this estimation are independent of the observations in the training data.
 However, if the number of data points in the test dataset ($m$) is small, the estimate of the outsample error may show large variance and hence is not reliable.
 
 # Logistic Regression Analysis for High Dimensional Data
@@ -1430,7 +1654,7 @@ Logistic regression  assumes
 \]
 with $\pi(\mathbf{x}) = \text{P}\left[Y=1\mid \mathbf{x}\right]$ and
 \[
-   \ln \frac{\pi(\mathbf{x})}{1-\pi(\mathbf{x})}=\beta_0 + \boldsymbol{\beta}^T\mathbf{x}.
+   \log \frac{\pi(\mathbf{x})}{1-\pi(\mathbf{x})}=\beta_0 + \boldsymbol{\beta}^T\mathbf{x}.
 \]
 
 The parameters are typically estimated by maximising the log-likelihood, which is denoted by $l(\mathbf{
