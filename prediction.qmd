@@ -358,14 +358,14 @@ Note, that
   \]
   with $\mathbf{U}$ an $n\times r$ matrix, $\boldsymbol{\Delta}$ an $r\times r$ diagonal matrix, $\mathbf{V}$ a $p\times r$ matrix, and $\mathbf{Z}=\mathbf{U}\boldsymbol{\Delta}$ the $n\times r$ matrix with the scores on the $r$ PCs.
 
-  - Still problematic: if we use all $r=n-1$ PCs as regressors, the model fits the data perfectly with zero residual degrees of freedom (centering $\mathbf{Y}$ already used one degree of freedom).
+  - Still problematic: if we use the scores on all $r=n-1$ PCs as regressors, the model fits the data perfectly with zero residual degrees of freedom (centering $\mathbf{Y}$ already used one degree of freedom).
 
 
 # Principal Component Regression
 
 A principal component regression (PCR) consists of
 
-1. transforming $p=4000$ dimensional $X$-variable to the $r=n-1=29$ dimensional $Z$-variable (PC scores). The $r$ PCs are mutually uncorrelated.
+1. transforming $p=4000$ dimensional $X$-variable to the $r=n-1=29$ dimensional $Z$-variable (PC scores). The scores on the $r$ PCs are mutually uncorrelated.
 
 2. using the $r$ PC-variables as regressors in a linear regression model
 
@@ -526,10 +526,9 @@ Note, that `svd()` in R returns $\min(n,p)$ singular vectors: the columns with $
 Geometrically: 
 
 - we only have $n$ data points $\mathbf{x}_1,\ldots,\mathbf{x}_n$ in a $p$-dimensional space.
-- $n$ points span at most an $n$-dimensional subspace, just like 2 points (and the origin) span a plane in $\mathbb{R}^3$.
+- $n$ points span at most an $n$-dimensional subspace.
 - Hence, $r\leq \min(n,p)$, and when $p>n$ we have $r\leq n<p$.
 - The columns $\mathbf{v}_1,\ldots,\mathbf{v}_r$ are an orthonormal basis of the subspace spanned by the data: every data point is a linear combination of them, $\mathbf{x}_i^T=\sum_{k=1}^r u_{ik}\delta_k\mathbf{v}_k^T$.
-- $\mathbf{V}\mathbf{V}^T$ projects onto this subspace; these are the directions in which the data contain information.
 
 - The remaining $p-r$ directions are perpendicular to all data points.
 - We collect them in $p-r$ orthonormal columns $\mathbf{V}_\perp$.
@@ -615,7 +614,7 @@ $$
 $$
 - So the ridge estimator can be computed from the thin SVD alone, and it always lies in the span of $\mathbf{V}$.
 
-- And, the ridge estimator is the same for both $p \geq  n$ and $p < n$.
+- Interestingly, the ridge estimator is the same for both $p \geq  n$ and $p < n$.
 
 ### Numerical check
 
@@ -784,7 +783,7 @@ with
 
 - Hence, the bias-variance trade-off may here also help in finding better predictions with biased estimators.
 
-- In contrast to ridge regression, however, the lasso estimator can give at most $\min(p,n)$ non-zero $\beta$-estimates.
+- In contrast to ridge regression, however, the lasso estimator can give at most $\min(p,n)$ non-zero $\beta$-estimates ($n-1$ for centered data) when the solution is unique.
 
 - Hence, at first sight the lasso is not directly appropriate for high-dimensional settings.
 
@@ -837,9 +836,23 @@ plot(mLasso, xvar = "lambda")
 
 - The graph with the paths of the parameter estimates nicely illustrates the typical behaviour of the lasso estimates as a function of $\lambda$: when $\lambda$ increases the estimates are shrunken towards zero.
 
-- When an estimate hits zero, it remains exactly equal to zero when $\gamma$ further increases. A parameter estimate equal to zero, say $\hat\beta_j=0$, implies that the corresponding predictor $x_j$ is no longer included in the model (i.e. $\beta_jx_j=0$).
+- When an estimate hits zero, it remains exactly equal to zero when $\lambda$ further increases. A parameter estimate equal to zero, say $\hat\beta_j=0$, implies that the corresponding predictor $x_j$ is no longer included in the model (i.e. $\beta_jx_j=0$).
 
-- The model fit is known as a sparse model fit (many zeroes). Hence, choosing a appropriate value for $\gamma$ is like choosing the important predictors in the model (feature selection).
+- The model fit is known as a sparse model fit (many zeroes). Hence, choosing an appropriate value for $\lambda$ is like choosing the important predictors in the model (feature selection).
+
+- Note, that for the centered toxicogenomics data ($n<p$), more than $n-1$ non-zero estimates are returned when the penalty is low!?
+
+    1. This occurs because the toxicogenomics data are strongly discretised.
+
+       - The median of the number of distinct values per gene over the 30 compounds is only 9, and 2 gene columns are exact duplicates.
+       - So the lasso solution is not unique, and there are multiple equally good solutions with more than $n-1$ non-zero parameters, i.e 34 instead of $n-1 = 29$.
+       - Duplicate columns show this most clearly: the lasso can split a coefficient over two identical genes in many ways without changing the fit or the penalty.
+
+    2. Moreover, `glmnet` only solves the problem approximately.
+
+       - Coordinate descent stops at a convergence tolerance, so the number of non-zero coefficients counted on the path is slightly inflated.
+       - At a $\lambda$ with 34 non-zeros, the smallest coefficient is $3.5\times 10^{-6}$, which is essentially a zero that did not converge.
+       - With a more strict tolerance (`thresh = 1e-14`), the maximum drops from 34 to 31. It still stays above 29 because of reason 1.
 
 
 # Splines and the connection to ridge regression.
