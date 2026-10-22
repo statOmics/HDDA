@@ -1255,7 +1255,14 @@ where $\mu(\mathbf{x}) = \text{E}_{\mathbf{Y}}\left[\hat{Y}(\mathbf{x})\mid \mat
 
 The importance of the bias-variance trade-off can be seen from a model selection perspective. When we agree that a good model is a model that has a small expected conditional test error at some point $\mathbf{x}$, then the bias-variance trade-off shows us that a model may be biased as long as it has a small variance to compensate for the bias.  It often happens that a biased model has a substantial smaller variance. When these two are combined, a small expected test error may occur.
 
-Also note that the model $m$ which forms the basis of the prediction model $\hat{m}(\mathbf{x})$ does NOT need to satisfy $m(\mathbf{x})=\mu(\mathbf{x})$ or $m(\mathbf{x})=\mu^*(\mathbf{x})$. The model $m$ is known by the data-analyst (its the basis of the prediction model), whereas $\mu(\mathbf{x})$ and $\mu^*(\mathbf{x})$ are generally unknown to the data-analyst. We only hope that $m$ serves well as a prediction model.
+Also note that the model $m$ which forms the basis of the prediction model $\hat{m}(\mathbf{x})$ does not need to be correct, and its predictions do not need to be unbiased:
+
+- the model $m$ is chosen by the data analyst, e.g. a linear model with a selected set of predictors, fitted with a ridge or lasso penalty;
+- it does not need to equal the true mean outcome, i.e. $m(\mathbf{x})\neq\mu^*(\mathbf{x})$ is allowed;
+- its average prediction does not need to equal the true mean outcome, i.e. $\mu(\mathbf{x})\neq\mu^*(\mathbf{x})$ (bias) is allowed;
+- $\mu^*(\mathbf{x})$ is unknown, and so is $\mu(\mathbf{x})$, because it depends on the unknown distribution of the training data.
+
+We only require that $\hat{m}$ predicts well, i.e. that it has a small expected test error. As the bias-variance trade-off shows, this can be achieved with a biased model.
 
 ---
 
@@ -1751,7 +1758,10 @@ The misclassification error is the probability to incorrectly predict an outcome
 &  & + \text{P}_{X^*,Y^*}\left[\hat\pi(\mathbf{X})> c \text{ and } Y^*=0 \mid {\mathcal{T}}\right].
 \end{eqnarray*}
 
-Note that in the definitions of sensitivity, specificity and the misclassification error, the probabilities refer to the distribution of the  $(\mathbf{X}^*,Y^*)$, which is independent of the training data, conditional on the training data. This is in line with the test or generalisation error. The misclassification error is actually the test error when a 0/1 loss function is used. Just as before, the sensitivity, specificity and the misclassification error can also be averaged over the distribution of the training data set, which is in line with the expected test error which has been discussed earlier.
+- Note that in the definitions of sensitivity, specificity and the misclassification error, the probabilities refer to the distribution of the  $(\mathbf{X}^*,Y^*)$, which is independent of the training data, conditional on the training data. 
+- This is in line with the test or generalisation error. 
+- The misclassification error is actually the test error when a 0/1 loss function is used. 
+- Just as before, the sensitivity, specificity and the misclassification error can also be averaged over the distribution of the training data set, which is in line with the expected test error which has been discussed earlier.
 
 ---
 
@@ -1859,7 +1869,7 @@ mLasso <- glmnet(
   alpha = 1,
   family="binomial")  # lasso: alpha = 1
 
-plot(mLasso, xvar = "lambda", xlim = c(-6,-1.5))
+plot(mLasso, xvar = "lambda")
 ```
 
 ---
@@ -2028,7 +2038,7 @@ mElastic <- glmnet(
   alpha = 0.5,
   family="binomial")  # elastic net
 
-plot(mElastic, xvar = "lambda",xlim=c(-5.5,-1))
+plot(mElastic, xvar = "lambda")
 ```
 
 ```{r}

@@ -247,7 +247,7 @@ or (upon using $\mathbf{v}_j^t\mathbf{W}\mathbf{v}_j=1$) the between-centroid su
 
 - From the scatterplot we can see that there is no perfect separation (discrimination) between the three tumor stages (quite some overlap).
 
-- To some extent the first Fisher discriminant dimension discriminates stage 3 (green dots) from the other two stages, and the second dimension separates stage 1 (black dots) from the two others.
+- To some extent the first Fisher discriminant dimension discriminates stage 3 (blue dots) from the other two stages, and the second dimension separates stage 1 (red dots) from the two others.
 
 ### Interpretation of loadings
 
