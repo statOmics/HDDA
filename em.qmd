@@ -1,5 +1,5 @@
 ---
-title: "EM"
+title: "Principles of model based clustering in practice"
 author: "Lieven Clement"
 date: "statOmics, Ghent University (https://statomics.github.io)"
 format:
@@ -10,7 +10,182 @@ format:
 ```{r, child="_setup.qmd"}
 ```
 
-# Example of model based clustering with two groups
+# Agglomerative hierarchical clustering based on the classification likelihood
+
+[Fraley and Raftery (1998)](https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf) state that
+
+> "The classification likelihood can be used as the basis for
+agglomerative hierarchical clustering"
+
+> "This approach subsumes several earlier proposals based on Gaussian mixtures: $\Sigma_k = \lambda I$ gives the sum of squares criterion, long known as a heuristic (Ward), in which clusters are spherical and have equal volumes."
+
+
+
+## Classification likelihood with $\Sigma_k = \lambda I$
+
+Model based hierarchical clustering merges at each stage the pair of clusters that maximises the resulting classification likelihood
+
+\[
+L_C(\boldsymbol{\theta}_1,\ldots,\boldsymbol{\theta}_G;\gamma_1,\ldots,\gamma_n\vert \mathbf{X}) = \prod_{i=1}^n f_{\gamma_i}(\mathbf{x}_i\vert\boldsymbol{\theta}_{\gamma_i}),
+\]
+
+with $\gamma_i=k$ if observation $i$ belongs to cluster $k$.
+
+With $\Sigma_k = \lambda I$, the density of a $p$-dimensional observation in cluster $k$ is
+
+\[
+f_k(\mathbf{x}_i) = (2\pi\lambda)^{-p/2}\exp\left(-\frac{\Vert \mathbf{x}_i-\boldsymbol{\mu}_k\Vert^2}{2\lambda}\right)
+\]
+
+and the log classification likelihood becomes
+
+\[
+\log L_C = -\frac{np}{2}\log(2\pi\lambda) - \frac{1}{2\lambda}\sum_{k=1}^G\sum_{i:\gamma_i=k}\Vert \mathbf{x}_i-\boldsymbol{\mu}_k\Vert^2
+\]
+
+- The maximum likelihood estimate of $\boldsymbol{\mu}_k$ is the cluster mean.
+- The double sum then becomes the within-cluster sum of squares $W$, i.e. the total squared distance of all observations to the mean of their own cluster.
+- The maximum likelihood estimate of $\lambda$ is $\hat \lambda = W/(np)$.
+
+Plugging in these estimates gives
+
+\[
+\log L_C = -\frac{np}{2}\log\left(\frac{2\pi W}{np}\right) - \frac{np}{2}
+\]
+
+- The only term that depends on the partition is $W$. 
+- Hence, maximising the classification likelihood is equivalent to minimising the within-cluster sum of squares.
+
+## Ward's method
+
+- Ward's hierarchical clustering merges at each stage the two clusters that lead to the smallest increase of the within-cluster sum of squares $W$.
+
+- Model based hierarchical clustering with $\Sigma_k = \lambda I$ merges the two clusters that lead to the smallest decrease of the classification likelihood.
+
+- Both should make the same choice at each stage and produce the same tree! 
+
+- Ward proposed his criterion as a heuristic: keep the clusters as compact as possible.
+
+- Model based clustering reveals the model that is implicitly assumed:
+
+| Part of the model | Implication for the clusters |
+|---|---|
+| $I$ (identity matrix) | spherical: the same spread in every direction |
+| one $\lambda$ for all clusters | equal volume: all clusters have the same size |
+
+
+
+- Model based clustering allows us to relax these assumptions with the other parametrisations of $\Sigma_k$ (see Table 1 in Fraley and Raftery, 1998), e.g. clusters with different volumes ($\lambda_k$), elongated clusters or clusters with a different orientation.
+
+- Note, that k-means minimises the same criterion $W$; only the search strategy differs:
+
+| | Criterion | Strategy |
+|---|---|---|
+| Ward | minimise $W$ | agglomerative: merge clusters step by step |
+| k-means | minimise $W$ | relocation: move observations between clusters (CEM) |
+| Model based with $\Sigma_k=\lambda I$ | maximise $L_C$, i.e. minimise $W$ | agglomerative or relocation |
+
+- So Ward and k-means are two algorithms for the same model: spherical clusters with equal volume.
+
+- The link between k-means and EM based relocation is explained in the section on CEM below.
+
+## Example
+
+We simulate bivariate data with two groups and compare model based hierarchical clustering with the spherical equal volume model (`"EII"` in `mclust`) with Ward's method.
+
+```{r}
+library(mclust)
+
+set.seed(1)
+X <- rbind(
+  matrix(rnorm(60, mean = 0), ncol = 2),
+  matrix(rnorm(60, mean = 4), ncol = 2)
+  )
+```
+
+## Full cluster trees
+
+To compare the full trees, we use the same height for both dendrograms: the within-cluster sum of squares $W$ of the partition after each merge.
+
+- For Ward's method, we obtain the partitions by cutting the tree.
+- For model based hierarchical clustering, `hclass()` returns the partitions for every number of clusters. Note, that `hclass()` returns them in increasing order of $G$, while the merges in the tree are ordered from $G=n-1$ to $G=1$.
+
+```{r, fig.width=10, fig.height=5}
+## within-cluster sum of squares of a partition
+n <- nrow(X)
+
+## model based hierarchical clustering with spherical equal volume model
+hcEIIobj <- hc(X, modelName = "EII", use = "VARS")
+treeEII <- as.hclust(hcEIIobj)
+treeEII$labels <- NULL
+
+
+## Ward's method
+treeWard <- hclust(dist(X), method = "ward.D2")
+
+
+par(mfrow = c(1, 2))
+plot(treeEII, main = "mclust (EII)",
+     xlab = "", sub = "", cex = 0.6)
+plot(treeWard, main = "Ward",
+     xlab = "", sub = "", cex = 0.6)
+```
+
+- The clustering is the same, but looks different because the loss in log-likehood gets at NA when too many clusters are used. 
+
+- This is an anomaly of the software as the log-likelihood is calculated separately for each cluster. So it does not use the model specification! 
+
+- Calculating the loglik ourselves: 
+
+```{r}
+## within-cluster sum of squares of a partition
+withinSS <- function(cl, dat)
+  sum(sapply(unique(cl), function(k)
+    sum(scale(dat[cl == k, , drop = FALSE], scale = FALSE)^2)))
+
+n <- nrow(X)
+p <- ncol(X)
+W <- hclass(hcEIIobj, G = 1:(n - 1)) |>
+  apply(2, withinSS, dat = X)                    # withinSS from em.qmd
+logLik <- -n * p / 2 * log(2 * pi * W / (n * p)) - n * p / 2
+
+treeEII$height <- rev(max(logLik) - logLik)        # loss of log-likelihood, from G = n-1 down to 1
+
+par(mfrow = c(1, 2))
+plot(treeEII, main = "mclust (EII)",
+     xlab = "", ylab="loglik loss", sub = "", cex = 0.6)
+plot(treeWard, main = "Ward",
+     xlab = "", sub = "", cex = 0.6)
+```
+
+- It is still difficult to compare the clustering.
+
+- We will now redefine the height by using the same metric, i.e. the within sum of squares (Ward metric)
+
+```{r}
+## model based hierarchical clustering with spherical equal volume model
+treeEII$height <- hclass(hcEIIobj, G = 1:(n - 1)) |>
+  apply(2, withinSS, dat = X) |>
+  rev()
+
+## Ward's method
+treeWard$height <- sapply((n - 1):1, function(g) withinSS(cutree(treeWard, g), dat = X))
+
+par(mfrow = c(1, 2))
+plot(treeEII, main = "mclust (EII)",
+     xlab = "", sub = "", ylab = "SSW", cex = 0.6)
+plot(treeWard, main = "Ward",
+     xlab = "", sub = "", ylab = "SSW", cex = 0.6)
+```
+
+- Both trees merge the same clusters at the same height.
+
+- The order of the leaves can differ slightly, because the two branches below a merge can be drawn in either order.
+
+
+# EM based iterative relocation using the mixture likelihood
+
+## Example of model based clustering with two groups
 
 We will use a toy example to explain the EM algorithm for model based clustering.
 
@@ -45,7 +220,7 @@ l\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X}\right) = \sum_{i=1}^n \log\left[\pi_1 f
 
 The optimisation is difficult because we have to take the log of a sum and the likelihood does not factorise further.
 
-# Simulate toy Data
+## Simulate toy Data
 
 ```{r}
 library(tidyverse)
@@ -71,7 +246,7 @@ data.frame(x,zReal) |>
       ggtitle("Simulated data with real group means (triangles)")
 ```
 
-# Parameter estimation
+## Parameter estimation
 
 If we would know the cluster membership $z_{i1}$
 \[z_{i1}=\left\{ \begin{matrix} 1 & \text{if } x_i \text{ belongs to group 1}\\
@@ -101,7 +276,7 @@ l\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right) = \sum_{i=1}^n z_{i1} \log \l
 
 - Note, that in the notation of the [Fraley and Raftery (1998)](https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf) $z_2=1-z_1$ and $\pi_2= 1- \pi_1$
 
-## EM algorithm
+### EM algorithm
 
 If we would know the cluster membership, we could estimate all model parameters based on the complete likelihood.
 
@@ -119,35 +294,44 @@ It is an iterative algorithm that consists of two steps:
 
 3. Iterate between  1 and 2 until convergence.
 
-### E-step
+#### E-step
 
 In iteration m+1
 
-\begin{eqnarray}
-Q\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right)&=&
-E\left[l\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right)\vert \mathbf{X}, \mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\\ &=&
-E\left[\sum_{i=1}^n z_{i1} \log\left[\pi_1  f_1(x_i)\right] + (1-z_{i1})\log \left[(1-\pi_1) f_2(x_i)\right]\vert \mathbf{X}, \mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\\
-&=&\sum_{i=1}^n E\left[z_{i1}\vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\log \left[\pi_1  f_1(x_i)\right] + \sum_{i=1}^n \left(1- E\left[z_{i1}\vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\right)\log \left[(1-\pi_1) f_2(x_i)\right]
-\end{eqnarray}
+\[
+\begin{aligned}
+Q\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right)&=
+E\left[l\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right)\vert \mathbf{X}, \mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\\ &=
+E\Big[\sum_{i=1}^n z_{i1} \log\left[\pi_1  f_1(x_i)\right] + (1-z_{i1})\log \left[(1-\pi_1) f_2(x_i)\right]\Big\vert \mathbf{X}, \\
+& \qquad \mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\Big]\\
+&=\sum_{i=1}^n E\left[z_{i1}\vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\log \left[\pi_1  f_1(x_i)\right] + \\
+& \qquad \sum_{i=1}^n \left(1- E\left[z_{i1}\vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right]\right)\log \left[(1-\pi_1) f_2(x_i)\right]
+\end{aligned}
+\]
 
 Note, that the expected log likelihood simplifies to replacing the unknown class memberships in the complete likelihood by their expected values.
 
-\begin{eqnarray}
- E\left[z_{i1}\vert \mathbf{X},\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right] &=& 1 \times f(z_{i1}=1 \vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m)  + 0 \times f(z_{i1}=0 \vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m)  \\\\
- &=& f(z_{i1}= 1 \vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m)\\\\
- &=& \frac{f(z=1,x_i)}{f(x_i)}\\\\
-&=& \frac{\pi^m_1 f_1(x_i)}{\pi^m_1 f_1(x_i)+(1-\pi^m_1) f_2(x_i)}
-\end{eqnarray}
+\[
+\begin{aligned}
+ E\left[z_{i1}\vert \mathbf{X},\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m\right] &= 1 \times f(z_{i1}=1 \vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m) +\\
+& \qquad 0 \times f(z_{i1}=0 \vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m)  \\\\
+ &= f(z_{i1}= 1 \vert x_i,\mu_1=\mu_1^m, \mu_2=\mu_2^m, \pi_1=\pi_1^m)\\[6pt]
+ &= \frac{f(z=1,x_i)}{f(x_i)}\\[6pt]
+&= \frac{\pi^m_1 f_1(x_i)}{\pi^m_1 f_1(x_i)+(1-\pi^m_1) f_2(x_i)}
+\end{aligned}
+\]
 
 We will refer to the expected class membership as $\hat z_{i1}^{m+1}$
 
-### M-step
+#### M-step
 
 Maximise the expected log-likelihood to obtain the unknown model parameters:
 
 \[
- Q\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right) = \sum_{i=1}^n \hat z_{i1}^m  \log \pi_1 + \sum_{i=1}^n \hat z_{i1}^m  \log f_1(x_i) + \sum_{i=1}^n\left(1- \hat z_{i1}\right)\log (1-\pi_1) +
- \sum_{i=1}^n\left(1- \hat z_{i1}\right)\log f_2(x_i)
+\begin{aligned}
+ Q\left(\mu_1,\mu_2,\pi_1\vert \mathbf{X, Z}\right) &= \sum_{i=1}^n \hat z_{i1}^{m+1}  \log \pi_1 + \sum_{i=1}^n \hat z_{i1}^{m+1}  \log f_1(x_i) + \\
+ & \qquad \sum_{i=1}^n\left(1- \hat z_{i1}^{m+1}\right)\log (1-\pi_1) + \sum_{i=1}^n\left(1- \hat z_{i1}^{m+1}\right)\log f_2(x_i)
+\end{aligned}
 \]
 
 So we observe that the expected log likelihood implies an estimation orthogonality between the normal distributions and the Bernoulli distribution.
@@ -162,8 +346,8 @@ So the parameter estimates that maximise the expected log-likelihood become:
 \hat \mu_2^{m+1} = \frac{\sum_{i=1}^n (1- \hat z_{i1}^{m+1}) x_i}{\sum_{i=1}^n (1-\hat z_{i1}^{m+1})}
 \]
 
-# Example
-## Initialize
+## Example
+### Initialize
 
 ```{r}
 z <- as.double(x > 0)
@@ -185,7 +369,7 @@ p <- data.frame(x,zReal,z) |>
 p
 ```
 
-## EM algorithm
+### EM algorithm
 
 ```{r}
 for (k in 1:10)
@@ -218,7 +402,7 @@ for (k in 1:10)
 }
 ```
 
-### Estimates
+#### Estimates
 
 ```{r echo=FALSE}
 zInit <- as.double(x > 0)
@@ -234,6 +418,108 @@ knitr::kable(data.frame(
   )
   )
 ```
+
+# From EM to CEM: link with k-means
+
+[Fraley and Raftery (1998)](https://sites.stat.washington.edu/people/raftery/Research/PDF/fraley1998.pdf) state that
+
+> "The standard k-means algorithm can be shown to be a version of the CEM algorithm corresponding to the uniform spherical Gaussian model $\Sigma_k = \lambda I$."
+
+## Soft versus hard assignment
+
+- In EM, the E-step gives a *soft* assignment: observation $i$ belongs to group 1 with probability $\hat z_{i1}$, e.g. 0.7, and to group 2 with probability $1-\hat z_{i1}$, e.g. 0.3.
+- The Classification EM (CEM) algorithm adds a C-step after the E-step that converts the soft assignment into a *hard* assignment: each observation is assigned to its most probable group.
+
+\[
+\hat z_{i1}^{C} = \left\{ \begin{matrix} 1 & \text{if } \hat z_{i1} > 0.5\\
+0 &  \text{otherwise}
+\end{matrix}\right.\]
+
+- The M-step then uses ordinary (unweighted) means of the observations assigned to each group.
+
+So, EM = soft assignment and CEM = hard assignment ("winner takes all").
+
+## CEM with spherical clusters with equal variance and equal proportions
+
+Now assume the simplest possible model:
+
+- all groups have the same variance $\lambda$ in every direction: $\Sigma_k = \lambda I$ (in our toy example $\sigma^2=1$ for both groups);
+- all groups have the same proportion, i.e. $\pi_1 = 1-\pi_1 = 0.5$ ("uniform").
+
+The posterior probability from the E-step then becomes
+
+\[
+\hat z_{ik} \propto \exp\left(-\frac{\Vert x_i-\mu_k\Vert^2}{2\lambda}\right)
+\]
+
+because the proportions and the variances are the same for all groups and cancel out.
+
+Hence, the most probable group is the group with the nearest mean!
+
+| CEM with $\Sigma_k=\lambda I$ and equal $\pi_k$ | k-means |
+|---|---|
+| E + C-step: assign each observation to its most probable group | Assign each observation to the nearest centroid |
+| M-step: $\hat \mu_k$ is the mean of the observations assigned to group $k$ | Recompute each centroid as the mean of its observations |
+
+This is exactly the same algorithm.
+
+## Implicit assumptions of k-means
+
+K-means thus implicitly assumes that
+
+- the clusters are spherical,
+- the clusters have the same size and spread,
+- the clusters contain approximately the same number of observations,
+- the assignments are hard, i.e. there is no uncertainty on the cluster membership.
+
+When these assumptions do not hold, e.g. for elongated clusters, clusters with a different spread or overlapping clusters, k-means performs poorly.
+
+Model based clustering allows us to relax each of these assumptions: other covariance models (see Table 1 in Fraley and Raftery, 1998), EM instead of CEM and different proportions $\pi_k$.
+
+## Example
+
+We implement CEM with equal proportions and equal variances for the toy data and start from the same initialisation as for EM.
+
+```{r}
+zCem <- as.double(x > 0)
+
+for (k in 1:10)
+{
+  ## M-step
+  mu1Cem <- sum(zCem * x)/sum(zCem)
+  mu2Cem <- sum((1-zCem) * x)/sum(1-zCem)
+
+  ## E-step with equal proportions and equal variances
+  d1 <- dnorm(x, mean = mu1Cem)
+  d2 <- dnorm(x, mean = mu2Cem)
+  zSoft <- d1/(d1 + d2)
+
+  ## C-step: hard assignment, i.e. assign to the nearest mean
+  zCem <- as.double(zSoft > 0.5)
+}
+```
+
+We compare the result with k-means, started from the same initial means.
+
+```{r}
+km <- kmeans(x, centers = c(mu1Init, mu2Init))
+
+table(CEM = zCem, kmeans = km$cluster)
+
+knitr::kable(data.frame(
+  parameter = c("mu1", "mu2"),
+  population = c(mu1Real, mu2Real),
+  EM = c(mu1, mu2) |> round(3),
+  CEM = c(mu1Cem, mu2Cem) |> round(3),
+  kmeans = km$centers[,1] |> round(3)
+  )
+  )
+```
+
+- CEM and k-means give the same partition and the same cluster means.
+- Note, that CEM and k-means do not provide an estimate of $\pi_1$, nor the uncertainty on the cluster membership of each observation.
+- In general, the hard assignment truncates the tails of overlapping groups and can bias the estimated cluster means. 
+- Here, the groups are fairly well separated, so all methods give estimates close to the population means.
 
 ```{r, child="_session-info.qmd"}
 ```
