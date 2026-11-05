@@ -287,7 +287,7 @@ We repeat the analysis, but now with the sparse LDA method of Clemmensen et al. 
 
 - We only present the results of the sparse LDA based on a random subset of 150 genes (ordering of genes in datamatrix is random).
 
-- The discrimination seems better than with classical LDA based on all genes. This is very likely caused by too much noise in the full data matrix with over 20000 predictors.
+- On the training data, the groups seem better separated than with classical LDA based on all genes. This may be caused by too much noise in the full data matrix with over 20000 predictors. Note, however, that these plots are based on the training data (see Wrapup).
 
 ```{r}
 # BiocManager::install("sparseLDA")
@@ -387,14 +387,13 @@ grid.arrange(
 
 ## Wrapup
 
-LDA on all 22283 genes gave poorer result than on 150 genes.
-This is probably caused by numerical instability when working with large $\mathbf{W}$ and $\mathbf{B}$ matrices
+- On the training data, LDA on all 22283 genes seems to separate the groups less well than LDA on 150 genes. This may be caused by numerical instability when working with large $\mathbf{W}$ and $\mathbf{B}$ matrices.
 
-- Sparse LDA gave slightly poorer result than LDA on the subset of 150 genes. This may be caused by overfitting of the LDA.
+- On the training data, sparse LDA seems to separate the groups slightly less well than LDA on the subset of 150 genes. This, however, does not imply that sparse LDA performs worse on new data: the apparent better separation of LDA on 150 genes may be the result of overfitting.
 
 - When (sparse) LDA is used to build a prediction model/classifier, then CV methods, or splitting of dataset into training and test datasets should be used to allow for an honest evaluation of the final prediction model.
 
-- The graphs in the first two Fisher discriminant dimensions shown on the previous slides should only be used for data exploration.
+- The graphs in the first two Fisher discriminant dimensions are based on the training data that were also used to estimate the discriminant directions. They therefore give an overly optimistic view of the separation between the groups (cf. training error vs. test error) and should only be used for data exploration, not to assess or compare the discriminative performance of the methods.
 
 - When the objective is to try to understand differences between groups in a high dimensional space, Fisher LDA is preferred over PCA.
 
