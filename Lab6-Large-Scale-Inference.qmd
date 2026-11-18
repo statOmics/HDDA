@@ -76,22 +76,22 @@ exactly what the underlying "true" distribution is (sometimes also called the "g
 However, keep in mind that this is an unlikely representation of real-world data.
 
 In particular, we will simulate data for multiple hypothesis tests where
-__the null hypothesis is always true__. This means that for the $i$-th test, if we let
-$\mu_{1i}$ and $\mu_{2i}$ represent the means of the two populations of interest,
+__the null hypothesis is always true__. This means that for the $j$-th test, if we let
+$\mu_{1j}$ and $\mu_{2j}$ represent the means of the two populations of interest,
 the null hypothesis for comparing the two means is
-$H_{0i} : \mu_{1i} = \mu_{2i}$. Let the alternative hypothesis of this test be
-$H_{1i} : \mu_{1i} \neq \mu_{2i}$, i.e., we perform a *two-tailed* test.
-Suppose we have data collected from both populations, given by $X_{1i}$ and $X_{2i}$
-of size $n_{1i}$ and $n_{2i}$, respectively, and assume that both populations
-have the same known variance $\sigma_i^2$. Then we can test this hypothesis by using a
+$H_{0j} : \mu_{1j} = \mu_{2j}$. Let the alternative hypothesis of this test be
+$H_{1j} : \mu_{1j} \neq \mu_{2j}$, i.e., we perform a *two-tailed* test.
+Suppose we have data collected from both populations, given by $X_{1j}$ and $X_{2j}$
+of size $n_{1j}$ and $n_{2j}$, respectively, and assume that both populations
+have the same known variance $\sigma_j^2$. Then we can test this hypothesis by using a
 __Z-test statistic__, given by
 
-$$ Z_i=\frac{\bar X_{1i}-\bar X_{2i}}{\sigma_i\sqrt{1/n_{1i}+1/n_{2i}}} \, .$$
+$$ Z_j=\frac{\bar X_{1j}-\bar X_{2j}}{\sigma_j\sqrt{1/n_{1j}+1/n_{2j}}} \, .$$
 
 Under the null hypothesis, the scores will be distributed as a *standard normal*
-$Z_i\sim N(0,1)$. The null hypothesis is rejected in favor of the alternative if
-$z_i < \phi_{\alpha_i/2}$ or $z_i > \phi_{1-\alpha_i/2}$, or equivalently if
-$|z_i| > \phi_{1-\alpha_i/2}$, where $\phi_{\alpha_i/2}$ is the $\alpha_i/2$th
+$Z_j\sim N(0,1)$. The null hypothesis is rejected in favor of the alternative if
+$z_j < \phi_{\alpha_j/2}$ or $z_j > \phi_{1-\alpha_j/2}$, or equivalently if
+$|z_j| > \phi_{1-\alpha_j/2}$, where $\phi_{\alpha_j/2}$ is the $\alpha_j/2$th
 quantile of the standard normal distribution.
 
 In a multiple hypothesis testing setting, we will perform $m$ tests using the
@@ -102,9 +102,9 @@ In this setting, we can only make one type of error: wrongly rejecting the null
 hypothesis, i.e. a __type 1 error__. The probability of making this error is given
 by
 
-$$ \alpha_i=\text{P}\{\text{ reject } H_{0i} | H_{0i}\} $$
+$$ \alpha_j=\text{P}\{\text{ reject } H_{0j} | H_{0j}\} $$
 
-(the $| H_{0i}$ part should be read as "given that the null hypothesis is true").
+(the $| H_{0j}$ part should be read as "given that the null hypothesis is true").
 
 If we now perform $m_0$ such tests (using the 0 subscript to denote that they
 are all hypotheses for which the *null* is true), we can summarise the possible
@@ -217,10 +217,10 @@ Instead, we consider the __Familywise Error Rate (FWER)__, given by
 
 $$
 \text{FWER}=\text{P}\{V > 0\}
-  = \text{P}\{\text{rejecting at least one } H_{0i}| H_0\}
+  = \text{P}\{\text{rejecting at least one } H_{0j} \text{ with } j\in\mathcal{M}_0\}
 $$
 
-where $H_0$ is the intersection of all  partial nulls ($H_{0i}$) $i=1,\ldots,m_0$.
+where $\mathcal{M}_0=\{j: H_{0j} \text{ is true}\}$ is the set of the $m_0$ true null hypotheses.
 In general, we would prefer testing procedures that keep the FWER under control,
 i.e. correct for the multiplicity problem.
 So instead of choosing $\alpha$ to control the probability of getting a false positive
@@ -287,19 +287,19 @@ We saw in the previous exercises that when conducting a large number of hypothes
 tests the FWER becomes unacceptably large. So what can we do to lower it?
 The most straightforward way would be to just lower $\alpha$ (so we get less false positives).
 
-Under the null hypothesis (so the p-values are uniformly distributed), we can write the FWER
+If all $m$ null hypotheses are true ($m_0=m$, so all p-values are uniformly distributed), we can write the FWER
 for $m$ independent tests as
 
 $$
 \begin{align}
 \text{FWER} = P(\text{at least one rejection}) &= 1 - P(\text{no rejections}) \\
-  &= 1 - \prod_{i=1}^{m} P(p_i > \alpha) \\
-  &= 1 - \prod_{i=1}^{m} (1 - \alpha) \\
+  &= 1 - \prod_{j=1}^{m} P(p_j > \alpha) \\
+  &= 1 - \prod_{j=1}^{m} (1 - \alpha) \\
   &= 1 - (1 - \alpha)^{m} \, ,
 \end{align}
 $$
 
-where $p_i$ is the p-value for the $i$-th test.
+where $p_j$ is the p-value for the $j$-th test.
 
 Šidák's correction solves the above equation at a given FWER level (e.g., 0.05)
 for $\alpha$ to control the FWER using 
@@ -311,8 +311,8 @@ Without assuming independent tests, the Bonferroni correction uses that
 $$
 \begin{align}
 \text{FWER} &= P(\text{at least one rejection}) \\
-  &= P(\cup_{i=1}^m \{ p_i \le \alpha \}) \\
-  &\le \sum_{i=1}^{m} P(p_i \le \alpha) \\
+  &= P(\cup_{j=1}^m \{ p_j \le \alpha \}) \\
+  &\le \sum_{j=1}^{m} P(p_j \le \alpha) \\
   &= m \alpha \, ,
 \end{align}
 $$
