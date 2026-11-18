@@ -4331,11 +4331,10 @@ window.Quarto = {
   <li><a href="#challenges" id="toc-challenges" class="nav-link" data-scroll-target="#challenges"><span class="header-section-number">1.2</span> Challenges</a></li>
   <li><a href="#multiplicity-problem" id="toc-multiplicity-problem" class="nav-link" data-scroll-target="#multiplicity-problem"><span class="header-section-number">1.3</span> Multiplicity Problem</a>
   <ul class="collapse">
-  <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation"><span class="header-section-number">1.3.1</span> Notation</a></li>
-  <li><a href="#familywise-error-rate" id="toc-familywise-error-rate" class="nav-link" data-scroll-target="#familywise-error-rate"><span class="header-section-number">1.3.2</span> Familywise error rate</a></li>
-  <li><a href="#method-of-šidák-invert-fwer-to-significance-level-for-individual-test" id="toc-method-of-šidák-invert-fwer-to-significance-level-for-individual-test" class="nav-link" data-scroll-target="#method-of-šidák-invert-fwer-to-significance-level-for-individual-test"><span class="header-section-number">1.3.3</span> Method of Šidák: invert FWER to significance level for individual test</a></li>
-  <li><a href="#bonferroni-method" id="toc-bonferroni-method" class="nav-link" data-scroll-target="#bonferroni-method"><span class="header-section-number">1.3.4</span> Bonferroni method</a></li>
-  <li><a href="#adjusted-p-value" id="toc-adjusted-p-value" class="nav-link" data-scroll-target="#adjusted-p-value"><span class="header-section-number">1.3.5</span> Adjusted p-value</a></li>
+  <li><a href="#familywise-error-rate" id="toc-familywise-error-rate" class="nav-link" data-scroll-target="#familywise-error-rate"><span class="header-section-number">1.3.1</span> Familywise error rate</a></li>
+  <li><a href="#method-of-šidák-invert-fwer-to-significance-level-for-individual-test" id="toc-method-of-šidák-invert-fwer-to-significance-level-for-individual-test" class="nav-link" data-scroll-target="#method-of-šidák-invert-fwer-to-significance-level-for-individual-test"><span class="header-section-number">1.3.2</span> Method of Šidák: invert FWER to significance level for individual test</a></li>
+  <li><a href="#bonferroni-method" id="toc-bonferroni-method" class="nav-link" data-scroll-target="#bonferroni-method"><span class="header-section-number">1.3.3</span> Bonferroni method</a></li>
+  <li><a href="#adjusted-p-value" id="toc-adjusted-p-value" class="nav-link" data-scroll-target="#adjusted-p-value"><span class="header-section-number">1.3.4</span> Adjusted p-value</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#false-discovery-rate" id="toc-false-discovery-rate" class="nav-link" data-scroll-target="#false-discovery-rate"><span class="header-section-number">2</span> False Discovery Rate</a>
@@ -4350,7 +4349,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#comments-and-extensions" id="toc-comments-and-extensions" class="nav-link" data-scroll-target="#comments-and-extensions"><span class="header-section-number">2.5</span> Comments and Extensions</a>
   <ul class="collapse">
-  <li><a href="#extension" id="toc-extension" class="nav-link" data-scroll-target="#extension"><span class="header-section-number">2.5.1</span> Extension</a></li>
+  <li><a href="#extension-adaptive-fdr-procedures" id="toc-extension-adaptive-fdr-procedures" class="nav-link" data-scroll-target="#extension-adaptive-fdr-procedures"><span class="header-section-number">2.5.1</span> Extension: adaptive FDR procedures</a></li>
   <li><a href="#other-important-considerations" id="toc-other-important-considerations" class="nav-link" data-scroll-target="#other-important-considerations"><span class="header-section-number">2.5.2</span> Other important considerations</a></li>
   </ul></li>
   </ul></li>
@@ -4614,10 +4613,11 @@ window.Quarto = {
 </div>
 </div>
 <p>We indeed observe that the p-values are uniform under the null hypothesis. So statistical hypothesis testing provides a uniform testing strategy.</p>
-<section id="notation" class="level3" data-number="1.3.1">
-<h3 data-number="1.3.1" class="anchored" data-anchor-id="notation"><span class="header-section-number">1.3.1</span> Notation</h3>
+<hr>
+<p><strong>Notation</strong></p>
 <p>In the multiple testing literature the number of features for which a test is conducted is denoted by <span class="math inline">\(m\)</span> instead of <span class="math inline">\(p\)</span> to avoid confusion with the symbol for a p-value.</p>
 <p>Note that we index the features (hypotheses) by <span class="math inline">\(j=1,\ldots,m\)</span>, in line with the notation in the rest of this course, where the data matrix <span class="math inline">\(\mathbf{X}\)</span> is <span class="math inline">\(n \times p\)</span> with samples <span class="math inline">\(i\)</span> in the rows and features <span class="math inline">\(j\)</span> in the columns. <span class="citation" data-cites="efron2010large">Efron (<a href="#ref-efron2010large" role="doc-biblioref">2010</a>)</span> follows the genomics convention instead, where the rows of the data matrix are features and the columns are samples, so that features (and thus the hypotheses <span class="math inline">\(H_{0i}\)</span>, test statistics <span class="math inline">\(z_i\)</span>, …) are indexed by <span class="math inline">\(i\)</span> and samples by <span class="math inline">\(j\)</span>.</p>
+<hr>
 <p>Consider testing all <span class="math inline">\(m=15443\)</span> voxels simultaneously</p>
 <ul>
 <li><p>What if we assess each individual test at level <span class="math inline">\(\alpha\)</span>? <span class="math inline">\(\rightarrow\)</span> Probability to have a false positive (FP) among all m simultaneous test <span class="math inline">\(\gg \alpha= 0.05\)</span></p></li>
@@ -4626,9 +4626,8 @@ window.Quarto = {
 <li><p>So an upperbound of the expected FP is <span class="math inline">\(m \times \alpha\)</span> or <span class="math inline">\(15443 \times 0.05=772\)</span>.</p></li>
 </ul>
 <p><span class="math inline">\(\rightarrow\)</span> Hence, we are bound to call many false positive voxels each time we run the experiment.</p>
-</section>
-<section id="familywise-error-rate" class="level3" data-number="1.3.2">
-<h3 data-number="1.3.2" class="anchored" data-anchor-id="familywise-error-rate"><span class="header-section-number">1.3.2</span> Familywise error rate</h3>
+<section id="familywise-error-rate" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="familywise-error-rate"><span class="header-section-number">1.3.1</span> Familywise error rate</h3>
 <p>Suppose that <span class="math inline">\(m\)</span> hypotheses have to be tested simultaneously for answering a single research question.</p>
 <p>Let <span class="math inline">\(H_{0j}\)</span> denote the <span class="math inline">\(j\)</span>th null hypothesis (<span class="math inline">\(j=1,\ldots, m\)</span>) and let <span class="math inline">\(\mathcal{M}_0=\{j: H_{0j} \text{ is true}\}\)</span> denote the (unknown) set of true null hypotheses, with <span class="math inline">\(m_0\)</span> the number of true nulls.</p>
 <p>In this case the type I error rate is no longer relevant. Instead one may consider the <strong>Familywise Error Rate (FWER)</strong>, the probability to reject at least one true null hypothesis, i.e. to return at least one false positive, <span class="math display">\[
@@ -4656,8 +4655,8 @@ window.Quarto = {
 <p>Many researchers, however, when presented a long list of significant results (or discoveries), would not mind too much if one or a few false discoveries appear in the list. Hence, the FWER is not the most relevant risk measure, as the FWER is allowed to be <span class="math inline">\(100\%\)</span> in case researchers do not mind to have a few false discoveries among the (perhaps many) positive results in the list of discoveries. A better solution will be given later, but first we continue with the use of FWER.</p>
 <hr>
 </section>
-<section id="method-of-šidák-invert-fwer-to-significance-level-for-individual-test" class="level3" data-number="1.3.3">
-<h3 data-number="1.3.3" class="anchored" data-anchor-id="method-of-šidák-invert-fwer-to-significance-level-for-individual-test"><span class="header-section-number">1.3.3</span> Method of Šidák: invert FWER to significance level for individual test</h3>
+<section id="method-of-šidák-invert-fwer-to-significance-level-for-individual-test" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="method-of-šidák-invert-fwer-to-significance-level-for-individual-test"><span class="header-section-number">1.3.2</span> Method of Šidák: invert FWER to significance level for individual test</h3>
 <p>The worst-case identity FWER<span class="math inline">\(=1- (1-\alpha)^m\)</span> may be inverted to find the significance level at which each individual test should be tested to attain the nominal familywise error rate at FWER, <span class="math display">\[
    \alpha = 1-(1-\text{FWER})^{1/m}
 \]</span> so that the simultaneous testing procedure controls the FWER at the desired level (method of Šidák).</p>
@@ -4667,8 +4666,8 @@ window.Quarto = {
 <p>FWER<span class="math inline">\(=0.05\)</span> and <span class="math inline">\(m=15443\)</span>: <span class="math inline">\(\alpha=0.0000033\)</span>.</p>
 <p>We will argue that this procedure is too stringent for large <span class="math inline">\(m\)</span>.</p>
 </section>
-<section id="bonferroni-method" class="level3" data-number="1.3.4">
-<h3 data-number="1.3.4" class="anchored" data-anchor-id="bonferroni-method"><span class="header-section-number">1.3.4</span> Bonferroni method</h3>
+<section id="bonferroni-method" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="bonferroni-method"><span class="header-section-number">1.3.3</span> Bonferroni method</h3>
 <p>The Bonferroni method is another method that is widely used to control the FWER:</p>
 <ul>
 <li><p>assess each test at <span class="math display">\[\alpha_\text{adj}=\frac{\alpha}{m}\]</span></p></li>
@@ -4676,11 +4675,18 @@ window.Quarto = {
 <li><p>Again, the method is very conservative!</p></li>
 </ul>
 <hr>
-<p>To attain the familywise error rate at level FWER the individual hypotheses should be tested at very stringent significance levels when <span class="math inline">\(m\)</span> is large. The consequence of testing at a small significance level <span class="math inline">\(\alpha\)</span> is that it is hard to find significant results, and thus the lists of significant results (discoveries) is likely to be short. Controlling the FWER means that the chance is small that these lists contain one or more false positives. A negative consequence, however, is that many of the true positive hypothesis (i.e. <span class="math inline">\(H_1\)</span> is true) will not appear in these short lists. Hence, the “power” is small (power is not well defined in this multiple testing setting – extensions of the concept are possible). Thus, avoiding false positives by controlling the FWER comes at a price: many of the true positive hypothesis may be missed.</p>
+<ul>
+<li><p>To attain the familywise error rate at level FWER the individual hypotheses should be tested at very stringent significance levels when <span class="math inline">\(m\)</span> is large.</p></li>
+<li><p>The consequence of testing at a small significance level <span class="math inline">\(\alpha\)</span> is that it is hard to find significant results, and thus the lists of significant results (discoveries) is likely to be short.</p></li>
+<li><p>Controlling the FWER means that the chance is small that these lists contain one or more false positives.</p></li>
+<li><p>A negative consequence, however, is that many of the true positive hypothesis (i.e. <span class="math inline">\(H_1\)</span> is true) will not appear in these short lists.</p></li>
+<li><p>Hence, the “power” is small (power is not well defined in this multiple testing setting – extensions of the concept are possible).</p></li>
+<li><p>Thus, avoiding false positives by controlling the FWER comes at a price: many of the true positive hypothesis may be missed.</p></li>
+</ul>
 <hr>
 </section>
-<section id="adjusted-p-value" class="level3" data-number="1.3.5">
-<h3 data-number="1.3.5" class="anchored" data-anchor-id="adjusted-p-value"><span class="header-section-number">1.3.5</span> Adjusted p-value</h3>
+<section id="adjusted-p-value" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="adjusted-p-value"><span class="header-section-number">1.3.4</span> Adjusted p-value</h3>
 <p>First we give a very general definition of an <strong>adjusted <span class="math inline">\(p\)</span>-value</strong>.</p>
 <p>Define the adjusted <span class="math inline">\(p\)</span>-value as <span class="math display">\[
    \tilde{p}_j = \{\inf \alpha\in[0,1]: \text{ reject }H_{0j} \text{ at FWER } \alpha\} .
@@ -4828,8 +4834,8 @@ p_{(k)} \leq k \times \alpha/m
 \]</span></p></li>
 <li><p>If such a <span class="math inline">\(k\)</span> exists, reject the <span class="math inline">\(k\)</span> null hypotheses associated with <span class="math inline">\(p_{(1)}, \ldots, p_{(k)}\)</span>. Otherwise none of the null hypotheses is rejected.</p></li>
 </ol>
-<p>The adjusted <span class="math inline">\(p\)</span>-value (also known as the <span class="math inline">\(q\)</span>-value in FDR literature; note that the <span class="math inline">\(q\)</span>-value of <span class="citation" data-cites="storey2003statistical">Storey and Tibshirani (<a href="#ref-storey2003statistical" role="doc-biblioref">2003</a>)</span> is a related but different quantity): <span class="math display">\[
-   q_{(r)}=\tilde{p}_{(r)} = \min\left[\min_{s=r,\ldots, m}\left(m p_{(s)}/s\right), 1 \right].
+<p>The BH-adjusted <span class="math inline">\(p\)</span>-value: <span class="math display">\[
+   \tilde{p}_{(r)} = \min\left[\min_{s=r,\ldots, m}\left(m p_{(s)}/s\right), 1 \right].
 \]</span> In the hypothetical example above: <span class="math inline">\(k=200\)</span>, <span class="math inline">\(p_{(k)}=0.01\)</span>, <span class="math inline">\(m=1000\)</span> and <span class="math inline">\(\alpha=0.05\)</span>.</p>
 <hr>
 </section>
@@ -5525,44 +5531,25 @@ p_{(k)} \leq k \times \alpha/m
 <li>The same authors published later yet other FDR control methods.</li>
 <li>For this reason their 1995 method is often referred to as the Benjamini and Hochberg 1995 method, or BH95.</li>
 <li>As input the method only needs the <span class="math inline">\(p\)</span>-values from the <span class="math inline">\(m\)</span> hypotheses tests.</li>
-<li>When controlling FDR, the adjusted <span class="math inline">\(p\)</span>-values are often referred to as <span class="math inline">\(q\)</span>-values.</li>
 </ul>
 <hr>
 <ul>
 <li>It is a <strong>linear step-up procedure</strong> : it starts from the least significant result (largest p-value) and steps-up to more significant results (lower p-values).</li>
 <li>The BH95 method assumes that the test statistics are independent <span class="citation" data-cites="benjamini1995controlling">(<a href="#ref-benjamini1995controlling" role="doc-biblioref">Benjamini and Hochberg 1995</a>)</span>, or at least positively dependent in a specific sense (PRDS, see below) <span class="citation" data-cites="benjamini2001control">(<a href="#ref-benjamini2001control" role="doc-biblioref">Benjamini and Yekutieli 2001</a>)</span>.</li>
 <li>When the assumptions hold, it guarantees <span class="math display">\[
-  \text{FDR}=\text{E}\left[FP/R\right]=\text{E}\left[\text{FDP}\right] \leq \frac{m_0}{m} \alpha \leq \alpha .
+  \text{FDR}=\text{E}\left[\text{FDP}\right] \leq \frac{m_0}{m} \alpha \leq \alpha .
 \]</span></li>
 </ul>
 <hr>
-<section id="extension" class="level3" data-number="2.5.1">
-<h3 data-number="2.5.1" class="anchored" data-anchor-id="extension"><span class="header-section-number">2.5.1</span> Extension</h3>
-<p>Thus, if we knew <span class="math inline">\(m_0\)</span> (the number of true nulls), we could improve the method by applying it to the level <span class="math inline">\(\alpha m/m_0\)</span> (cfr. Bonferroni).</p>
-<p><span class="math inline">\(\longrightarrow\)</span> many FDR methods consist in estimating <span class="math inline">\(m_0\)</span> or the fraction of null features <span class="math inline">\(m_0/m\)</span>.</p>
+<section id="extension-adaptive-fdr-procedures" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="extension-adaptive-fdr-procedures"><span class="header-section-number">2.5.1</span> Extension: adaptive FDR procedures</h3>
 <p>The inequality <span class="math display">\[
-  \text{FDR} \leq \frac{m_0}{m} \alpha \leq \alpha
-\]</span> shows that BH1995 is a conservative method, i.e. it controls the FDR at the safe side, i.e. when one is prepared to control the FDR at the nominal level <span class="math inline">\(\alpha\)</span>, the BH95 will guarantee that the true FDR is not larger than the nominal level (when the assumptions hold).</p>
-<ul>
-<li><p>More interestingly is that <span class="math inline">\(\frac{m_0}{m} \alpha\)</span> is in between the true FDR and the nominal FDR.</p></li>
-<li><p>Suppose that <span class="math inline">\(m_0\)</span> were known and that the BH95 method were applied at the nominal FDR level of <span class="math inline">\(\alpha=m/m_0 \alpha^*\)</span>, in which <span class="math inline">\(\alpha^*\)</span> is the FDR level we want to control. Then the inequality gives <span class="math display">\[
-\text{FDR} \leq \frac{m_0}{m} \alpha = \frac{m_0}{m} \frac{m}{m_0}\alpha^* = \alpha^* ,
-\]</span> and hence BH95 would better control the FDR at <span class="math inline">\(\alpha^*\)</span>.</p></li>
-<li><p>Note that <span class="math inline">\(\alpha=m/m_0 \alpha^*&gt;\alpha^*\)</span> and hence the result is less conservative than the original BH95 method.</p></li>
-</ul>
-<hr>
-<p>The above reasoning implies a <strong>generalized adaptive linear step-up procedure</strong>:</p>
-<ul>
-<li>estimate <span class="math inline">\(m_0\)</span>: <span class="math inline">\(\hat{m}_0\)</span></li>
-<li>if <span class="math inline">\(\hat{m}_0=0\)</span>, reject all null hypotheses; otherwise, apply the step-up procedure of BH 95 at the level <span class="math inline">\(\alpha=m \alpha^*/\hat{m}_0\)</span> to control the FDR at <span class="math inline">\(\alpha^*\)</span>.</li>
-</ul>
-<p>The adjusted <span class="math inline">\(p\)</span>-values (=<span class="math inline">\(q\)</span>-values) are obtained as <span class="math display">\[
-  \tilde{p}_{(r)} = \frac{\hat{m}_0}{m} \min\left\{\min_{s=r,\ldots, m}\{m p_{(s)}/s\} ,1 \right\}.
+  \text{FDR} \leq \frac{m_0}{m} \alpha = \pi_0\alpha \leq \alpha
+\]</span> shows that BH95 is conservative: it controls the FDR at level <span class="math inline">\(\pi_0\alpha\)</span> rather than at the nominal level <span class="math inline">\(\alpha\)</span>. The more non-null features there are (<span class="math inline">\(m_0 \ll m\)</span>), the more conservative the method becomes, and the more power is lost.</p>
+<p>If <span class="math inline">\(m_0\)</span> were known, we could correct for this by applying BH95 at the level <span class="math inline">\(\alpha\, m/m_0\)</span>, which controls the FDR at <span class="math inline">\(\alpha\)</span>. <strong>Adaptive FDR procedures</strong> therefore first estimate the number <span class="math inline">\(m_0\)</span>, or the fraction <span class="math inline">\(\pi_0 = m_0/m\)</span>, of null features from the data, and then use the adjusted <span class="math inline">\(p\)</span>-values <span class="math display">\[
+  \tilde{p}_{(r)} = \hat\pi_0 \min\left\{\min_{s=r,\ldots, m}\{m p_{(s)}/s\} ,1 \right\}.
 \]</span></p>
-<ul>
-<li>Many FDR procedures can be fit into this definition (e.g. <span class="citation" data-cites="benjamini2000adaptive">Benjamini and Hochberg (<a href="#ref-benjamini2000adaptive" role="doc-biblioref">2000</a>)</span> and <span class="citation" data-cites="storey2003statistical">Storey and Tibshirani (<a href="#ref-storey2003statistical" role="doc-biblioref">2003</a>)</span>).</li>
-<li>We do not give details on the methods for estimating <span class="math inline">\(m_0\)</span>, but some of them are implemented in the R software.</li>
-</ul>
+<p>We do not give details on how <span class="math inline">\(\pi_0\)</span> is estimated <span class="citation" data-cites="benjamini2000adaptive storey2003statistical">(see e.g. <a href="#ref-benjamini2000adaptive" role="doc-biblioref">Benjamini and Hochberg 2000</a>; <a href="#ref-storey2003statistical" role="doc-biblioref">Storey and Tibshirani 2003</a>)</span>. The adjusted <span class="math inline">\(p\)</span>-values above correspond to the <span class="math inline">\(q\)</span>-values of <span class="citation" data-cites="storey2003statistical">Storey and Tibshirani (<a href="#ref-storey2003statistical" role="doc-biblioref">2003</a>)</span>, which are implemented in the Bioconductor package <code>qvalue</code>. Note that in many large-scale studies the vast majority of features is null, so that <span class="math inline">\(\hat\pi_0\)</span> is close to 1 and the gain over BH95 is small.</p>
 <hr>
 </section>
 <section id="other-important-considerations" class="level3" data-number="2.5.2">
@@ -5571,7 +5558,9 @@ p_{(k)} \leq k \times \alpha/m
 <li><p>It can be shown that the BH-FDR method weakly controls the FWER, i.e. it controls the FWER only when all features are null (<span class="math inline">\(m_0=m\)</span>), but not for every configuration <span class="math inline">\(\mathcal{M}_0\)</span> of true nulls (strong control).</p></li>
 <li><p>The BH-FDR is derived under the assumption of independence of the features. <span class="citation" data-cites="benjamini2001control">Benjamini and Yekutieli (<a href="#ref-benjamini2001control" role="doc-biblioref">2001</a>)</span> showed that it also controls the FDR under <em>positive regression dependence on the subset of true nulls</em> (PRDS), which holds e.g. for one-sided tests based on positively correlated normally distributed test statistics.</p></li>
 <li><p>Under arbitrary dependence, the <strong>Benjamini–Yekutieli (BY)</strong> procedure controls the FDR. It applies BH at the more stringent level <span class="math inline">\(\alpha / c(m)\)</span> with <span class="math inline">\(c(m) = \sum_{s=1}^m 1/s \approx \ln(m) + 0.577\)</span>. In R: <code>p.adjust(p, method = &quot;BY&quot;)</code>.</p></li>
-<li><p>BY is very conservative. For the DTI data <span class="math inline">\(c(m) = 10.22\)</span>, and BY returns 0 voxels at the 5% FDR, compared to 32 for BH. In practice BH is therefore widely used, and it turns out to be quite robust to the dependence typically encountered in omics and imaging data. Strong correlation between features, such as spatial correlation between neighbouring voxels, can however distort the null distribution of the test statistics, which is one of the motivations for the empirical null in the local fdr section.</p></li>
+<li><p>BY is very conservative. For the DTI data <span class="math inline">\(c(m) = 10.22\)</span>, and BY returns 0 voxels at the 5% FDR, compared to 32 for BH.</p></li>
+<li><p>In practice BH is therefore widely used, and it turns out to be quite robust to the dependence typically encountered in omics and imaging data.</p></li>
+<li><p>Strong correlation between features, such as spatial correlation between neighbouring voxels, can however distort the null distribution of the test statistics, which is one of the motivations for the empirical null in the local fdr section.</p></li>
 </ul>
 </section>
 </section>
@@ -5580,7 +5569,11 @@ p_{(k)} \leq k \times \alpha/m
 <h1 data-number="3"><span class="header-section-number">3</span> local fdr</h1>
 <section id="introduction-1" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="introduction-1"><span class="header-section-number">3.1</span> Introduction</h2>
-<p>Suppose that the test statistic for testing <span class="math inline">\(H_{0j}\)</span> is denoted by <span class="math inline">\(z_j\)</span>, and that the test statistics have a <span class="math inline">\(N(0,1)\)</span> null distribution.</p>
+<p>Suppose that</p>
+<ul>
+<li>the test statistic for testing <span class="math inline">\(H_{0j}\)</span> is denoted by <span class="math inline">\(z_j\)</span>, and</li>
+<li>the test statistics have a <span class="math inline">\(N(0,1)\)</span> null distribution.</li>
+</ul>
 <p>If all <span class="math inline">\(m\)</span> null hypotheses are true, the histogram of the <span class="math inline">\(m\)</span> test statistics should approximate the theoretical null distribution (density <span class="math inline">\(f_0(z)\)</span>).</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -5591,13 +5584,21 @@ p_{(k)} \leq k \times \alpha/m
 </div>
 </div>
 </div>
-<p>Assuming that the test statistic has a standard normal null distribution is not restrictive. For example, suppose that <span class="math inline">\(t\)</span>-tests have been applied and that the null distribution is <span class="math inline">\(t_d\)</span>, with <span class="math inline">\(d\)</span> representing the degrees of freedom. Let <span class="math inline">\(F_{td}\)</span> denote the distribution function of <span class="math inline">\(t_d\)</span> and let <span class="math inline">\(\Phi\)</span> denote the distribution function of the standard normal distribution. If <span class="math inline">\(T\)</span> denotes the <span class="math inline">\(t\)</span>-test statistic, then, under the null hypothesis, <span class="math display">\[
-  T \sim t_d
+<ul>
+<li><p>Assuming that the test statistic has a standard normal null distribution is not restrictive.</p></li>
+<li><p>For example, suppose that <span class="math inline">\(t\)</span>-tests have been applied and that the null distribution is <span class="math inline">\(t_d\)</span>, with <span class="math inline">\(d\)</span> representing the degrees of freedom.</p></li>
+<li><p>Let <span class="math inline">\(F_{td}\)</span> denote the distribution function of <span class="math inline">\(t_d\)</span> and let <span class="math inline">\(\Phi\)</span> denote the distribution function of the standard normal distribution.</p></li>
+<li><p>If <span class="math inline">\(T\)</span> denotes the <span class="math inline">\(t\)</span>-test statistic, then, under the null hypothesis, <span class="math display">\[
+T \sim t_d
 \]</span> and hence <span class="math display">\[
-  F_{td}(T) \sim U[0,1]
+F_{td}(T) \sim U[0,1]
 \]</span> and <span class="math display">\[
-  Z = \Phi^{-1}(F_{td}(T)) \sim N(0,1).
-\]</span> If all <span class="math inline">\(m\)</span> null hypotheses are true, then each of the <span class="math inline">\(Z_j\)</span> is <span class="math inline">\(N(0,1)\)</span> and the set of <span class="math inline">\(m\)</span> calculated <span class="math inline">\(z_j\)</span> test statistics may be considered as a sample from <span class="math inline">\(N(0,1)\)</span>. Hence, under these conditions we expect the histogram of the <span class="math inline">\(m\)</span> <span class="math inline">\(z_j\)</span>’s to look like the density of the null distribution.</p>
+Z = \Phi^{-1}(F_{td}(T)) \sim N(0,1).
+\]</span></p></li>
+<li><p>If all <span class="math inline">\(m\)</span> null hypotheses are true, then each of the <span class="math inline">\(Z_j\)</span> is <span class="math inline">\(N(0,1)\)</span> and</p></li>
+<li><p>the set of <span class="math inline">\(m\)</span> calculated <span class="math inline">\(z_j\)</span> test statistics may be considered as a sample from <span class="math inline">\(N(0,1)\)</span>.</p></li>
+<li><p>Hence, under these conditions we expect the histogram of the <span class="math inline">\(m\)</span> <span class="math inline">\(z_j\)</span>’s to look like the density of the null distribution.</p></li>
+</ul>
 </section>
 <section id="two-group-model" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="two-group-model"><span class="header-section-number">3.2</span> Two group model</h2>
@@ -5888,7 +5889,8 @@ H_{0j}: \mathbf{L}^T\boldsymbol{\beta}_j = 0 \text{ vs } H_{1j}: \mathbf{L}^T\bo
 </div>
 <p>The plot shows that the null distribution is shifted to negative values and has a standard deviation that remains close to 1.</p>
 <ul>
-<li><p>With correlation between the features, the null distribution of the z-values that is realised in a particular study can be shifted and/or be wider or narrower than <span class="math inline">\(N(0,1)\)</span>, even if each null z-value is marginally <span class="math inline">\(N(0,1)\)</span> <span class="citation" data-cites="efron2010large">(<a href="#ref-efron2010large" role="doc-biblioref">Efron 2010</a>)</span>. Unobserved confounders, on the other hand, typically broaden the null distribution.</p></li>
+<li><p>With correlation between the features, the null distribution of the z-values that is realised in a particular study can be shifted and/or be wider or narrower than <span class="math inline">\(N(0,1)\)</span>, even if each null z-value is marginally <span class="math inline">\(N(0,1)\)</span> <span class="citation" data-cites="efron2010large">(<a href="#ref-efron2010large" role="doc-biblioref">Efron 2010</a>)</span>.</p></li>
+<li><p>Unobserved confounders, on the other hand, typically broaden the null distribution.</p></li>
 <li><p>Spatial correlation can be expected in the brain, so voxels that are close to each-other typically will be correlated.</p></li>
 <li><p>The dashed blue line gives <span class="math inline">\(f_0\)</span> and the solid green line is the nonparametric estimate of the marginal density function <span class="math inline">\(f\)</span>. Unlike with the theoretical null, both densities now coincide in the centre of the distribution, but they differ in the right tail. Hence, we may anticipate that some voxels with large positive <span class="math inline">\(z\)</span>-values show a difference in FA.</p></li>
 <li><p>The purple bars indicate the estimated number of non-nulls (among the hypotheses/voxels for a given <span class="math inline">\(z\)</span>-value). The plots shows that only non-nulls for positive <span class="math inline">\(z\)</span>-values are expected (positive <span class="math inline">\(z\)</span> corresponds to a higher average FA in dyslexic children).</p></li>
@@ -5912,7 +5914,18 @@ H_{0j}: \mathbf{L}^T\boldsymbol{\beta}_j = 0 \text{ vs } H_{1j}: \mathbf{L}^T\bo
 <li><p>Note, that the result is atypical. In most applications we typically pick-up both downregulated (negative z) and upregulated (positive z) features.</p></li>
 </ul>
 <hr>
-<p>We return the voxels with a local fdr below 0.2, a conventional threshold for reporting “interesting” cases <span class="citation" data-cites="efron2010large">(<a href="#ref-efron2010large" role="doc-biblioref">Efron 2010</a>)</span>. It corresponds to requiring that the likelihood ratio <span class="math inline">\(f_1(z)/f_0(z)\)</span> is at least <span class="math inline">\(4\pi_0/\pi_1\)</span>.</p>
+<p>We return the voxels with a local fdr below 0.2, a conventional threshold for reporting “interesting” cases <span class="citation" data-cites="efron2010large">(<a href="#ref-efron2010large" role="doc-biblioref">Efron 2010</a>)</span>.</p>
+<ul>
+<li>Since fdr<span class="math inline">\((z)\)</span> is the posterior probability that a voxel is null, this means that the posterior probability of being non-null is at least 0.8.</li>
+<li>Hence, the posterior odds of being non-null are at least</li>
+</ul>
+<p><span class="math display">\[
+\frac{\pi_1f_1(z)}{\pi_0f_0(z)}= 0.8/0.2 = 4
+\]</span></p>
+<ul>
+<li><p>Because most voxels are null, the prior odds <span class="math inline">\(\pi_1/\pi_0\)</span> are small, so the data must provide strong evidence</p></li>
+<li><p>e.g. for <span class="math inline">\(\pi_0 = 0.9\)</span>, the observed <span class="math inline">\(z\)</span> must be at least 36 times more likely under the alternative than under the null to reach posterior odds of 4.</p></li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>dti <span class="ot">&lt;-</span> dti <span class="sc">|&gt;</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -6002,7 +6015,7 @@ H_{0j}: \mathbf{L}^T\boldsymbol{\beta}_j = 0 \text{ vs } H_{1j}: \mathbf{L}^T\bo
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>lfdrHiv0 <span class="ot">&lt;-</span> <span class="fu">locfdr</span>(hivdata, <span class="at">nulltype =</span> <span class="dv">0</span>, <span class="at">plot =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
-<li><p>Unlike the DTI study, the empirical null is not so much shifted, but it is much narrower than the theoretical null: <span class="math inline">\(\hat\delta_0 = -0.12\)</span> and <span class="math inline">\(\hat\sigma_0 = 0.75\)</span>. The z-values are <em>underdispersed</em>.</p></li>
+<li><p>As in the DTI study, the empirical null (MLE, the default) is slightly shifted to negative values: <span class="math inline">\(\hat\delta_0 = -0.12\)</span> compared to <span class="math inline">\(-0.16\)</span> for the DTI study. In contrast to the DTI study, however, it is much narrower than the theoretical null: <span class="math inline">\(\hat\sigma_0 = 0.75\)</span> compared to <span class="math inline">\(1.05\)</span> for the DTI study. The z-values are <em>underdispersed</em>.</p></li>
 <li><p><span class="citation" data-cites="efron2010large">Efron (<a href="#ref-efron2010large" role="doc-biblioref">2010</a>)</span> shows that this underdispersion is not caused by the non-normality of the expression data, but is consistent with the considerable correlation between the genes in this study, which affects the null distribution of the z-values (cfr. correlation between the features in <a href="#sec-problems">Problems?</a>).</p></li>
 <li><p>With the theoretical null <span class="math inline">\(N(0,1)\)</span> the estimated fraction of nulls is <span class="math inline">\(\hat\pi_0 = 1.21\)</span>, an impossible value larger than 1. This is a clear indication that the theoretical null is not appropriate here.</p></li>
 <li><p>The choice of the null distribution has a large impact: 17 genes have a local fdr below 0.2 with the theoretical null, compared to 160 genes with the empirical null.</p></li>
@@ -6028,7 +6041,7 @@ Session info
 </summary>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] &quot;2026-11-18 15:21:26 CET&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;2026-11-18 16:26:39 CET&quot;</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; ─ Session info ───────────────────────────────────────────────────────────────

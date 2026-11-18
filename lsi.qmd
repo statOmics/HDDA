@@ -297,13 +297,15 @@ grid.arrange(pNullZ, pNullP, ncol=2)
 
 We indeed observe that the p-values are uniform under the null hypothesis. So statistical hypothesis testing provides a uniform testing strategy.
 
+--- 
 
-### Notation
+**Notation**
 
 In the multiple testing literature the number of features for which a test is conducted is denoted by $m$ instead of $p$ to avoid confusion with the symbol for a p-value.
 
 Note that we index the features (hypotheses) by $j=1,\ldots,m$, in line with the notation in the rest of this course, where the data matrix $\mathbf{X}$ is $n \times p$ with samples $i$ in the rows and features $j$ in the columns. @efron2010large follows the genomics convention instead, where the rows of the data matrix are features and the columns are samples, so that features (and thus the hypotheses $H_{0i}$, test statistics $z_i$, …) are indexed by $i$ and samples by $j$.
 
+--- 
 
 Consider testing all $m=15443$ voxels simultaneously
 
@@ -393,7 +395,17 @@ The Bonferroni method is another method that is widely used to control the FWER:
 
 ---
 
-To attain the familywise error rate at level FWER the individual hypotheses should be tested at very stringent significance levels when $m$ is large. The consequence of testing at a small significance level $\alpha$ is that it is hard to find significant results, and thus the lists of significant results (discoveries) is likely to be short. Controlling the FWER means that the chance is small that these lists contain one or more false positives. A negative consequence, however, is that many of the true positive hypothesis (i.e. $H_1$ is true) will not appear in these short lists. Hence, the "power" is small (power is not well defined in this multiple testing setting -- extensions of the concept are possible). Thus, avoiding false positives by controlling the FWER comes at a price: many of the true positive hypothesis may be missed.
+- To attain the familywise error rate at level FWER the individual hypotheses should be tested at very stringent significance levels when $m$ is large. 
+
+- The consequence of testing at a small significance level $\alpha$ is that it is hard to find significant results, and thus the lists of significant results (discoveries) is likely to be short. 
+
+- Controlling the FWER means that the chance is small that these lists contain one or more false positives. 
+
+- A negative consequence, however, is that many of the true positive hypothesis (i.e. $H_1$ is true) will not appear in these short lists. 
+
+- Hence, the "power" is small (power is not well defined in this multiple testing setting -- extensions of the concept are possible). 
+
+- Thus, avoiding false positives by controlling the FWER comes at a price: many of the true positive hypothesis may be missed.
 
 ---
 
@@ -524,9 +536,9 @@ $$
 3. If such a $k$ exists, reject the $k$ null hypotheses associated with $p_{(1)}, \ldots, p_{(k)}$.
 Otherwise none of the null hypotheses is rejected.
 
-The adjusted $p$-value (also known as the $q$-value in FDR literature; note that the $q$-value of @storey2003statistical is a related but different quantity):
+The BH-adjusted $p$-value:
  $$
-   q_{(r)}=\tilde{p}_{(r)} = \min\left[\min_{s=r,\ldots, m}\left(m p_{(s)}/s\right), 1 \right].
+   \tilde{p}_{(r)} = \min\left[\min_{s=r,\ldots, m}\left(m p_{(s)}/s\right), 1 \right].
  $$
  In the hypothetical example above: $k=200$, $p_{(k)}=0.01$, $m=1000$ and $\alpha=0.05$.
 
@@ -645,7 +657,6 @@ animate(pFDR, nframes = 103, end_pause = 3)
 - The same authors published later yet other FDR control methods.
 - For this reason their 1995 method is often referred to as the Benjamini and Hochberg 1995 method, or BH95.
 - As input the method only needs the $p$-values from the $m$ hypotheses tests.
-- When controlling FDR, the adjusted $p$-values are often referred to as $q$-values.
 
 ---
 
@@ -653,49 +664,25 @@ animate(pFDR, nframes = 103, end_pause = 3)
 - The BH95 method assumes that the test statistics are independent [@benjamini1995controlling], or at least positively dependent in a specific sense (PRDS, see below) [@benjamini2001control].
 - When the assumptions hold, it guarantees
   \[
-    \text{FDR}=\text{E}\left[FP/R\right]=\text{E}\left[\text{FDP}\right] \leq \frac{m_0}{m} \alpha \leq \alpha .
+    \text{FDR}=\text{E}\left[\text{FDP}\right] \leq \frac{m_0}{m} \alpha \leq \alpha .
   \]
 
 ---
 
-### Extension
-
-Thus, if we knew $m_0$ (the number of true nulls), we could improve the method by applying it to the level $\alpha m/m_0$ (cfr. Bonferroni).
-
- $\longrightarrow$ many FDR methods consist in estimating $m_0$ or the fraction of null features $m_0/m$.
-
+### Extension: adaptive FDR procedures
 
 The inequality
 \[
-  \text{FDR} \leq \frac{m_0}{m} \alpha \leq \alpha
+  \text{FDR} \leq \frac{m_0}{m} \alpha = \pi_0\alpha \leq \alpha
 \]
-shows that BH1995 is a conservative method, i.e. it controls the FDR at the safe side, i.e. when one is prepared to control the FDR at the nominal level $\alpha$, the BH95 will guarantee that the true FDR is not larger than the nominal level (when the assumptions hold).
+shows that BH95 is conservative: it controls the FDR at level $\pi_0\alpha$ rather than at the nominal level $\alpha$. The more non-null features there are ($m_0 \ll m$), the more conservative the method becomes, and the more power is lost.
 
-- More interestingly is that $\frac{m_0}{m} \alpha$ is in between the true FDR and the nominal FDR.
-
-- Suppose that $m_0$ were known and that the BH95 method were applied at the nominal FDR level of $\alpha=m/m_0 \alpha^*$, in which $\alpha^*$ is the FDR level we want to control. Then the inequality gives
+If $m_0$ were known, we could correct for this by applying BH95 at the level $\alpha\, m/m_0$, which controls the FDR at $\alpha$. **Adaptive FDR procedures** therefore first estimate the number $m_0$, or the fraction $\pi_0 = m_0/m$, of null features from the data, and then use the adjusted $p$-values
 \[
-  \text{FDR} \leq \frac{m_0}{m} \alpha = \frac{m_0}{m} \frac{m}{m_0}\alpha^* = \alpha^* ,
-\]
-and hence BH95 would better control the FDR  at $\alpha^*$.
-
-- Note that $\alpha=m/m_0 \alpha^*>\alpha^*$ and hence the result is less conservative than the original BH95 method.
-
----
-
-The above reasoning implies a **generalized adaptive linear step-up procedure**:
-
-- estimate $m_0$: $\hat{m}_0$
-- if $\hat{m}_0=0$, reject all null hypotheses;
- otherwise, apply the step-up procedure of BH 95 at the level $\alpha=m \alpha^*/\hat{m}_0$ to control the FDR at $\alpha^*$.
-
-The adjusted $p$-values (=$q$-values) are obtained as
-\[
-  \tilde{p}_{(r)} = \frac{\hat{m}_0}{m} \min\left\{\min_{s=r,\ldots, m}\{m p_{(s)}/s\} ,1 \right\}.
+  \tilde{p}_{(r)} = \hat\pi_0 \min\left\{\min_{s=r,\ldots, m}\{m p_{(s)}/s\} ,1 \right\}.
 \]
 
-- Many FDR procedures can be fit into this definition (e.g. @benjamini2000adaptive and @storey2003statistical).
-- We do not give details on the methods for estimating $m_0$, but some of them are implemented in the R software. 
+We do not give details on how $\pi_0$ is estimated [see e.g. @benjamini2000adaptive; @storey2003statistical]. The adjusted $p$-values above correspond to the $q$-values of @storey2003statistical, which are implemented in the Bioconductor package `qvalue`. Note that in many large-scale studies the vast majority of features is null, so that $\hat\pi_0$ is close to 1 and the gain over BH95 is small.
 
 ---
 
@@ -707,14 +694,21 @@ The adjusted $p$-values (=$q$-values) are obtained as
 
 - Under arbitrary dependence, the **Benjamini–Yekutieli (BY)** procedure controls the FDR. It applies BH at the more stringent level $\alpha / c(m)$ with $c(m) = \sum_{s=1}^m 1/s \approx \ln(m) + 0.577$. In R: `p.adjust(p, method = "BY")`.
 
-- BY is very conservative. For the DTI data $c(m) = `r round(sum(1/seq_len(nrow(dti))), 2)`$, and BY returns `r sum(p.adjust(dti$p.value, method = "BY") < 0.05)` voxels at the 5% FDR, compared to `r sum(dti$padj < 0.05)` for BH. In practice BH is therefore widely used, and it turns out to be quite robust to the dependence typically encountered in omics and imaging data. Strong correlation between features, such as spatial correlation between neighbouring voxels, can however distort the null distribution of the test statistics, which is one of the motivations for the empirical null in the local fdr section.
+- BY is very conservative. For the DTI data $c(m) = `r round(sum(1/seq_len(nrow(dti))), 2)`$, and BY returns `r sum(p.adjust(dti$p.value, method = "BY") < 0.05)` voxels at the 5% FDR, compared to `r sum(dti$padj < 0.05)` for BH. 
+
+- In practice BH is therefore widely used, and it turns out to be quite robust to the dependence typically encountered in omics and imaging data. 
+
+- Strong correlation between features, such as spatial correlation between neighbouring voxels, can however distort the null distribution of the test statistics, which is one of the motivations for the empirical null in the local fdr section.
 
 
 # local fdr
 
 ## Introduction
 
-Suppose that the test statistic for testing $H_{0j}$ is denoted by $z_j$, and that the test statistics have a $N(0,1)$ null distribution.
+Suppose that 
+
+- the test statistic for testing $H_{0j}$ is denoted by $z_j$, and 
+- the test statistics have a $N(0,1)$ null distribution.
 
 If all $m$ null hypotheses are true, the histogram of the $m$ test statistics should approximate the theoretical null distribution (density $f_0(z)$).
 
@@ -722,7 +716,10 @@ If all $m$ null hypotheses are true, the histogram of the $m$ test statistics sh
 pNullZ
 ```
 
-Assuming that the test statistic has a standard normal null distribution is not restrictive. For example, suppose that $t$-tests have been applied and that the null distribution is $t_d$, with $d$ representing the degrees of freedom. Let $F_{td}$ denote the distribution function of $t_d$ and let $\Phi$ denote the distribution function of the standard normal distribution. If $T$ denotes the $t$-test statistic, then, under the null hypothesis,
+- Assuming that the test statistic has a standard normal null distribution is not restrictive. 
+- For example, suppose that $t$-tests have been applied and that the null distribution is $t_d$, with $d$ representing the degrees of freedom. 
+- Let $F_{td}$ denote the distribution function of $t_d$ and let $\Phi$ denote the distribution function of the standard normal distribution. 
+- If $T$ denotes the $t$-test statistic, then, under the null hypothesis,
 \[
   T \sim t_d
 \]
@@ -734,7 +731,10 @@ and
 \[
   Z = \Phi^{-1}(F_{td}(T)) \sim N(0,1).
 \]
-If all $m$ null hypotheses are true, then each of the $Z_j$ is $N(0,1)$ and the set of $m$ calculated $z_j$ test statistics may be considered as a sample from $N(0,1)$. Hence, under these conditions we expect the histogram of the $m$ $z_j$'s to look like the density of the null distribution.
+
+- If all $m$ null hypotheses are true, then each of the $Z_j$ is $N(0,1)$ and 
+- the set of $m$ calculated $z_j$ test statistics may be considered as a sample from $N(0,1)$. 
+- Hence, under these conditions we expect the histogram of the $m$ $z_j$'s to look like the density of the null distribution.
 
 ## Two group model
 
@@ -1029,7 +1029,8 @@ lfdr <- locfdr(dti$z.value)
 
 The plot shows that the null distribution is shifted to negative values and has a standard deviation that remains close to 1.
 
-- With correlation between the features, the null distribution of the z-values that is realised in a particular study can be shifted and/or be wider or narrower than $N(0,1)$, even if each null z-value is marginally $N(0,1)$ [@efron2010large]. Unobserved confounders, on the other hand, typically broaden the null distribution.
+- With correlation between the features, the null distribution of the z-values that is realised in a particular study can be shifted and/or be wider or narrower than $N(0,1)$, even if each null z-value is marginally $N(0,1)$ [@efron2010large]. 
+- Unobserved confounders, on the other hand, typically broaden the null distribution.
 
 - Spatial correlation can be expected in the brain, so voxels that are close to each-other typically will be correlated.
 
@@ -1055,7 +1056,18 @@ lfdr <- locfdr(dti$z.value, plot=2)
 
 ---
 
-We return the voxels with a local fdr below 0.2, a conventional threshold for reporting "interesting" cases [@efron2010large]. It corresponds to requiring that the likelihood ratio $f_1(z)/f_0(z)$ is at least $4\pi_0/\pi_1$.
+We return the voxels with a local fdr below 0.2, a conventional threshold for reporting "interesting" cases [@efron2010large]. 
+
+- Since fdr$(z)$ is the posterior probability that a voxel is null, this means that the posterior probability of being non-null is at least 0.8.
+- Hence, the posterior odds of being non-null are at least 
+
+$$ 
+\frac{\pi_1f_1(z)}{\pi_0f_0(z)}= 0.8/0.2 = 4
+$$
+
+- Because most voxels are null, the prior odds $\pi_1/\pi_0$ are small, so the data must provide strong evidence
+
+- e.g. for $\pi_0 = 0.9$, the observed $z$ must be at least 36 times more likely under the alternative than under the null to reach posterior odds of 4.
 
 ```{r}
 dti <- dti |>
@@ -1136,7 +1148,7 @@ lfdrHiv <- locfdr(hivdata, plot = 4)
 lfdrHiv0 <- locfdr(hivdata, nulltype = 0, plot = 0)
 ```
 
-- Unlike the DTI study, the empirical null is not so much shifted, but it is much narrower than the theoretical null: $\hat\delta_0 = `r round(lfdrHiv$fp0["mlest", "delta"], 2)`$ and $\hat\sigma_0 = `r round(lfdrHiv$fp0["mlest", "sigma"], 2)`$. The z-values are *underdispersed*.
+- As in the DTI study, the empirical null (MLE, the default) is slightly shifted to negative values: $\hat\delta_0 = `r round(lfdrHiv$fp0["mlest", "delta"], 2)`$ compared to $`r round(lfdr$fp0["mlest", "delta"], 2)`$ for the DTI study. In contrast to the DTI study, however, it is much narrower than the theoretical null: $\hat\sigma_0 = `r round(lfdrHiv$fp0["mlest", "sigma"], 2)`$ compared to $`r round(lfdr$fp0["mlest", "sigma"], 2)`$ for the DTI study. The z-values are *underdispersed*.
 
 - @efron2010large shows that this underdispersion is not caused by the non-normality of the expression data, but is consistent with the considerable correlation between the genes in this study, which affects the null distribution of the z-values (cfr. correlation between the features in [Problems?](#sec-problems)).
 
