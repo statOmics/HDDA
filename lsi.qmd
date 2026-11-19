@@ -3,6 +3,23 @@ title: "Large Scale Inference"
 author: "Lieven Clement"
 date: "statOmics, Ghent University (https://statomics.github.io)"
 references:
+- id: schwartzman2005cross
+  type: article-journal
+  author:
+  - family: Schwartzman
+    given: Armin
+  - family: Dougherty
+    given: Robert F.
+  - family: Taylor
+    given: Jonathan E.
+  issued:
+  - year: 2005
+  title: Cross-subject comparison of principal diffusion direction maps
+  container-title: Magnetic Resonance in Medicine
+  page: 1423-1431
+  volume: '53'
+  issue: '6'
+  DOI: 10.1002/mrm.20503
 - id: benjamini2001control
   type: article-journal
   author:
@@ -120,7 +137,11 @@ For each voxel separately, this is a simple problem, but the large scale of the 
 The dataset `dti` contains
 
 - Spatial location (x, y, z) of each voxel
-- z-statistic for assessing a difference in average FA between dyslexic and non-dyslexic children
+- z-statistic for assessing a difference in average FA between non-dyslexic and dyslexic children
+
+- The original source of the data [@schwartzman2005cross] computed the FA differences as control minus dyslexic. 
+- Assuming the same convention, positive $z$-values correspond to a higher average FA in control children than in dyslexic children. 
+- Note that @schwartzman2005cross themselves found no significant FA differences in their (smaller) white-matter region of interest; they did find differences in the principal diffusion *direction* in a frontal region.
 
 
 
@@ -143,8 +164,12 @@ pZ <- dti |>
     ) +
   geom_point() +
   scale_colour_gradient2(low = "blue",mid="white",high="red") +
+  coord_fixed() +
   transition_manual(coord.z) +
-  labs(title = "transection z = {frame}") +
+  labs(
+    title = "transection z = {current_frame}",
+    x = "coord.y (right → left hemisphere)",
+    y = "coord.x (back → front)") +
   theme_grey()
 ```
 
@@ -197,8 +222,12 @@ pPval <- dti |>
     ) +
   geom_point() +
   scale_colour_gradient2(low = "blue",mid="white",high="red") +
+  coord_fixed() +
   transition_manual(coord.z) +
-  labs(title = "transection z = {frame}") +
+  labs(
+    title = "transection z = {current_frame}",
+    x = "coord.y (right → left hemisphere)",
+    y = "coord.x (back → front)") +
   theme_grey()
 ```
 
@@ -217,8 +246,8 @@ It is much easier to observe spatial patterns.
 
 Note, however that
 
-- Higher average FA (z > 0 and p < 0.05) in dyslexic children is appearing in spatial patterns in some locations.
-- Lower average FA (z < 0 and p < 0.05) in dyslexic children is scattered throughout the brain.
+- Higher average FA in control children (z > 0 and p < 0.05) is appearing in spatial patterns in some locations.
+- Lower average FA in control children (z < 0 and p < 0.05) is scattered throughout the brain.
 - Multiple testing problem.
 - If there would be no association between FA and dyslexia we can expect on average $`r nrow(dti)`\times\alpha=`r round(nrow(dti) * 0.05,0)`$ false positive voxels at the 5% level of significance.
 - Note, that only `r sum(dti$p.value < 0.05)` were significant at the 5% significance level, so possibly the majority of the returned voxels are false positives (the expected number of false positives above is an upper bound, as it assumes that all voxels are null).
@@ -301,9 +330,11 @@ We indeed observe that the p-values are uniform under the null hypothesis. So st
 
 **Notation**
 
-In the multiple testing literature the number of features for which a test is conducted is denoted by $m$ instead of $p$ to avoid confusion with the symbol for a p-value.
+- In the multiple testing literature the number of features for which a test is conducted is denoted by $m$ instead of $p$ to avoid confusion with the symbol for a p-value.
 
-Note that we index the features (hypotheses) by $j=1,\ldots,m$, in line with the notation in the rest of this course, where the data matrix $\mathbf{X}$ is $n \times p$ with samples $i$ in the rows and features $j$ in the columns. @efron2010large follows the genomics convention instead, where the rows of the data matrix are features and the columns are samples, so that features (and thus the hypotheses $H_{0i}$, test statistics $z_i$, …) are indexed by $i$ and samples by $j$.
+- Note that we index the features (hypotheses) by $j=1,\ldots,m$, in line with the notation in the rest of this course, where the data matrix $\mathbf{X}$ is $n \times p$ with samples $i$ in the rows and features $j$ in the columns. 
+
+- @efron2010large follows the genomics convention instead, where the rows of the data matrix are features and the columns are samples, so that features (and thus the hypotheses $H_{0i}$, test statistics $z_i$, …) are indexed by $i$ and samples by $j$.
 
 --- 
 
@@ -315,7 +346,7 @@ test $\gg \alpha= 0.05$
 
 - Indeed for each non differential voxel we have a probability of 5% to return a FP.
 - In a typical experiment the majority of the voxels are non differential.
-- So an upperbound of the expected FP is $m \times \alpha$ or $15443 \times 0.05=`r round(15443*0.05,0)`$.
+- So an upperbound of the expected FP is $m \times \alpha$ or $15443 \times 0.05=`r round(15443*0.05,0)`$ (when we act as if the average difference in FA between nd and d in all $m$ voxels is zero).
 
 $\rightarrow$ Hence, we are bound to call many false positive voxels each time we run the experiment.
 
@@ -357,11 +388,22 @@ The upper bound is attained when all null hypotheses are true ($m_0=m$). Because
 
 ---
 
- These calculations illustrate the problem of multiplicity: the more tests that are performed, the larger the probability that at least one false positive conclusion is obtained. Thus if all significant results are listed, then the FWER is the probability that at least one of the listed positive results is a false positive. Sometimes, a list of significant results represent the "discoveries" from the study, and therefore a false positive result is often also referred to as a false discovery.
+ These calculations illustrate the problem of multiplicity: 
+ 
+ - the more tests that are performed, the larger the probability that at least one false positive conclusion is obtained. 
+ - Thus if all significant results are listed, then the FWER is the probability that at least one of the listed positive results is a false positive. 
+ - Sometimes, a list of significant results represent the "discoveries" from the study, and therefore a false positive result is often also referred to as a false discovery.
 
-For example, with $m=100$ true nulls and $\alpha=0.05$ the chance that at least one of the "discoveries" is false, is about $99\%$. Even worse, with $m\approx 15000$ the FWER increases to virtually $100\%$. In general we also expect that lists of significant results (discoveries) get longer with increasing $m$.
+Examples: 
+- With $m=100$ true nulls and $\alpha=0.05$ the chance that at least one of the "discoveries" is false, is about $99\%$. 
+- Even worse, with $m\approx 15000$ the FWER increases to virtually $100\%$. 
+- In general we also expect that lists of significant results (discoveries) get longer with increasing $m$.
 
-Many researchers, however, when presented a long list of significant results (or discoveries), would not mind too much if one or a few false discoveries appear in the list. Hence, the FWER is not the most relevant risk measure, as the FWER is allowed to be $100\%$ in case researchers do not mind to have a few false discoveries among the (perhaps many) positive results in the list of discoveries. A better solution will be given later, but first we continue with the use of FWER.
+In practice: 
+
+= Many researchers, however, when presented a long list of significant results (or discoveries), would not mind too much if one or a few false discoveries appear in the list. 
+- Hence, the FWER is not the most relevant risk measure, as the FWER is allowed to be $100\%$ in case researchers do not mind to have a few false discoveries among the (perhaps many) positive results in the list of discoveries. 
+- A better solution will be given later, but first we continue with the use of FWER.
 
 ---
 
@@ -415,11 +457,14 @@ First we give a very general definition of an **adjusted $p$-value**.
 
  Define the adjusted $p$-value as
  \[
-   \tilde{p}_j = \{\inf \alpha\in[0,1]: \text{ reject }H_{0j} \text{ at FWER } \alpha\} .
+   \tilde{p}_j = \inf\{\alpha\in[0,1]: \text{ reject }H_{0j} \text{ at FWER } \alpha\} .
  \]
+
+ In words: the adjusted $p$-value of feature $j$ is the smallest FWER level at which the multiple testing procedure would still reject $H_{0j}$, analogous to the ordinary $p$-value being the smallest significance level at which a single test is rejected.
+
  With these adjusted $p$-value, the $j$th partial null hypothesis may  be rejected when
  \[
-   \tilde{p}_j < \alpha
+   \tilde{p}_j \leq \alpha
  \]
  while controlling the FWER at $\alpha$.
 
@@ -500,7 +545,8 @@ the expected FDP, in their seminal paper.
 
 - An FDR of 1% means that on average we expect 1% false positive voxels in the list of voxels that are called significant.
 
-- Controlling the FDR allows for more discoveries (i.e. longer lists with significant results), while the fraction of false discoveries among the significant results is well controlled on average. As a consequence, more of the true positive hypotheses will be detected.
+- Controlling the FDR allows for more discoveries (i.e. longer lists with significant results), while the fraction of false discoveries among the significant results is well controlled on average. 
+- As a consequence, more of the true positive hypotheses will be detected.
 
 ## Intuition of BH-FDR procedure
 
@@ -638,8 +684,12 @@ pFDR <- dti |>
     ) +
   geom_point() +
   scale_colour_gradient2(low = "blue",mid="white",high="red") +
+  coord_fixed() +
   transition_manual(coord.z) +
-  labs(title = "transection z = {frame}") +
+  labs(
+    title = "transection z = {current_frame}",
+    x = "coord.y (right → left hemisphere)",
+    y = "coord.x (back → front)") +
   theme_grey()
 ```
 
@@ -675,22 +725,28 @@ The inequality
 \[
   \text{FDR} \leq \frac{m_0}{m} \alpha = \pi_0\alpha \leq \alpha
 \]
-shows that BH95 is conservative: it controls the FDR at level $\pi_0\alpha$ rather than at the nominal level $\alpha$. The more non-null features there are ($m_0 \ll m$), the more conservative the method becomes, and the more power is lost.
+shows that BH95 is conservative: it controls the FDR at level $\pi_0\alpha$ rather than at the nominal level $\alpha$. 
+- The more non-null features there are ($m_0 < m$), the more conservative the method becomes, and the more power is lost.
 
-If $m_0$ were known, we could correct for this by applying BH95 at the level $\alpha\, m/m_0$, which controls the FDR at $\alpha$. **Adaptive FDR procedures** therefore first estimate the number $m_0$, or the fraction $\pi_0 = m_0/m$, of null features from the data, and then use the adjusted $p$-values
+If $m_0$ were known, we could correct for this by applying BH95 at the level $\alpha\, m/m_0$, which controls the FDR at $\alpha$. 
+
+- **Adaptive FDR procedures** therefore first estimate the number $m_0$, or the fraction $\pi_0 = m_0/m$, of null features from the data, and then use the adjusted $p$-values
 \[
   \tilde{p}_{(r)} = \hat\pi_0 \min\left\{\min_{s=r,\ldots, m}\{m p_{(s)}/s\} ,1 \right\}.
 \]
 
-We do not give details on how $\pi_0$ is estimated [see e.g. @benjamini2000adaptive; @storey2003statistical]. The adjusted $p$-values above correspond to the $q$-values of @storey2003statistical, which are implemented in the Bioconductor package `qvalue`. Note that in many large-scale studies the vast majority of features is null, so that $\hat\pi_0$ is close to 1 and the gain over BH95 is small.
+- We do not give details on how $\pi_0$ is estimated [see e.g. @benjamini2000adaptive; @storey2003statistical]. The adjusted $p$-values above correspond to the $q$-values of @storey2003statistical, which are implemented in the Bioconductor package `qvalue`. 
+- Note that in many large-scale studies the vast majority of features is null, so that $\hat\pi_0$ is close to 1 and the gain over BH95 is small.
 
 ---
 
 ### Other important considerations
 
-- It can be shown  that the BH-FDR method weakly controls the FWER, i.e. it controls the FWER only when all features are null ($m_0=m$), but not for every configuration $\mathcal{M}_0$ of true nulls (strong control).
+- It can be shown  that the BH-FDR method weakly controls the FWER, i.e. it controls the FWER only when all features are null ($m_0=m$), but not for every configuration $\mathcal{M}_0$ of true nulls (that would be strong control, e.g. like Bonferroni).
 
-- The BH-FDR is derived under the assumption of independence of the features. @benjamini2001control showed that it also controls the FDR under *positive regression dependence on the subset of true nulls* (PRDS), which holds e.g. for one-sided tests based on positively correlated normally distributed test statistics.
+- BH controls the FDR under independence, and also under **positive dependence** between the test statistics of the null features (PRDS: *positive regression dependence on the subset of true nulls*) [@benjamini2001control].
+
+- Intuition: if one null feature has a larger test statistic by chance, the others tend to be larger as well, never smaller. E.g. neighbouring voxels, genes in the same pathway, batch effects.
 
 - Under arbitrary dependence, the **Benjamini–Yekutieli (BY)** procedure controls the FDR. It applies BH at the more stringent level $\alpha / c(m)$ with $c(m) = \sum_{s=1}^m 1/s \approx \ln(m) + 0.577$. In R: `p.adjust(p, method = "BY")`.
 
@@ -877,13 +933,22 @@ Fortunately, the local fdr method does not require us to estimate $f_1$ as we wi
 
 ## local fdr
 
-We can now calculate the probability that a case is a null given the observed $z$,
+The two-group model allows us to calculate the probability that a feature is null given its observed test statistic $z$. Therefore, we write the joint probability (density) of being null and observing $z$ in two ways:
 \[
-  \text{P}\left[\text{null}\mid z\right] = \frac{\pi_0 f_0(z)}{f(z)} .
+  \text{P}\left[\text{null}\right] f(z\mid\text{null}) = \text{P}\left[\text{null}\mid z\right] f(z),
 \]
-This probability is referred to as the **local false discovery rate**, and denoted by fdr$(z)$.
+where the left-hand side equals $\pi_0 f_0(z)$. Solving for $\text{P}\left[\text{null}\mid z\right]$ gives Bayes' rule:
+\[
+  \text{fdr}(z) = \text{P}\left[\text{null}\mid z\right]
+  = \frac{\pi_0 f_0(z)}{f(z)}
+  = \frac{\pi_0 f_0(z)}{\pi_0 f_0(z) + \pi_1 f_1(z)} .
+\]
 
-If for an observed $z$, fdr$(z)$ is sufficiently small, one may believe that the case is a true discovery (i.e. $H_{0j}$ may be rejected).
+- This posterior probability is referred to as the **local false discovery rate**. 
+- It is the fraction of the mixture density at $z$ that originates from the null features, i.e. the ratio of the blue curve ($\pi_0 f_0$) and the black curve ($f$) in the mixture plots above. 
+- For $z$-values near 0, the nulls make up almost all of $f(z)$ and fdr$(z)$ is close to 1; in the tails, where the non-nulls contribute to $f(z)$, fdr$(z)$ becomes small.
+
+If for an observed $z$, fdr$(z)$ is sufficiently small, one may believe that the feature is a true discovery (i.e. $H_{0j}$ may be rejected).
 
 ### Link with FDR
 
@@ -926,7 +991,7 @@ $$
 
 so that $H_{0j}$ is rejected for large negative values of the test statistic $z_j$.
 
-Note, that for the DTI two-sample setting, $\mathbf{L}^T\boldsymbol{\beta}_j = \mu_{d,j} - \mu_{nd,j}$, the difference in mean FA between dyslexic and control children in voxel $j$.
+Note, that for the DTI two-sample setting, $\mathbf{L}^T\boldsymbol{\beta}_j = \mu_{nd,j} - \mu_{d,j}$, the difference in mean FA between control and dyslexic children in voxel $j$.
 
 Suppose that all $H_{0j}$ are rejected for which the observed test statistic is at most $z$, then we can write
 
@@ -983,11 +1048,12 @@ lfdr <- locfdr(dti$z.value, nulltype = 0)
 
 - The argument `nulltype=0` specifies that the null distribution ($f_0$) is $N(0,1)$.
 
-- The dashed blue line gives $f_0$ and the solid green line is the nonparametric estimate of the marginal density function $f$. The two densities do not coincide and hence we may anticipate that some of the voxels show a difference in FA.
+- The dashed blue line gives $f_0$ and the solid green line is the nonparametric estimate of the marginal density function $f$. 
+- The two densities do not coincide and hence we may anticipate that some of the voxels show a difference in FA.
 
-- The purple bars indicate the estimated number of non-nulls (among the hypotheses/voxels for a given $z$-value). The plots shows that more non-nulls are expected for the negative $z$-values than for the positive $z$-values (positive $z$ corresponds to a higher average FA in dyslexic children).
+- The purple bars indicate the estimated number of non-nulls (among the hypotheses/voxels for a given $z$-value). The plots shows that more non-nulls are expected for the negative $z$-values than for the positive $z$-values (positive $z$ corresponds to a higher average FA in control children).
 
-### Problems? {#sec-problems}
+### Problems {#sec-problems}
 
 Note, however, that
 
@@ -1034,9 +1100,11 @@ The plot shows that the null distribution is shifted to negative values and has 
 
 - Spatial correlation can be expected in the brain, so voxels that are close to each-other typically will be correlated.
 
-- The dashed blue line gives $f_0$ and the solid green line is the nonparametric estimate of the marginal density function $f$. Unlike with the theoretical null, both densities now coincide in the centre of the distribution, but they differ in the right tail. Hence, we may anticipate that some voxels with large positive $z$-values show a difference in FA.
+- The dashed blue line gives $f_0$ and the solid green line is the nonparametric estimate of the marginal density function $f$. - Unlike with the theoretical null, both densities now coincide in the centre of the distribution, but they differ in the right tail. 
+- Hence, we may anticipate that some voxels with large positive $z$-values show a difference in FA.
 
-- The purple bars indicate the estimated number of non-nulls (among the hypotheses/voxels for a given $z$-value). The plots shows that only non-nulls for positive $z$-values are expected (positive $z$ corresponds to a higher average FA in dyslexic children).
+- The purple bars indicate the estimated number of non-nulls (among the hypotheses/voxels for a given $z$-value). 
+- The plots shows that only non-nulls for positive $z$-values are expected (positive $z$ corresponds to a higher average FA in control children).
 
 ---
 
@@ -1084,8 +1152,12 @@ pfdr <- dti |>
     ) +
   geom_point() +
   scale_colour_gradient2(low = "blue",mid="white",high="red") +
+  coord_fixed() +
   transition_manual(coord.z) +
-  labs(title = "transection z = {frame}") +
+  labs(
+    title = "transection z = {current_frame}",
+    x = "coord.y (right → left hemisphere)",
+    y = "coord.x (back → front)") +
   theme_grey()
 ```
 
@@ -1093,7 +1165,7 @@ pfdr <- dti |>
 animate(pfdr, nframes = 103, end_pause = 3)
 ```
 
-Note, that the local fdr method allows us to detect differences in FA in a specific region in the front part of the brain for which a larger fractional anisotropy is observed on average for children having dyslexia.
+Note, that the local fdr method allows us to detect differences in FA in a specific region in the front part of the brain for which a higher fractional anisotropy is observed on average in control children than in children with dyslexia.
 
 We can also estimate the Fdr of the set that we return as the average local fdr in this set.
 
@@ -1111,14 +1183,21 @@ The local false discovery rate may also be used to get **power diagnostics**.
 
 General idea: for $z$'s supported by the alternative hypothesis (i.e. large $f_1(z)$), we hope to see small fdr$(z)$.
 
-The **expected fdr** is an appropriate summary measure:
+The **expected fdr of the non-null features** is an appropriate summary measure:
 \[
-  \text{Efdr} = \text{E}_{f_1}\left[\text{fdr}(Z)\right] = \int_{-\infty}^{+\infty} \text{fdr}(z) f_1(z) dz.
+  \text{Efdr}_1 = \text{E}_{f_1}\left[\text{fdr}(Z)\right] = \int_{-\infty}^{+\infty} \text{fdr}(z) f_1(z) dz,
 \]
+i.e. the average local fdr of the non-null features, with $Z$ distributed according to the non-null density $f_1$. 
 
-With estimates of fdr$(z)$ and $f_1(z)$, the Efdr can be computed.
+- The subscript 1 refers to the non-null features, as in $f_1$ and $\pi_1$ [@efron2010large]. 
 
-A small Efdr is an indication of a powerful study.
+- Note that the `locfdr` package reports this quantity simply as `Efdr`, which does not indicate that the expectation is taken over the non-null features only.
+
+- With estimates of fdr$(z)$ and $f_1(z)$, Efdr$_1$ can be computed. 
+
+- Note that $f_1$ is not modelled directly: it follows from the mixture as $\hat\pi_1\hat f_1(z) = \hat f(z)\{1-\widehat{\text{fdr}}(z)\}$, i.e. the part of the marginal density that is not explained by the null. These are the purple bars in the `locfdr` histogram.
+
+- A small Efdr$_1$ indicates that a typical non-null feature has a small local fdr and is likely to be discovered, which is an indication of a powerful study.
 
 ```{r}
 lfdr <- locfdr(dti$z.value, plot = 3)
@@ -1150,7 +1229,7 @@ lfdrHiv0 <- locfdr(hivdata, nulltype = 0, plot = 0)
 
 - As in the DTI study, the empirical null (MLE, the default) is slightly shifted to negative values: $\hat\delta_0 = `r round(lfdrHiv$fp0["mlest", "delta"], 2)`$ compared to $`r round(lfdr$fp0["mlest", "delta"], 2)`$ for the DTI study. In contrast to the DTI study, however, it is much narrower than the theoretical null: $\hat\sigma_0 = `r round(lfdrHiv$fp0["mlest", "sigma"], 2)`$ compared to $`r round(lfdr$fp0["mlest", "sigma"], 2)`$ for the DTI study. The z-values are *underdispersed*.
 
-- @efron2010large shows that this underdispersion is not caused by the non-normality of the expression data, but is consistent with the considerable correlation between the genes in this study, which affects the null distribution of the z-values (cfr. correlation between the features in [Problems?](#sec-problems)).
+- @efron2010large shows that this underdispersion is not caused by the non-normality of the expression data, but is consistent with the considerable correlation between the genes in this study, which affects the null distribution of the z-values (cfr. correlation between the features in section [Problems](#sec-problems)).
 
 - With the theoretical null $N(0,1)$ the estimated fraction of nulls is $\hat\pi_0 = `r round(lfdrHiv$fp0["thest", "p0"], 2)`$, an impossible value larger than 1. This is a clear indication that the theoretical null is not appropriate here.
 
